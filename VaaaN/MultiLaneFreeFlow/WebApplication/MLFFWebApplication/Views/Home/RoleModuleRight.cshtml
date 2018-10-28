@@ -1,0 +1,83 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleModuleRightActivityCBE>
+
+@{
+    ViewBag.Title = "RoleModuleRight";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style type="text/css">
+    .nopadding {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_2').css({ "background-color": "#00B2aa" });
+        $('#submodule_2').css({ "font-weight": "bold" });
+        });
+</script>
+<div class="grid-container">
+    <div class="grid-table-wrapper">
+        <div class="grid-title">
+            <div class="grid-row">
+                <div class="col-sm-6">
+                    <h2>@ViewBag.Rolename - Modules</h2>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width:10%">
+                        @Html.DisplayNameFor(model => model.ModuleName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModuleView)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModuleAdd)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModuleEdit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModuleDelete)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleView)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleAdd)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleEdit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleDelete)
+                        </td>
+                        <td>
+                            <a class="delete" href="@Url.Action("ResetRoleModuleRight", "Home", new { id = item.Id,Rolename = ViewBag.Rolename, prm = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.Encrypt(item.RoleId + "~" + item.ModuleId + "~" + item.ModuleName + "~" + item.ModuleView + "~" + item.ModuleAdd + "~" + item.ModuleEdit + "~" + item.ModuleDelete) })"><i class="fa fa-lock" aria-hidden="true" title="Edit Role Modules Right"></i></a>
+                            <a class="edit" href="@Url.Action("RoleSubModuleRight", "Home", new {id = item.Id,Rolename = ViewBag.Rolename, roleId = item.RoleId, moduleId = item.ModuleId })"><i class="fa fa-list" aria-hidden="true" title="Sub Module List"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p>
+            @Html.ActionLink("Back", "RoleList", null, new { @class = "btn btn-primary btn-sm" })
+        </p>
+    </div>
+</div>

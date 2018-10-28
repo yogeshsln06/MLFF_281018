@@ -1,0 +1,91 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE
+@{
+    ViewBag.Title = "Add Vehicle";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.prev i').removeClass();
+        $('.prev i').addClass("fa fa-chevron-left");
+
+        $('.next i').removeClass();
+
+        $('.next i').addClass("fa fa-chevron-right");
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_6').css({ "background-color": "#00B2aa" });
+        $('#submodule_6').css({ "font-weight": "bold" });
+
+        $("#buttonUserBack").click(function () {
+            // Back to User List
+            location.href = "@Url.Action("VehicleClassList", "Home")";
+
+        });
+    });
+
+    function Validation() {
+        if (!validateVehicleClass()) {
+            return false;
+        }
+        return true;
+    }
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+
+
+    function validateAlpha() {
+        var textInput = document.getElementById("FirstName").value;
+        textInput = textInput.replace(/[^A-Za-z]/g, "");
+        document.getElementById("FirstName").value = textInput;
+
+    }
+   
+</script>
+<script src="~/js/userValidation.js"></script>
+
+<div class="grid-container">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">New Gantry</h1>
+
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("VehicleClassAdd", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="row">
+                    <form role="form">
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="Name" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Name</label>
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Name", autofocus = "true" } })
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4" style="float:right">
+                            <span id="lblErrors" style="color:red;"></span>
+
+                            @if (TempData["Message"] != null && TempData["Message"].ToString() != "")
+                            {
+                                <span style="color:red;">@TempData["Message"]!</span>
+
+                            }
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <button type="submit" class="btn btn-primary" onclick="return Validation();">Submit</button>&nbsp;&nbsp;<button id="buttonUserBack" type="button" class="btn btn-primary">Back</button>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+</div>

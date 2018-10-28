@@ -1,0 +1,209 @@
+﻿
+@{
+    ViewBag.Title = "LiveMonitoring";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+<style>
+    .hide {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 350px; /* Could be more or less, depending on screen size */
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetLiveMonitoringFromDB();
+        //myVar = setInterval("GetLiveMonitoringList()", 1000);
+        // myVar = setInterval("GetLiveMonitoringFromDB()", 1000);
+    });
+    function GetLiveMonitoringFromDB() {
+
+        $.ajax({
+            type: 'GET',
+            url: "@Url.Action("Transaction_LiveData", "Home")",
+            dataType: 'json',
+            success: function (Livedata) {
+                var TR = '';
+
+                var Imagepath = "http://192.168.1.88:5555/events"
+                for (var i = 0; i < Livedata.length; i++) {
+                    var SNo = i + 1;
+                    var TMS_ID = Livedata[i].TMS_ID;
+                    var PLAZA_ID = Livedata[i].PLAZA_ID;
+                    var LANE_ID = Livedata[i].LANE_ID;
+                    var LANE_NAME = Livedata[i].LANE_NAME;
+                    var TRANSACTION_ID = Livedata[i].TRANSACTION_ID;
+                    var TRANSACTION_DATETIME = Livedata[i].TRANSACTION_DATETIME;
+                    var CROSSTALK_TAG_ID = Livedata[i].CROSSTALK_TAG_ID;
+                    var CROSSTALK_VEHICLE_CLASS_ID = Livedata[i].CROSSTALK_VEHICLE_CLASS_ID;
+                    var CROSSTALK_VRN = Livedata[i].CROSSTALK_VRN;
+                    var CROSSTALK_TIMESTAMP = Livedata[i].CROSSTALK_TIMESTAMP;
+                    var NODEFLUX_VRN = Livedata[i].NODEFLUX_VRN;
+                    var NODEFLUX_VEHICLE_CLASS_ID = Livedata[i].NODEFLUX_VEHICLE_CLASS_ID;
+                    var NODEFLUX_TIMESTAMP = Livedata[i].NODEFLUX_TIMESTAMP;
+                    var CROSSTALK_ENTRY_ID = Livedata[i].CROSSTALK_ENTRY_ID;
+                    var NODEFLUX_ENTRY_ID = Livedata[i].NODEFLUX_ENTRY_ID;
+                    var IS_BALANCE_UPDATED = Livedata[i].IS_BALANCE_UPDATED;
+                    var IS_TRANSFERED = Livedata[i].IS_TRANSFERED;
+                    var IS_VIOLATION = Livedata[i].IS_VIOLATION;
+                    var MODIFIER_ID = Livedata[i].MODIFIER_ID;
+                    var CREATION_TIME = Livedata[i].CREATION_TIME;
+                    var MODIFICATION_TIME = Livedata[i].MODIFICATION_TIME;
+                    var DATA_THUMBNAIL = Livedata[i].DATA_THUMBNAIL;
+                    var DATA_VEHICLE_THUMBNAIL = Livedata[i].DATA_VEHICLE_THUMBNAIL;
+                    if (DATA_THUMBNAIL != '' && DATA_THUMBNAIL != null) {
+                        var arr = DATA_THUMBNAIL.split('events');
+                        DATA_THUMBNAIL = Imagepath + arr[1];
+                    }
+                    var clsName = 'hide'
+                    if (DATA_VEHICLE_THUMBNAIL != '' && DATA_VEHICLE_THUMBNAIL != null) {
+                        var arr1 = DATA_VEHICLE_THUMBNAIL.split('events');
+                        DATA_VEHICLE_THUMBNAIL = Imagepath + arr1[1];
+                        clsName = 'show';
+                    }
+                    TR = TR + "<tr><td>" + SNo + "</td><td>" + TRANSACTION_DATETIME + "</td><td>" + CROSSTALK_TAG_ID + "</td><td>" + NODEFLUX_VRN + "</td>" +
+                        "<td>" + LANE_NAME + "</td><td onclick='openImage(this)'><img  height='20px' width='110px' src='" + DATA_THUMBNAIL + "' alt='Data Thumbnail' </img></td>" +
+                        "<td><img class='" + clsName + "' height='20px' width='110px' src='" + DATA_VEHICLE_THUMBNAIL + "' alt='Data Vehicle Thumbnail' </img></td><td><a onclick='showVideo()'>Video</a></td></tr>"
+
+                }
+                $("#tableLiveMonitoring tbody").html(TR);
+
+            }
+        });
+    }
+    function openImage(td) {
+        var imgpath = $(td).children('img').attr('src');
+        $("#myimage").attr('src', imgpath);
+        var modal = document.getElementById('myModal');
+        modal.style.display = "block";
+        //$("#myModal").show();
+
+    }
+    function imageclose() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = "none";
+
+    }
+
+    function showVideo(){
+        var modal = document.getElementById('myModalVideo');
+        modal.style.display = "block";
+    }
+
+    function videoclose() {
+        var modal = document.getElementById('myModalVideo');
+        modal.style.display = "none";
+
+    }
+    
+</script>
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+
+        <div class="panel-title new-title">
+            Live Monitoring List
+            
+        </div>
+
+    </div>
+    <table id="tableLiveMonitoring" class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th style="width:5%">
+                    S. No.
+                </th>
+                <th style="width:15%">
+                    Time Stamp
+                </th>
+                <th style="width:15%">
+                    IKE
+                </th>
+                <th style="width:10%">
+                    No. Polisi
+                </th>
+                <th style="width:10%">
+                    Lajur
+                </th>
+                <th style="width:20%">
+                    ANPR Front
+                </th>
+                <th style="width:20%">
+                    ANPR Rear
+                </th>
+                <th style="width:5%">
+                   Video
+                </th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close" onclick="imageclose()">&times;</span>
+            <img src="" id="myimage" height="150" width="300" />
+        </div>
+
+    </div>
+    <div id="myModalVideo" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close" onclick="videoclose()">&times;</span>
+            <video width="320" height="240" controls>
+                <source src="~/Images/POC-ERP-HIKVISION_1537438140_60.mp4#t=10,20" type="video/mp4">
+                @*<source src="movie.ogg" type="video/ogg">*@
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+    </div>
+   
+</div>
+

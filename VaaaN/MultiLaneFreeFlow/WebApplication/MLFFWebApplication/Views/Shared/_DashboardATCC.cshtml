@@ -1,0 +1,45 @@
+﻿<link href="/css/Dashboard.css" rel="stylesheet" />
+<link href="/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <div id="atcc-left-panel">
+        <input type="button" id="buttonATCCSummary" value="Summary" class="buttonClass" />
+        <input type="button" id="buttonATCCMonitor" value="Atcc Detail" class="buttonClass" />
+    </div>
+    <div id="atcc-right-panel">
+        <div id="divAtccSummary" style="display:none;">
+            <div class="divAllblur">
+                <table id="ItemAtccDetail" cellpadding="3" name="ItemAtccDetail" class="table table-responsive"></table>
+            </div>
+        </div>
+        <div id="divAtccDetail" style="display:none;">
+            <div class="divAllblur" style="padding:20px;">
+                <div id="divAtccFilter">
+                    <div class="divFilterWrapper">
+                        <div>
+                            <label>ATCC :</label>
+                            <div id="divATCCddl"></div>
+                        </div>
+                        <div><input type="button" id="buttonAtccOpenSession" value="Open Session" class="btn btn-primary" /></div>
+                        <div><input type="button" id="buttonAtccCloseSession" value="Close Session" class="btn btn-primary" /></div>
+                    </div>
+                </div>
+                <span>Recent Vehicles</span>
+                <div id="divAtccFilterVehicles">
+                    <div style="overflow-y: scroll; height:312px; font-size:11px;">
+                        <table id="tblAtccRecentVehicle" cellpadding="5" name="tblAtccRecentVehicle" class="table table-bordered table-responsive">
+                            <thead>
+                                <tr style="background-color:#1A5276; color:#fff;">
+                                    <th>Vehicle Class</th>
+                                    <th>Lane</th>
+                                    <th>Direction</th>
+                                    <th>Wheel Base (in cm)</th>
+                                    <th>Axle Count</th>
+                                    <th>Vehicle Length (in cm)</th>
+                                    <th>Transaction Date</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

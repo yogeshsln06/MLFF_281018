@@ -1,0 +1,118 @@
+﻿
+@{
+    ViewBag.Title = "New Role";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#buttonSaveRole").click(function () {
+            // Validate Educational Entry
+            if (!validateroleentry()) {
+                return false;
+            }
+            // Save New Role
+            var role_name = $("#txtRoleName").val();
+            var active = 0;
+            if ($('#chkActive').is(":checked")) {
+                active = 1;
+            }
+            var remark = $("#txtRemark").val();
+
+            $.ajax({
+                type: 'POST',
+                //url: '../Home/SaveRole/',
+                url: "@Url.Action("SaveRole", "Home")",
+                dataType: 'json',
+                data: { role_name, active: active, remark: remark },
+                success: function (result) {
+                    if (result == "saved") {
+                        location.href = "@Url.Action("RoleList", "Home")";
+                    }
+                    else if (result == "found") {
+                        $("#lblErrors").text("");
+                        $("#lblErrors").text("This role name already exist.");
+                   
+                    }
+                    else if (result == "error") {
+                        alert('Failed to save new role');
+                    }
+                    else if (result == 'sessionout') {
+                        location.href = "@Url.Action("Login", "Home")";
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to save new role' + ex);
+                }
+            });
+        });
+
+        $("#buttonCancelRole").click(function () {
+            // Back to Role List
+            location.href = "@Url.Action("RoleList", "Home")";
+        });
+    });
+
+        function validateroleentry() {
+            var alpha = /^[a-zA-Z-,]+(\s{0,1}[a-zA-Z-, ])*$/
+            if ($("#txtRoleName").val() == '') {
+
+                $("#lblErrors").text("Enter Role Name");
+           
+            $("#txtRoleName").focus();
+            return false;
+           
+        }
+        return true;
+        
+    }
+
+    function InitializeRoleEntry() {
+        $("#txtRoleName").val('');
+        $("#txtRemark").val('');
+        $('#chkActive').prop('checked', true);
+    }
+
+    function validateAlpha(){
+        var textInput = document.getElementById("txtRoleName").value;
+        textInput = textInput.replace(/[^A-Za-z]/g, "");
+        document.getElementById("txtRoleName").value = textInput;
+    }
+    $('#module_2').css({ "background-color": "#00B4CE" });
+    $('#module_2').css({ "font-weight": "bold" });
+    $('#submodule_2').css({ "background-color": "#00B2aa" });
+    $('#submodule_2').css({ "font-weight": "bold" });
+</script>
+<div class="grid-container">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">New Role</h1>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form role="form">
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="txtRoleName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.RoleName</label>
+                            
+                            <input type="text" class="form-control" id="txtRoleName" oninput="validateAlpha();" autofocus="true" placeholder="Role Name">
+                        </div>
+                     
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="chkActive" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.IsActive</label>
+                            <input type="checkbox" class="checkbox input-lg" style="height:34px" id="chkActive" name="chkActive" checked="checked">
+                         
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <span id="lblErrors" style="color:red;"></span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                <button id="buttonSaveRole" type="button" class="btn btn-primary">Save</button>&nbsp;&nbsp;
+                                <button id="buttonCancelRole" type="button" class="btn btn-primary">Back</button>
+                            </div>
+</form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

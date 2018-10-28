@@ -1,0 +1,29 @@
+
+*************************************************************************************************************************
+*															*
+*															*
+*					       H T M S          				                        *
+*															*
+*															*
+*************************************************************************************************************************
+
+
+© Copyright 2016 VaaaN Infra (P) Ltd. All rights reserved.
+
+This file contains Proprietary information of VaaaN Infra (P) Ltd.
+and should be treated as proprietary and confidential.
+
+The use, copying, disclosure or modification of the programs and/or 
+source code is prohibited unless otherwise provided for in the license 
+or confidential agreements.
+
+========================================================
+Author           :  VaaaN Infra Private Limited              
+Company          :  VaaaN Infra Private Limited    
+Date of Creation :                              
+========================================================
+
+VIDS
+----
+Manadatory : Copy all dll files from D:\Projects\B_HTMS_10Feb16\VaaaN\DLL\VIDS\Triflex 
+             to VaaaN\HTMS\Applications\MainDashboard\bin\Release folder.

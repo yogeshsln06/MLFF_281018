@@ -1,0 +1,101 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE>
+
+@{
+    ViewBag.Title = "Gantry List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tablePlaza').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_4').css({ "background-color": "#00B2aa" });
+        $('#submodule_4').css({ "font-weight": "bold" });
+    });
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
+        <div class="panel-title new-title">
+            Gantry List
+        </div>
+
+    </div>
+    <table id="tablePlaza" class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PlazaName)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Location)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IpAddress)
+                </th>
+             
+                <th>
+                    Edit
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var token = "";
+                var token1 = "";
+
+                if (item.PlazaId > 0)
+                {
+                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "PlazaEdit", Convert.ToString(item.PlazaId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                    token1 = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "LanebyPlazaList", Convert.ToString(item.PlazaId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                }
+                <tr>
+                    <td>
+                        @(rowNo+=1)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlazaName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IpAddress)
+                    </td>
+                    <td>
+                        <a class="edit" href="@Url.Action("PlazaEdit", "Home", new { id = item.PlazaId, urltoken = token })">
+                            <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
+                        </a>
+                        <a class="edit" href="@Url.Action("LanebyPlazaList", "Home", new { id = item.PlazaId, urltoken = token1 })">
+                            <i class="fa fa-info-circle" style="@ViewBag.Visibility" aria-hidden="true" title="Lajur List"></i>
+                        </a>
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <p style="padding-top:15px;">
+        <a href="~/Home/PlazaAdd" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Plaza</span></a>
+    </p>
+</div>

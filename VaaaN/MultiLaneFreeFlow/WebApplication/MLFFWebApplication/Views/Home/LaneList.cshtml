@@ -1,0 +1,111 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE>
+
+@{
+    ViewBag.Title = "Lajur List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tableLane').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_5').css({ "background-color": "#00B2aa" });
+        $('#submodule_5').css({ "font-weight": "bold" });
+        $("#newadd").attr("href", "/Home/LaneAdd/" + $("#hfPlazaId").val())
+    });
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
+        <div class="panel-title new-title">
+            Lajur List
+        </div>
+
+    </div>
+    <input type="hidden" id="hfPlazaId" value="@ViewBag.PlazaId" />
+    <table id="tableLane" class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PlazaName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LaneName)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.CameraNameFront)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CameraNameRear)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EtcReaderName)
+                </th>
+
+                <th>
+                 @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var token = "";
+
+                if (item.LaneId > 0)
+                {
+                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "LaneEdit", Convert.ToString(item.LaneId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                }
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlazaName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LaneName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CameraNameFront)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CameraNameRear)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EtcReaderName)
+                    </td>
+
+                    <td>
+                        <a class="edit" href="@Url.Action("LaneEdit", "Home", new { id = item.LaneId, urltoken = token })">
+                            <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
+                        </a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <p style="padding-top:15px;">
+        <a href="#" class="btn btn-primary" id="newadd"><i class="fa fa-plus-circle"></i><span> New Lajur</span></a>
+
+    </p>
+</div>

@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Atcc Controller";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<link href="~/css/Dashboard.css" rel="stylesheet" />
+<script src="~/js/dashboard-main.js"></script>
+<script src="~/js/dashboard-atcc.js"></script>
+<style>
+    #ItemAtccDetail td {
+        padding:2px;
+    }
+</style>
+<div id="AtccSection">
+    @Html.Partial("_DashboardATCC")
+</div>
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#Admin').removeClass('list-group-item list-group-item-info');
+        $('#Admin').addClass("list-group-item list-group-item-info collapsed");
+
+        $('#AdminsubMenu').removeClass('list-group-submenu in');
+        $('#AdminsubMenu').addClass("list-group-submenu collapse");
+
+        $('#divAtccSummary').attr('style', 'display:block;');
+        $('#divAtccDetail').attr('style', 'display:none;');
+
+        // Change the Header of Atcc Popup
+        $("#ui-id-1").text('ATCC Summary');
+
+        // Initially show the Atcc Summary Details 
+        GetAtccDetail();
+    });
+</script>
+

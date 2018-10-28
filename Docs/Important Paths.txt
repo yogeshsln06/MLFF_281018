@@ -1,0 +1,17 @@
+BASE URL:http://10.210.0.106:5555/
+API Path :
+      NodeFlux Event:  /VaaaN/IndonesiaMLFFApi/SendNodefluxEvent 
+CrossTalk Event:  /VaaaN/IndonesiaMLFFApi/SendCrossTalkEvent
+
+
+VPN VAAN
+Mode PPTP
+IP MAIN : 103.119.144.6
+IP BackUp: 203.128.83.14
+user: vaan
+Pass: Vaan-9876
+
+Windows Vaan
+IP: 10.210.0.106
+User: administrator
+Pass: Vaan-9876

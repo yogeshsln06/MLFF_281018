@@ -1,0 +1,90 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE>
+
+@{
+    ViewBag.Title = "Customer Vehicle List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tableCustomerVehicle').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+    });
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
+        <div class="panel-title new-title">
+            Customer Vehicle List
+        </div>
+
+    </div>
+    <div style="height:5px;"></div>
+    <table id="tableCustomerVehicle" class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                   @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
+                </th>
+
+                <th>
+                  @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.TagId
+                </th>
+                <th>
+                   @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
+                </th>
+
+                <th>
+                    Edit
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VehRegNo)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TagId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VehicleClassName)
+                    </td>
+
+
+                    <td>
+                        <a class="edit" href="#"><i class="fa fa-pencil-square-o" title="Edit"></i></a>
+
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <p style="padding-top:15px;">
+        <a href="@Url.Action("AddCustomerTag", "POS", new { id =ViewBag.AccountId })" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Tag</span></a>
+        &nbsp;&nbsp;<a href="@Url.Action("AddCustomerRecharge", "POS", new { id =ViewBag.AccountId })" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Recharge</span></a>
+
+    </p>
+</div>

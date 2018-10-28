@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="/Bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Bootstrap/css/bootstrap-datepicker.css" rel="stylesheet" />
+
+    <link href="/Css/StyleSheet.css" rel="stylesheet" />
+    <link href="/Css/TableWithSearch.css" rel="stylesheet">
+    <link href="/Css/StyleSheetLeftMenu.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="/scripts/jquery-3.3.1.js"></script>
+    <script src="~/scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="/Bootstrap/js/bootstrap.js"></script>
+    <script src="~/scripts/bootstrap-datepicker.js"></script>
+
+    <style type="text/css">
+        .col-md-3, .col-sm-3, .col-lg-3 {
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+        .panel {
+            margin: 2%;
+        }
+
+        .logininfo {
+            background-color: aliceblue;
+            padding: 7px;
+            top: -10px;
+            position: absolute;
+            width: 100%;
+        }
+
+
+
+        /*Boot Strap Date Picker*/
+
+        .datepicker td,
+        .datepicker th {
+            width: auto;
+        }
+
+        .datepicker td, .datepicker th {
+            -webkit-border-radius: 0px;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+            border: none;
+        }
+
+        .dropdown-menu {
+            font-size: 10px;
+        }
+
+        .datepicker-dropdown:before {
+            display: none;
+            position: absolute;
+        }
+
+        .datepicker-dropdown:after {
+            display: none;
+            position: absolute;
+        }
+
+        .nav span {
+            box-sizing: border-box;
+            color: rgb(255, 255, 255);
+            font-family: "Varela Round", sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            list-style-image: none;
+            list-style-position: outside;
+            list-style-type: none;
+            position: relative;
+            text-shadow: rgba(255, 255, 255, 0.2) 0px 0px 4px;
+            top: 3px;
+        }
+
+        .link {
+            color: white;
+        }
+
+        .container {
+            padding-left: 0px;
+            padding-right: 0px;
+            width: 100%;
+        }
+
+        .row {
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav span {
+            color: #F19F4D;
+        }
+
+        .navbar-toggle {
+            color: white;
+        }
+
+        .list-group-item list-group-item-info {
+            background-color: rgb(49, 112, 143);
+            color: rgb(217, 237, 247);
+        }
+
+        .round-img {
+            border-radius: 50%;
+        }
+        /*Boot Strap Date Picker end*/
+        .list-group-item {
+            position: relative;
+            display: block;
+            padding: 8px 15px;
+            margin-bottom: -1px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        .strongtag {
+    float: right;
+    padding-right: 11px;
+}
+.tagdiv{
+    float: right;
+    padding: 0;
+    margin: 0;
+    color:white;
+}
+    </style>
+</head>
+
+<body ng-app="" style="background-color:white;">
+    <input type="hidden" value="0" id="hfAPIPath" />
+    <div class="container" style="background-color:rgb(46, 109, 164);">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-sm-12">
+                    <div class="col-sm-10">
+
+                    </div>
+                    <div class="tagdiv col-sm-2" >
+                        <strong>Welcome !</strong>
+                        <strong class="strongtag">@Session["UserName"]</strong>
+                    </div>
+                    @*<img src="~/Images/profile.png" style="padding:10px;float:right;" class="round-img" width="70" height="70" /><br /><span style="float:right">*@
+                    
+                </div>
+                <div class="col-sm-12">
+                    <div class="navbar-header">
+                        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <!-- Collection of nav links and other content for toggling -->
+                    <div id="navbarCollapse" class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a class="link" href="~/Home/HomePage" title="PMS Home">Home</a></li>
+                            <li><a class="link" href="">About Us</a></li>
+
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a class="link" data-target="#ChangePasswordModal" data-toggle="modal" href="#ChangePasswordModal">Change Password</a></li>
+                            <li><a class="link" href="~/Home/Logout">Logout</a></li>
+                         
+                        </ul>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <img style="float:left; height:85px; width:200px;" src="~/images/logo.jpg">
+            </div>
+            <div class="col-md-8" style="text-align:center">
+                <h1 style="margin-top: 17px;">Multilane Free Flow</h1>
+            </div>
+            <div class="col-md-2">
+                <img style="height:85px; float:right" src="~/images/smarterplogo.png">
+            </div>
+        </div>
+
+    </div>
+    <div class="container" style="background-color:#e8e5e5;min-height:460px;">
+        <div class="col-sm-2 col-lg-2 col-md-2" style="padding-right:0px;padding-left:0px;border-radius:4px">
+
+            @*<i class="fa fa-bars  toggle-btn list-group-item" style="background-color:rgb(46, 109, 164);  color:rgb(217, 237, 247);" data-toggle="collapse" data-target="#MainMenu" aria-expanded="true"></i>*@
+
+            <div id="MainMenu">
+                <div class="list-group panel">
+                    @Html.Partial("_LeftMenuBar")
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10 col-lg-10 col-md-10">
+            @RenderBody()
+        </div>
+    </div>
+    <div class="container">
+        <div class="row bottom_row">
+            <div class="col-md-12 col-sm-12 col-lg-12" style="margin-top: 3%;">
+                <footer id="footer">
+                    Copyright &copy VaaaN Infra @DateTime.Now.Year
+                </footer>
+            </div>
+        </div>
+    </div>
+    <div id="ChangePasswordModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-sm modal-dialog  modal-dialog-backcolor">
+            <div class="modal-login">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <img src="~/images/chng.png" width="70" height="70">
+                    <h3 class="modal-title text-center" style="margin-top:5px">Change Password</h3>
+                </div>
+                <div class="modal-body col-lg-8 col-lg-offset-2" style="margin-top:10px">
+
+                    <div class="form-group">
+                        <label for="txtOldPassword" class="form-label">Old Password</label>
+                        <input type="password" class="form-control" id="txtoldpassword" placeholder="Old Password" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtNewPassword" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="txtnewPassword" placeholder="New Password" />
+                    </div>
+                    <div class="form-group text-center">
+                        <button class="btn  btn-primary" style="margin-top:10px" name="buttonChange" id="buttonChange">Change</button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 text-left">
+                            <span id="errormsg" style="color:red; font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="/js/layout-page.js"></script>

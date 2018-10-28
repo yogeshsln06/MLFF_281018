@@ -1,0 +1,230 @@
+﻿@using System.Data
+@model DataTable
+<div class="col-xs-12 well boxshadow">
+    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
+        <div class="form-horizontal">
+            <div class="form-group col-lg-12" style="margin:0%">
+                <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px">
+                    <hr style="margin-left: 0;width:90%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                </div>
+                <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px;width:5%">
+                    <label style="padding-top:10px" class="form-label">Result</label>
+                </div>
+                <div class="col-sm-10 col-md-10 col-lg-10" style="padding-left:1px;padding-right:1px;width:85%">
+                    <hr style="margin-left: 0;  text-align: left;width: 100%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <table id="tableTransaction" class="table table-condensed table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Tran Id
+                                </th>
+                                <th>
+                                    Tran Time
+                                </th>
+                                <th>
+                                   Lane Id
+                                </th>
+                                <th>
+                                   Gantry Id
+                                </th>
+                                <th>
+                                 Cross Talk VRN
+                                </th>
+                                <th>
+                                    Cross Talk Class
+                                </th>
+                                <th>
+                                   Nodeflux Front Image
+                                </th>
+                                <th>
+                                    Nodeflux Rear Image
+                                </th>
+                                <th>
+                                    Check Associated Transactions
+                                </th>
+                                @*<th>
+                                    IKE VRN
+                                </th>
+                                <th>
+                                    ANPR FRONT VRN
+                                </th>
+                                <th>
+                                    ANPR REAR VRN
+                                </th>
+                                <th>
+                                    Audit Status
+                                </th>
+                                <th>
+                                    Details
+                                </th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (DataRow item in Model.Rows)
+            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
+                                    </td>
+                                    <td>
+                                     @item["TRANSACTION_DATETIME"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["LANE_ID"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["PLAZA_ID"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["CTP_VRN"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["CTP_VEHICLE_CLASS_NAME"].ToString()
+                                    </td>
+                                    <td>  
+                                        @if (item["FRONT_IMAGE"].ToString()!="")
+                                        {
+                                            string path = "http://192.168.1.65:5555/" + item["FRONT_IMAGE"].ToString();
+                                            <img src="@path"  />
+                                        }else
+                                        {
+                                           <label>No Image Captured</label>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item["REAR_IMAGE"].ToString() != "")
+                                        {
+                                            string path = "http://192.168.1.65:5555/" + item["REAR_IMAGE"].ToString();
+                                            <img src="@path" />
+                                        }
+                                        else
+                                        {
+                                            <label>No Image Captured</label>
+                                        }
+                                       
+                                    </td>
+                                    <td>
+                                        <a onclick="CheckAssociated(this);" id="TransactionTime_@item["TRANSACTION_ID"].ToString()" class="edit" data-id="@item["TRANSACTION_ID"].ToString()"><i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i></a>
+                                    </td>
+                                    @*<td>
+                                        @Html.DisplayFor(modelItem => item["TRANSACTION_DATETIME"])
+                                    </td>
+                                    <td>
+                                        @(item.Direction == 1 ? "Up" : "Down")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IPAddress)
+                                    </td>
+                                    <td style="@ViewBag.Visibility">
+                                        <a class="edit" href="@Url.Action("EditEcb", "Home", new {id=item.EcbId })"><i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i></a>
+                                        <a onclick="AddEcbFacility(this);" id="EcbID_@item.EcbId" data-id="@item.EcbId" style="cursor:pointer">Facilities</a>
+                                    </td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="Associatedmodel"
+         data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">Associated transactions</h4>
+                </div>
+                <div class="modal-body" style="padding:0px"><input type="hidden" id="hdnTransactionId" value="0" /> 
+                    <div id="partialassociated">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnjoin" onclick="joinTransactions();" class="btn btn-primary button button4">Join</button>
+                    <button type="button" id="btnHideModal" onclick="HideModal()" class="btn btn-primary button button4">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript">
+    function CheckAssociated(DataValue)
+    {
+        debugger;
+        var dataid = $(DataValue).attr("data-id");
+        $('#hdnTransactionId').val(dataid);
+        var route = '/MRM/AssociatedTransaction?transactionId=' + dataid;
+        $('#partialassociated').load(route);
+        $('#Associatedmodel').modal('show');
+    }
+    function HideModal() {
+        $('#Associatedmodel').modal('hide');
+    }
+    function joinTransactions()
+    {
+        debugger;
+        var selectedIDs = new Array();
+        $('input:checkbox.checkBox').each(function () {
+            if ($(this).prop('checked')) {
+                selectedIDs.push($(this).val());
+            }
+        });
+        var inputData = {
+            AssociatedTransactionIds: selectedIDs, TransactionId: $("#hdnTransactionId").val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "JoinTransactions",
+            dataType: "JSON",
+            async: false,
+            data: JSON.stringify(inputData),
+            contentType: "application/json; charset=utf-8",
+            success: function (JsonfilterData) {
+                ResponceData = JsonfilterData;
+    
+
+            },
+            error: function (x, e) {
+
+                //$('#loader').hide();
+            }
+
+        });
+        //$("#delete").click(function () {
+        //    var selectedIDs = new Array();
+        //    $('input:checkbox.checkBox').each(function () {
+        //        if ($(this).prop('checked')) {
+        //            selectedIDs.push($(this).val());
+        //        }
+        //    });
+
+        //    var options = {};
+        //    options.url = "/home/delete";
+        //    options.type = "POST";
+        //    options.data = JSON.stringify(selectedIDs);
+        //    options.contentType = "application/json";
+        //    options.dataType = "json";
+        //    options.success = function (msg) {
+        //        alert(msg);
+        //    };
+        //    options.error = function () {
+        //        alert("Error while deleting the records!");
+        //    };
+        //    $.ajax(options);
+
+        //});
+
+    }
+</script>

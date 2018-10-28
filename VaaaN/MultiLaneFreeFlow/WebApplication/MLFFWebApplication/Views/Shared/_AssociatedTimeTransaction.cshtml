@@ -1,0 +1,148 @@
+﻿@using System.Data
+@model DataTable
+<div class="row">
+    <div style="background:#fff">
+        <div class="col-sm-12">
+            <label class="col-sm-2">Transaction Id:</label>
+            <label class="col-sm-1">@ViewBag.TransactionId</label>
+            <label class="col-sm-2">Transaction Time:</label>
+            <label class="col-sm-3">@ViewBag.TransactionTime</label>
+            <label class="col-sm-2">CrossTalk VRN:</label>
+            <label class="col-sm-2">@ViewBag.CrossTalkVRN</label>
+        </div>
+        <div class="col-sm-12">
+            <label class="col-sm-2">Cross Talk Class:</label>
+            <label class="col-sm-1">@ViewBag.Class</label>
+                <label class="col-sm-2">NodeFlux Rear:</label>
+                <label class="col-sm-3">
+            @if (ViewBag.NFRear != "")
+            {
+                string path = "http://192.168.1.65:5555/" + ViewBag.NFRear;
+                <img src="@path" />
+            }
+            else
+            {
+              @ViewBag.NFRear;
+
+            }
+            
+          </label>
+                <label class="col-sm-2">NodeFlux Front:</label>
+                <label class="col-sm-2">
+            @if (ViewBag.NFFront != "")
+            {
+                string path = "http://192.168.1.65:5555/" + ViewBag.NFFront;
+                <img src="@path" />
+            }
+            else
+            {
+                @ViewBag.NFFront;
+
+            }</label>
+            </div>
+            </div>
+</div>
+<div class="col-xs-12 well boxshadow">
+    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
+     
+        <div class="form-horizontal">
+
+            <div class="form-group">
+                <div class="col-md-12">
+
+                    <table id="tableTransaction" class="table table-condensed table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Select Transactions
+                                </th>
+                                <th>
+                                    Tran Id
+                                </th>
+                                <th>
+                                    Tran Time
+                                </th>
+                                <th>
+                                    Lane Id
+                                </th>
+                                <th>
+                                    Gantry Id
+                                </th>
+                                <th>
+                                    Cross Talk VRN
+                                </th>
+                                <th>
+                                    Cross Talk Class
+                                </th>
+                                <th>
+                                    Nodeflux Front Image
+                                </th>
+                                <th>
+                                    Nodeflux Rear Image
+                                </th>
+                                <th>
+                                    Audited
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (DataRow item in Model.Rows)
+            {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="checkBox"
+                                               value="@item["TRANSACTION_ID"].ToString()" />
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
+                                    </td>
+                                    <td>
+                                        @item["TRANSACTION_DATETIME"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["LANE_ID"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["PLAZA_ID"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["CTP_VRN"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["CTP_VEHICLE_CLASS_NAME"].ToString()
+                                    </td>
+                                    <td>
+                                        @if (item["FRONT_IMAGE"].ToString() != "")
+                                        {
+                                            string path = "http://192.168.1.65:5555/" + item["FRONT_IMAGE"].ToString();
+                                            <img src="@path" />
+                                        }
+                                        else
+                                        {
+                                            <label>No Image Captured</label>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item["REAR_IMAGE"].ToString() != "")
+                                        {
+                                            string path = "http://192.168.1.65:5555/" + item["REAR_IMAGE"].ToString();
+                                            <img src="@path" />
+                                        }
+                                        else
+                                        {
+                                            <label>No Image Captured</label>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @(item["AUDIT_STATUS"].ToString() == "1" ? "Yes" : "No")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

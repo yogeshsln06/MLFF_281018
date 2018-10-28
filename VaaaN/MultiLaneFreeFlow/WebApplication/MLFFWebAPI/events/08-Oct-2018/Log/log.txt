@@ -1,0 +1,24 @@
+-----------Exception Details on  08-10-2018 16:27:17-----------------
+-------------------------------------------------------------------------------------
+
+
+
+Log Written Date: 08-10-2018 16:27:17
+
+Error Line No : ine 794
+
+Error Message: DivideByZeroException
+
+Exception Type: System.DivideByZeroException
+
+Error Location : Attempted to divide by zero.
+
+ Error Page Url: http://localhost:49947/VaaaN/IndonesiaMLFFApi/Transaction_LiveData
+
+User Host IP: 
+
+
+--------------------------------*End*------------------------------------------
+
+
+

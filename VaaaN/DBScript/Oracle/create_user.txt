@@ -1,0 +1,5 @@
+/as sysdba
+create user MLFF identified by vaarid789 account unlock;
+grant connect, resource, dba to MLFF;
+conn;
+

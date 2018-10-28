@@ -1,0 +1,161 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE
+
+@{
+    ViewBag.Title = "Edit Customer Vehicle";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script src="~/js/CustomerVehicle.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AccountId").val($("#hfAccountId").val());
+        $("#VehicleClassId").val($("#hfVehicleClassId").val());
+        $("#FirstName").val($("#hfFirstName").val());
+        $("#LastName").val($("#hfLastName").val());
+        $("#spnTick").removeClass('glyphicon-remove').addClass('glyphicon-ok');
+         $("#buttonUserBack").click(function () {
+            // Back to User List
+            location.href = "@Url.Action("CustomerVehicleList", "Home")";
+        });
+    });
+
+</script>
+<style>
+    table.table {
+        table-layout: auto;
+        width: 100%;
+    }
+
+    .glyphicon-ok {
+        display: inline;
+        margin-right: 12px;
+        margin-top: 23px;
+        color: green;
+    }
+
+    .glyphicon-remove {
+        display: inline;
+        margin-right: 12px;
+        margin-top: 25px;
+        color: red;
+    }
+
+    input.notFound {
+        background: #d9534f;
+        color: white;
+    }
+</style>
+
+
+<div class="grid-container">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">Edit</h1>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="hidden" id="hfUserId" value="@ViewBag.UserId" />
+                    <input type="hidden" id="hfAccountId" value="@ViewBag.AccountId" />
+                    <input type="hidden" id="hfFirstName" value="@ViewBag.FirstName" />
+                    <input type="hidden" id="hfLastName" value="@ViewBag.LastName"  />
+                    <input type="hidden" id="hfVehicleClassId" value="@ViewBag.VehicleClassId" />
+                    @using (Html.BeginForm("CustomerVehicleEdit", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.HiddenFor(model => model.EntryId)
+                        <div class="row">
+                            <form role="form">
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="FirstName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.FirstName/label>
+                                    @Html.DropDownList("AccountId", (IEnumerable<SelectListItem>)ViewBag.customerclassList, new { @class = "form-control" })
+                                    @Html.Editor("FirstName", new { htmlAttributes = new { @class = "form-control", placeholder = "First Name" } })
+                                    <span class="form-control-feedback glyphicon glyphicon-remove" id="spnTick"></span>
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="LastName" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.LastName</label>
+                                    @Html.Editor("LastName", new { htmlAttributes = new { @class = "form-control", placeholder = "Last Name", @readonly = true } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="AccountId" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.SearchCustomer</label>
+
+                                    <button type="button" class="form-control btn btn-primary btn-sm" onclick="btnSearchUser()" id="searchCust">Validate Customer</button>
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="VehicleClassId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass</label>
+                                    @Html.DropDownList("VehicleClassId", (IEnumerable<SelectListItem>)ViewBag.vehicleclassList, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="VehRegNo" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo</label>
+                                    @Html.EditorFor(model => model.VehRegNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Reg No" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="TagId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.TagId</label>
+                                    @Html.EditorFor(model => model.TagId, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Tag Id" } })
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4" style="float:right">
+                                    <span id="lblErrors" style="color:red;"></span>
+
+                                    @if (TempData["Message"] != null && TempData["Message"].ToString() != "")
+                                    {
+                                        <span style="color:red;">@TempData["Message"]!</span>
+
+                                    }
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <button type="submit" class="btn btn-primary" onclick="return Validation();">Submit</button>&nbsp;&nbsp;<button id="buttonUserBack" type="button" class="btn btn-primary">Back</button>
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                        </div>
+                    }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="SearchUserModal"
+     data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="HideModel()">
+                    ×
+                </button>
+                <h4 class="modal-title">Select Users</h4>
+            </div>
+            <div class="form-group form-group-sm" style="padding:4px">
+                <input type="text" class="form-control" id="inputToSearch" placeholder="Search..." />
+            </div>
+            <div class="modal-body" style="padding:0px">
+
+                <table id="tableCustomerList" class="table table-condensed table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                No.
+                            </th>
+                            <th style='text-align:left'>
+                                First Name
+                            </th>
+                            <th style='text-align:left'>
+                                Last Name
+                            </th>
+                            <th>
+                                Mobile No.
+                            </th>
+                            <th style='text-align:left'>
+                                Email Id
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

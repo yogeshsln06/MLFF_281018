@@ -1,0 +1,47 @@
+﻿<div id="cctv-left-panel">
+    <input type="button" id="buttonCCTVSummary" value="Summary" class="buttonClass" />
+    <input type="button" id="buttonCCTVMonitor" value="Detail" class="buttonClass" />
+</div>
+<div id="cctv-right-panel">
+    <div id="divCctvSummary" style="display:none;">
+        <div class="divAllblur">
+            <table id="ItemCCTVDetail" cellpadding="3" name="ItemCCTVDetail" class="table table-responsive"></table>
+        </div>
+    </div>
+    <div id="divCCTVDetail" style="display:none;">
+        <div class="divAllblur" style="padding:20px;">
+            <h3>CCTV Details</h3>
+            <div class="clearfix"></div>
+            <div>
+                <label>CCTV :</label>
+                <select name="ddlCCTV" id="ddlCCTV" class="dropdown">
+                    <option value="Cctv1">CCTV 1</option>
+                    <option value="Cctv2">CCTV 2</option>
+                    <option value="Cctv3">CCTV 3</option>
+                    <option value="Cctv4">CCTV 4</option>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+            <div>
+                <label>Class :</label>
+                <span id="cctvClassValue" class="span-value">abc</span>
+            </div>
+            <div class="clearfix"></div>
+            <div>
+                <label>Axel Count :</label>
+                <span id="cctvAxelCountValue" class="span-value">10</span>
+            </div>
+            <div class="clearfix"></div>
+            <div>
+                <label>Time :</label>
+                <span id="cctvTimeValue" class="span-value">10:23:56</span>
+            </div>
+            <div class="clearfix"></div>
+            <div>
+                <label>Location :</label>
+                <span id="cctvLocaValue" class="span-value">NA</span>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

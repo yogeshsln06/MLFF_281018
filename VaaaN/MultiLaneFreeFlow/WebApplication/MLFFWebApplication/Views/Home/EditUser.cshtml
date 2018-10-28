@@ -1,0 +1,187 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.UserCBE
+
+@{
+    ViewBag.Title = "Edit User";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#txtFromDate").datepicker({
+            format: 'dd-mm-yyyy',
+            autoclose: true
+        });
+
+        $("#txtToDate").datepicker({
+            format: 'dd-mm-yyyy',
+            autoclose: true
+        });
+
+        $("#UserDob").datepicker({
+            format: 'dd-mm-yyyy',
+            autoclose: true
+        });
+
+        $("#AccountExpiryDate").datepicker({
+            format: 'dd-mm-yyyy',
+            startDate: '+0d',
+            autoclose: true
+
+        });
+
+        $('.prev i').removeClass();
+        $('.prev i').addClass("fa fa-chevron-left");
+
+        $('.next i').removeClass();
+        $('.next i').addClass("fa fa-chevron-right");
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_1').css({ "background-color": "#00B2aa" });
+        $('#submodule_1').css({ "font-weight": "bold" });
+
+        $("#buttonUserBack").click(function () {
+            // Back to User List
+            location.href = "@Url.Action("UsersList", "Home")";
+        });
+    });
+    function isNumberKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+    function Validation() {
+
+        if (!EditPage_ValidateUser()) {
+            return false;
+        }
+
+        return true;
+    }
+    function readUrl(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#userimage')
+                    .attr('src', e.target.result)
+                    .width(60)
+                    .height(60);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function validateAlpha(){
+        var textInput = document.getElementById("FirstName").value;
+        textInput = textInput.replace(/[^A-Za-z]/g, "");
+        document.getElementById("FirstName").value = textInput;
+    }
+    function validateLastname(){
+        var textInput2 = document.getElementById("LastName").value;
+        textInput2 = textInput2.replace(/[^A-Za-z]/g, "");
+        document.getElementById("LastName").value = textInput2;
+    }
+</script>
+
+@*<script src="~/js/users.js"></script>*@
+<script src="~/js/userValidation.js"></script>
+
+<div class="grid-container">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">Edit</h1>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="hidden" id="hfUserId" value="@ViewBag.UserId" />
+
+                    @using (Html.BeginForm("EditUser", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.HiddenFor(model => model.UserId)
+                        @Html.HiddenFor(model => model.LoginName)
+                        <div class="row">
+                            <form role="form">
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="txtFirstName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.FirstName</label>
+                                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "First Name", oninput="validateAlpha();" , autofocus="true" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="txtLastName" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.LastName</label>
+                                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Last Name",  oninput="validateLastname();" } })
+                                </div>
+
+                      
+                                <div class="clearfix"></div>
+
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="txtDob" class="form-label">DOB</label>
+                                    @Html.EditorFor(model => model.UserDob, new { htmlAttributes = new { @class = "form-control", placeholder = "Dob(dd/mm/yyyy)" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="txtAddress1" class="form-label ">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Address</label>
+                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Address Line 1" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="txtMobileNo" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.MobileNo</label>
+                                    @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Mobile No", maxlength = "15", onkeypress="return isNumberKey(event)" } })
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="txtEmailId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.EmailId</label>
+                                    @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control", placeholder = "Email Id" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="txtAccountExpiry" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.AccountExpiryDate</label>
+                                    @Html.EditorFor(model => model.AccountExpiryDate, new { htmlAttributes = new { @class = "form-control", placeholder = "Dob(dd/mm/yyyy)" } })
+                                </div>
+                                @*<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                        @Html.LabelFor(model => model.OrganizationId, htmlAttributes: new { @class = "form-label control-label col-md-3 col-sm-3  required" })
+                                        @Html.DropDownList("OrganizationId", null, "Select Organization", new { @class = "form-control select" })
+                                    </div>*@
+
+                                <div class="clearfix"></div>
+
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "form-label control-label col-md-3 col-sm-3  required" })
+                                    @Html.DropDownList("RoleId", null, "Select Role", new { @class = "form-control select" })
+                                </div>
+
+                                @*<div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                        @Html.LabelFor(model => model.DesignationId, htmlAttributes: new { @class = "form-label control-label col-md-3 col-sm-3  required" })
+                                        @Html.DropDownList("DesignationId", null, "Select Designation", new { @class = "form-control select" })
+                                    </div>*@
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="txtRemarks" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.IsActive</label>
+                                    <br>
+                                    @Html.CheckBoxFor(model => model.UserStatus, new { htmlAttributes = new { @class = "form-control" } })
+                                    <span id="lblErrors" style="color:red; float:right"></span>
+                                 </div>
+
+                                <div class="clearfix"></div>
+                                <div class="col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <button id="buttonSave" type="submit" class="btn btn-primary" onclick="return Validation();">Save</button>&nbsp;<button id="buttonUserBack" type="button" class="btn btn-primary">Back</button>
+                                </div>
+                                @if (ViewBag.urlForged != null)
+                                {
+                                    <div class="row">
+                                        <div class="form-label col-md-4 col-sm-4 text-center ">
+                                            <span class="alert-danger form-control">@ViewBag.urlForged</span>
+                                        </div>
+                                    </div>
+                                }
+                            </form>
+                        </div>
+                    }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

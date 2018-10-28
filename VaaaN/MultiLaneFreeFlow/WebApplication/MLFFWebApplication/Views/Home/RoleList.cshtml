@@ -1,0 +1,108 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleCBE>
+@{
+    ViewBag.Title = "Role List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    VaaaN.MLFF.Libraries.CommonLibrary.Common.SortingPagingInfo info = ViewBag.SortingPagingInfo;
+}
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+<style type="text/css">
+    .nopadding {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".pagination").click(function (evt) {
+            var pageindex = $(evt.target).data("pageindex");
+            $("#CurrentPageIndex").val(pageindex);
+            evt.preventDefault();
+            $("form").submit();
+        });
+        $('#tblRole').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_2').css({ "background-color": "#00B2aa" });
+        $('#submodule_2').css({ "font-weight": "bold" });
+    });
+</script>
+
+<div class="grid-container">
+    <div class="grid-table-wrapper">
+        @using (Html.BeginForm("RoleList", "Home", FormMethod.Post))
+            {
+           
+            <div class="grid-title">
+                <div class="grid-row">
+                    <div class="col-sm-6">
+                        <h2>Roles</h2>
+                    </div>@{ int rowNo = 0; }
+                    <div class="col-sm-6">
+
+                    </div>
+                </div>
+            </div>
+            @Html.Hidden("PageCount", info.PageCount)
+            @Html.Hidden("PageSize", info.PageSize)
+            @Html.Hidden("CurrentPageIndex", info.CurrentPageIndex)
+            <table id="tblRole" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            No.
+                        </th>
+                        <th style="width:20%">
+                            @Html.DisplayNameFor(model => model.RoleName)
+                        </th>
+                        <th style="width:20%">
+                            @Html.DisplayNameFor(model => model.ISActive)
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                {
+                    var token = "";
+                    if (item.RoleId > 0)
+                    {
+                        // token = VaaaN.CCHLibrary.CommonClass.generateUrlToken("Admin", "UserEdit", Convert.ToString(item.UserId), VaaaN.CCHLibrary.CommonClass.urlProtectPassword);
+                    }
+                    <tr>
+                        <td>
+                            @(rowNo += 1)
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RoleName)
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor((modelItem => item.Active == 1 ? "Active" : "Inactive"))*@
+                            @if (item.ISActive == 1)
+                            {<span> Active</span>}
+                            else
+                            {<span> Inactive</span>}
+                        </td>
+                        <td style="@ViewBag.Visibility">
+                            <a class="edit" href="@Url.Action("EditRole", "Home", new { id = item.RoleId,Rolename =item.RoleName, urltoken = token })"><i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i></a>
+                            <a class="delete" href="@Url.Action("RoleModuleRight", "Home", new { id = item.RoleId,Rolename =item.RoleName })"><i class="fa fa-lock" aria-hidden="true" style="@ViewBag.Visibility" title="set role -module right"></i></a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        
+        <p style="padding-top:15px">
+            <a href="~/Home/AddRole" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Role</span></a>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCBE>
+
+@{
+    ViewBag.Title = "Hardware List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tableHardware').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_3').css({ "background-color": "#00B2aa" });
+        $('#submodule_3').css({ "font-weight": "bold" });
+    });
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
+        <div class="panel-title new-title">
+            Hardware List
+        </div>
+
+    </div>
+    <table id="tableHardware" class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HardwareName)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.HardwareTypeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ManufacturerName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ModelName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IpAddress)
+                </th>
+                <th>
+                    Edit
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var token = "";
+
+                if (item.HardwareId > 0)
+                {
+                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "HardwareEdit", Convert.ToString(item.HardwareId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                }
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HardwareName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HardwareTypeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ManufacturerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ModelName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.IpAddress)
+                    </td>
+                    <td>
+                        <a class="edit" href="@Url.Action("HardwareEdit", "Home", new { id = item.HardwareId, urltoken = token })">
+                            <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
+                        </a>
+
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <p style="padding-top:15px;">
+        <a href="~/Home/HardwareAdd" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Hardware</span></a>
+
+    </p>
+</div>

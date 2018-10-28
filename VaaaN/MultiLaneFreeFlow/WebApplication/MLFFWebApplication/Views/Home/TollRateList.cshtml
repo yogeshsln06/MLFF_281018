@@ -1,0 +1,100 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>
+
+@{
+    ViewBag.Title = "Toll Rate List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tabletollrate').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_7').css({ "background-color": "#00B2aa" });
+        $('#submodule_7').css({ "font-weight": "bold" });
+    });
+</script>
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
+        <div class="panel-title new-title">
+            Fare List
+        </div>
+    </div>
+    <div class="panel-body">
+        <table id="tabletollrate" class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        No.
+                    </th>
+                    <th>
+                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Amount
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.VehicleClassName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LaneTypeName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndTime)
+                    </th>
+
+                    @*<th>
+                            Edit
+                        </th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @(rowNo += 1)
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VehicleClassName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LaneTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndTime)
+                        </td>
+                        @*<td>
+                                <a class="edit" href="#"><i class="fa fa-pencil-square-o" title="Edit"></i></a>
+
+                            </td>*@
+                    </tr>
+
+            }
+            </tbody>
+        </table>
+    </div>
+    @*<p style="padding-top:15px;">
+        <a href="#" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Toll Rate</span></a>
+
+    </p>*@
+</div>

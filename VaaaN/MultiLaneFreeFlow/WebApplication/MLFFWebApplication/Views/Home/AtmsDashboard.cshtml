@@ -1,0 +1,106 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Agra-Lucknow Expressway";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Bootstrap/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="/css/Dashboard.css" rel="stylesheet" />
+    <link href="/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script src="/scripts/jquery-3.3.1.min.js"></script>
+    <script src="/scripts/jquery-ui-1.12.1.js"></script>
+    <script src="/scripts/bootstrap-datepicker.js"></script>
+    <script src="/js/dashboard-main.js"></script>
+    <script src="/js/dashboard-atcc.js"></script>
+    <script src="/js/dashboard-ecb.js"></script>
+    <script src="/js/dashboard-met.js"></script>
+    <script src="/js/dashboard-cctv.js"></script>
+
+    <title>@ViewBag.Title</title>
+    <script type="text/javascript">
+        $(window).scroll(function () {
+            $('.divMainRoute').animate({ right: '-=50' }, 5);
+        });
+    </script>
+</head>
+<body>
+    <div id="divHeader">
+        <div class="topLeftCorner">
+            <img id="imglogo" src="~/Images/logo.jpg" />
+        </div>
+        <h2>Agra-Lucknow Expressway</h2>
+        <h3>(Dashboard)</h3>
+
+        <div class="topcorner">
+            <div class="username">
+                @if (@Session["LoggedUserId"] != null)
+                {
+                    @Html.Encode(@Session["UserName"])
+                }
+                else
+                {
+                    <strong>Unknown User</strong>
+                }
+            </div>
+            <div class="userrole">@Html.Encode(@Session["RoleName"])</div>
+            <div class="lnklogout">@Html.ActionLink("Logout", "LogOut", "Home")</div>
+        </div>
+    </div>
+
+    @*Show the list of device*@
+    <div id="divDeviceLeged">
+        <div id="divLegendList"></div>
+    </div>
+    <div id="divFrom_top"><span>Agra to Lucknow</span><div id="triangle-right"></div></div>
+
+    <div id="divContent">
+        <div id="divData">
+            <div id="divTopSide">
+            </div>
+            <div id="slider-top-addon"></div>
+            <div id="divMainRoute">
+            </div>
+            <div id="slider-bottom-addon"></div>
+            <div id="divBottomSide">
+            </div>
+        </div>
+    </div>
+    <div id="divFooter">
+        <input type="button" id="buttonECB" name="buttonECB" class="button glow-button" value="ECB" />
+        <input type="button" id="buttonATCC" name="buttonATCC" class="button glow-button" value="ATCC" />
+        <input type="button" id="buttonMET" name="buttonMET" class="button glow-button" value="MET" />
+        <input type="button" class="button glow-button" value="ANPR" />
+        <input type="button" id="buttonCCTV" name="buttonCCTV" class="button glow-button" value="CCTV" />
+        <input type="button" class="button glow-button" value="VIDS" />
+    </div>
+    @*ATCC Section*@
+    <div id="AtccSection">
+        <div id="ATCC-Dialog-Box" style="display:none;">
+            @Html.Partial("_DashboardATCC")
+        </div>
+    </div>
+    @*ECB Section*@
+    <div id="ECBSection">
+        <div id="ECB-Dialog-Box" style="display:none;">
+            @Html.Partial("_DashboardECB")
+        </div>
+    </div>
+
+    @*MET Section*@
+    <div id="MetSection">
+        <div id="MET-Dialog-Box" style="display:none;">
+            @Html.Partial("_DashboardMET")
+        </div>
+    </div>
+
+    @*CCTV Section*@
+    <div id="cctvSection">
+        <div id="CCTV-Dialog-Box" style="display:none;">
+            @Html.Partial("_DashboardCCTV")
+        </div>
+    </div>
+</body>
+</html>

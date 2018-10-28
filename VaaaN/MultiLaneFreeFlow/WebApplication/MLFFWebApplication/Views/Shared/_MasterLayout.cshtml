@@ -1,0 +1,78 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="~/scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Bootstrap/js/bootstrap.js"></script>
+    <link href="~/Bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script src="/scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/js/custom.js"></script>
+
+    <style type="text/css">
+        body {
+            font-size: 12px;
+            line-height: 1.43;
+        }
+
+        .form-horizontal .control-label {
+            text-align: left;
+        }
+
+        #header{
+            background-color:darkslateblue;
+            color:white;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <!-- header -->
+            <header id="header">
+                <div class="row">
+                    <div class="border col-md-3"><img src="~/Images/boblogo.png" class="img-responsive" alt="" height:120px;" /></div>
+                    <div class="border col-xs-6"><h1 id="title" style="text-align:center;">Incident Management</h1></div>
+                    <div class="border col-xs-3">
+                        @if (Session["UserId"] != null)
+                        {
+                            <div id="headerrightsec">
+                                <div class="row">
+                                    <strong>@Html.Encode(@Session["UserName"])</strong>
+                                </div>
+                                <div class="row">
+                                    <strong>(@Html.Encode(@Session["UserRole"]))</strong>
+                                </div>
+                                <div class="row">
+                                    <a href="/Account/Logout">Logout</a>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-right">
+                                <p>Welcome <b>Guest</b></p>
+                                @Html.ActionLink("Sign In", "Login", "Account")
+                            </div>
+                        }
+                    </div>
+                </div>
+            </header>
+
+            <div style="min-height:580px; background-color:#fbe3b3; border-color:#fbe3b3; padding-left:2px; padding-right:2px;">
+                @RenderBody().
+            </div>
+            <!-- Footer -->
+            <footer id="footer">
+                Copyright &copy VaaaN Infra 2018
+            </footer>
+        </div>
+    </div>
+
+</body>
+</html>

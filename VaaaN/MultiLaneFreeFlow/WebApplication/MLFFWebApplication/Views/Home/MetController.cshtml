@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Met Controlller";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<link href="~/css/Dashboard.css" rel="stylesheet" />
+<script src="~/js/dashboard-main.js"></script>
+<script src="~/js/dashboard-met.js"></script>
+<style type="text/css">
+    #ItemMETDetail td {
+        padding: 2px;
+    }
+
+    #loader {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('../../Images/loader.gif') 50% 50% no-repeat rgb(249,249,249);
+    }
+</style>
+<div id="AtccSection">    
+    @Html.Partial("_DashboardMET")
+</div>
+
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#Admin').removeClass('list-group-item list-group-item-info');
+        $('#Admin').addClass("list-group-item list-group-item-info collapsed");
+
+        $('#AdminsubMenu').removeClass('list-group-submenu in');
+        $('#AdminsubMenu').addClass("list-group-submenu collapse");
+
+        $("#loader").show();
+        $('#divMETSummary').attr('style', 'display:block;');
+        $('#divMETDetail').attr('style', 'display:none;');
+        $("#ui-id-1").text('MET Summary');
+        GetMETSummaryDetail();
+        $("#loader").fadeOut(800);
+        //$("#loader").hide();
+    });
+</script>
+
+

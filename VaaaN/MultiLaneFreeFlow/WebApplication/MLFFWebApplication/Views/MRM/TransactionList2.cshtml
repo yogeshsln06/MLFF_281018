@@ -1,0 +1,349 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.ViewTransactionCBE
+
+@{
+    ViewBag.Title = "Customer List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="~/css/jquery.datetimepicker.css" />
+<script src="~/js/jquery.datetimepicker.full.min.js"></script>
+
+
+
+<style>
+    .form-horizontal {
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .light-border {
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .btn {
+        margin-right: 20px;
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+
+    .tablescroll {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 350px; /* Could be more or less, depending on screen size */
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+<script src="~/js/ManualReview.js"></script>
+
+@using (Html.BeginForm("TransactionList2", "MRM", FormMethod.Post))
+{
+    <div class="panel panel-info">
+        <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+            <div class="panel-title new-title">
+                Manual Review
+            </div>
+        </div><div style="height:5px"></div>
+        <div class="panel-body">
+            <div class="col-sm-12">
+                <div class="form-horizontal">
+                    <fieldset>
+                        <legend>Search Filter</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-1" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+                            </div>
+                            @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-1" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                            </div>
+                            @Html.Label("Gantry", htmlAttributes: new { @class = "control-label col-md-1 required" })
+                            <div class="col-md-2">
+                                @Html.DropDownList("ddlGantry", (IEnumerable<SelectListItem>)ViewBag.Gantry, new { @class = "form-control" })
+                            </div>
+                            @Html.Label("Vehicle Class", htmlAttributes: new { @class = "control-label col-md-1" })
+                            <div class="col-md-2">
+                                @Html.DropDownList("ddlVehicleClass", (IEnumerable<SelectListItem>)ViewBag.VehicleClass, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PlateNumber, htmlAttributes: new { @class = "control-label col-md-1" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(model => model.PlateNumber, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            @Html.Label("Trans Category", htmlAttributes: new { @class = "control-label col-md-1 required" })
+                            <div class="col-md-3">
+                                @Html.DropDownList("ddlTransactionCategory", (IEnumerable<SelectListItem>)ViewBag.TransactionCategory, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4">
+                                <input type="button" value="Submit" name="Refresh" class="btn btn-primary pull-right" onclick="filterData();" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-horizontal">
+                    <fieldset>
+                        <legend>Filter Result</legend>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <table id="tableTransaction" class="table table-condensed table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Tran Id
+                                            </th>
+                                            <th>
+                                                Tran Time
+                                            </th>
+                                            <th>
+                                                IKE VRN
+                                            </th>
+                                            <th>
+                                                ANPR FRONT VRN
+                                            </th>
+                                            <th>
+                                                ANPR REAR VRN
+                                            </th>
+                                            <th>
+                                                Audit Status
+                                            </th>
+                                            <th>
+                                                Details
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="noRecordExits">
+                                            <td colspan="7">No record Exists</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-horizontal">
+                    <fieldset>
+                        <legend>Details</legend>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="TRANSACTION_ID">Tran ID</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="TRANSACTION_ID" name="TRANSACTION_ID" readonly="readonly" value="">
+                                        </div>
+                                        <label class="control-label col-md-2" for="TRANSACTION_DATETIME">Date Time</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="TRANSACTION_DATETIME" name="TRANSACTION_DATETIME" readonly="readonly" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="LANE_NAME">Lajur</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="LANE_NAME" name="LANE_NAME" readonly="readonly" value="">
+                                        </div>
+                                        <label class="control-label col-md-2" for="TAG_ID">IKE</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="TAG_ID" name="TAG_ID" readonly="readonly" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="CTP_VRN">IKE VRN</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="CTP_VRN" name="CTP_VRN" readonly="readonly" value="">
+                                        </div>
+                                        <label class="control-label col-md-2" for="CTP_VEHICLE_CLASS_NAME">IKE Mengetik</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="CTP_VEHICLE_CLASS_NAME" name="CTP_VEHICLE_CLASS_NAME" readonly="readonly" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="FRONT_VRN">Front VRN</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="FRONT_VRN" name="FRONT_VRN" readonly="readonly" value="">
+                                        </div>
+                                        <label class="control-label col-md-2" for="NFP_VEHICLE_CLASS_NAME_FRONT">Front Mengetik</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="NFP_VEHICLE_CLASS_NAME_FRONT" name="NFP_VEHICLE_CLASS_NAME_FRONT" readonly="readonly" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="REAR_VRN">Rear VRN</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="REAR_VRN" name="REAR_VRN" readonly="readonly" value="">
+                                        </div>
+                                        <label class="control-label col-md-2" for="NFP_VEHICLE_CLASS_NAME_REAR">Rear Mengetik</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="NFP_VEHICLE_CLASS_NAME_REAR" name="NFP_VEHICLE_CLASS_NAME_REAR" readonly="readonly" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="AUDIT_STATUS">Audit Status</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="AUDIT_STATUS" name="AUDIT_STATUS" readonly="readonly" value="">
+                                        </div>
+                                        <label class="control-label col-md-2" for="AMOUNT">Jumlah (Rp.)</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control text-box single-line" id="AMOUNT" name="AMOUNT" readonly="readonly" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div id="output" class="col-md-12 light-border" style="height:300px;">
+                                    <div id="imgeview" style="height:100%;">
+                                        <div class="col-md-6">
+                                            <fieldset>
+                                                <legend>Front VRN</legend>
+                                                <img src="#" id="frontImg" onclick="openImage(this)" />
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <fieldset>
+                                                <legend>Rear VRN</legend>
+                                                <img src="#" id="rearImg" onclick="openImage(this)" />
+                                            </fieldset>
+
+                                        </div>
+                                    </div>
+                                    <div id="videoview" style="display:none; height:100%;">
+                                        <div class="col-md-6">
+                                            <fieldset>
+                                                <legend>Front VRN</legend>
+                                                <div id="frontvideo">
+                                                    <video controls style="height: 113px;">
+                                                        <source src="#" type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </div>
+                                            </fieldset>
+
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <fieldset>
+                                                <legend>Front VRN</legend>
+                                                <div id="rearvideo">
+                                                    <video controls style="height: 113px;">
+                                                        <source src="#" type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <input type="radio" name="favorite_pet" value="Image" checked="checked" class="radio" onclick="handleClick(this);">Image
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="radio" name="favorite_pet" value="Video" class="radio" onclick="handleClick(this);">Video
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="light-border">
+                                <fieldset>
+                                    <legend>Audit</legend>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1" for="AUDITOR_ID">Id</label>
+                                            <div class="col-md-2">
+                                                <input class="form-control text-box single-line" id="AUDITOR_ID" name="AUDITOR_ID" readonly="readonly" value="">
+                                            </div>
+                                            <label class="control-label col-md-1" for="AUDIT_DATE">Date</label>
+                                            <div class="col-md-2">
+                                                <input class="form-control text-box single-line" id="AUDIT_DATE" name="AUDIT_DATE" readonly="readonly" value="">
+                                            </div>
+                                            <label class="control-label col-md-1" for="AUDITED_VEHICLE_CLASS_ID">Vehicle Type</label>
+                                            <div class="col-md-2">
+                                                @Html.DropDownList("AUDITED_VEHICLE_CLASS_ID", (IEnumerable<SelectListItem>)ViewBag.VehicleClass, new { @class = "form-control" })
+                                            </div>
+                                            <label class="control-label col-md-1" for="AUDITED_VRN">VRN</label>
+                                            <div class="col-md-2">
+                                                <input class="form-control text-box single-line" id="AUDITED_VRN" name="AUDITED_VRN" value="">
+                                            </div>
+                                        </div>
+                                        <input type="button" value="Audit Done" name="Refresh" class="btn btn-primary pull-right" onclick="filterData();" />
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close" onclick="imageclose()">&times;</span>
+            <img src="" id="myimage" height="150" width="300" />
+        </div>
+
+    </div>
+}

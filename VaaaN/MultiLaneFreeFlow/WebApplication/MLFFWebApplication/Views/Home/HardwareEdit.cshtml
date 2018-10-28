@@ -1,0 +1,146 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCBE
+
+@{
+    ViewBag.Title = "Edit Hardware";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $('.prev i').removeClass();
+        $('.prev i').addClass("fa fa-chevron-left");
+
+        $('.next i').removeClass();
+        $('.next i').addClass("fa fa-chevron-right");
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_3').css({ "background-color": "#00B2aa" });
+        $('#submodule_3').css({ "font-weight": "bold" });
+
+        $("#buttonUserBack").click(function () {
+            // Back to User List
+            location.href = "@Url.Action("HardwareList", "Home")";
+        });
+        $("#HardwareType").val($("#hfHardwareType").val());
+        $("#HardwarePosition").val($("#hfHardwarePosition").val());
+        validateHardwarePosition($("#HardwarePosition").val())
+    });
+
+    function Validation() {
+        if (!validateHardware()) {
+            return false;
+        }
+        return true;
+    }
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    function validateAlpha() {
+        var textInput = document.getElementById("FirstName").value;
+        textInput = textInput.replace(/[^A-Za-z]/g, "");
+        document.getElementById("FirstName").value = textInput;
+
+    }
+    function validateLastname() {
+        var textInput2 = document.getElementById("LastName").value;
+        textInput2 = textInput2.replace(/[^A-Za-z]/g, "");
+        document.getElementById("LastName").value = textInput2;
+    }
+
+    function validateHardwarePosition(position) {
+        position = position || 0;
+        if ($("#HardwareType").val() == 1) {
+            $("#HardwarePosition").removeAttr("disabled").val(position);
+            $("#lblHardwarePosition").addClass("required");
+
+        }
+        else if ($("#HardwareType").val() == 2) {
+            $("#HardwarePosition").attr("disabled", "disabled").val(position);
+            $("#lblHardwarePosition").removeClass("required");
+        }
+    }
+</script>
+
+@*<script src="~/js/users.js"></script>*@
+<script src="~/js/userValidation.js"></script>
+
+<div class="grid-container">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">Edit</h1>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="hidden" id="hfUserId" value="@ViewBag.UserId" />
+                    <input type="hidden" id="hfPlazaId" value="@ViewBag.hfPlazaId" />
+                    <input type="hidden" id="hfHardwarePosition" value="@ViewBag.hfHardwarePosition" />
+                    <input type="hidden" id="hfHardwareType" value="@ViewBag.hfHardwareType" />
+
+                    @using (Html.BeginForm("HardwareEdit", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.HiddenFor(model => model.HardwareId)
+                        <div class="row">
+                            <form role="form">
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="PlazaId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry</label>
+                                    @Html.DropDownList("PlazaId", (IEnumerable<SelectListItem>)ViewBag.Gantry, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="HardwareType" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.HardwareType</label>
+                                    @Html.DropDownList("HardwareType", (IEnumerable<SelectListItem>)ViewBag.HardwareType, new { @class = "form-control", onchange = "validateHardwarePosition();" })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="HardwarePosition" class="form-label required" id="lblHardwarePosition">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.HardwarePosition</label>
+                                    @Html.DropDownList("HardwarePosition", (IEnumerable<SelectListItem>)ViewBag.HardwarePosition, new { @class = "form-control" })
+                                </div>
+
+                                <div class="clearfix"></div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="HardwareName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.HardwareName</label>
+                                    @Html.EditorFor(model => model.HardwareName, new { htmlAttributes = new { @class = "form-control", placeholder = "Hardware Name", autofocus = "true" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="ManufacturerName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.ManufacturerName</label>
+                                    @Html.EditorFor(model => model.ManufacturerName, new { htmlAttributes = new { @class = "form-control", placeholder = "Manufacturer Name" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="ModelName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.ModelName</label>
+                                    @Html.EditorFor(model => model.ModelName, new { htmlAttributes = new { @class = "form-control", placeholder = "Model Name" } })
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="IpAddress" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.IPAddress</label>
+                                    @Html.EditorFor(model => model.IpAddress, new { htmlAttributes = new { @class = "form-control", placeholder = "0.0.0.0" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4" style="float:right">
+                                    <span id="lblErrors" style="color:red;"></span>
+
+                                    @if (TempData["Message"] != null && TempData["Message"].ToString() != "")
+                                    {
+                                        <span style="color:red;">@TempData["Message"]!</span>
+
+                                    }
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <button type="submit" class="btn btn-primary" onclick="return Validation();">Submit</button>&nbsp;&nbsp;<button id="buttonUserBack" type="button" class="btn btn-primary">Back</button>
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                        </div>
+                    }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

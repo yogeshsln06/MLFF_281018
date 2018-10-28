@@ -1,0 +1,103 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.UserModuleActivityRightCBE
+
+@{
+    ViewBag.Title = "Reset Module Right";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<style type="text/css">
+    .checkbox input[type="checkbox"] {
+        margin: 0 0 0 12px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_1').css({ "background-color": "#00B2aa" });
+        $('#submodule_1').css({ "font-weight": "bold" });
+        });
+
+
+</script>
+<div class="grid-container">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">Reset @ViewBag.Username - Module Right</h1>
+        </div>
+        <div class="panel-body">
+            <div class="well">
+                <div class="row">
+
+                    <div class="col-md-12">
+
+                        @using (Html.BeginForm())
+            {
+                            @Html.HiddenFor(model => model.Id)
+                            @Html.HiddenFor(model => model.UserId)
+                            @Html.HiddenFor(model => model.ModuleId)
+
+                            <div class="col-md-12">
+                                <div class="h4">
+                                    Module : @Html.DisplayFor(model => model.ModuleName)
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <div class="form-group col-xs-10 col-sm-2 col-md-2 col-lg-2" style="padding-top:10px;">
+                                @Html.LabelFor(model => model.ModuleView, htmlAttributes: new { @class = "form-label control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model.ModuleView)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-10 col-sm-2 col-md-2 col-lg-2" style="padding-top:10px;">
+                                @Html.LabelFor(model => model.ModuleAdd, htmlAttributes: new { @class = "form-label control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model.ModuleAdd)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-10 col-sm-2 col-md-2 col-lg-2" style="padding-top:10px;">
+                                @Html.LabelFor(model => model.ModuleEdit, htmlAttributes: new { @class = "form-label control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model.ModuleEdit)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-10 col-sm-2 col-md-2 col-lg-2" style="padding-top:10px;">
+                                @Html.LabelFor(model => model.ModuleDelete, htmlAttributes: new { @class = "form-label control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model.ModuleDelete)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-xs-10 col-sm-3 col-md-3 col-lg-3">
+                                <div style="padding:20px;">
+                                    @{
+                                        string token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "UserModuleRight", Convert.ToString(ViewBag.UserId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                                    }
+                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                    &nbsp;
+                                    @Html.ActionLink("Back", "UserModuleRight", new { id = ViewBag.UserId, name=@ViewBag.Username, urltoken = token }, new { @class = "btn btn-primary" })
+
+
+                                </div>
+                            </div>
+                                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

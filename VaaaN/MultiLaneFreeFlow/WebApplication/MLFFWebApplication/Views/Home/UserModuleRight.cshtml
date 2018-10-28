@@ -1,0 +1,98 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.UserModuleActivityRightCBE>
+
+@{
+    ViewBag.Title = "UserModuleRight";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style type="text/css">
+    .nopadding {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_1').css({ "background-color": "#00B2aa" });
+        $('#submodule_1').css({ "font-weight": "bold" });
+        });
+   
+
+</script>
+<div class="grid-container">
+    <div class="grid-table-wrapper">
+        <div class="grid-title">
+            <div class="grid-row">
+                <div class="col-sm-6">
+
+                    <h2>@ViewBag.Username - Module Rights</h2>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width:20%">
+                        @Html.DisplayNameFor(model => model.ModuleName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModuleView)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModuleAdd)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModuleEdit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModuleDelete)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleView)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleAdd)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleEdit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleDelete)
+                        </td>
+                        <td>
+                            <a class="delete" href="@Url.Action("ResetUserModuleRight", "Home", new {id = item.Id,name = ViewBag.Username, uid = item.UserId, mid = item.ModuleId })"><i class="fa fa-lock" aria-hidden="true" title="Edit Module Right"></i></a>
+                            <a class="edit" href="@Url.Action("UserSubModulesRight", "Home", new {id = item.UserId,userName = ViewBag.Username, mid = item.ModuleId })"><i class="fa fa-list" aria-hidden="true" title="Sub Module List"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p>
+
+            @Html.ActionLink("Back", "UsersList", null, new { @class = "btn btn-primary btn-sm" })
+        </p>
+        @if (ViewBag.urlForged != null)
+            {
+            <div class="row">
+                <div class="col-md-4 col-sm-4 text-center ">
+                    <span class="alert-danger form-control">@ViewBag.urlForged</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

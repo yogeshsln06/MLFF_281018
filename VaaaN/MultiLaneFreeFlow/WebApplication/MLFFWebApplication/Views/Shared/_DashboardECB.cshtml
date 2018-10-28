@@ -1,0 +1,192 @@
+﻿
+    <div id="ecb-left-panel">
+        <input type="button" id="buttonECBSummary" value="Summary" class="buttonClass" />
+        <input type="button" id="buttonEcbCallMgt" value="Call MGT" class="buttonClass" />
+        <input type="button" id="buttonEcbCallAudit" value="Call Audit" class="buttonClass" />
+    </div>
+    <div id="ecb-right-panel">
+        @* ECB Summary*@
+        <div id="divECBSummary" style="display:none;">
+            <div class="divAllblur">
+                <p>ECB Summary Pannel</p>
+                <table id="ItemECBDetail" cellpadding="3" name="ItemECBDetail" class="table table-responsive"></table>
+            </div>
+        </div>
+        @* ECB Call Management*@
+        <div id="divECBCallMgt" style="display:none;">
+            <div class="divAllblur">
+                <div class="divwrapper">
+                    <label>Recent Calls</label>
+                    <div style="overflow-y: scroll; height:100px; font-size:11px;">
+                        <table id="tblECBCallHistory" name="tblECBCallHistory" class="table table-bordered table-responsive">
+                            <thead>
+                                <tr style="background-color:#1A5276; color:#fff;">
+                                    <th>ECB</th>
+                                    <th>Chainage</th>
+                                    <th>Direction</th>
+                                    <th>Call Time</th>
+                                    <th>Duration(hh:mm:ss)</th>
+                                    <th>Call Type</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="divwrapper">
+                    <label>Call Event</label>
+                    <div style="min-height:30px">
+                        <div class="divFilterWrapper">
+                            <div>
+                                Call 1:
+                                <input type="text" class="normaltextbox" id="txtCall1" readonly />
+                            </div>
+                            <div>
+                                Call 2:
+                                <input type="text" id="txtCall2" class="normaltextbox" readonly />
+                            </div>
+                            <div>
+                                Call 3:
+                                <input type="text" id="txtCall3" class="normaltextbox" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="divwrapper">
+                    <label>Near by Facilities</label>
+                    <div style="min-height:100px">
+                        <div id="divHospital" class="divEcbFacility">
+                            <div class="divEcbFacilityHeader"> Hospitals</div>
+                            <div id="divHospitalFacility"></div>
+                        </div>
+                        <div id="divPoliceStation" class="divEcbFacility">
+                            <div class="divEcbFacilityHeader">
+                                Police Stations
+                            </div>
+                            <div id="divPoliceFacility"></div>
+                        </div>
+                        <div id="divFuelStation" class="divEcbFacility">
+                            <div class="divEcbFacilityHeader">
+                                Fuel Stations
+                            </div>
+                            <div id="divFuelFacility"></div>
+                        </div>
+                        <div id="divHotels" class="divEcbFacility">
+                            <div class="divEcbFacilityHeader">
+                                Hotels
+                            </div>
+                            <div id="divHotelsFacility"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="divwrapper">
+                    <label>Operator Comments</label>
+                    <div style="min-height:30px">
+                        <div class="divFilterWrapper">
+                            <div>
+                                ECB ID : <input type="text" id="txtECBId" style="width:50px; background-color:#D9D9D9;" readonly />
+                                <input type="hidden" id="hdEntryId" name="hdEntryId" />
+                            </div>
+                            <div>
+                                <div>
+                                    Disposition Category:
+                                    <div id="divDispositionCategory"></div>
+                                </div>
+                            </div>
+                            <div>
+                                Comment: <textarea cols="32" rows="2" id="txtOperatorComment" style="resize:none;"></textarea>
+                            </div>
+                            <div>
+                                <input type="button" id="buttonSaveComment" value="Save" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ECB Call Audit*@
+        <div id="divECBCalAudit" style="display:none;">
+            <div class="divAllblur">
+                <div id="divECBFilter">
+                    <div class="divFilterWrapper">
+                        <div>
+                            <label>ECB:</label>
+                            <div id="divDdlEcb"></div>
+                        </div>
+                        <div>
+                            <label>Operator:</label>
+                            <div id="divDdlOperator"></div>
+                        </div>
+                        <div>
+                            <label>Call Status:</label>
+                            <select id="ddlECBAuditCallStatus" class="dropdown">
+                                <option value="-1">-Select-</option>
+                                <option value="0">Un-Audit</option>
+                                <option value="1">Audited</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Direction:</label>
+                            <select id="ddlECBAuditDirection" class="dropdown">
+                                <option value="-1">-Select-</option>
+                                <option value="1">Left</option>
+                                <option value="2">Right</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="divFilterWrapper" style="border-top:solid 1px #808080;padding-top:2px;">
+                        <div>
+                            <label1>Disposition Category:</label1>
+                            <div id="divDispositionCategoryAudit"></div>
+                        </div>
+                        <div>
+                            <label>From Date:</label>
+                            <input type="text" id="txtECBAuditFromDate" class="normaltextbox_w100" />
+                        </div>
+                        <div>
+                            <label>To Date:</label>
+                            <input type="text" id="txtECBAuditToDate" class="normaltextbox_w100" />
+                        </div>
+                        <div><input type="button" id="buttonEcbAuditSearch" value="Search" class="btn btn-primary" /></div>
+                        <div><input type="button" id="buttonEcbAuditReset" value="Reset" class="btn btn-primary" /></div>
+                    </div>
+                </div>
+                <span>Call Details</span>
+                <div id="divECBFilterList">
+                    <div style="overflow-y: scroll; height:390px; font-size:11px;">
+                        <table id="tblECBAuditCallDetail" name="tblECBAuditCallDetail" class="table table-bordered table-responsive">
+                            <thead>
+                                <tr style="background-color:#1A5276; color:#fff;">
+                                    <th>ECB</th>
+                                    <th>Chainage</th>
+                                    <th>Direction</th>
+                                    <th>Call Time</th>
+                                    <th>Call Type</th>
+                                    <th>Duration (hh:mm:ss)</th>
+                                    <th>Operator</th>
+                                    <th>Dispo. Category</th>
+                                    <th>Operator Comment</th>
+                                    <th>Auditor Comment</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <span>Call Playback</span>
+                <div id="divECBCallback_AuditComment">
+                    <div style="width:50%;height:54px; border-right:solid 2px #808080;float:left;padding:2px;">
+                        @*<div class="video-frame">*@
+                        <audio id="ecbPlayer" style="width:100%; height:50px;" controls>
+                            <source id="videoSrc" type="video/mp4" src="" />@*src="~/Images/test1.mp3"*@
+                        </audio>
+                        @*</div>*@
+                    </div>
+                    <div style="width:50%;height:44px;float:right;padding:2px;">
+                        <input type="hidden" id="hfCallAuditEntryId" />
+                        Auditor Comment : <textarea rows="2" cols="33" id="txtAuditorComment" style="resize:none;"></textarea><input type="button" id="buttonAuditorCommentSave" value="Save" class="btn btn-primary" style="float:right;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

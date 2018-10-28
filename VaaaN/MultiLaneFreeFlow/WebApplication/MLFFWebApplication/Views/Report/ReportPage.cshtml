@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_LayoutReportPage.cshtml";
+}
+
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+                    document.getElementById('rptPMSReport').contentWindow.location.reload(true);
+                    $("#loader").fadeOut(800);
+                    $("#divReportSection").show();
+
+    });
+
+</script>*@
+@*<script src="~/js/userValidation.js"></script>*@
+<div id="divReportSection" class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title text-center">PARKING MANAGEMENT SYSTEM</h2>
+        <a href="javascript: window.history.go(-1)" style="color:white">Back</a>
+    </div>
+</div>
+    <div class="col-md-10 col-sm-10 col-lg-10" style="text-align:center;margin-left:5%">
+        <iframe id="rptPMSReport" src="~/Reports/ReportViewer.aspx" style="background-color:white" height=950 width=950></iframe>
+    </div>

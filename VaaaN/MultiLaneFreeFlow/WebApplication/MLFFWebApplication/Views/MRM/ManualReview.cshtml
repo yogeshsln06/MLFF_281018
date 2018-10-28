@@ -1,0 +1,137 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.ViewTransactionCBE
+@{
+    ViewBag.Title = "ManualReview";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        <div class="panel-title new-title">
+            Manual Review
+        </div>
+    </div>
+    <div style="height:5px"></div>
+    <div class="panel-body">
+        <div class="col-sm-12">
+            <div class="col-xs-12 well boxshadow">
+                <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
+                    <div class="form-horizontal">
+                        <div class="form-group col-lg-12" style="margin:0%">
+                            <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px">
+                                <hr style="margin-left: 0;width:90%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                            </div>
+                            <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px;width:5%">
+                                <label style="padding-top:10px" class="form-label">Filters</label>
+                            </div>
+                            <div class="col-sm-10 col-md-10 col-lg-10" style="padding-left:1px;padding-right:1px;width:85%">
+                                <hr style="margin-left: 0;  text-align: left;width: 100%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                            </div>
+                        </div>
+                        <form data-toggle="validator" role="form">
+                            <div class="form-group">
+
+                                @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-1" })
+                                <div class="col-md-2">
+                                    @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+                                </div>
+                                @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-1" })
+                                <div class="col-md-2">
+                                    @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                                </div>
+                                @Html.Label("Gantry", htmlAttributes: new { @class = "control-label col-md-1 required" })
+                                <div class="col-md-2">
+                                    @Html.DropDownList("ddlGantry", (IEnumerable<SelectListItem>)ViewBag.Gantry, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.GantryId, "", new { @class = "text-danger " })
+                                </div>
+                                @Html.Label("Vehicle Class", htmlAttributes: new { @class = "control-label col-md-1" })
+                                <div class="col-md-2">
+                                    @Html.DropDownList("ddlVehicleClass", (IEnumerable<SelectListItem>)ViewBag.VehicleClass, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PlateNumber, htmlAttributes: new { @class = "control-label col-md-1" })
+                                <div class="col-md-2">
+                                    @Html.EditorFor(model => model.PlateNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.Label("Trans Category", htmlAttributes: new { @class = "control-label col-md-1 required" })
+                                <div class="col-md-3">
+                                    @Html.DropDownList("ddlTransactionCategory", (IEnumerable<SelectListItem>)ViewBag.TransactionCategory, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-4">
+                                    <button id="btnShow" type="button" class="btn btn-primary pull-right" onclick="Show()">Filter</button>
+                                   
+                                    
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="partial">
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function Show()
+    {
+        if ($("#ddlGantry").val() == 0) {
+            alert("Gantry harus dipilih ");
+            return false;
+        }
+      
+        var StartTime = $("#StartTime").val();
+        var  EndTime =  $("#EndTime").val();
+        var GantryId =  $("#ddlGantry").val();
+        var VehicleClassId=  $("#ddlVehicleClass").val();
+        var PlateNumber = $("#PlateNumber").val(); 
+        var TransactionCategoryId = $("#ddlTransactionCategory").val();
+        
+        var route = '/MRM/ShowTransaction?StartTime=' + StartTime + '&GantryId=' + GantryId + '&VehicleClassId=' + VehicleClassId + '&PlateNumber=' + PlateNumber + '&TransactionCategoryId=' + TransactionCategoryId;
+        $('#partial').load(route);
+
+        ////if ($("#ddlGantry").val() == 0) {
+        ////    alert("Gantry harus dipilih ");
+        ////    return false;
+        ////}
+        ////var InputDate = {
+        ////    StartTime: $("#StartTime").val(), EndTime: $("#EndTime").val(),
+        ////    GantryId: $("#ddlGantry").val(), VehicleClassId: $("#ddlVehicleClass").val(),
+        ////    PlateNumber: $("#PlateNumber").val(),
+        ////    TransactionCategoryId: $("#ddlTransactionCategory").val()
+        ////}
+        ////// $('#loader').show();
+        ////$.ajax({
+        ////    type: "POST",
+        ////    url: "ShowTransaction",
+        ////    dataType: "JSON",
+        ////    async: false,
+        ////    data: JSON.stringify(InputDate),
+        ////    contentType: "application/json; charset=utf-8",
+        ////    success: function (JsonfilterData) {
+        ////        $('#partial').load();
+
+        ////    },
+        ////    error: function (x, e) {
+
+        ////        $('#partial').hide();
+        ////    }
+
+        ////});
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $("#hfAPIPath").val(JSON.parse('@Html.Raw(Json.Encode(ViewData["apiPath"]))'));
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="~/css/jquery.datetimepicker.css" />
+<script src="~/js/jquery.datetimepicker.full.min.js"></script>
+

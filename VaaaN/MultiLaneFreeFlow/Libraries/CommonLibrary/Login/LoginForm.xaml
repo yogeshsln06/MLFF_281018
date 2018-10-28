@@ -1,0 +1,60 @@
+﻿<Window x:Class="VaaaN.MLFF.Libraries.CommonLibrary.Login.LoginForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TollMax Login" Width="1392" Height="808" WindowState="Maximized" WindowStyle="None" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" PreviewKeyDown="Window_PreviewKeyDown" Topmost="False">
+
+    <Viewbox Stretch="Fill">
+    <Grid Background="#FF0D1212">
+        <Border BorderBrush="Gray" BorderThickness="2" Width="1162" Height="570">
+            <Canvas Margin="1" Background="Black">
+
+                <Grid Canvas.Left="0" Canvas.Top="10" Height="30" Width="1156">
+                    <Button Name="buttonClose" Content="X" HorizontalAlignment="Right" VerticalAlignment="Center" Width="28" Height="28" Click="buttonClose_Click" FontFamily="Segoe UI" FontWeight="Bold" Margin="0,0,10,0" />
+                </Grid>
+
+                <Grid Canvas.Left="0" Canvas.Top="52" Height="100" Width="1156">
+                    <Image Width="180" HorizontalAlignment="Left" Margin="142,0,0,0"  Stretch="Uniform" VerticalAlignment="Center" Source="/VaaaN.ATMS.CommonLibrary;component/Images/cleartalk_logo.jpg"></Image>
+                    <TextBlock Name="textBlockVersionInfo" Margin="347,0,0,0" FontWeight="Bold" HorizontalAlignment="Left" FontSize="40" FontFamily="Segoe UI" Width="799" VerticalAlignment="Center" Height="100" Padding="0,15,0,0" Foreground="Red" Text=""></TextBlock>
+                </Grid>
+
+                <Border Canvas.Left="152" Canvas.Top="160" BorderThickness="4" CornerRadius="10" Padding="5" BorderBrush="White" Background="#1A1B1D" Height="250" Width="852">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="70"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
+                            <ColumnDefinition Width="120"></ColumnDefinition>
+                            <ColumnDefinition Width="250*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                            <Image HorizontalAlignment="Left" Grid.RowSpan="4" Width="99" Margin="176,-11,0,11" Source="file:///D:/Project_12/B_ATMS_12082013/VaaaN/ATMS/Libraries/CommonLibrary/Images/login.ico"></Image>
+                        <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="120"  Content="User Name" Foreground="White" Name="labelUserName" Height="30" FontFamily="Segoe UI" FontSize="15" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
+                        <TextBox Grid.Row="1" Grid.Column="2" Name="textBoxUserName" VerticalAlignment="Center" Width="200" Height="30" HorizontalAlignment="Left" TextAlignment="Left" FontSize="15" FontFamily="Segoe UI" VerticalContentAlignment="Center" TabIndex="1"></TextBox>
+
+                        <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="120" Content="Password" Foreground="White" Name="labelPassword" Height="30" FontFamily="Segoe UI" FontSize="15" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
+                        <PasswordBox Grid.Row="2" Grid.Column="2" Name="textBoxPassword" VerticalAlignment="Center" Width="200" Height="30" HorizontalAlignment="Left" Password="" FontSize="15" FontFamily="Segoe UI" VerticalContentAlignment="Center" TabIndex="2"></PasswordBox>
+
+                        <CheckBox Grid.Column="1" Grid.Row="3" Height="16" HorizontalAlignment="Left" Margin="88,26,0,0" Name="checkBoxIsBiometricLogin" VerticalAlignment="Top"  TabIndex="3" Width="21"/>
+                        
+                        <Button Grid.Row="3" Grid.Column="2" Name="buttonLogin" Content="OK" Width="80" Height="35" IsDefault="True" HorizontalAlignment="Right" Margin="0,8,331,8" Foreground="White" Background="#67676B" Click="buttonLogin_Click" FontFamily="Segoe UI" FontSize="20" FontWeight="Bold" TabIndex="4"></Button>
+                        <Button Grid.Row="3" Grid.Column="2" Name="buttonCancel" Content="Cancel"  HorizontalAlignment="Left" Margin="118,0,0,0" Width="80" Height="35" Foreground="White" Background="#67676B" Click="buttonCancel_Click" FontFamily="Segoe UI" FontSize="20" FontWeight="Bold" TabIndex="5"></Button>
+
+                        <Label Grid.Row="4" Grid.ColumnSpan="3"  HorizontalAlignment="Left" Content="lblErrorMessage" Foreground="Red"  Name="labelErrorMessage" FontFamily="Segoe UI" FontSize="12" Width="626" Margin="175,0,0,0" VerticalContentAlignment="Center" Height="28"></Label>
+                            <Label Content="Biometric" FontFamily="Segoe UI" FontSize="15" Foreground="White" Height="30" HorizontalAlignment="Right" HorizontalContentAlignment="Left" Margin="0,15,45,25" Name="labelCheckBoxBiometric" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="73" Grid.Column="1" Grid.Row="3" />
+                        </Grid>
+                </Border>
+
+                <Grid Canvas.Left="0" Canvas.Top="534" Height="30" Width="1156">
+                    <Label HorizontalAlignment="Right" Content="VaaaN Infra Pvt. Ltd. INDIA" Foreground="White"  FontFamily="Segoe UI" FontSize="12" Width="200"  VerticalContentAlignment="Center" Height="28" HorizontalContentAlignment="Right" Margin="0,0,10,0"></Label>
+                </Grid>
+
+            </Canvas>
+        </Border>
+    </Grid>
+  </Viewbox>
+</Window>
+

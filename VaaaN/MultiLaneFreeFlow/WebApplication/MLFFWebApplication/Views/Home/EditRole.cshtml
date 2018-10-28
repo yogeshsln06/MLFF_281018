@@ -1,0 +1,158 @@
+﻿@{
+    ViewBag.Title = "Edit Role";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script type="text/javascript">
+    function backtorolelist()
+    {
+        location.href = "/home/rolelist";
+    }
+
+    $("#buttonCancelRole").click(function () {
+        // Back to Role List
+        alert("message");
+        location.href = "/home/rolelist";
+    });
+    $(document).ready(function () {
+        // Get the Role Information
+        $.ajax({
+            cache:false,
+            crossDomain:true,
+            type: 'POST',
+            // url: '../GetRoleByRoleId/',
+            url: "@Url.Action("GetRoleByRoleId", "Home")",
+            dataType: 'json',
+        data: { role_id:@ViewBag.RoleId },
+        success: function (result) {
+            if (result != null) {
+                $("#hfRoleId").val(result[0]['ROLE_ID']);
+                $('#txtRoleName').val(result[0]['ROLE_NAME']);
+                $('#oldRolename').val(result[0]['ROLE_NAME']);
+                $('#txtRemark').val(result[0]['remark']);
+                var active=result[0]['IS_ACTIVE'];
+                if(active==1)
+                {
+                    $('#chkActive').prop('checked', true);
+                }                }
+            else {
+                alert('Failed to retrive role details');
+            }
+        },
+        error: function (ex) {
+            alert('Failed to retrive role details' + ex);
+        }
+    });
+
+    $("#buttonSaveRole").click(function () {
+        // Validate Educational Entry
+        if (!validateroleentry()) {
+            return false;
+        }
+        var role_id =  $("#hfRoleId").val();
+        var role_name = $("#txtRoleName").val();
+        var oldrole_name = $("#oldRolename").val();
+        var active = 0;
+        if ($('#chkActive').is(":checked")) {
+            active = 1;
+        }
+        var remark = $("#txtRemark").val();
+
+        // Save New Role
+        $.ajax({
+            type: 'POST',
+            //url: '../UpdateRole/',
+            url: "@Url.Action("UpdateRole", "Home")",
+            dataType: 'json',
+        data: { role_id:role_id, role_name,oldrole_name: oldrole_name,active: active, remark: remark },
+        success: function (result) {
+            if (result == "updated") {
+                location.href = "@Url.Action("RoleList", "Home")" ;
+            }
+            else if (result == "found") {
+                $("#lblErrors").text("");
+                $("#lblErrors").text("This role name already exist.");
+            }
+            else if (result == "error") {
+                $("#lblErrors").text("");
+                $("#lblErrors").text("Failed to update role information.");
+              
+            }
+            else if (result == 'sessionout') {
+                location.href = "@Url.Action("Login", "Home")";
+            }
+        },
+        error: function (ex) {
+            alert('Failed to edit role' + ex);
+        }
+    });
+    });
+
+
+    });
+
+    function validateroleentry() {
+        if ($("#txtRoleName").val() == '') {
+        
+            $("#lblErrors").text("Enter Role Name");
+            $("#txtRoleName").focus();
+            return false;
+        }
+        return true;
+    }
+
+    function InitializeRoleEntry() {
+        $("#txtRoleName").val('');
+        $("#txtRemark").val('');
+        $('#chkActive').prop('checked', true);
+    }
+    function validateAlpha(){
+        var textInput = document.getElementById("txtRoleName").value;
+        textInput = textInput.replace(/[^A-Za-z]/g, "");
+        document.getElementById("txtRoleName").value = textInput;
+    }
+    $('#module_2').css({ "background-color": "#00B4CE" });
+    $('#module_2').css({ "font-weight": "bold" });
+    $('#submodule_2').css({ "background-color": "#00B2aa" });
+    $('#submodule_2').css({ "font-weight": "bold" });
+</script>
+<div class="grid-container">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">Edit @ViewBag.Rolename</h1>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form role="form">
+                        <input type="hidden" id="hfRoleId" name="hfRoleId" />
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="txtRoleName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.RoleName</label>
+                            <input type="text" class="form-control" id="txtRoleName" oninput="validateAlpha();" autofocus="true" placeholder="Role Name">
+                        </div>
+
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="chkActive" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.IsActive</label>
+                            <input type="checkbox" class="checkbox input-lg" style="height:34px" id="chkActive" name="chkActive">
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <span id="lblErrors" style="color:red;"></span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <button id="buttonSaveRole" type="button" class="btn btn-primary">Save</button>&nbsp;&nbsp;
+                            <button id="buttonCancelRole" type="button" class="btn btn-primary" onclick="backtorolelist();">Back</button>
+                        </div>
+                       <span id="oldRolename" style="display:none"></span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function backtorolelist()
+    {
+        location.href = "/home/rolelist";
+    }
+</script>

@@ -1,0 +1,113 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.UserSubModuleActivityRightCBE>
+
+@{
+    ViewBag.Title = "UserSubModulesRight";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<style type="text/css">
+    .nopadding {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_1').css({ "background-color": "#00B2aa" });
+        $('#submodule_1').css({ "font-weight": "bold" });
+        });
+
+
+</script>
+<div class="grid-container">
+    <div class="grid-table-wrapper">
+        <div class="grid-title">
+            <div class="grid-row">
+                <div class="col-sm-6">
+                    <h2>@ViewBag.Username - SubModules</h2>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.UserId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ModuleId)
+                        </th>*@
+                    <th style="width:10%">
+                        @Html.DisplayNameFor(model => model.ModuleName)
+                    </th>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.SubModuleId)
+                        </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubModuleName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubModuleView)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubModuleAdd)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubModuleEdit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SubModuleDelete)
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ModuleId)
+                            </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModuleName)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.SubModuleId)
+                            </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubModuleName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubModuleView)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubModuleAdd)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubModuleEdit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubModuleDelete)
+                        </td>
+                        <td>
+                            <a class="delete" href="@Url.Action("ResetSubModuleRight", "Home", new {id = item.Id, uid = item.UserId, mid = ViewBag.ModuleId, sid = item.SubModuleId })"><i class="fa fa-lock" aria-hidden="true" title="Reset sub module right"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p>
+            @{
+                var token2 = "";
+                token2 = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "UserModuleRight", Convert.ToString(ViewBag.UserId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+            }
+            @Html.ActionLink("Back", "UserModuleRight", new { id = ViewBag.UserId,name= @ViewBag.Username, urltoken = token2 }, new { @class = "btn btn-primary btn-sm" })
+        </p>
+    </div>
+</div>
+

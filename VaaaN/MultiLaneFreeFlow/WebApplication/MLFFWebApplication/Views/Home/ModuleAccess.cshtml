@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Title = "ModuleAccess";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link href="~/css/ManageTypes.css" rel="stylesheet" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Logo -->
+                    <div class="logo">
+                        <img src="/Images/vaaan.png" class="img-responsive" width="65" style="float:left; margin-right:10px;" /> 
+                        <h1><a>Agra-Lucknow Expressway (ATMS)</a></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div style="padding-top:6%">
+            <div class="col-sm-10 col-sm-offset-1">
+                
+                <a href="@Url.Action("AssetManagement", "AssetManagement")">
+                    <div class="col-sm-4">
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <h3 id="button">Asset Management</h3>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </a>
+                <a href="@Url.Action("AtmsDashboard","Home")">
+                    <div class="col-sm-4">
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <h3 id="button">Dashboard</h3>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </a>
+                <a href="@Url.Action("IncidentMainPage","Home")">
+                    <div class="col-sm-4">
+                        <div class="panel-group">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <h3 id="button">Incident Management</h3>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </a>
+
+            </div>        
+        </div>
+        </div>
+
+</body>
+</html>

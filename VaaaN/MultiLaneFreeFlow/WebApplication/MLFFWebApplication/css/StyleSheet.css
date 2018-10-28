@@ -1,0 +1,202 @@
+﻿html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    line-height: 1.43;
+    background-color: white;
+    position:relative;
+}
+
+
+.top_row {
+    padding-top: 10px;
+    min-height: 80px;
+    background-color: aliceblue;
+    align-items: center;
+    justify-content: center;
+    border-left: solid 1px #0e2058;
+    border-right: solid 1px #0e2058;
+
+}
+
+.middle_row {
+    min-height: 450px;
+    background-color: #fff;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px #0e2058;
+}
+
+.bottom_row {
+    padding-top: 10px;
+    min-height: 100px;
+    background-color: black;
+    align-items: center;
+    justify-content: center;
+    border-top: solid 1px #0e2058;
+    color: #fff;
+ 
+    margin-left: 0px;
+  margin-right: 0px;
+}
+
+.projectname {
+    padding: 15px;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    font-family: Verdana;
+ 
+}
+
+/*Login*/
+#sectionlogin {
+    margin: 0 auto;
+    position: relative;
+    background: white;
+    background-color: white;
+    margin-top: 13%;
+    padding: 5%;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 3px 3px 0 #0e2058;
+    box-shadow: 0 3px 3px 0 #0e2058;
+}
+
+.login-hd {
+    font-family: Arial;
+    font-weight: 300;
+    font-size: 28px;
+    line-height: 34px;
+    color: #414848;
+    text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
+    margin-bottom: 10px;
+}
+
+/*form title*/
+#formTitle {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 0px 25px 5px;
+    color: #ffffff;
+    width: 100%;
+    height: 17px;
+    background-color: #414848;
+    margin-bottom: 10px;
+}
+
+/*grid title*/
+.gridtitle {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 15px 0px 15px 5px;
+    color: #808080;
+}
+
+/*page size*/
+.divps {
+    float: right;
+    padding-right: 5px;
+}
+
+/*table header*/
+table thead th {
+    background-color: #414848;
+    text-align: center;
+    color: #ffffff;
+}
+
+/* Grid Pagination css */
+.pagination {
+    display: inline-block;
+    margin: 0px;
+}
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 2px 16px;
+        text-decoration: none;
+    }
+
+        .pagination a.active {
+            background-color: #f47321;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+/* End Grid Pagination css */
+
+/* tabs */
+.panel.with-nav-tabs .panel-heading {
+    padding: 5px 5px 0 5px;
+}
+
+.panel.with-nav-tabs .nav-tabs {
+    border-bottom: none;
+}
+
+.panel.with-nav-tabs .nav-justified {
+    margin-bottom: -1px;
+}
+  .required:after {
+            content: "*";
+            color: #e32;
+/********************************************************************/
+/*** PANEL DEFAULT ***/
+.with-nav-tabs.panel-default .nav-tabs > li > a,
+.with-nav-tabs.panel-default .nav-tabs > li > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li > a:focus {
+    color: #777;
+}
+
+    .with-nav-tabs.panel-default .nav-tabs > .open > a,
+    .with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
+    .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
+        color: #777;
+        background-color: #ddd;
+        border-color: transparent;
+    }
+
+.with-nav-tabs.panel-default .nav-tabs > li.active > a,
+.with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
+.with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
+    color: #555;
+    background-color: #fff;
+    border-color: #ddd;
+    border-bottom-color: transparent;
+}
+
+.with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
+        color: #777;
+    }
+
+        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
+        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
+            background-color: #ddd;
+        }
+
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
+    .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
+        color: #fff;
+        background-color: #555;
+    }
+/* End tabs */
+
+
+
+

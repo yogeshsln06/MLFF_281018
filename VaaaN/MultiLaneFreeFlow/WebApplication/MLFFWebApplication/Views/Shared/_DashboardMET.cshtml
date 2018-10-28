@@ -1,0 +1,30 @@
+﻿<div id="met-left-panel">
+    <input type="button" id="buttonMETSummary" value="Summary" class="buttonClass" />
+    <input type="button" id="buttonMETMonitor" value="Monitor" class="buttonClass" />
+</div>
+<div id="met-right-panel">
+    <div id="loader" style="display:none;"></div>
+    @* MET Summary*@
+    <div id="divMETSummary" style="display:none;">
+        <div class="divAllblur">
+            <p><u>MET Summary</u></p>
+            <table id="ItemMETDetail" cellpadding="3" name="ItemMETDetail" class="table table-responsive"></table>
+        </div>
+    </div>
+    <div id="divMETDetail" style="display:none;">
+        <div class="divAllblur">
+            <div class="divwrapper">
+                <label>MET</label>
+                <div style="min-height:30px">
+                    <div class="divFilterWrapper">
+                        Metrological Station:
+                        <div id="divMetsCollections"></div>
+                        <button id="buttonMetRefresh" class="btn btn-primary">Refresh</button>
+                        &nbsp;Last Updated : <div id="divMetLastUpdatedDate"></div>
+                        <div id="divSelectedMetDetails"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

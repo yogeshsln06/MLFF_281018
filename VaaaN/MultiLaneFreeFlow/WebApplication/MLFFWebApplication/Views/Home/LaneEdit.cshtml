@@ -1,0 +1,120 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE
+
+@{
+    ViewBag.Title = "Edit Lajur";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $('.prev i').removeClass();
+        $('.prev i').addClass("fa fa-chevron-left");
+
+        $('.next i').removeClass();
+        $('.next i').addClass("fa fa-chevron-right");
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_3').css({ "background-color": "#00B2aa" });
+        $('#submodule_3').css({ "font-weight": "bold" });
+
+        $("#buttonUserBack").click(function () {
+            // Back to User List
+            location.href = "@Url.Action("LaneList", "Home")";
+        });
+        $("#PlazaId").val($("#hfPlazaId").val());
+        $("#LaneTypeId").val($("#hfLaneTypeId").val());
+        $("#CameraIdFront").val($("#hfCameraIdFront").val());
+        $("#CameraIdRear").val($("#hfCameraIdRear").val());
+        $("#RFID").val($("#hfRFID").val());
+    });
+
+    function Validation() {
+        if (!validateLane()) {
+            return false;
+        }
+        return true;
+    }
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+</script>
+
+<script src="~/js/userValidation.js"></script>
+
+<div class="grid-container">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">Edit</h1>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="hidden" id="hfUserId" value="@ViewBag.UserId" />
+                    <input type="hidden" id="hfPlazaId" value="@ViewBag.PlazaId" />
+                    <input type="hidden" id="hfLaneTypeId" value="@ViewBag.LaneTypeId" />
+                    <input type="hidden" id="hfCameraIdFront" value="@ViewBag.CameraIdFront" />
+                    <input type="hidden" id="hfCameraIdRear" value="@ViewBag.CameraIdRear" />
+                    <input type="hidden" id="hfEtcReaderId" value="@ViewBag.EtcReaderId" />
+
+                    @using (Html.BeginForm("LaneEdit", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.HiddenFor(model => model.LaneId)
+                        <div class="row">
+                            <form role="form">
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="PlazaId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry</label>
+                                    @Html.DropDownList("PlazaId", (IEnumerable<SelectListItem>)ViewBag.Gantry, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="LaneName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.LaneName</label>
+                                    @Html.EditorFor(model => model.LaneName, new { htmlAttributes = new { @class = "form-control", placeholder = "Lajur Name" } })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="LaneTypeId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.LaneType</label>
+                                    @Html.DropDownList("LaneTypeId", (IEnumerable<SelectListItem>)ViewBag.LaneType, new { @class = "form-control" })
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="CameraIdFront" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.CameraNameFront</label>
+                                    @Html.DropDownList("CameraIdFront", (IEnumerable<SelectListItem>)ViewBag.ANPR, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="CameraIdRear" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.CameraNameRear</label>
+                                    @Html.DropDownList("CameraIdRear", (IEnumerable<SelectListItem>)ViewBag.ANPR, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <label for="EtcReaderId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.ETCReaderName</label>
+                                    @Html.DropDownList("EtcReaderId", (IEnumerable<SelectListItem>)ViewBag.RFID, new { @class = "form-control" })
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4" style="float:right">
+                                    <span id="lblErrors" style="color:red;"></span>
+
+                                    @if (TempData["Message"] != null && TempData["Message"].ToString() != "")
+                                    {
+                                        <span style="color:red;">@TempData["Message"]!</span>
+
+                                    }
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                                    <button type="submit" class="btn btn-primary" onclick="return Validation();">Submit</button>&nbsp;&nbsp;<button id="buttonUserBack" type="button" class="btn btn-primary">Back</button>
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                        </div>
+                    }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

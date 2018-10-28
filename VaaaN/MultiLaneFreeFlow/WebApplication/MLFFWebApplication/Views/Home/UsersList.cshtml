@@ -1,0 +1,132 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.UserCBE>
+
+@{
+    ViewBag.Title = "Users List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    VaaaN.MLFF.Libraries.CommonLibrary.Common.SortingPagingInfo info = ViewBag.SortingPagingInfo;
+}
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("ddlPageSize").
+        $("#loader").show();
+        $(".pagination").click(function (evt) {
+            $("#loader").show();
+            var pageindex = $(evt.target).data("pageindex");
+            $("#CurrentPageIndex").val(pageindex);
+            evt.preventDefault();
+            $("form").submit();
+        });
+        $("#loader").fadeOut(800);
+        //$("#loader").hide();
+
+        $('#tblUser').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+
+        $('#module_2').css({ "background-color": "#00B4CE" });
+        $('#module_2').css({ "font-weight": "bold" });
+        $('#submodule_1').css({ "background-color": "#00B2aa" });
+        $('#submodule_1').css({ "font-weight": "bold" });
+
+    });
+</script>
+<style type="text/css">
+    .nopadding {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+
+<div class="grid-container">
+    <div class="grid-table-wrapper">
+        @using (Html.BeginForm("UsersList", "Home", FormMethod.Post))
+        {
+            <div class="grid-title">
+                <div class="grid-row">
+                    <div class="col-sm-6">
+                        <h2>Users</h2>
+                    </div>
+                    <div class="col-sm-6">
+                    
+                    </div>
+                </div>
+            </div>
+            @Html.Hidden("PageCount", info.PageCount)
+            @Html.Hidden("PageSize", info.PageSize)
+            @Html.Hidden("CurrentPageIndex", info.CurrentPageIndex)
+            <table id="tblUser" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="width:20%">
+                            @Html.DisplayNameFor(model => model.LoginName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LastName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RoleName)
+                        </th>
+
+                        <th style="width:10%">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Actions</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var item in Model)
+                    {
+                        var token = "";
+                        var token2 = "";
+
+                        if (item.UserId > 0)
+                        {
+                            token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "EditUser", Convert.ToString(item.UserId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                            token2 = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "UserModuleRight", Convert.ToString(item.UserId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                        }
+
+                        <tr style="display: table-row">
+                            <td>
+
+                                @Html.DisplayFor(modelItem => item.LoginName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RoleName)
+                            </td>
+
+                            <td style="@ViewBag.Visibility">
+                                <a class="edit" href="@Url.Action("EditUser", "Home", new { id = item.UserId,name = item.FirstName+""+item.LastName, urltoken = token })"><i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i></a>
+                                <a class="delete" href="@Url.Action("UserModuleRight", "Home", new { id = item.UserId,name=item.FirstName+""+item.LastName, urltoken = token2 })"><i class="fa fa-lock" aria-hidden="true" style="@ViewBag.Visibility" title="set module right"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        }
+
+
+        <p style="padding-top:10px">
+            <a href="~/Home/AddUser" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span>@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.NewUser</span></a>
+
+        </p>
+
+    </div>
+</div>

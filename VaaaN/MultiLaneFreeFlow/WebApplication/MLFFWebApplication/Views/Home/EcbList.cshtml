@@ -1,0 +1,116 @@
+﻿@model IEnumerable<VaaaN.ATMS.Libraries.CommonLibrary.CBE.EcbCBE>
+
+@{
+    ViewBag.Title = "EcbList";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tableECB').dataTable({
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "searching": false
+        });
+    });
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+
+        <div class="panel-title new-title">
+            ECB List
+        </div>
+
+    </div>
+    <table id="tableECB"  class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ControlRoomName)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.EcbName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Chainage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsInstalled)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Direction)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Make)
+                </th>
+
+
+                <th>
+                    @Html.DisplayNameFor(model => model.NextServiceDate)
+                </th>
+               
+                <th>
+                    @Html.DisplayNameFor(model => model.MACAddress)
+                </th>
+               
+                <th>
+                   Edit
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ControlRoomName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EcbName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Chainage)
+                    </td>
+                    <td>
+                        @(item.IsInstalled == 1 ? "Yes" : "No")
+                    </td>
+                    <td>
+                     @(item.Direction==1?"Up":"Down")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Make)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NextServiceDate)
+                    </td>
+                 
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MACAddress)
+                    </td>
+                 
+
+                    <td>
+                        @Html.ActionLink("Edit", "EditEcb", new {  id=item.EcbId  })
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <p style="padding-top:15px;">
+    <a href="~/Home/AddEcb" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New ECB</span></a>
+
+</p>
+    </div>

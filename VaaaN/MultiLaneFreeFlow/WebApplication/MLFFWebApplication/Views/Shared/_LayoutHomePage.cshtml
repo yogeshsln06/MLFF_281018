@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Page-Enter" content="blendTrans(Duration=0)">
+    <meta http-equiv="Page-Exit" content="blendTrans(Duration=0)">
+    <title>@ViewBag.Title</title>
+    <link href="~/Bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Css/StyleSheet.css" rel="stylesheet" />
+    <link href="~/Css/StyleSheetLeftMenu.css" rel="stylesheet" />
+    <link href="~/Css/TableWithSearch.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://www.malot.fr/bootstrap-datetimepicker/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    @*<script src="~/scripts/jquery-3.1.1.min.js"></script>*@
+    <script src="~/scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/scripts/bootstrap-datepicker.js"></script>
+    <link href="~/Bootstrap/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <script src="https://www.malot.fr/bootstrap-datetimepicker/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+    <style type="text/css">
+        .col-md-3, .col-sm-3, .col-lg-3 {
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+        .logininfo {
+            background-color: aliceblue;
+            padding: 7px;
+            top: -10px;
+            position: absolute;
+            width: 100%;
+        }
+
+
+
+        /*Boot Strap Date Picker*/
+
+        .datepicker td,
+        .datepicker th {
+            width: auto;
+        }
+
+        .datepicker td, .datepicker th {
+            -webkit-border-radius: 0px;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+            border: none;
+        }
+
+        .dropdown-menu {
+            font-size: 10px;
+        }
+
+        .datepicker-dropdown:before {
+            display: none;
+            position: absolute;
+        }
+
+        .datepicker-dropdown:after {
+            display: none;
+            position: absolute;
+        }
+
+
+
+        .zoomin img {
+            -webkit-transition: all .3s ease;
+            -moz-transition: all .3s ease;
+            -ms-transition: all .3s ease;
+            transition: all .3s ease;
+        }
+
+            .zoomin img:hover {
+                width: 300px;
+                height: 200px;
+                z-index: 3;
+            }
+
+        .img_container {
+            position: relative;
+            width: 260px;
+            height: 178px;
+            overflow: hidden;
+            color: transparent;
+        }
+
+        .item {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .img_container:hover .item img {
+            -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+        }
+
+        .item img {
+            -webkit-transition: 0.6s ease;
+            transition: 0.6s ease;
+        }
+
+        .link {
+            color: white;
+        }
+
+        .container {
+            padding-left: 0px;
+            padding-right: 0px;
+            width: 100%;
+        }
+
+        .row {
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-toggle {
+            color: white;
+        }
+        /*Boot Strap Date Picker end*/
+    </style>
+</head>
+
+
+<body style="background-color:white">
+    <div class="container">
+        <div class="container" style="background-color:rgb(46, 109, 164);">
+
+            <div class="col-md-12">
+                <div class="navbar-header">
+                    <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <!-- Collection of nav links and other content for toggling -->
+                <div id="navbarCollapse" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a class="link" href="~/Home/HomePage" title="PMS Home">Home</a></li>
+                        <li><a class="link" href="">About Us</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        @*<li><a class="link" data-target="#LoginModal" data-toggle="modal" href="#LoginModal">Login</a></li>*@
+                        
+                        <li>
+
+                            <select id="slctLanguage" class="input-sm" name="Language">
+                                <option value="en" selected>English</option>
+                                <option value="id">Bhasa</option>
+                     
+                            </select>
+                        </li>
+                       
+                        @*<li><a class="link" href="/home/homepage">Login</a></li>*@
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    <img style="float:left; height:85px; width:200px;" src="~/images/logo.jpg">
+                </div>
+                <div class="col-md-8" style="text-align:center">
+                    <h1 style="margin-top: 17px;">Multilane Free Flow</h1>
+                </div>
+                <div class="col-md-2">
+                    <img style="height:85px; float:right" src="~/images/smarterplogo.png">
+                </div>
+            </div>
+            <div class="container" style="background-color:#e8e5e5">
+                <div class="content" style="padding:15px; margin-top:20px; height:400px">
+                    @RenderBody()
+                </div>
+            </div>
+
+
+            <div class="container">
+                <div class="row bottom_row">
+                    <div class="col-md-12 col-sm-12 col-lg-12" style="margin-top: 3%;">
+                        <footer id="footer">
+                            Copyright &copy VaaaN Infra @DateTime.Now.Year
+
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div id="LoginModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                <div class="modal-sm modal-dialog  modal-dialog-backcolor">
+                    <div class="modal-login">
+                        <div class="modal-header text-center">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <img src="~/Images/index.png" width="60" height="60">
+                            <h3 class="modal-title text-center" style="margin-top:5px">Login</h3>
+                        </div>
+                        <div class="modal-body col-lg-8 col-md-8 col-lg-offset-2">
+
+                            <div class="form-group">
+                                <label for="txtUserName" class="form-label">Username</label>
+                                <input class="form-control" id="txtUserName" placeholder="Username" autofocus />
+                            </div>
+                            <div class="form-group">
+                                <label for="txtPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="txtPassword" placeholder="Password" />
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn  btn-primary" name="buttonLogin" id="buttonLogin">LOGIN</button>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 text-left">
+                                    <span id="errormsg" style="color:red; font-weight:bold;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <a href="/home/forgotpassword"><h4 class="text-center">Forgot Password?</h4></a>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+</body>
+
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("body").keydown(function (e) {
+            if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                $('#buttonLogin').click();
+                return true;
+            }
+        });
+
+        $("#buttonLogin").focus();
+        $("#buttonLogin").click(function () {
+            // validation
+            var username = $("#txtUserName").val();
+            var passward = $("#txtPassword").val();
+            $("#errormsg").text('');
+
+
+            if (username == '') {
+                $("#errormsg").text('User Name must be required');
+                $("#LoginModal").modal(show);
+                return false;
+            }
+            if (passward == '') {
+                $("#errormsg").text('Password must be required');
+                $("#LoginModal").modal(show);
+                return false;
+            }
+
+
+            $.ajax({
+                type: 'POST',
+                //  url: '../Home/DoLogin/',
+                url: "@Url.Action("DoLogin", "Home")",
+                dataType: 'json',
+                data: {
+                    username: username, password: passward, LanguageAbbreviation: $("#slctLanguage").val()
+                },
+                success: function (data) {
+                    if (data == 'Error') {
+                        $("#errormsg").text('Trouble in login .Incorrect Username Password.');
+                        $("#LoginModal").modal(show);
+
+                    }
+                    else if (data == 'Inactive') {
+                        $("#errormsg").text('User\' Account is Inactive.');
+                        $("#LoginModal").modal(show);
+
+                    } else if (data == 'Expired') {
+                        $("#errormsg").text('User\'s Account is Expired.');
+                        $("#LoginModal").modal(show);
+
+                    }
+                    else {
+                        location.href = "@Url.Action("UsersList", "Home")";
+                    }
+                },
+                error: function (ex) {
+                    $("#errormsg").text('Exception occured. Unable to login');
+                    $("#LoginModal").modal(show);
+                }
+            });
+        });
+
+    });
+</script>
