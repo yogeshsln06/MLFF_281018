@@ -81,7 +81,7 @@ namespace DTSService
         {
             try
             {
-                timerGenerateTransactionCSV.Interval = 10 * 60 * 1000;// Run after every 10 minutes
+                timerGenerateTransactionCSV.Interval = 5 * 60 * 1000;// Run after every 5 minutes
                 timerGenerateTransactionCSV.Enabled = false;
                 GenerateNormalTransactionCSV();
                 GenerateViolationTransactionCSV();
@@ -253,7 +253,7 @@ namespace DTSService
                 }
                 else
                 {
-                    LogMessage("Normal transaction data not found.");
+                    //LogMessage("Normal transaction data not found.");
                 }
             }
             else
@@ -385,7 +385,7 @@ namespace DTSService
                 }
                 else
                 {
-                    LogMessage("Violation transaction data not found.");
+                    //LogMessage("Violation transaction data not found.");
                 }
             }
             else
@@ -409,14 +409,19 @@ namespace DTSService
                 {
                     System.IO.FileInfo fi = new FileInfo(path);
 
-                    // Send email with CSV file attachment
-                    bool isSuccess = SendEmail(fi);
-                    if (isSuccess)
+                    // 5 days older file will not be sent
+                    if ((DateTime.Now - fi.CreationTime).TotalDays <= 5)
                     {
-                        // Mark file as sent
-                        LogMessage("Marking file as sent." + fi.Name);
-                        File.Move(fi.FullName, fi.FullName.Replace(fi.Extension, "_s" + fi.Extension));
-                        LogMessage("File marked successfully.");
+                        // Send email with CSV file attachment
+                        bool isSuccess = SendEmail(fi);
+                        if (isSuccess)
+                        {
+                            // Mark file as sent
+                            LogMessage("Marking file as sent." + fi.Name);
+                            Thread.Sleep(100);
+                            File.Move(fi.FullName, fi.FullName.Replace(fi.Extension, "_s" + fi.Extension));
+                            LogMessage("File marked successfully.");
+                        }
                     }
                 }
             }
@@ -433,13 +438,6 @@ namespace DTSService
             try
             {
                 LogMessage("Sending Email of CSV file." + fiAttachment.FullName);
-
-                // Get from configuration file- TODO
-                //string toEmailId = "yogesh.kumar@vaaaninfra.com,mridul.buragohain @vaaaninfra.com,hemant.kumar@vaaaninfra.com,arun.yadav@vaaaninfra.com";
-                //string fromMail = "yogesh.kumar@vaaaninfra.com";
-                //string mailPassword = "milestogo@123";
-                //int port = 587;
-                //string hostName = "smtp.office365.com";
 
                 string toEmailId = csvFileConfig.ToEmailId;
                 string fromMail = csvFileConfig.FromEmailId;
@@ -474,7 +472,7 @@ namespace DTSService
 
                     SmtpServer.Send(mail);
                     attachFile.Dispose();//disposing the Attachment object
-
+                    Thread.Sleep(100);
                     isSuccess = true;
                     LogMessage("Email sent successfully.");
                 }

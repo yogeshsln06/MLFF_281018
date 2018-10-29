@@ -161,7 +161,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLAZA_ID", DbType.Int32, transaction.PlazaId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, transaction.LaneId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_ID", DbType.Int64, transaction.TransactionId, ParameterDirection.Input));
-                
+
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_ENTRY_ID_REAR", DbType.Int32, nfpEntryIdRear, ParameterDirection.Input));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
@@ -529,7 +529,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             if (dt.Rows.Count > 0)
             {
                 sb.Append("TIME_STAMP,");
-                //sb.Append("EVI_VEH_NO,");
                 sb.Append("FRONT_PLATE_NUMBER,");
                 sb.Append("REAR_PLATE_NUMBER,");
                 sb.Append("ANPR_VEHICLE_CLASS,");
@@ -539,6 +538,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             foreach (DataRow dr in dt.Rows)
             {
                 sb.AppendLine();
+
                 //TIME_STAMP
                 if (dr["TIME_STAMP"] != DBNull.Value)
                 {
@@ -548,16 +548,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 {
                     sb.Append(",");
                 }
-
-                ////EVI_VEH_NO
-                //if (dr["EVI_VEH_NO"] != DBNull.Value)
-                //{
-                //    sb.Append(Convert.ToString(dr["EVI_VEH_NO"]) + ",");
-                //}
-                //else
-                //{
-                //    sb.Append(",");
-                //}
 
                 //FRONT_VRN
                 if (dr["FRONT_VRN"] != DBNull.Value)
@@ -592,11 +582,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //LANE_ID
                 if (dr["LANE_ID"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["LANE_ID"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
+                    sb.Append(Convert.ToString(dr["LANE_ID"]));
                 }
             }
 
