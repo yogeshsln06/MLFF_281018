@@ -72,16 +72,20 @@ namespace MLFFWebAPI.Controllers
                 else
                 {
                     var guid = Guid.NewGuid().ToString();
-                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "GUID-" + guid + ".xml";
+                    filepath = rootpath + "CrossTalk/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".xml";
                     File.Create(filepath).Dispose();
                     doc.Save(filepath);
                 }
                 response = Request.CreateResponse(HttpStatusCode.OK);
                 //response = Request.CreateResponse(HttpStatusCode.OK, doc);
-
                 #endregion
-
-
+            }
+            catch (IOException)
+            {
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "CrossTalk/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".xml";
+                File.Create(filepath).Dispose();
+                doc.Save(filepath);
             }
             catch (Exception ex)
             {
@@ -223,7 +227,7 @@ namespace MLFFWebAPI.Controllers
                 }
                 else {
                     var guid = Guid.NewGuid().ToString();
-                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "GUID-" + guid + ".json";
+                    filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
                     File.Create(filepath).Dispose();
                     File.WriteAllText(filepath, jsonString);
                 }
@@ -231,6 +235,14 @@ namespace MLFFWebAPI.Controllers
 
                 response = Request.CreateResponse(HttpStatusCode.OK);
                 #endregion
+            }
+            catch (IOException) 
+            {
+                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, jsonString);
             }
             catch (Exception ex)
             {
