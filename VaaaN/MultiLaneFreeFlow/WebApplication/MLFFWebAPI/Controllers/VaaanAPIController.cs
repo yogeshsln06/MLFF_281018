@@ -67,9 +67,15 @@ namespace MLFFWebAPI.Controllers
                 if (!File.Exists(filepath))
                 {
                     File.Create(filepath).Dispose();
+                    doc.Save(filepath);
                 }
-
-                doc.Save(filepath);
+                else
+                {
+                    var guid = Guid.NewGuid().ToString();
+                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "GUID-" + guid + ".xml";
+                    File.Create(filepath).Dispose();
+                    doc.Save(filepath);
+                }
                 response = Request.CreateResponse(HttpStatusCode.OK);
                 //response = Request.CreateResponse(HttpStatusCode.OK, doc);
 
@@ -81,20 +87,11 @@ namespace MLFFWebAPI.Controllers
             {
 
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API Recive File Crosstalk" + ex);
+                Log("Error in API Recive File Crosstalk : " + ex);
             }
             #endregion
 
-            //try
-            //{
 
-            //}k
-            //catch (Exception ex)
-            //{
-
-            //    ExceptionLogging.SendErrorToText(ex);
-            //    Log("Error in API Crosstalk Save File" + ex);
-            //}
 
             #region Process File to MSMQ
             try
@@ -176,7 +173,7 @@ namespace MLFFWebAPI.Controllers
                         catch (Exception ex)
                         {
                             ExceptionLogging.SendErrorToText(ex);
-                            Log("Error in API ReciveFilefromCrosstalk Send data to MSMQ" + ex);
+                            Log("Error in API ReciveFilefromCrosstalk Send data to MSMQ : " + ex);
                         }
                         #endregion
                     }
@@ -189,7 +186,7 @@ namespace MLFFWebAPI.Controllers
             {
 
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API ReciveFilefromCrosstalk" + ex);
+                Log("Error in API ReciveFilefromCrosstalk : " + ex);
             }
             #endregion
             return response;
@@ -225,8 +222,8 @@ namespace MLFFWebAPI.Controllers
                     File.WriteAllText(filepath, jsonString);
                 }
                 else {
-                    await Task.Delay(100);
-                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                    var guid = Guid.NewGuid().ToString();
+                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "GUID-" + guid + ".json";
                     File.Create(filepath).Dispose();
                     File.WriteAllText(filepath, jsonString);
                 }
@@ -237,7 +234,7 @@ namespace MLFFWebAPI.Controllers
             catch (Exception ex)
             {
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API to save Nodeflux File" + ex);
+                Log("Error in API to save Nodeflux File : " + ex);
             }
 
             try
@@ -327,7 +324,7 @@ namespace MLFFWebAPI.Controllers
             {
 
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API Nodeflux Send data to MSMQ" + ex); ;
+                Log("Error in API Nodeflux Send data to MSMQ : " + ex); ;
             }
             return response;
         }
@@ -364,7 +361,7 @@ namespace MLFFWebAPI.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LogInboundSMS("Failed to load xml document." + ex.Message);
+                    LogInboundSMS("Failed to load xml document. : " + ex.Message);
                 }
                 #endregion
 
@@ -394,7 +391,7 @@ namespace MLFFWebAPI.Controllers
                 catch (Exception ex)
                 {
                     ExceptionLogging.SendErrorToText(ex);
-                    LogInboundSMS("Failed to save sms xml file." + ex);
+                    LogInboundSMS("Failed to save sms xml file. : " + ex);
                 }
 
                 #endregion
@@ -420,7 +417,7 @@ namespace MLFFWebAPI.Controllers
                     }
                     catch (Exception ex)
                     {
-                        LogInboundSMS("Failed to parse xml." + ex.Message);
+                        LogInboundSMS("Failed to parse xml. : " + ex.Message);
                     }
                     #endregion
 
@@ -468,7 +465,7 @@ namespace MLFFWebAPI.Controllers
                     }
                     catch (Exception ex)
                     {
-                        LogInboundSMS("Failed to insert SMS communication history." + ex.Message);
+                        LogInboundSMS("Failed to insert SMS communication history. : " + ex.Message);
                     }
                     #endregion
 
@@ -493,7 +490,7 @@ namespace MLFFWebAPI.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    LogInboundSMS("Invalid message format." + ex.Message);
+                                    LogInboundSMS("Invalid message format. : " + ex.Message);
                                 }
 
                                 // Identify account id by mobile number
@@ -512,7 +509,7 @@ namespace MLFFWebAPI.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        LogInboundSMS("Failed to update customer account." + ex.Message);
+                                        LogInboundSMS("Failed to update customer account. : " + ex.Message);
                                     }
                                     #endregion
 
@@ -539,7 +536,7 @@ namespace MLFFWebAPI.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        LogInboundSMS("Exception in recording in the Account History table. " + ex.ToString());
+                                        LogInboundSMS("Exception in recording in the Account History table. : " + ex.ToString());
                                     }
 
                                     #endregion
@@ -573,7 +570,7 @@ namespace MLFFWebAPI.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        LogInboundSMS("Failed to insert outbound message." + ex.Message);
+                                        LogInboundSMS("Failed to insert outbound message. : " + ex.Message);
                                     }
                                     #endregion
                                 }
@@ -621,7 +618,7 @@ namespace MLFFWebAPI.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    LogInboundSMS("Failed to insert SMS communication history." + ex.Message);
+                                    LogInboundSMS("Failed to insert SMS communication history. : " + ex.Message);
                                 }
                                 #endregion
 
@@ -635,14 +632,14 @@ namespace MLFFWebAPI.Controllers
                     }
                     catch (Exception ex)
                     {
-                        LogInboundSMS("Failed to create outbound message for incoming message." + ex.Message);
+                        LogInboundSMS("Failed to create outbound message for incoming message. : " + ex.Message);
                     }
 
                     #endregion
                 }
                 catch (Exception ex)
                 {
-                    LogInboundSMS("Failed to insert SMS record." + ex.Message);
+                    LogInboundSMS("Failed to insert SMS record. : " + ex.Message);
                 }
                 #endregion
 
@@ -651,7 +648,7 @@ namespace MLFFWebAPI.Controllers
             catch (Exception ex)
             {
                 ExceptionLogging.SendErrorToText(ex);
-                LogInboundSMS("Error in API SendSMS" + ex);
+                LogInboundSMS("Error in API SendSMS : " + ex);
             }
 
             return response;
@@ -702,7 +699,7 @@ namespace MLFFWebAPI.Controllers
             {
                 FileName = string.Empty;
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API ReciveFilefromCrosstalk" + ex);
+                Log("Error in API SaveByteArrayAsImage : " + ex);
             }
             return FileName;
         }
