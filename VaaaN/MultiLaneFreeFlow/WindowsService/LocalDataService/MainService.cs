@@ -50,6 +50,7 @@ namespace VaaaN.MLFF.WindowsServices
         {
             InitializeComponent();
 
+            //dont forget to comment this line
             //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
