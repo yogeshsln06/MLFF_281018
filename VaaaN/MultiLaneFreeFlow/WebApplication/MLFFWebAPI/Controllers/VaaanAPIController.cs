@@ -67,34 +67,35 @@ namespace MLFFWebAPI.Controllers
                 if (!File.Exists(filepath))
                 {
                     File.Create(filepath).Dispose();
+                    doc.Save(filepath);
                 }
-
-                doc.Save(filepath);
+                else
+                {
+                    var guid = Guid.NewGuid().ToString();
+                    filepath = rootpath + "CrossTalk/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".xml";
+                    File.Create(filepath).Dispose();
+                    doc.Save(filepath);
+                }
                 response = Request.CreateResponse(HttpStatusCode.OK);
                 //response = Request.CreateResponse(HttpStatusCode.OK, doc);
-
                 #endregion
-
-
+            }
+            catch (IOException)
+            {
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "CrossTalk/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".xml";
+                File.Create(filepath).Dispose();
+                doc.Save(filepath);
             }
             catch (Exception ex)
             {
 
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API Recive File Crosstalk" + ex);
+                Log("Error in API Recive File Crosstalk : " + ex);
             }
             #endregion
 
-            //try
-            //{
 
-            //}k
-            //catch (Exception ex)
-            //{
-
-            //    ExceptionLogging.SendErrorToText(ex);
-            //    Log("Error in API Crosstalk Save File" + ex);
-            //}
 
             #region Process File to MSMQ
             try
@@ -176,7 +177,7 @@ namespace MLFFWebAPI.Controllers
                         catch (Exception ex)
                         {
                             ExceptionLogging.SendErrorToText(ex);
-                            Log("Error in API ReciveFilefromCrosstalk Send data to MSMQ" + ex);
+                            Log("Error in API ReciveFilefromCrosstalk Send data to MSMQ : " + ex);
                         }
                         #endregion
                     }
@@ -189,7 +190,7 @@ namespace MLFFWebAPI.Controllers
             {
 
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API ReciveFilefromCrosstalk" + ex);
+                Log("Error in API ReciveFilefromCrosstalk : " + ex);
             }
             #endregion
             return response;
@@ -203,138 +204,140 @@ namespace MLFFWebAPI.Controllers
         {
             try
             {
+                #region Serialize the nodeflux JSON Data
+                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                await Task.Delay(100);
+                #endregion
 
-
-
-                try
+                #region Create Physical Path to save nodeflux JSON Data as file
+                if (!Directory.Exists(rootpath))
                 {
-                    #region Serialize the nodeflux JSON Data
-                    string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
-                    await Task.Delay(100);
-                    #endregion
-
-                    #region Create Physical Path to save nodeflux JSON Data as file
-                    if (!Directory.Exists(rootpath))
-                    {
-                        Directory.CreateDirectory(rootpath);
-                    }
-                    filepath = rootpath + "NodeFlux/";
-                    if (!Directory.Exists(filepath))
-                    {
-                        Directory.CreateDirectory(filepath);
-                    }
-                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
-                    if (!File.Exists(filepath))
-                    {
-                        File.Create(filepath).Dispose();
-                    }
+                    Directory.CreateDirectory(rootpath);
+                }
+                filepath = rootpath + "NodeFlux/";
+                if (!Directory.Exists(filepath))
+                {
+                    Directory.CreateDirectory(filepath);
+                }
+                filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Dispose();
                     File.WriteAllText(filepath, jsonString);
-                    response = Request.CreateResponse(HttpStatusCode.OK);
-                    //response = Request.CreateResponse(HttpStatusCode.OK, objNodeFluxPacketJSON);
-                    #endregion
                 }
-                catch (Exception ex)
-                {
-                    ExceptionLogging.SendErrorToText(ex);
-                    Log("Error in API to save Nodeflux File" + ex);
-                }
-
-                try
-                {
-                    #region Pass data to CBE Liberrary
-                    NodeFluxPacketCBE nodeFluxCBE = new NodeFluxPacketCBE();
-                    nodeFluxCBE.EventType = objNodeFluxPacketJSON.Event_Type;
-                    nodeFluxCBE.TimeStamp = objNodeFluxPacketJSON.TimeStamp;
-                    nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
-                    nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
-                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Camera_Position.ToString()))
-                        nodeFluxCBE.CameraPosition = string.Empty;
-                    else
-                        nodeFluxCBE.CameraPosition = objNodeFluxPacketJSON.Camera.Camera_Position.ToString();
-
-                    nodeFluxCBE.CameraId = objNodeFluxPacketJSON.Camera.Id;
-                    nodeFluxCBE.CameraName = objNodeFluxPacketJSON.Camera.Name;
-                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Address))
-                        nodeFluxCBE.CameraAddress = string.Empty;
-                    else
-                        nodeFluxCBE.CameraAddress = objNodeFluxPacketJSON.Camera.Address;
-                    if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 2)
-                    {
-                        nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString() + "," + objNodeFluxPacketJSON.Camera.Coordinate[1].ToString();
-                    }
-                    else if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 1)
-                    {
-                        nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString();
-                    }
-                    else {
-                        nodeFluxCBE.CamaraCoordinate = string.Empty;
-                    }
-                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
-                    nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
-                    nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
-
-                    #region Convert 64 bit String into PNG Image
-                    filepath = rootpath + @"Thumbnail\Plates\";
-                    if (!Directory.Exists(filepath))
-                    {
-                        Directory.CreateDirectory(filepath);
-                    }
-                    //dateTimeFormat24HForFileName
-
-                    string imgfilepath = string.Empty;
-                    string FileName = string.Empty;
-                    FileName = "VRN_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
-                    imgfilepath = filepath + FileName;
-                    nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
-                    imgfilepath = string.Empty;
-                    FileName = string.Empty;
-                    filepath = rootpath + @"Thumbnail\Vehicle\";
-                    if (!Directory.Exists(filepath))
-                    {
-                        Directory.CreateDirectory(filepath);
-                    }
-                    FileName = "Vehicle_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
-                    imgfilepath = filepath + FileName;
-                    nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
-
-                    #endregion
-
-                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Video_URL))
-                        nodeFluxCBE.VideoURL = string.Empty;
-                    else
-                        nodeFluxCBE.VideoURL = objNodeFluxPacketJSON.Data.Video_URL;
-                    #endregion
-
-                    #region Send data to MSMQ
-                    NodeFluxPacket nfp = new NodeFluxPacket();
-                    nfp.Source = "Source";
-                    nfp.Destination = "Destination";
-                    nfp.Payload = nodeFluxCBE;
-                    nfp.TimeStamp = DateTime.Now;
-
-                    Message m = new Message();
-                    m.Formatter = new BinaryMessageFormatter();
-                    m.Body = nfp;
-                    m.Recoverable = true;
-                    inBoxQueue = Queue.Create(Queue.inBoxQueueName);
-                    //eventQueue = Queue.Create(Queue.eventQueue);
-                    inBoxQueue.Send(m);
-                    //eventQueue.Send(m);
-                    #endregion
-                }
-                catch (Exception ex)
-                {
-
-                    ExceptionLogging.SendErrorToText(ex);
-                    Log("Error in API Nodeflux Send data to MSMQ" + ex); ;
+                else {
+                    var guid = Guid.NewGuid().ToString();
+                    filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                    File.Create(filepath).Dispose();
+                    File.WriteAllText(filepath, jsonString);
                 }
 
 
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                #endregion
+            }
+            catch (IOException) 
+            {
+                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, jsonString);
             }
             catch (Exception ex)
             {
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API ReciveFilefromNodeflux Send data to MSMQ" + ex);
+                Log("Error in API to save Nodeflux File : " + ex);
+            }
+
+            try
+            {
+                #region Pass data to CBE Liberrary
+                NodeFluxPacketCBE nodeFluxCBE = new NodeFluxPacketCBE();
+                nodeFluxCBE.EventType = objNodeFluxPacketJSON.Event_Type;
+                nodeFluxCBE.TimeStamp = objNodeFluxPacketJSON.TimeStamp;
+                nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
+                nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
+                if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Camera_Position.ToString()))
+                    nodeFluxCBE.CameraPosition = string.Empty;
+                else
+                    nodeFluxCBE.CameraPosition = objNodeFluxPacketJSON.Camera.Camera_Position.ToString();
+
+                nodeFluxCBE.CameraId = objNodeFluxPacketJSON.Camera.Id;
+                nodeFluxCBE.CameraName = objNodeFluxPacketJSON.Camera.Name;
+                if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Address))
+                    nodeFluxCBE.CameraAddress = string.Empty;
+                else
+                    nodeFluxCBE.CameraAddress = objNodeFluxPacketJSON.Camera.Address;
+                if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 2)
+                {
+                    nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString() + "," + objNodeFluxPacketJSON.Camera.Coordinate[1].ToString();
+                }
+                else if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 1)
+                {
+                    nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString();
+                }
+                else {
+                    nodeFluxCBE.CamaraCoordinate = string.Empty;
+                }
+                nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
+                nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
+                nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
+
+                #region Convert 64 bit String into PNG Image
+                filepath = rootpath + @"Thumbnail\Plates\";
+                if (!Directory.Exists(filepath))
+                {
+                    Directory.CreateDirectory(filepath);
+                }
+                //dateTimeFormat24HForFileName
+
+                string imgfilepath = string.Empty;
+                string FileName = string.Empty;
+                FileName = "VRN_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                imgfilepath = filepath + FileName;
+                nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
+                imgfilepath = string.Empty;
+                FileName = string.Empty;
+                filepath = rootpath + @"Thumbnail\Vehicle\";
+                if (!Directory.Exists(filepath))
+                {
+                    Directory.CreateDirectory(filepath);
+                }
+                FileName = "Vehicle_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                imgfilepath = filepath + FileName;
+                nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
+
+                #endregion
+
+                if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Video_URL))
+                    nodeFluxCBE.VideoURL = string.Empty;
+                else
+                    nodeFluxCBE.VideoURL = objNodeFluxPacketJSON.Data.Video_URL;
+                #endregion
+
+                #region Send data to MSMQ
+                NodeFluxPacket nfp = new NodeFluxPacket();
+                nfp.Source = "Source";
+                nfp.Destination = "Destination";
+                nfp.Payload = nodeFluxCBE;
+                nfp.TimeStamp = DateTime.Now;
+
+                Message m = new Message();
+                m.Formatter = new BinaryMessageFormatter();
+                m.Body = nfp;
+                m.Recoverable = true;
+                inBoxQueue = Queue.Create(Queue.inBoxQueueName);
+                //eventQueue = Queue.Create(Queue.eventQueue);
+                inBoxQueue.Send(m);
+                //eventQueue.Send(m);
+                #endregion
+            }
+            catch (Exception ex)
+            {
+
+                ExceptionLogging.SendErrorToText(ex);
+                Log("Error in API Nodeflux Send data to MSMQ : " + ex); ;
             }
             return response;
         }
@@ -371,7 +374,7 @@ namespace MLFFWebAPI.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LogInboundSMS("Failed to load xml document." + ex.Message);
+                    LogInboundSMS("Failed to load xml document. : " + ex.Message);
                 }
                 #endregion
 
@@ -401,7 +404,7 @@ namespace MLFFWebAPI.Controllers
                 catch (Exception ex)
                 {
                     ExceptionLogging.SendErrorToText(ex);
-                    LogInboundSMS("Failed to save sms xml file." + ex);
+                    LogInboundSMS("Failed to save sms xml file. : " + ex);
                 }
 
                 #endregion
@@ -427,7 +430,7 @@ namespace MLFFWebAPI.Controllers
                     }
                     catch (Exception ex)
                     {
-                        LogInboundSMS("Failed to parse xml." + ex.Message);
+                        LogInboundSMS("Failed to parse xml. : " + ex.Message);
                     }
                     #endregion
 
@@ -475,7 +478,7 @@ namespace MLFFWebAPI.Controllers
                     }
                     catch (Exception ex)
                     {
-                        LogInboundSMS("Failed to insert SMS communication history." + ex.Message);
+                        LogInboundSMS("Failed to insert SMS communication history. : " + ex.Message);
                     }
                     #endregion
 
@@ -500,7 +503,7 @@ namespace MLFFWebAPI.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    LogInboundSMS("Invalid message format." + ex.Message);
+                                    LogInboundSMS("Invalid message format. : " + ex.Message);
                                 }
 
                                 // Identify account id by mobile number
@@ -519,7 +522,7 @@ namespace MLFFWebAPI.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        LogInboundSMS("Failed to update customer account." + ex.Message);
+                                        LogInboundSMS("Failed to update customer account. : " + ex.Message);
                                     }
                                     #endregion
 
@@ -546,7 +549,7 @@ namespace MLFFWebAPI.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        LogInboundSMS("Exception in recording in the Account History table. " + ex.ToString());
+                                        LogInboundSMS("Exception in recording in the Account History table. : " + ex.ToString());
                                     }
 
                                     #endregion
@@ -580,7 +583,7 @@ namespace MLFFWebAPI.Controllers
                                     }
                                     catch (Exception ex)
                                     {
-                                        LogInboundSMS("Failed to insert outbound message." + ex.Message);
+                                        LogInboundSMS("Failed to insert outbound message. : " + ex.Message);
                                     }
                                     #endregion
                                 }
@@ -628,7 +631,7 @@ namespace MLFFWebAPI.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    LogInboundSMS("Failed to insert SMS communication history." + ex.Message);
+                                    LogInboundSMS("Failed to insert SMS communication history. : " + ex.Message);
                                 }
                                 #endregion
 
@@ -642,14 +645,14 @@ namespace MLFFWebAPI.Controllers
                     }
                     catch (Exception ex)
                     {
-                        LogInboundSMS("Failed to create outbound message for incoming message." + ex.Message);
+                        LogInboundSMS("Failed to create outbound message for incoming message. : " + ex.Message);
                     }
 
                     #endregion
                 }
                 catch (Exception ex)
                 {
-                    LogInboundSMS("Failed to insert SMS record." + ex.Message);
+                    LogInboundSMS("Failed to insert SMS record. : " + ex.Message);
                 }
                 #endregion
 
@@ -658,7 +661,7 @@ namespace MLFFWebAPI.Controllers
             catch (Exception ex)
             {
                 ExceptionLogging.SendErrorToText(ex);
-                LogInboundSMS("Error in API SendSMS" + ex);
+                LogInboundSMS("Error in API SendSMS : " + ex);
             }
 
             return response;
@@ -709,7 +712,7 @@ namespace MLFFWebAPI.Controllers
             {
                 FileName = string.Empty;
                 ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API ReciveFilefromCrosstalk" + ex);
+                Log("Error in API SaveByteArrayAsImage : " + ex);
             }
             return FileName;
         }
