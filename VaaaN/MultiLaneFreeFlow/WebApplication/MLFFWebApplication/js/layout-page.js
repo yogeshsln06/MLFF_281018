@@ -1,10 +1,11 @@
 ﻿$(document).ready(function () {
-    $("#Admin").attr("aria-expanded", "true");
-    $("#AdminsubMenu").removeClass("list-group-item list-group-item-info collapsed");
-    $("#Admin").addClass("list-group-item list-group-item-info");
-    $("#AdminsubMenu").attr("aria-expanded", "true");
-    $("#AdminsubMenu").removeClass("list-group-submenu");
-    $("#AdminsubMenu").addClass("list-group-submenu collapse in")
+    //$("#Admin").attr("aria-expanded", "true");
+    //$("#AdminsubMenu").removeClass("list-group-item list-group-item-info collapsed");
+    //$("#Admin").addClass("list-group-item list-group-item-info");
+    //$("#AdminsubMenu").attr("aria-expanded", "true");
+    //$("#AdminsubMenu").removeClass("list-group-submenu");
+    //$("#AdminsubMenu").addClass("list-group-submenu collapse in")
+
     $("#buttonChange").focus();
     $("#buttonChange").click(function () {
         // validation
@@ -47,5 +48,20 @@
             }
         });
     });
+    console.log(window.location.pathname);
+    var menuUrl = window.location.pathname.toLowerCase();
+    if ($('#MainMenu [href^="' + menuUrl + '"]').length == 0) {
+        menuUrl = document.referrer.replace(window.location.origin, '').trim().toLowerCase();
+    }
+
+    $('#MainMenu [href^="' + menuUrl + '"]').addClass('active');
+    var parent = $('#MainMenu [href^="' + menuUrl + '"]').attr("data-parent");
+    if (parent != '#MainMenu') {
+        $(parent).removeClass("list-group-item list-group-item-info collapsed");
+        $(parent).attr("aria-expanded", "true");
+        $(parent).removeClass("list-group-submenu");
+        $(parent).addClass("list-group-submenu collapse in")
+    }
+
 });
 

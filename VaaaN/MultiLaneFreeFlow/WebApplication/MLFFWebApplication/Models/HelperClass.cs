@@ -62,7 +62,7 @@ namespace VaaaN.MLFF.WebApplication.Models
 
                         if (module.IsGuiVisible != 0)
                         {
-                            sb.Append("<a id=\"module_" + module.ModuleId + "\" class=\"list-group-item list-group-item-info\" style=\"background-color:rgb(46, 109, 164);  color:rgb(217, 237, 247);\"  data-parent=\"#MainMenu\" href=\"" + module.ModuleUrl + "\">");//module.Url
+                            sb.Append("<a id=\"module_" + module.ModuleId + "\" class=\"parent list-group-item list-group-item-info\"   data-parent=\"#MainMenu\" href=\"" + module.ModuleUrl.ToLower() + "\">");//module.Url
                            //// sb.Append("<i  style=\"padding-right:10%; padding-left:1%;\" class=\"" + "" + "\"></i>"+ module.ModuleName + "</a>");
                             sb.Append("<i  style=\"padding-right:10%; padding-left:1%;\" class=\"" + "" + "\"></i>"+ someString + "</a>");
 
@@ -70,7 +70,7 @@ namespace VaaaN.MLFF.WebApplication.Models
                     }
                     else
                     {
-                        sb.Append("<a id=\"module_" + module.ModuleId + "\" class=\"list-group-item list-group-item-info\" style=\"background-color:rgb(46, 109, 164);  color:rgb(217, 237, 247);\" data-toggle=\"collapse\"  data-Parent=\"#MainMenu\" href=\"#" + someString + "subMenu\">");
+                        sb.Append("<a id=\"module_" + module.ModuleId + "\" class=\"parent list-group-item list-group-item-info\"  data-toggle=\"collapse\"  data-Parent=\"#MainMenu\" href=\"#" + someString + "subMenu\">");
 
                         sb.Append("<i  style=\"padding-right:10%; padding-left:1%;\" class=\"" + "" + "\"></i>" + someString + "");
                         sb.Append("<i  style=\"float:right\" class=\"fa fa-caret-down\"></i></a>");
@@ -80,7 +80,7 @@ namespace VaaaN.MLFF.WebApplication.Models
                             if (subModule.IsGuiVisible != 0)
                             {
                                 string substring = rm.GetString(subModule.SubModuleName);
-                                sb.Append("<a id=\"submodule_" + subModule.SubModuleId + "\" class=\"list-group-item list-group-item-info\" data-parent=\"#" + module.ModuleName + "subMenu\" href=\"" + subModule.SubmoduleUrl + "\">");//Submodule.Url
+                                sb.Append("<a id=\"submodule_" + subModule.SubModuleId + "\" class=\"list-group-item list-group-item-info\" data-parent=\"#" + module.ModuleName + "subMenu\" href=\"" + subModule.SubmoduleUrl.ToLower() + "\">");//Submodule.Url
                                 sb.Append("<i  style=\"padding-right:10%; padding-left:1%;\" class=\"fa fa-caret-right\"></i>" + substring + "</a>");
 
                             }

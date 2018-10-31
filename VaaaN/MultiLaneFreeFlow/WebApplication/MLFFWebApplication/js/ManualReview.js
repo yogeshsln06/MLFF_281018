@@ -39,10 +39,7 @@ $(document).ready(function () {
     $("#EndTime").val(mm + '/' + dd + '/' + yy + " 23:59");
 
     $("#GenerateReport").click(function () {
-
         GenerateReport();
-
-
     });
 
 });
