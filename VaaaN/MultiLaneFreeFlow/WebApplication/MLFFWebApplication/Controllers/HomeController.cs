@@ -100,6 +100,7 @@ namespace VaaaN.MLFF.WebApplication
                 }
                 else
                 {
+
                     result.Data = "Error";
                 }
             }
