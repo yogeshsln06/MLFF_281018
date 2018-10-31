@@ -213,12 +213,15 @@ namespace VaaaN.MLFF.WindowsServices
             }
             finally
             {
-                if (receiveRecord)
-                {
+                //if (receiveRecord)
+                //{
                     mq.Receive();
                     sw.Stop();
-                    //VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.WriteGeneralLog("InBoxQueue message processed in " + sw.Elapsed.TotalSeconds + " seconds.");
-                }
+                //}
+                //else
+                //{
+                    //receive and send to failed queue
+                //}
 
                 inBoxQueue.BeginPeek();
             }
