@@ -188,8 +188,9 @@
                                     <hr style="margin-left: 0;  text-align: left;width: 100%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
                                 </div>
                             </div>
+
                             <div class="form-group">
-                                <div class="col-md-12">
+                                <div class="col-md-12 tablescroll">
                                     <table id="tableTransaction" class="table table-condensed table-striped table-hover">
                                         <thead>
                                             <tr>
@@ -303,7 +304,6 @@
                                             <div class="col-md-4">
                                                 <input class="form-control text-box single-line" id="AMOUNT" name="AMOUNT" readonly="readonly" value="">
                                             </div>
-                                            <input type="hidden" id="hdnLaneId" value="0"/>
                                         </div>
                                     </div>
 
@@ -322,6 +322,7 @@
                                                     <legend>Rear VRN</legend>
                                                     <img src="#" id="rearImg" onclick="openImage(this)" class="imgsize" />
                                                 </fieldset>
+
                                             </div>
                                         </div>
                                         <div id="videoview" style="display:none; height:100%;">
@@ -404,7 +405,7 @@
 
                                 </div>
                                 <div class="col-md-12">
-                                    <input type="button" value="Audit Done" name="Refresh" class="btn btn-primary pull-right" onclick="SubmitAuditedData();" />
+                                    <input type="button" value="Audit Done" name="Refresh" class="btn btn-primary pull-right" onclick="filterData();" />
                                 </div>
 
                             </div>
@@ -414,6 +415,7 @@
 
 
             </div>
+            
         </div>
         <div id="myModal" class="modal">
 
@@ -426,4 +428,3 @@
         </div>
     </div>
 }
-

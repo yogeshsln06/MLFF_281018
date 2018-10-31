@@ -20,7 +20,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private string cameraNameFront;
         private Int32 cameraIdRear;
         private string cameraNameRear;
-        private Int32 etcReaderId;
+        private Int32 antennaIdFront;
+        private Int32 antennaIdRear;
         private string etcReaderName;
         private DateTime creationDate;
         private DateTime modificationDate;
@@ -37,7 +38,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.cameraNameFront = string.Empty;
             this.cameraIdRear = 0;
             this.cameraNameRear = string.Empty;
-            this.etcReaderId = 0;
+            this.antennaIdFront = 0;
+            this.antennaIdRear = 0;
             this.etcReaderName = string.Empty;
             this.creationDate = DateTime.Now;
             this.modificationDate = DateTime.Now;
@@ -120,11 +122,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        public Int32 EtcReaderId
+        public Int32 AntennaIdFront
         {
-            get { return this.etcReaderId; }
-            set { this.etcReaderId = value; }
+            get { return this.antennaIdFront; }
+            set { this.antennaIdFront = value; }
         }
+
+        public Int32 AntennaIdRear
+        {
+            get { return this.antennaIdRear; }
+            set { this.antennaIdRear = value; }
+        }
+
         [Display(Name = "ETCReaderName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public string EtcReaderName
         {
@@ -177,7 +186,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("laneName = " + this.laneName + Environment.NewLine);
             sb.Append("cameraIdFront = " + this.cameraIdFront + Environment.NewLine);
             sb.Append("cameraIdRear = " + this.cameraIdRear + Environment.NewLine);
-            sb.Append("etcReaderId = " + this.etcReaderId + Environment.NewLine);
+            sb.Append("etcAntennaIdFront = " + this.antennaIdFront + Environment.NewLine);
+            sb.Append("etcAntennaIdRear = " + this.antennaIdRear + Environment.NewLine);
             sb.Append("creationDate = " + this.creationDate + Environment.NewLine);
             sb.Append("modificationDate = " + this.modificationDate + Environment.NewLine);
             sb.Append("modifiedBy = " + this.modifierId + Environment.NewLine);

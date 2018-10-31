@@ -36,7 +36,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_NAME", DbType.String, lane.LaneName, ParameterDirection.Input, 50));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CAMERA_ID_FRONT", DbType.Int32, lane.CameraIdFront, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CAMERA_ID_REAR", DbType.Int32, lane.CameraIdRear, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ETC_READER_ID", DbType.Int32, lane.EtcReaderId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ETC_ANTENNA_ID_FRONT", DbType.Int32, lane.AntennaIdFront, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ETC_ANTENNA_ID_REAR", DbType.Int32, lane.AntennaIdRear, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, lane.CreationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSFER_STATUS", DbType.Int32, lane.TransferStatus, ParameterDirection.Input));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
@@ -63,7 +64,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_NAME", DbType.String, lane.LaneName, ParameterDirection.Input, 50));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CAMERA_ID_FRONT", DbType.Int32, lane.CameraIdFront, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CAMERA_ID_REAR", DbType.Int32, lane.CameraIdRear, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ETC_READER_ID", DbType.Int32, lane.EtcReaderId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ETC_ANTENNA_ID_FRONT", DbType.Int32, lane.AntennaIdFront, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ETC_ANTENNA_ID_REAR", DbType.Int32, lane.AntennaIdRear, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIED_BY", DbType.Int32, lane.ModifierId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, lane.ModificationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSFER_STATUS", DbType.Int32, lane.TransferStatus, ParameterDirection.Input));
@@ -248,8 +250,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["CAMERA_NAME_REAR"] != DBNull.Value)
                         lane.CameraNameRear = Convert.ToString(dt.Rows[i]["CAMERA_NAME_REAR"]);
 
-                    if (dt.Rows[i]["ETC_READER_ID"] != DBNull.Value)
-                        lane.EtcReaderId = Convert.ToInt32(dt.Rows[i]["ETC_READER_ID"]);
+                    if (dt.Rows[i]["ETC_ANTENNA_ID_FRONT"] != DBNull.Value)
+                        lane.AntennaIdFront = Convert.ToInt32(dt.Rows[i]["ETC_ANTENNA_ID_FRONT"]);
+
+                    if (dt.Rows[i]["ETC_ANTENNA_ID_REAR"] != DBNull.Value)
+                        lane.AntennaIdRear = Convert.ToInt32(dt.Rows[i]["ETC_ANTENNA_ID_REAR"]);
 
                     if (dt.Rows[i]["ETC_READER_NAME"] != DBNull.Value)
                         lane.EtcReaderName = Convert.ToString(dt.Rows[i]["ETC_READER_NAME"]);
