@@ -52,6 +52,26 @@
     border-left: 3px solid #d19b3d;
     background-color: #4f5b69;
 }
+a.parent {
+ background-color:rgb(46, 109, 164);  
+    color:rgb(217, 237, 247);
+}
+/*a.list-group-item-info {
+    background-color:rgb(46, 109, 164);  
+    color:rgb(217, 237, 247);
+}*/
+
+a.list-group-item-info.active, 
+a.list-group-item-info.active:hover, 
+a.list-group-item-info.active:focus {
+    color: #fff;
+    background-color: rgb(0, 180, 206);
+    border-color: #31708f;
+}
+
+.myactive{    background-color: rgb(0, 180, 206);
+    color: rgb(217, 237, 247);
+    font-weight: bold;}
 
 .nav-side-menu ul .sub-menu li.active,
 .nav-side-menu li .sub-menu li.active {
