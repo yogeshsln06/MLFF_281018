@@ -148,7 +148,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnjoin" onclick="joinTransactions();" class="btn btn-primary button button4">Join</button>
+                   
                     <button type="button" id="btnHideModal" onclick="HideModal()" class="btn btn-primary button button4">
                         Close
                     </button>
@@ -171,60 +171,5 @@
     function HideModal() {
         $('#Associatedmodel').modal('hide');
     }
-    function joinTransactions()
-    {
-        debugger;
-        var selectedIDs = new Array();
-        $('input:checkbox.checkBox').each(function () {
-            if ($(this).prop('checked')) {
-                selectedIDs.push($(this).val());
-            }
-        });
-        var inputData = {
-            AssociatedTransactionIds: selectedIDs, TransactionId: $("#hdnTransactionId").val()
-        }
 
-        $.ajax({
-            type: "POST",
-            url: "JoinTransactions",
-            dataType: "JSON",
-            async: false,
-            data: JSON.stringify(inputData),
-            contentType: "application/json; charset=utf-8",
-            success: function (JsonfilterData) {
-                ResponceData = JsonfilterData;
-    
-
-            },
-            error: function (x, e) {
-
-                //$('#loader').hide();
-            }
-
-        });
-        //$("#delete").click(function () {
-        //    var selectedIDs = new Array();
-        //    $('input:checkbox.checkBox').each(function () {
-        //        if ($(this).prop('checked')) {
-        //            selectedIDs.push($(this).val());
-        //        }
-        //    });
-
-        //    var options = {};
-        //    options.url = "/home/delete";
-        //    options.type = "POST";
-        //    options.data = JSON.stringify(selectedIDs);
-        //    options.contentType = "application/json";
-        //    options.dataType = "json";
-        //    options.success = function (msg) {
-        //        alert(msg);
-        //    };
-        //    options.error = function () {
-        //        alert("Error while deleting the records!");
-        //    };
-        //    $.ajax(options);
-
-        //});
-
-    }
 </script>
