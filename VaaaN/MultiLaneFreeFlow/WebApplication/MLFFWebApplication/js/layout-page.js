@@ -47,5 +47,8 @@
             }
         });
     });
+    console.log(window.location.pathname);
+
+    $('#MainMenu [href^="' + window.location.pathname.toLowerCase() + '"]').addClass('active');
 });
 
