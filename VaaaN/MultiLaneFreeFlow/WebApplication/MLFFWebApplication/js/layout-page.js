@@ -5,6 +5,7 @@
     //$("#AdminsubMenu").attr("aria-expanded", "true");
     //$("#AdminsubMenu").removeClass("list-group-submenu");
     //$("#AdminsubMenu").addClass("list-group-submenu collapse in")
+
     $("#buttonChange").focus();
     $("#buttonChange").click(function () {
         // validation
