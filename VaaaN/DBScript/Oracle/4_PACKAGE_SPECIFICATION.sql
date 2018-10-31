@@ -625,7 +625,7 @@ AS
                           P_LANE_TYPE_ID        IN NUMBER,
                           P_LANE_NAME           IN NVARCHAR2,
                           P_CAMERA_ID_FRONT         IN NUMBER,
-                P_CAMERA_ID_REAR         IN NUMBER,
+                          P_CAMERA_ID_REAR         IN NUMBER,
                           P_ETC_ANTENNA_ID_FRONT       IN NUMBER,
                           P_ETC_ANTENNA_ID_REAR       IN NUMBER,
                           P_MODIFIED_BY         IN NUMBER,
