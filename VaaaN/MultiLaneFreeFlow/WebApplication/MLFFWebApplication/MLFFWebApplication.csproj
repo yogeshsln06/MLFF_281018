@@ -406,6 +406,7 @@
     <Content Include="Views\Home\CustomerVehicleListbyCustomer.cshtml" />
     <Content Include="Views\Home\LiveEvent.cshtml" />
     <Content Include="Views\Shared\_LeftMenuBar.cshtml" />
+    <Content Include="Views\Shared\_AssociatedTimeTransaction.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
