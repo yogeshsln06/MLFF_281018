@@ -1,0 +1,16 @@
+1. How to create users
+2. How to create customers (tbl_customer_account)
+3. How to create customer vehicles (tbl_customer_vehicle)
+4. How to create hardwares (tbl_hardware)
+5. How to create lane asnd assign hardware to the lanes
+6. How to verify that crosstalk and nodeflux sending proper hardware ids in their packets.
+7. How to create vehicle class
+8. How to erase previous experimental data (tbl_crosstalk_packet, tbl_nodeflux_packet, tbl_transaction)
+9. How to operate manual review module
+10. How to operate live monitoring module
+11. How to monitor live violation module (in tabs)
+
+12. How to see logs
+13. How to restart services
+14. How to check inbound and outboud SMSs?
+15. How to check latencies?
