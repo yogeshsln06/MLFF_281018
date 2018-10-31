@@ -1208,7 +1208,7 @@ namespace VaaaN.MLFF.WebApplication
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> LaneNamefiltered = laneDataList.FindAll(x => x.LaneName.ToLower() == lane.LaneName.ToLower() && x.PlazaId == lane.PlazaId);
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> ANPRFrontfiltered = laneDataList.FindAll(x => x.CameraIdFront == lane.CameraIdFront || x.CameraIdRear == lane.CameraIdFront);
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> ANPRRearfiltered = laneDataList.FindAll(x => x.CameraIdFront == lane.CameraIdRear || x.CameraIdRear == lane.CameraIdRear);
-                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> RIFDfiltered = laneDataList.FindAll(x => x.EtcReaderId == lane.EtcReaderId);
+                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> RIFDfiltered = laneDataList.FindAll(x => x.AntennaIdFront == lane.AntennaIdFront);
                 if (LaneNamefiltered.Count > 0)
                 {
 
@@ -1270,7 +1270,7 @@ namespace VaaaN.MLFF.WebApplication
                 ViewBag.LaneTypeId = lane.LaneTypeId;
                 ViewBag.CameraIdFront = lane.CameraIdFront;
                 ViewBag.CameraIdRear = lane.CameraIdRear;
-                ViewBag.EtcReaderId = lane.EtcReaderId;
+                ViewBag.EtcReaderId = lane.AntennaIdFront;
                 TempData["Message"] = "";
                 return LaneEditions(lane);
             }
@@ -1294,7 +1294,7 @@ namespace VaaaN.MLFF.WebApplication
             ViewBag.LaneTypeId = lane.LaneTypeId;
             ViewBag.CameraIdFront = lane.CameraIdFront;
             ViewBag.CameraIdRear = lane.CameraIdRear;
-            ViewBag.EtcReaderId = lane.EtcReaderId;
+            ViewBag.EtcReaderId = lane.AntennaIdFront;
             try
             {
 
@@ -1304,7 +1304,7 @@ namespace VaaaN.MLFF.WebApplication
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> LaneNamefiltered = laneDataList.FindAll(x => (x.LaneName.ToLower() == lane.LaneName.ToLower() && x.PlazaId == lane.PlazaId) && x.LaneId != lane.LaneId);
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> ANPRFrontfiltered = laneDataList.FindAll(x => (x.CameraIdFront == lane.CameraIdFront || x.CameraIdRear == lane.CameraIdFront) && x.LaneId != lane.LaneId);
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> ANPRRearfiltered = laneDataList.FindAll(x => (x.CameraIdFront == lane.CameraIdRear || x.CameraIdRear == lane.CameraIdRear) && x.LaneId != lane.LaneId);
-                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> RIFDfiltered = laneDataList.FindAll(x => x.EtcReaderId == lane.EtcReaderId && x.LaneId != lane.LaneId);
+                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> RIFDfiltered = laneDataList.FindAll(x => x.AntennaIdFront == lane.AntennaIdFront && x.LaneId != lane.LaneId);
                 if (LaneNamefiltered.Count > 0)
                 {
                     TempData["Message"] = "Lajur Name already exists with selected Gantry";

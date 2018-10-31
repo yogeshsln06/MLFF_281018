@@ -1299,7 +1299,7 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE lane in lanes)
                 {
-                    if ((lane.CameraIdFront == hardwareId) || (lane.CameraIdRear == hardwareId) || (lane.EtcReaderId == hardwareId))
+                    if ((lane.CameraIdFront == hardwareId) || (lane.CameraIdRear == hardwareId) || (lane.AntennaIdFront == hardwareId) || (lane.AntennaIdRear == hardwareId))
                     {
                         result = lane; //it should be lane module business logic that one assigned hardware id cannot be assigned to other lane.
                         break;
