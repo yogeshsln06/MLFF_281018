@@ -297,21 +297,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.Class = transactiondata.Rows[0]["CTP_VEHICLE_CLASS_NAME"].ToString();
                 ViewBag.NFRear = transactiondata.Rows[0]["FRONT_IMAGE"].ToString();
                 ViewBag.NFFront = transactiondata.Rows[0]["REAR_IMAGE"].ToString();
-                #region Vehicle Class Dropdown
-                List<SelectListItem> vehicleClass = new List<SelectListItem>();
-                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE> vehicle = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
-
-                vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
-                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
-                {
-                    vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
-                }
-
-                ViewBag.AuditorVehicleClass = vehicleClass;
-
-                #endregion
             }
-
+         
             string strQuery = " WHERE 1=1 ";
             strQuery += " AND T.TRANSACTION_ID <> " + transactionId;
             strQuery += " AND  TRANSACTION_DATETIME BETWEEN TO_DATE('" + strTransactionTime + "','DD/MM/YYYY HH24:MI:SS') - INTERVAL '1' MINUTE AND  TO_DATE('" + strTransactionTime + "','DD/MM/YYYY HH24:MI:SS')  + INTERVAL '1' MINUTE";
@@ -325,58 +312,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         [HttpPost]
         public JsonResult JoinTransactions(string[] AssociatedTransactionIds, string TransactionId)
         {
-            int associatedtransactionId = 0;
-            int ctEntryId = 0;
-            int nfRearEntryId = 0;
-            int nffrontEntryId = 0;
-
-            Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
-            //Get TransactionTime from Transaction Id
-            DataTable transactiondata = new DataTable();
             JsonResult result = new JsonResult();
-            for (int i = 0; i < AssociatedTransactionIds.Length; i++)
-            {
-                associatedtransactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
-                string strfilter = " WHERE 1=1 ";
-                strfilter += " AND T.TRANSACTION_ID = " + associatedtransactionId;
-                transaction.TransactionId = associatedtransactionId;
-
-                //transactiondata = Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strfilter);
-                transactiondata = Libraries.CommonLibrary.BLL.TransactionBLL.Transaction_GetById(transaction);
-
-                if (transactiondata!=null && transactiondata.Rows!=null && transactiondata.Rows.Count>0)
-                {
-
-                    HelperClass.LogMessage("Trying To Read CTEnrtyId, NodeFlux Rear Entry Id, NodeFlux Front Entry Id");
-                    if (transactiondata.Rows[0]["CT_ENTRY_ID"]!=null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString()!="")
-                    {
-                        HelperClass.LogMessage("CTEnrtyId Found");
-                        ctEntryId = Convert.ToInt32(transactiondata.Rows[0]["CT_ENTRY_ID"].ToString());
-                    }
-                    HelperClass.LogMessage("CTEnrtyId not Found");
-                    if (transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString() != "")
-                    {
-                        HelperClass.LogMessage("NodeFlux Front Entry Id Found");
-                        nffrontEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString());
-                    }
-                    HelperClass.LogMessage("NodeFlux Front Entry Id not Found");
-                    if (transactiondata.Rows[0]["NF_ENTRY_ID_REAR"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString() != "")
-                    {
-                        HelperClass.LogMessage("NodeFlux Rear Entry Id Found");
-                        nfRearEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString());
-                    }
-                    HelperClass.LogMessage("NodeFlux Rear Entry Id not Found");
-                    HelperClass.LogMessage("Ready to update Transaction");
-
-                    #region Update Transaction By Manual Review
-
-                    #endregion
-
-                }
-
-            }
-            //Update transaction
-          //  Libraries.CommonLibrary.BLL.TransactionBLL.up
             return Json(result);
         }
         #endregion
