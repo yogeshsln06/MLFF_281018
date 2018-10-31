@@ -246,6 +246,7 @@
     <Content Include="css\jquery.datetimepicker.css" />
     <Content Include="js\jquery.datetimepicker.full.min.js" />
     <Content Include="js\jquery.freezeheader.js" />
+    <Content Include="js\layout-page.js" />
     <Content Include="js\liveEvents.js" />
     <Content Include="js\Login.js" />
     <Content Include="js\ManualReview.js" />
@@ -407,6 +408,8 @@
     <Content Include="Views\Home\LiveEvent.cshtml" />
     <Content Include="Views\Shared\_LeftMenuBar.cshtml" />
     <Content Include="Views\Shared\_AssociatedTimeTransaction.cshtml" />
+    <Content Include="Views\Report\ReportPage.cshtml" />
+    <Content Include="Views\Report\ReportSelection.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -416,7 +419,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Report\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\CommonLibrary\CommonLibrary.csproj">

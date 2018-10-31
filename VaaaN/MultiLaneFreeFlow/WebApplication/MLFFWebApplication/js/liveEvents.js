@@ -4,8 +4,8 @@ $(document).ready(function () {
     $('.prev i').addClass("fa fa-chevron-left");
     $('.next i').removeClass();
     $('.next i').addClass("fa fa-chevron-right");
-    $('#module_4').css({ "background-color": "#00B4CE" });
-    $('#module_4').css({ "font-weight": "bold" });
+    //$('#module_4').css({ "background-color": "#00B4CE" });
+    //$('#module_4').css({ "font-weight": "bold" });
     $("#tableCrossTalk").freezeHeader({ 'height': '180px' });
     $("#tableNodeFluxFront").freezeHeader({ 'height': '180px' });
     $("#tableNodeFluxRear").freezeHeader({ 'height': '180px' });
