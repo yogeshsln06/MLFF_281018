@@ -199,11 +199,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_is_transfered", DbType.Int32, transaction.IsTransfered, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_is_violation", DbType.Int32, transaction.IsViolation, ParameterDirection.Input));
 
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_audit_status", DbType.Int32, transaction.AuditStatus, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_auditor_id", DbType.Int32, transaction.AuditorId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_audit_datetime", DbType.DateTime, transaction.AuditDate, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_audited_vehicle_class_id", DbType.Int32, transaction.AuditedVehicleClassId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_audited_vrn", DbType.String, transaction.AuditedVRN, ParameterDirection.Input, 20));
+                ////command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_audit_status", DbType.Int32, transaction.AuditStatus, ParameterDirection.Input));
+                ////command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_auditor_id", DbType.Int32, transaction.AuditorId, ParameterDirection.Input));
+                ////command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_audit_datetime", DbType.DateTime, transaction.AuditDate, ParameterDirection.Input));
+                ////command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_audited_vehicle_class_id", DbType.Int32, transaction.AuditedVehicleClassId, ParameterDirection.Input));
+                ////command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_audited_vrn", DbType.String, transaction.AuditedVRN, ParameterDirection.Input, 20));
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modifier_id", DbType.Int32, transaction.ModifierId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modification_date", DbType.DateTime, transaction.ModificationDate, ParameterDirection.Input));
