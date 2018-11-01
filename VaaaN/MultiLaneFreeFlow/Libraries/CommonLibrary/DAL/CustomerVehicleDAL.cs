@@ -238,7 +238,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
-        public static CBE.CustomerVehicleCBE GetCustomerVehicleVehRegNo(CBE.CustomerVehicleCBE vehicle)
+        public static CBE.CustomerVehicleCBE GetCustomerVehicleByVehRegNo(CBE.CustomerVehicleCBE vehicle)
         {
             try
             {

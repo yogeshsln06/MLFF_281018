@@ -77,9 +77,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleById(customerVehicle);
         }
 
-        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE GetCustomerVehicleVehRegNo(CBE.CustomerVehicleCBE customerVehicle)
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE GetCustomerVehicleByVehRegNo(CBE.CustomerVehicleCBE customerVehicle)
         {
-            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleVehRegNo(customerVehicle);
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleByVehRegNo(customerVehicle);
         }
 
     }
