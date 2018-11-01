@@ -220,7 +220,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 //timestamp part is added with three extra zeros for millisecond part
                 result =
                     "<events> " +
-                      "<event objectId=\"" + tagId + "\" parentUUID=\"2BB5CAD0-1F66-710D-8682-547811838B92\" locationId=\"" + 5 + "\" uuid=\"5DB5ED55-4EB6-C47A-2E32-AD8E262A840D\" timestamp=\"" + DateTimeToUnixTimestamp(transactionTime) + "000" + "\" type=\"com:nofilis:crosstalk:event:tag-observation\"> " +
+                      "<event objectId=\"" + tagId + "\" parentUUID=\"2BB5CAD0-1F66-710D-8682-547811838B92\" locationId=\"" + 6 + "\" uuid=\"5DB5ED55-4EB6-C47A-2E32-AD8E262A840D\" timestamp=\"" + DateTimeToUnixTimestamp(transactionTime) + "000" + "\" type=\"com:nofilis:crosstalk:event:tag-observation\"> " +
                         "<property value=\"1325565648758\" id=\"first-read\"/> " +
                         "<property value=\"1325565648758\" id=\"last-read\"/> " +
                         "<property value=\"BD63426A-D8DE-F008-DD76-87E94B5D8B36\" id=\"observationUUID\"/>" +
