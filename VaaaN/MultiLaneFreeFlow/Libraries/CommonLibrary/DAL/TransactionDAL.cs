@@ -1171,6 +1171,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["AUDITED_VRN"] != DBNull.Value)
                         transaction.AuditedVRN = Convert.ToString(dt.Rows[i]["AUDITED_VRN"]);
 
+                    if (dt.Rows[i]["IS_REGISTERED"] != DBNull.Value)
+                        transaction.IsRegistered = Convert.ToInt32(dt.Rows[i]["IS_REGISTERED"]);
 
                     transactions.Add(transaction);
                 }
