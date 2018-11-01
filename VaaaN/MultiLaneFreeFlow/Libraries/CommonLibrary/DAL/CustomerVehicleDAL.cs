@@ -238,6 +238,26 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static CBE.CustomerVehicleCBE GetCustomerVehicleVehRegNo(CBE.CustomerVehicleCBE vehicle)
+        {
+            try
+            {
+
+                CBE.CustomerVehicleCollection vehicles = new CBE.CustomerVehicleCollection();
+
+                string spName = Constants.oraclePackagePrefix + "CUSTOMERVEHICLE_GETBYVEHREGNO";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEH_REG_NO", DbType.String, vehicle.VehRegNo, ParameterDirection.Input));
+
+                vehicles = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
+
+                return vehicles[0];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
 
         #region Helper Methods

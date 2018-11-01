@@ -3314,6 +3314,31 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
           WHERE CV.TAG_ID = P_TAG_ID;
    END CUSTOMER_VEHICLE_GETBYTAGID;
 
+   PROCEDURE CUSTOMERVEHICLE_GETBYVEHREGNO (P_VEH_REG_NO   IN     NVARCHAR2,
+                                          CUR_OUT       OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT CV.TMS_ID,
+                  CV.ENTRY_ID,
+                  CV.ACCOUNT_ID,
+                  CV.VEH_REG_NO,
+                  CV.TAG_ID,
+                  CV.VEHICLE_CLASS_ID,
+                  CV.CREATION_DATE,
+                  CV.MODIFICATION_DATE,
+                  CV.MODIFIED_BY,
+                  CV.TRANSFER_STATUS,
+                  VC.VEHICLE_CLASS_NAME,
+                 CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+           FROM TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                   ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                   ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+          WHERE CV.VEH_REG_NO = P_VEH_REG_NO;
+   END CUSTOMERVEHICLE_GETBYVEHREGNO;
+
    ------------ACCOUNT HISTORY ----------
 
    PROCEDURE ACCOUNT_HISTORY_INSERT (

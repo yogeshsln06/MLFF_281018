@@ -859,7 +859,9 @@ AS
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYTAGID (P_TAG_ID   IN     NVARCHAR2,
                                           CUR_OUT       OUT T_CURSOR);
-
+ 
+  PROCEDURE CUSTOMERVEHICLE_GETBYVEHREGNO (P_VEH_REG_NO   IN     NVARCHAR2,
+                                          CUR_OUT       OUT T_CURSOR);
    ------------ACCOUNT HISTORY ----------
 
    PROCEDURE ACCOUNT_HISTORY_INSERT (
