@@ -61,10 +61,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
 
             transaction.CreationDate = System.DateTime.Now;
             transaction.ModificationDate = System.DateTime.Now;
+
+            transaction.IsRegistered = 1; //it will be always 1 in this case
+
             return TransactionDAL.InsertByCTP(transaction);
         }
 
-        public static Int64 InsertByNFPFront(NodeFluxPacketCBE nfp, int nfpEntryId)
+        public static Int64 InsertByNFPFront(NodeFluxPacketCBE nfp, int nfpEntryId, int isRegistered)
         {
             TransactionCBE transaction = new TransactionCBE();
             transaction.TMSId = 1;
@@ -89,10 +92,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
 
             transaction.CreationDate = System.DateTime.Now;
             transaction.ModificationDate = System.DateTime.Now;
+
+            transaction.IsRegistered = isRegistered;
+
             return TransactionDAL.InsertByNFPFront(transaction);
         }
 
-        public static Int64 InsertByNFPRear(NodeFluxPacketCBE nfp, int nfpEntryId)
+        public static Int64 InsertByNFPRear(NodeFluxPacketCBE nfp, int nfpEntryId, int isRegistered)
         {
             TransactionCBE transaction = new TransactionCBE();
             transaction.TMSId = 1;
@@ -117,6 +123,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
 
             transaction.CreationDate = System.DateTime.Now;
             transaction.ModificationDate = System.DateTime.Now;
+
+            transaction.IsRegistered = isRegistered;
+
             return TransactionDAL.InsertByNFPRear(transaction);
         }
 

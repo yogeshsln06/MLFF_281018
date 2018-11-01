@@ -37,6 +37,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CT_ENTRY_ID", DbType.Int32, transaction.CrosstalkEntryId, ParameterDirection.Input));
                 //common parts
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, transaction.CreationDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_REGISTERED", DbType.Int32, transaction.IsRegistered, ParameterDirection.Input));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
 
@@ -70,6 +71,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_ENTRY_ID_FRONT", DbType.Int32, transaction.NodefluxEntryIdFront, ParameterDirection.Input));
                 //common parts
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, transaction.CreationDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_REGISTERED", DbType.Int32, transaction.IsRegistered, ParameterDirection.Input));
+
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
 
                 transactionId = Convert.ToInt64(command.Parameters["P_TRANSACTION_ID"].Value);
@@ -103,6 +106,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_ENTRY_ID_REAR", DbType.Int32, transaction.NodefluxEntryIdRear, ParameterDirection.Input));
                 //common parts
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, transaction.CreationDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_REGISTERED", DbType.Int32, transaction.IsRegistered, ParameterDirection.Input));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
 
@@ -207,6 +211,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modifier_id", DbType.Int32, transaction.ModifierId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modification_date", DbType.DateTime, transaction.ModificationDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_REGISTERED", DbType.Int32, transaction.IsRegistered, ParameterDirection.Input));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
@@ -372,8 +377,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         {
             StringBuilder sb = new StringBuilder();
 
-            //TIME_STAMP,ike_plate_number,FRONT_plate_number,REAR_plate_number,ike_vehicle_class,anpr_vehicle_class,LANE_ID,IKE_ID,
-            //OWNER_ID,VEHICLE_OWNER,AMOUNT_CHARGED,BALANCE,SMS_NOTIFICATION_status
             // Add header line
             if (dt.Rows.Count > 0)
             {
@@ -389,6 +392,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("VEHICLE_OWNER,");
                 sb.Append("AMOUNT_CHARGED,");
                 sb.Append("BALANCE,");
+                sb.Append("FRONT_PLATE_THUMBNAIL,");
+                sb.Append("FRONT_VEHICLE_THUMBNAIL,");
+                sb.Append("FRONT_VIDEO_URL,");
+                sb.Append("REAR_PLATE_THUMBNAIL,");
+                sb.Append("REAR_VEHICLE_THUMBNAIL,");
+                sb.Append("REAR_VIDEO_URL,");
                 sb.Append("SMS_NOTIFICATION_STATUS");
             }
 
@@ -510,6 +519,70 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 {
                     sb.Append(Convert.ToString(dr["BALANCE"]) + ",");
                 }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //FRONT_PLATE_THUMBNAIL
+                if (dr["FRONT_PLATE_THUMBNAIL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_PLATE_THUMBNAIL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //FRONT_VEHICLE_THUMBNAIL
+                if (dr["FRONT_VEHICLE_THUMBNAIL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_VEHICLE_THUMBNAIL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //FRONT_VIDEO_URL
+                if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //REAR_PLATE_THUMBNAIL
+                if (dr["REAR_PLATE_THUMBNAIL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_PLATE_THUMBNAIL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //REAR_VEHICLE_THUMBNAIL
+                if (dr["REAR_VEHICLE_THUMBNAIL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_VEHICLE_THUMBNAIL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //REAR_VIDEO_URL
+                if (dr["REAR_VIDEO_URL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
 
                 //SMS_NOTIFICATION
                 if (dr["SMS_NOTIFICATION"] != DBNull.Value)
@@ -532,7 +605,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("FRONT_PLATE_NUMBER,");
                 sb.Append("REAR_PLATE_NUMBER,");
                 sb.Append("ANPR_VEHICLE_CLASS,");
-                sb.Append("LANE_ID");
+                sb.Append("LANE_ID,");
+                sb.Append("FRONT_PLATE_THUMBNAIL,");
+                sb.Append("FRONT_VEHICLE_THUMBNAIL,");
+                sb.Append("FRONT_VIDEO_URL,");
+                sb.Append("REAR_PLATE_THUMBNAIL,");
+                sb.Append("REAR_VEHICLE_THUMBNAIL,");
+                sb.Append("REAR_VIDEO_URL");
             }
 
             foreach (DataRow dr in dt.Rows)
@@ -582,7 +661,67 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //LANE_ID
                 if (dr["LANE_ID"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["LANE_ID"]));
+                    sb.Append(Convert.ToString(dr["LANE_ID"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //FRONT_PLATE_THUMBNAIL
+                if (dr["FRONT_PLATE_THUMBNAIL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_PLATE_THUMBNAIL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //FRONT_VEHICLE_THUMBNAIL
+                if (dr["FRONT_VEHICLE_THUMBNAIL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_VEHICLE_THUMBNAIL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //FRONT_VIDEO_URL
+                if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //REAR_PLATE_THUMBNAIL
+                if (dr["REAR_PLATE_THUMBNAIL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_PLATE_THUMBNAIL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //REAR_VEHICLE_THUMBNAIL
+                if (dr["REAR_VEHICLE_THUMBNAIL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_VEHICLE_THUMBNAIL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //REAR_VIDEO_URL
+                if (dr["REAR_VIDEO_URL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]));
                 }
             }
 
@@ -1032,6 +1171,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["AUDITED_VRN"] != DBNull.Value)
                         transaction.AuditedVRN = Convert.ToString(dt.Rows[i]["AUDITED_VRN"]);
 
+                    if (dt.Rows[i]["IS_REGISTERED"] != DBNull.Value)
+                        transaction.IsRegistered = Convert.ToInt32(dt.Rows[i]["IS_REGISTERED"]);
 
                     transactions.Add(transaction);
                 }
