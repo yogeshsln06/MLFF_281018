@@ -46,6 +46,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private DateTime auditDate;
         private int auditedVehicleClassId = -1;
         private string auditedVRN = string.Empty;
+
+        private int isRegistered = 0;//0=Unknown, 1=Registered, 2=Unregistered
         #endregion
 
         #region Properties
@@ -381,6 +383,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.auditedVRN = value;
+            }
+        }
+
+        public Int32 IsRegistered
+        {
+            get
+            {
+                return this.isRegistered;
+            }
+            set
+            {
+                this.isRegistered = value;
             }
         }
         #endregion

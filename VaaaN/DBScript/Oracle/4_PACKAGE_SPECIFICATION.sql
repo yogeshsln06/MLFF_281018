@@ -466,6 +466,7 @@ AS
                                  P_TRANSACTION_ID            OUT NUMBER,
                                  P_TRANSACTION_DATETIME   IN     DATE,
                                  P_CT_ENTRY_ID            IN     NUMBER,
+								  P_IS_REGISTERED           IN NUMBER,
                                  P_CREATION_DATE          IN     DATE);
 
    PROCEDURE TRAN_INSERT_BY_NFP_FRONT (
@@ -475,6 +476,7 @@ AS
       P_TRANSACTION_ID            OUT NUMBER,
       P_TRANSACTION_DATETIME   IN     DATE,
       P_NF_ENTRY_ID_FRONT      IN     NUMBER,
+	   P_IS_REGISTERED           IN NUMBER,
       P_CREATION_DATE          IN     DATE);
 
    PROCEDURE TRAN_INSERT_BY_NFP_REAR (P_TMS_ID                 IN     NUMBER,
@@ -483,20 +485,23 @@ AS
                                       P_TRANSACTION_ID            OUT NUMBER,
                                       P_TRANSACTION_DATETIME   IN     DATE,
                                       P_NF_ENTRY_ID_REAR       IN     NUMBER,
-                                      P_CREATION_DATE          IN     DATE);
+                                      P_IS_REGISTERED           IN NUMBER,
+									   P_CREATION_DATE          IN     DATE);
 
    PROCEDURE TRAN_UPDATE_BY_NFP_FRONT (
       P_TMS_ID                 IN     NUMBER,
       P_PLAZA_ID               IN     NUMBER,
       P_LANE_ID                IN     NUMBER,
       P_TRANSACTION_ID            IN NUMBER,
-      P_NF_ENTRY_ID_FRONT      IN     NUMBER);
+      P_NF_ENTRY_ID_FRONT      IN     NUMBER
+	   	  );
 
    PROCEDURE TRAN_UPDATE_BY_NFP_REAR (P_TMS_ID                 IN     NUMBER,
                                       P_PLAZA_ID               IN     NUMBER,
                                       P_LANE_ID                IN     NUMBER,
                                       P_TRANSACTION_ID            IN NUMBER,
-                                      P_NF_ENTRY_ID_REAR       IN     NUMBER);
+                                      P_NF_ENTRY_ID_REAR       IN     NUMBER
+									  );
 
    PROCEDURE TRAN_UPDATE (P_TMS_ID                 IN NUMBER,
                           P_PLAZA_ID               IN NUMBER,
@@ -509,6 +514,7 @@ AS
                           P_IS_BALANCE_UPDATED     IN NUMBER,
                           P_IS_TRANSFERED          IN NUMBER,
                           P_IS_VIOLATION           IN NUMBER,
+						  P_IS_REGISTERED           IN NUMBER,
                           P_MODIFIER_ID            IN NUMBER,
                           P_MODIFICATION_DATE      IN DATE);
 
