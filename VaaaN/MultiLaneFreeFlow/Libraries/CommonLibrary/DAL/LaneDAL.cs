@@ -256,8 +256,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["ETC_ANTENNA_ID_REAR"] != DBNull.Value)
                         lane.AntennaIdRear = Convert.ToInt32(dt.Rows[i]["ETC_ANTENNA_ID_REAR"]);
 
-                    if (dt.Rows[i]["ETC_READER_NAME"] != DBNull.Value)
-                        lane.EtcReaderName = Convert.ToString(dt.Rows[i]["ETC_READER_NAME"]);
+                    if (dt.Rows[i]["ETC_ANTENNA_NAME_FRONT"] != DBNull.Value)
+                        lane.EtcAntennaNameFront = Convert.ToString(dt.Rows[i]["ETC_ANTENNA_NAME_FRONT"]);
+
+                    if (dt.Rows[i]["ETC_ANTENNA_NAME_REAR"] != DBNull.Value)
+                        lane.EtcAntennaNameRear = Convert.ToString(dt.Rows[i]["ETC_ANTENNA_NAME_REAR"]);
 
                     if (dt.Rows[i]["CREATION_DATE"] != DBNull.Value)
                         lane.CreationDate = Convert.ToDateTime(dt.Rows[i]["CREATION_DATE"]);
