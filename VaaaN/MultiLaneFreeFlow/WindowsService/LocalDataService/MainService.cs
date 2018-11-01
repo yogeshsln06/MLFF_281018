@@ -51,7 +51,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
             //DateTime dt = DateTime.ParseExact("13/10/2018 23:24:25.111", "dd/MM/yyyy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
@@ -213,12 +213,15 @@ namespace VaaaN.MLFF.WindowsServices
             }
             finally
             {
-                if (receiveRecord)
-                {
+                //if (receiveRecord)
+                //{
                     mq.Receive();
                     sw.Stop();
-                    //VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.WriteGeneralLog("InBoxQueue message processed in " + sw.Elapsed.TotalSeconds + " seconds.");
-                }
+                //}
+                //else
+                //{
+                    //receive and send to failed queue
+                //}
 
                 inBoxQueue.BeginPeek();
             }
@@ -1299,7 +1302,7 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE lane in lanes)
                 {
-                    if ((lane.CameraIdFront == hardwareId) || (lane.CameraIdRear == hardwareId) || (lane.EtcReaderId == hardwareId))
+                    if ((lane.CameraIdFront == hardwareId) || (lane.CameraIdRear == hardwareId) || (lane.AntennaIdFront == hardwareId) || (lane.AntennaIdRear == hardwareId))
                     {
                         result = lane; //it should be lane module business logic that one assigned hardware id cannot be assigned to other lane.
                         break;

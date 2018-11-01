@@ -221,7 +221,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             TransactionDAL.UpdateAuditSection(transaction);
         }
-
+        public static void UpdateTransaction(CBE.TransactionCBE transaction)
+        {
+            TransactionDAL.Update(transaction);
+        }
 
         #region CSV Data
         public static StringBuilder GetNormalTransactions(DateTime startTime, DateTime endTime)

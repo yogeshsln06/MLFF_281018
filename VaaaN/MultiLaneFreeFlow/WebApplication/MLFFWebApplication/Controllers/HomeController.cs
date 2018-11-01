@@ -1209,7 +1209,7 @@ namespace VaaaN.MLFF.WebApplication
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> LaneNamefiltered = laneDataList.FindAll(x => x.LaneName.ToLower() == lane.LaneName.ToLower() && x.PlazaId == lane.PlazaId);
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> ANPRFrontfiltered = laneDataList.FindAll(x => x.CameraIdFront == lane.CameraIdFront || x.CameraIdRear == lane.CameraIdFront);
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> ANPRRearfiltered = laneDataList.FindAll(x => x.CameraIdFront == lane.CameraIdRear || x.CameraIdRear == lane.CameraIdRear);
-                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> RIFDfiltered = laneDataList.FindAll(x => x.EtcReaderId == lane.EtcReaderId);
+                //List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> RIFDfiltered = laneDataList.FindAll(x => x.EtcReaderId == lane.EtcReaderId);
                 if (LaneNamefiltered.Count > 0)
                 {
 
@@ -1227,11 +1227,11 @@ namespace VaaaN.MLFF.WebApplication
                     TempData["Message"] = "Camera Name Rear already exists";
                     return LaneAdditions(Convert.ToInt32(urlid[urlid.Length - 1]));
                 }
-                else if (RIFDfiltered.Count > 0)
-                {
-                    TempData["Message"] = "ETC Reader Name already exists";
-                    return LaneAdditions(Convert.ToInt32(urlid[urlid.Length - 1]));
-                }
+                //else if (RIFDfiltered.Count > 0)
+                //{
+                //    TempData["Message"] = "ETC Reader Name already exists";
+                //    return LaneAdditions(Convert.ToInt32(urlid[urlid.Length - 1]));
+                //}
 
 
                 lane.TMSId = 1;
@@ -1271,7 +1271,7 @@ namespace VaaaN.MLFF.WebApplication
                 ViewBag.LaneTypeId = lane.LaneTypeId;
                 ViewBag.CameraIdFront = lane.CameraIdFront;
                 ViewBag.CameraIdRear = lane.CameraIdRear;
-                ViewBag.EtcReaderId = lane.EtcReaderId;
+                //ViewBag.EtcReaderId = lane.EtcReaderId;
                 TempData["Message"] = "";
                 return LaneEditions(lane);
             }
@@ -1295,7 +1295,7 @@ namespace VaaaN.MLFF.WebApplication
             ViewBag.LaneTypeId = lane.LaneTypeId;
             ViewBag.CameraIdFront = lane.CameraIdFront;
             ViewBag.CameraIdRear = lane.CameraIdRear;
-            ViewBag.EtcReaderId = lane.EtcReaderId;
+            //ViewBag.EtcReaderId = lane.EtcReaderId;
             try
             {
 
@@ -1305,7 +1305,7 @@ namespace VaaaN.MLFF.WebApplication
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> LaneNamefiltered = laneDataList.FindAll(x => (x.LaneName.ToLower() == lane.LaneName.ToLower() && x.PlazaId == lane.PlazaId) && x.LaneId != lane.LaneId);
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> ANPRFrontfiltered = laneDataList.FindAll(x => (x.CameraIdFront == lane.CameraIdFront || x.CameraIdRear == lane.CameraIdFront) && x.LaneId != lane.LaneId);
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> ANPRRearfiltered = laneDataList.FindAll(x => (x.CameraIdFront == lane.CameraIdRear || x.CameraIdRear == lane.CameraIdRear) && x.LaneId != lane.LaneId);
-                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> RIFDfiltered = laneDataList.FindAll(x => x.EtcReaderId == lane.EtcReaderId && x.LaneId != lane.LaneId);
+                //List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> RIFDfiltered = laneDataList.FindAll(x => x.EtcReaderId == lane.EtcReaderId && x.LaneId != lane.LaneId);
                 if (LaneNamefiltered.Count > 0)
                 {
                     TempData["Message"] = "Lajur Name already exists with selected Gantry";
@@ -1322,11 +1322,11 @@ namespace VaaaN.MLFF.WebApplication
                     TempData["Message"] = "Camera Name Rear already exists";
                     return LaneEditions(lane);
                 }
-                else if (RIFDfiltered.Count > 0)
-                {
-                    TempData["Message"] = "ETC Reader Name already exists";
-                    return LaneEditions(lane);
-                }
+                //else if (RIFDfiltered.Count > 0)
+                //{
+                //    TempData["Message"] = "ETC Reader Name already exists";
+                //    return LaneEditions(lane);
+                //}
 
 
 

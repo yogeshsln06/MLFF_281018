@@ -2275,7 +2275,7 @@ PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID             IN NUMBER,
     LEFT OUTER JOIN TBL_LANE L ON T.LANE_ID=L.LANE_ID  
     LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP ON T.CT_ENTRY_ID = CTP.ENTRY_ID
     LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_CTP ON CTP.OBJECT_ID = CV_CTP.TAG_ID
-    
+     LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP ON VC_CTP.VEHICLE_CLASS_ID = CV_CTP.VEHICLE_CLASS_ID
     LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF ON T.NF_ENTRY_ID_FRONT=NFPF.ENTRY_ID
     LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF ON CV_NFPF.VEH_REG_NO =NFPF.PLATE_NUMBER
     LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF ON NFPF.VEHICLE_CLASS_ID =VC_NFPF.VEHICLE_CLASS_ID
@@ -2359,7 +2359,8 @@ ORDER BY TRANSACTION_ID';
                           P_LANE_NAME         IN NVARCHAR2,
                           P_CAMERA_ID_FRONT         IN NUMBER,
               P_CAMERA_ID_REAR         IN NUMBER,
-                          P_ETC_READER_ID     IN NUMBER,
+                          P_ETC_ANTENNA_ID_FRONT     IN NUMBER,
+                          P_ETC_ANTENNA_ID_REAR     IN NUMBER,
                           P_CREATION_DATE     IN DATE,
                           P_TRANSFER_STATUS   IN NUMBER)
    AS
@@ -2371,7 +2372,8 @@ ORDER BY TRANSACTION_ID';
                             LANE_NAME,
                             CAMERA_ID_FRONT,
                 CAMERA_ID_REAR,
-                            ETC_READER_ID,
+                            ETC_ANTENNA_ID_FRONT,
+                            ETC_ANTENNA_ID_REAR,
                             CREATION_DATE,
                             TRANSFER_STATUS)
            VALUES (P_TMS_ID,
@@ -2381,7 +2383,8 @@ ORDER BY TRANSACTION_ID';
                    P_LANE_NAME,
                    P_CAMERA_ID_FRONT,
 P_CAMERA_ID_REAR,
-                   P_ETC_READER_ID,
+                   P_ETC_ANTENNA_ID_FRONT,
+                   P_ETC_ANTENNA_ID_REAR,
                    P_CREATION_DATE,
                    P_TRANSFER_STATUS);
    END LANE_INSERT;
@@ -2393,7 +2396,8 @@ P_CAMERA_ID_REAR,
                           P_LANE_NAME           IN NVARCHAR2,
                           P_CAMERA_ID_FRONT         IN NUMBER,
               P_CAMERA_ID_REAR         IN NUMBER,
-                          P_ETC_READER_ID       IN NUMBER,
+                          P_ETC_ANTENNA_ID_FRONT       IN NUMBER,
+                          P_ETC_ANTENNA_ID_REAR       IN NUMBER,
                           P_MODIFIED_BY         IN NUMBER,
                           P_MODIFICATION_DATE   IN DATE,
                           P_TRANSFER_STATUS     IN NUMBER)
@@ -2404,7 +2408,8 @@ P_CAMERA_ID_REAR,
              LANE_TYPE_ID = P_LANE_TYPE_ID,
              CAMERA_ID_FRONT = P_CAMERA_ID_FRONT,
 CAMERA_ID_REAR = P_CAMERA_ID_REAR,
-             ETC_READER_ID = P_ETC_READER_ID,
+             ETC_ANTENNA_ID_FRONT = P_ETC_ANTENNA_ID_FRONT,
+             ETC_ANTENNA_ID_REAR = P_ETC_ANTENNA_ID_REAR,
              MODIFIED_BY = P_MODIFIED_BY,
              MODIFICATION_DATE = MODIFICATION_DATE,
              TRANSFER_STATUS = P_TRANSFER_STATUS
@@ -2420,7 +2425,8 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
            SELECT L.CAMERA_ID_FRONT,
                   L.CAMERA_ID_REAR,
                   L.CREATION_DATE,
-                  L.ETC_READER_ID,
+                  L.ETC_ANTENNA_ID_FRONT,
+                  L.ETC_ANTENNA_ID_REAR,
                   L.LANE_ID,
                   L.LANE_TYPE_ID,
                   L.LANE_NAME,
@@ -2442,8 +2448,12 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                      AS CAMERA_NAME_REAR,
                   (SELECT H.HARDWARE_NAME
                      FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.ETC_READER_ID)
-                     AS ETC_READER_NAME
+                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_FRONT)
+                     AS ETC_ANTENNA_NAME_FRONT,
+                     (SELECT H.HARDWARE_NAME
+                     FROM TBL_HARDWARE H
+                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_REAR)
+                     AS ETC_ANTENNA_NAME_REAR
              FROM TBL_LANE L
          ORDER BY LANE_ID;
    END LANE_GETALL;
@@ -2455,7 +2465,8 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
         SELECT L.CAMERA_ID_FRONT,
                   L.CAMERA_ID_REAR,
                   L.CREATION_DATE,
-                  L.ETC_READER_ID,
+                  L.ETC_ANTENNA_ID_FRONT,
+                  L.ETC_ANTENNA_ID_REAR,
                   L.LANE_ID,
                   L.LANE_TYPE_ID,
                   L.LANE_NAME,
@@ -2477,8 +2488,12 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                      AS CAMERA_NAME_REAR,
                   (SELECT H.HARDWARE_NAME
                      FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.ETC_READER_ID)
-                     AS ETC_READER_NAME
+                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_FRONT)
+                     AS ETC_ANTENNA_NAME_FRONT,
+                     (SELECT H.HARDWARE_NAME
+                     FROM TBL_HARDWARE H
+                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_REAR)
+                     AS ETC_ANTENNA_NAME_REAR
              FROM TBL_LANE L
           WHERE L.LANE_ID = P_LANE_ID;
    END LANE_GETBYID;
@@ -2490,7 +2505,8 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
          SELECT L.CAMERA_ID_FRONT,
                   L.CAMERA_ID_REAR,
                   L.CREATION_DATE,
-                  L.ETC_READER_ID,
+                  L.ETC_ANTENNA_ID_FRONT,
+                  L.ETC_ANTENNA_ID_REAR,
                   L.LANE_ID,
                   L.LANE_TYPE_ID,
                   L.LANE_NAME,
@@ -2512,8 +2528,12 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                      AS CAMERA_NAME_REAR,
                   (SELECT H.HARDWARE_NAME
                      FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.ETC_READER_ID)
-                     AS ETC_READER_NAME
+                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_FRONT)
+                     AS ETC_ANTENNA_NAME_FRONT,
+                     (SELECT H.HARDWARE_NAME
+                     FROM TBL_HARDWARE H
+                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_REAR)
+                     AS ETC_ANTENNA_NAME_REAR
              FROM TBL_LANE L
           WHERE L.PLAZA_ID = P_PLAZA_ID;
    END LANE_GETBYPLAZAID;

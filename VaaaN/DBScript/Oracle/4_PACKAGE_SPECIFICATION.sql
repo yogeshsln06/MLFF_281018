@@ -614,7 +614,8 @@ AS
                           P_LANE_NAME         IN NVARCHAR2,
                           P_CAMERA_ID_FRONT         IN NUMBER,
                 P_CAMERA_ID_REAR         IN NUMBER,
-                          P_ETC_READER_ID     IN NUMBER,
+                          P_ETC_ANTENNA_ID_FRONT     IN NUMBER,
+                          P_ETC_ANTENNA_ID_REAR     IN NUMBER,
                           P_CREATION_DATE     IN DATE,
                           P_TRANSFER_STATUS   IN NUMBER);
 
@@ -624,8 +625,9 @@ AS
                           P_LANE_TYPE_ID        IN NUMBER,
                           P_LANE_NAME           IN NVARCHAR2,
                           P_CAMERA_ID_FRONT         IN NUMBER,
-                P_CAMERA_ID_REAR         IN NUMBER,
-                          P_ETC_READER_ID       IN NUMBER,
+                          P_CAMERA_ID_REAR         IN NUMBER,
+                          P_ETC_ANTENNA_ID_FRONT       IN NUMBER,
+                          P_ETC_ANTENNA_ID_REAR       IN NUMBER,
                           P_MODIFIED_BY         IN NUMBER,
                           P_MODIFICATION_DATE   IN DATE,
                           P_TRANSFER_STATUS     IN NUMBER);

@@ -20,8 +20,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private string cameraNameFront;
         private Int32 cameraIdRear;
         private string cameraNameRear;
-        private Int32 etcReaderId;
-        private string etcReaderName;
+        private Int32 antennaIdFront;
+        private Int32 antennaIdRear;
+        private string etcAntennaNameFront;
+        private string etcAntennaNameRear;
         private DateTime creationDate;
         private DateTime modificationDate;
         private Int32 modifierId;
@@ -37,8 +39,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.cameraNameFront = string.Empty;
             this.cameraIdRear = 0;
             this.cameraNameRear = string.Empty;
-            this.etcReaderId = 0;
-            this.etcReaderName = string.Empty;
+            this.antennaIdFront = 0;
+            this.antennaIdRear = 0;
+            this.etcAntennaNameFront = string.Empty;
+            this.etcAntennaNameRear = string.Empty;
             this.creationDate = DateTime.Now;
             this.modificationDate = DateTime.Now;
             this.modifierId = 0;
@@ -120,26 +124,46 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        public Int32 EtcReaderId
+        public Int32 AntennaIdFront
         {
-            get { return this.etcReaderId; }
-            set { this.etcReaderId = value; }
+            get { return this.antennaIdFront; }
+            set { this.antennaIdFront = value; }
         }
+
+        public Int32 AntennaIdRear
+        {
+            get { return this.antennaIdRear; }
+            set { this.antennaIdRear = value; }
+        }
+
         [Display(Name = "ETCReaderName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
-        public string EtcReaderName
+        public string EtcAntennaNameFront
         {
             get
             {
-                return this.etcReaderName;
+                return this.etcAntennaNameFront;
             }
 
             set
             {
-                this.etcReaderName = value;
+                this.etcAntennaNameFront = value;
             }
         }
 
-     
+        public string EtcAntennaNameRear
+        {
+            get
+            {
+                return this.etcAntennaNameRear;
+            }
+
+            set
+            {
+                this.etcAntennaNameRear = value;
+            }
+        }
+
+
         public DateTime CreationDate
         {
             get { return this.creationDate; }
@@ -177,7 +201,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("laneName = " + this.laneName + Environment.NewLine);
             sb.Append("cameraIdFront = " + this.cameraIdFront + Environment.NewLine);
             sb.Append("cameraIdRear = " + this.cameraIdRear + Environment.NewLine);
-            sb.Append("etcReaderId = " + this.etcReaderId + Environment.NewLine);
+            sb.Append("etcAntennaIdFront = " + this.antennaIdFront + Environment.NewLine);
+            sb.Append("etcAntennaIdRear = " + this.antennaIdRear + Environment.NewLine);
             sb.Append("creationDate = " + this.creationDate + Environment.NewLine);
             sb.Append("modificationDate = " + this.modificationDate + Environment.NewLine);
             sb.Append("modifiedBy = " + this.modifierId + Environment.NewLine);
