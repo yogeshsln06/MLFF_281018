@@ -1,7 +1,7 @@
 ﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.ViewTransactionCBE
 
 @{
-    ViewBag.Title = "Customer List";
+    ViewBag.Title = "Manual Review";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
 }
 
@@ -104,6 +104,7 @@
 <script>
     $(document).ready(function () {
         $("#hfAPIPath").val(JSON.parse('@Html.Raw(Json.Encode(ViewData["apiPath"]))'));
+
     });
 </script>
 <script src="~/js/ManualReview.js"></script>
@@ -309,50 +310,80 @@
 
                                 </div>
                                 <div class="col-md-6">
-                                    <div id="output" class="col-md-12 light-border" style="height:300px;">
-                                        <div id="imgeview" style="height:100%;">
-                                            <div class="col-md-6">
-                                                <fieldset>
-                                                    <legend>Front VRN</legend>
-                                                    <img src="#" id="frontImg" onclick="openImage(this)" class="imgsize" />
-                                                </fieldset>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <fieldset>
-                                                    <legend>Rear VRN</legend>
-                                                    <img src="#" id="rearImg" onclick="openImage(this)" class="imgsize" />
-                                                </fieldset>
-
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#front">Front VRN</a></li>
+                                        <li><a href="#rear">Rear VRN</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div id="front" class="tab-pane fade in active">
+                                            <div class="col-md-12 light-border" style="height:265px;">
+                                                <div id="frontimgeview" style="height:100%;">
+                                                    <div class="col-md-6">
+                                                        <fieldset>
+                                                            <legend>Plate Number</legend>
+                                                            <img src="#" id="frontplateImg" onclick="openImage(this)" class="imgsize" />
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <fieldset>
+                                                            <legend>Vechile VRN</legend>
+                                                            <img src="#" id="frontvechileImg" onclick="openImage(this)" class="imgsize" />
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                                <div id="frontvideoview" style="display:none; height:100%;">
+                                                    <div class="col-md-9">
+                                                        <fieldset>
+                                                            <legend>Video</legend>
+                                                            <div id="frontvideo">
+                                                                <video controls class="videoDiv">
+                                                                    <source src="#" type="video/mp4">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div id="videoview" style="display:none; height:100%;">
-                                            <div class="col-md-6">
-                                                <fieldset>
-                                                    <legend>Front VRN</legend>
-                                                    <div id="frontvideo">
-                                                        <video controls class="videoDiv">
-                                                            <source src="#" type="video/mp4">
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                        @*<i class="fa fa-download fa-5x" aria-hidden="true" onclick="downlaodVideo('front')"></i>*@
+                                        <div id="rear" class="tab-pane fade">
+                                            <div class="col-md-12 light-border" style="height:265px;">
+                                                <div id="rearimgeview" style="height:100%;">
+                                                    <div class="col-md-6">
+                                                        <fieldset>
+                                                            <legend>Plate Number</legend>
+                                                            <img src="#" id="rearplateImg" onclick="openImage(this)" class="imgsize" />
+                                                        </fieldset>
                                                     </div>
-                                                </fieldset>
-
-
-                                            </div>
-                                            <div class="col-md-6">
-                                                <fieldset>
-                                                    <legend>Front VRN</legend>
-                                                    <div id="rearvideo">
-                                                        <video controls class="videoDiv">
-                                                            <source src="#" type="video/mp4">
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                        @*<i class="fa fa-download fa-5x" aria-hidden="true"><a id="reardownload" href="#"></a></i>*@
+                                                    <div class="col-md-6">
+                                                        <fieldset>
+                                                            <legend>Vechile VRN</legend>
+                                                            <img src="#" id="rearvechileImg" onclick="openImage(this)" class="imgsize" />
+                                                        </fieldset>
                                                     </div>
-                                                </fieldset>
+                                                </div>
+                                                <div id="rearvideoview" style="display:none; height:100%;">
+                                                    <div class="col-md-9">
+                                                        <fieldset>
+                                                            <legend>Video</legend>
+                                                            <div id="rearvideo">
+                                                                <video controls class="videoDiv">
+                                                                    <source src="#" type="video/mp4">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+
+                                    </div>
+                                    <div class="col-md-6">
                                         <div class="col-md-12">
                                             <div class="col-md-4">
                                                 <input type="radio" name="favorite_pet" value="Image" checked="checked" class="radio" onclick="handleClick(this);">Image
@@ -362,7 +393,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -415,7 +445,7 @@
 
 
             </div>
-            
+
         </div>
         <div id="myModal" class="modal">
 

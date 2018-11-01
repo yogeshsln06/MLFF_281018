@@ -2,22 +2,25 @@
 var apiPath = '';
 var noimagepath = "";
 var novideo = "";
+var activeTab = '#front'
 $(document).ready(function () {
     noimagepath = $("#hfAPIPath").val() + "Content/images/noimage.png";
     novideo = $("#hfAPIPath").val() + "Content/images/sample.mp4";
-    $("#frontImg").attr('src', noimagepath);
-    $("#rearImg").attr('src', noimagepath);
-    //$("#frontvideo").attr('src', novideo);
+    $("#frontplateImg").attr('src', noimagepath);
+    $("#frontvechileImg").attr('src', noimagepath);
+    $("#rearplateImg").attr('src', noimagepath);
+    $("#rearvechileImg").attr('src', noimagepath);
     //$("#rearvideo").attr('src', novideo);
-    $("#videoview").hide();
+    $("#frontvideoview").hide();
+    //$("#rearvideoview").hide();
 
     jQuery('#StartTime').datetimepicker({
         format: 'm/d/Y H:i',
 
     });
-	
-	 jQuery('#EndTime').datetimepicker({
-	     format: 'm/d/Y H:i',
+
+    jQuery('#EndTime').datetimepicker({
+        format: 'm/d/Y H:i',
 
     });
 
@@ -41,6 +44,10 @@ $(document).ready(function () {
     $("#GenerateReport").click(function () {
         GenerateReport();
     });
+    $(".nav-tabs a").click(function () {
+        activeTab = $(this).attr('href');
+        $(this).tab('show');
+    });
 
 });
 
@@ -59,7 +66,7 @@ function filterData() {
         PlateNumber: $("#PlateNumber").val(),
         TransactionCategoryId: $("#ddlTransactionCategory").val()
     }
-    // $('#loader').show();
+    $('#loader').show();
     $.ajax({
         type: "POST",
         url: "FilterManulReview",
@@ -68,6 +75,7 @@ function filterData() {
         data: JSON.stringify(InputDate),
         contentType: "application/json; charset=utf-8",
         success: function (JsonfilterData) {
+            $('#loader').hide();
             ResponceData = JsonfilterData;
             var TR;
             if (ResponceData.length > 0) {
@@ -85,8 +93,7 @@ function filterData() {
 
         },
         error: function (x, e) {
-
-            //$('#loader').hide();
+            $('#loader').hide();
         }
 
     });
@@ -145,28 +152,39 @@ function FilterDataBtTranscationId(TranId) {
         $("#AUDITED_VEHICLE_CLASS_ID").val(retJson[0].AUDITED_VEHICLE_CLASS_ID);
 
         if (replacenull(retJson[0].FRONT_IMAGE) == '') {
-            $("#frontImg").attr('src', noimagepath);
+            $("#frontplateImg").attr('src', noimagepath);
         }
         else {
-            $("#frontImg").attr('src', Imagepath + retJson[0].FRONT_IMAGE);
+            $("#frontplateImg").attr('src', Imagepath + retJson[0].FRONT_IMAGE);
         }
+        if (replacenull(retJson[0].FRONT_VEHICLE_THUMBNAIL) == '') {
+            $("#frontvechileImg").attr('src', noimagepath);
+        }
+        else {
+            $("#frontvechileImg").attr('src', Imagepath + retJson[0].FRONT_VEHICLE_THUMBNAIL);
+        }
+        // 
         if (replacenull(retJson[0].REAR_IMAGE) == '') {
-            $("#rearImg").attr('src', noimagepath);
+            $("#rearplateImg").attr('src', noimagepath);
         }
         else {
-            $("#rearImg").attr('src', Imagepath + retJson[0].REAR_IMAGE);
+            $("#rearplateImg").attr('src', Imagepath + retJson[0].REAR_IMAGE);
+        }
+
+        if (replacenull(retJson[0].REAR_VEHICLE_THUMBNAIL) == '') {
+            $("#rearvechileImg").attr('src', noimagepath);
+        }
+        else {
+            $("#rearvechileImg").attr('src', Imagepath + retJson[0].REAR_VEHICLE_THUMBNAIL);
         }
 
         if (replacenull(retJson[0].FRONT_VIDEO_URL) == '') {
-            // $("#frontvideo").attr('src', novideo);
-            $("#reardownload").attr('href', novideo);
             var $video = $('#frontvideo video'),
             videoSrc = $('source', $video).attr('src', novideo);
             $video[0].load();
             //$video[0].play();
         }
         else {
-            $("#reardownload").attr('href', retJson[0].FRONT_VIDEO_URL);
             var $video = $('#frontvideo video'),
             videoSrc = $('source', $video).attr('src', retJson[0].FRONT_VIDEO_URL);
             $video[0].load();
@@ -174,13 +192,11 @@ function FilterDataBtTranscationId(TranId) {
             // $("#frontvideo").attr('src', retJson[0].FRONT_VIDEO_URL);
         }
         if (replacenull(retJson[0].REAR_VIDEO_URL) == '') {
-            //$("#rearvideo").attr('src', novideo);
             var $video = $('#rearvideo video'),
             videoSrc = $('source', $video).attr('src', novideo);
             $video[0].load();
         }
         else {
-            //$("#rearvideo").attr('src', retJson[0].REAR_VIDEO_URL);
             var $video = $('#rearvideo video'),
             videoSrc = $('source', $video).attr('src', retJson[0].REAR_VIDEO_URL);
             $video[0].load();
@@ -195,16 +211,12 @@ function FilterDataBtTranscationId(TranId) {
 
 function handleClick(radio) {
     if ($(radio).val() == "Image") {
-        //$("#frontvideo").attr('src', '#');
-        //$("#rearvideo").attr('src', '#');
-        $("#videoview").hide();
-        $("#imgeview").show();
+        $(activeTab + "videoview").hide();
+        $(activeTab + "imgeview").show();
     }
     else if ($(radio).val() == "Video") {
-        //$("#frontImg").attr('src', '#');
-        //$("#rearImg").attr('src', '#');
-        $("#imgeview").hide();
-        $("#videoview").show();
+        $(activeTab + "imgeview").hide();
+        $(activeTab + "videoview").show();
     }
 }
 

@@ -8,7 +8,8 @@
     position:relative;
 }
 
-
+.loader { position: absolute; height: 100%; width: 100%; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); z-index: 9999999; display: none; }
+.loader .loader-spin { position: absolute; left: 50%; top: 50%; color: #fff; }
 .top_row {
     padding-top: 10px;
     min-height: 80px;
