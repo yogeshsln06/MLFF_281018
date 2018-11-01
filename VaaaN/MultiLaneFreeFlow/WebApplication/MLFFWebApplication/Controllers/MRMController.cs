@@ -303,7 +303,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.NFFront = transactiondata.Rows[0]["REAR_IMAGE"].ToString();
 
                 //check CT_Entry_ID exists if yes we will not fetch CT_entry_ID associated transaction
-                if (transactiondata.Rows[0]["CT_ENTRY_ID"].ToString()!=null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString()!="")
+                if (transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != "")
                 {
                     ctEntryId = Convert.ToInt32(transactiondata.Rows[0]["CT_ENTRY_ID"].ToString());
                 }
@@ -317,8 +317,6 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 {
                     nfRearEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString());
                 }
-
-
                 #region Vehicle Class Dropdown 
                 List<SelectListItem> vehicleClass = new List<SelectListItem>();
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE> vehicle = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
@@ -336,29 +334,49 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             string strQuery = " WHERE 1=1 ";
             strQuery += " AND T.TRANSACTION_ID <> " + transactionId;
-            //Make Query if CT_ENTRY_ID not exists i.e. CT_ENTRY_ENTRY_ID=0
-            if (ctEntryId == 0)
+            strQuery += " AND  TRANSACTION_DATETIME BETWEEN TO_DATE('" + strTransactionTime + "','DD/MM/YYYY HH24:MI:SS') - INTERVAL '1' MINUTE AND  TO_DATE('" + strTransactionTime + "','DD/MM/YYYY HH24:MI:SS')  + INTERVAL '1' MINUTE";
+            //Case 1 Cross Talk entry Id Exists and Nodeflux Front Entry Id Exists and Nodeflux Rear Entry Id Exists
+            if (ctEntryId != 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
             {
-                strQuery += " AND T.CT_ENTRY_ID IS NOT NULL";
+                //Return No Transaction
             }
-            //Make Query if NF_FRONT_ENTRY_ID not exists i.e. NF_FRONT_ENTRY_ID=0
-            if (nffrontEntryId == 0)
-            {
-                strQuery += " AND T.NF_ENTRY_ID_FRONT IS NOT NULL";
-            }
-            //Make Query if NF_FRONT_ENTRY_ID not exists i.e. NF_FRONT_ENTRY_ID=0
-            if (nfRearEntryId == 0)
+            //Case 2 Cross Talk entry Id Exists and Nodeflux Front Entry Id Exists and Nodeflux Rear Entry Id not Exists
+            if (ctEntryId != 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
             {
                 strQuery += " AND T.NF_ENTRY_ID_REAR IS NOT NULL";
             }
-            strQuery += " AND  TRANSACTION_DATETIME BETWEEN TO_DATE('" + strTransactionTime + "','DD/MM/YYYY HH24:MI:SS') - INTERVAL '1' MINUTE AND  TO_DATE('" + strTransactionTime + "','DD/MM/YYYY HH24:MI:SS')  + INTERVAL '1' MINUTE";
+            //Case 3 Cross Talk entry Id Exists and Nodeflux Front Entry Id Not Exists and Nodeflux Rear Entry Id Exists
+            else if (ctEntryId != 0 && nffrontEntryId == 0 && nfRearEntryId != 0)
+            {
+                strQuery += " AND T.NF_ENTRY_ID_FRONT IS NOT NULL";
+            }
+            //Case 4 Cross Talk entry Id Exists and Nodeflux Front Entry Id Not Exists and Nodeflux Rear Entry Id NOT Exists
+            else if (ctEntryId != 0 && nffrontEntryId == 0 && nfRearEntryId == 0)
+            {
+                strQuery += " AND (T.NF_ENTRY_ID_FRONT IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL)";
+            }
+            //Case 7 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id Exists
+            else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+            {
+                strQuery += " AND T.CT_ENTRY_ID IS NOT NULL ";
+            }
+            //Case 8 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id NOT Exists
+            else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+            {
+                strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL) ";
+            }
+            //Case 9 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Not Exists and Nodeflux Rear Entry Id Exists
+            else if (ctEntryId == 0 && nffrontEntryId == 0 && nfRearEntryId != 0)
+            {
+                strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL) ";
+            }
 
-           
             DataTable dt = new DataTable();
             dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);
 
             return PartialView("_AssociatedTimeTransaction", dt);
         }
+
 
         [HttpPost]
         public JsonResult JoinTransactions(string[] AssociatedTransactionIds, string TransactionId)
