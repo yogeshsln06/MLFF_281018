@@ -319,7 +319,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 }
 
 
-                #region Vehicle Class Dropdown
+                #region Vehicle Class Dropdown 
                 List<SelectListItem> vehicleClass = new List<SelectListItem>();
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE> vehicle = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
