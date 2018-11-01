@@ -71,7 +71,7 @@ function filterData() {
         type: "POST",
         url: "FilterManulReview",
         dataType: "JSON",
-        async: false,
+        async: true,
         data: JSON.stringify(InputDate),
         contentType: "application/json; charset=utf-8",
         success: function (JsonfilterData) {
