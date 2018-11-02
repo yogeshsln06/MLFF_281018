@@ -377,6 +377,25 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             return PartialView("_AssociatedTimeTransaction", dt);
         }
 
+        //GET :VRN Search
+        public JsonResult SearchVRN(string VehRegNo)
+        {
+            JsonResult result = new JsonResult();
+            Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicle = new Libraries.CommonLibrary.CBE.CustomerVehicleCBE();
+            customerVehicle.VehRegNo = VehRegNo;
+            //Check this VRN Exists in record
+            customerVehicle = Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(customerVehicle);
+            if (customerVehicle!=null)//i.e customer exists
+            {
+                result.Data = "VRN Exists";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                result.Data = "VRN Not Exists";
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         public JsonResult JoinTransactions(string[] AssociatedTransactionIds, string TransactionId)
@@ -387,6 +406,19 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             int nffrontEntryId = 0;
 
             Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
+            //get Parent Transaction Data
+            DataTable parentTransaction = new DataTable();
+            parentTransaction= Libraries.CommonLibrary.BLL.TransactionBLL.Transaction_GetById(transaction);
+            if (parentTransaction != null && parentTransaction.Rows != null && parentTransaction.Rows.Count > 0)
+            {
+                //Check CT_ENTRY_ID Exists for parent Transaction
+                if (parentTransaction.Rows[0]["CT_ENTRY_ID"] != null && parentTransaction.Rows[0]["CT_ENTRY_ID"].ToString() != "")
+                {
+                    ctEntryId = Convert.ToInt32(parentTransaction.Rows[0]["CT_ENTRY_ID"].ToString());
+                }
+                //Check CT_ENTRY_ID Exists for parent Transaction
+            }
+
             //Get TransactionTime from Transaction Id
             DataTable transactiondata = new DataTable();
             JsonResult result = new JsonResult();
@@ -427,16 +459,13 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     #region Update Transaction By Manual Review
 
                     #endregion
-
+                
                 }
-
             }
             //Update transaction
             //  Libraries.CommonLibrary.BLL.TransactionBLL.up
             return Json(result);
         }
         #endregion
-
-
     }
 }
