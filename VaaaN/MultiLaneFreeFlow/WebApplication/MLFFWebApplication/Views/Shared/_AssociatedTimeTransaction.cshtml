@@ -13,34 +13,35 @@
         <div class="col-sm-12">
             <label class="col-sm-2">Cross Talk Class:</label>
             <label class="col-sm-1">@ViewBag.Class</label>
-                <label class="col-sm-2">NodeFlux Rear:</label>
-                <label class="col-sm-3">
-            @if (ViewBag.NFRear != "")
+            <label class="col-sm-2">NodeFlux Rear:</label>
+            <label class="col-sm-3">
+                @if (ViewBag.NFRear != "")
             {
                 string path = "http://192.168.1.65:5555/" + ViewBag.NFRear;
-                <img src="@path" />
-            }
-            else
-            {
-              @ViewBag.NFRear;
+                    <img src="@path" />
+                }
+                else
+                {
+                    @ViewBag.NFRear;
 
             }
-            
-          </label>
-                <label class="col-sm-2">NodeFlux Front:</label>
-                <label class="col-sm-2">
-            @if (ViewBag.NFFront != "")
+
+            </label>
+            <label class="col-sm-2">NodeFlux Front:</label>
+            <label class="col-sm-2">
+                @if (ViewBag.NFFront != "")
             {
                 string path = "http://192.168.1.65:5555/" + ViewBag.NFFront;
-                <img src="@path" />
-            }
-            else
-            {
-                @ViewBag.NFFront;
+                    <img src="@path" />
+                }
+                else
+                {
+                    @ViewBag.NFFront;
 
-            }</label>
-            </div>
-            </div>
+            }
+            </label>
+        </div>
+    </div>
 </div>
 <div class="col-xs-12 well boxshadow">
     <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
@@ -85,61 +86,97 @@
                         <tbody>
                             @foreach (DataRow item in Model.Rows)
             {
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" class="checkBox"
-                                               value="@item["TRANSACTION_ID"].ToString()" />
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
-                                    </td>
-                                    <td>
-                                        @item["TRANSACTION_DATETIME"].ToString()
-                                    </td>
-                                    <td>
-                                        @item["LANE_ID"].ToString()
-                                    </td>
-                                    <td>
-                                        @item["PLAZA_ID"].ToString()
-                                    </td>
-                                    <td>
-                                        @item["CTP_VRN"].ToString()
-                                    </td>
-                                    <td>
-                                        @item["CTP_VEHICLE_CLASS_NAME"].ToString()
-                                    </td>
-                                    <td>
-                                        @if (item["FRONT_IMAGE"].ToString() != "")
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="checkBox"
+                                           value="@item["TRANSACTION_ID"].ToString()" />
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
+                                </td>
+                                <td>
+                                    @item["TRANSACTION_DATETIME"].ToString()
+                                </td>
+                                <td>
+                                    @item["LANE_ID"].ToString()
+                                </td>
+                                <td>
+                                    @item["PLAZA_ID"].ToString()
+                                </td>
+                                <td>
+                                    @item["CTP_VRN"].ToString()
+                                </td>
+                                <td>
+                                    @item["CTP_VEHICLE_CLASS_NAME"].ToString()
+                                </td>
+                                <td>
+                                    @if (item["FRONT_IMAGE"].ToString() != "")
                                         {
                                             string path = "http://192.168.1.65:5555/" + item["FRONT_IMAGE"].ToString();
-                                            <img src="@path" />
+                                        <img src="@path" />
                                         }
                                         else
                                         {
-                                            <label>No Image Captured</label>
+                                        <label>No Image Captured</label>
                                         }
-                                    </td>
-                                    <td>
-                                        @if (item["REAR_IMAGE"].ToString() != "")
+                                </td>
+                                <td>
+                                    @if (item["REAR_IMAGE"].ToString() != "")
                                         {
                                             string path = "http://192.168.1.65:5555/" + item["REAR_IMAGE"].ToString();
-                                            <img src="@path" />
+                                        <img src="@path" />
                                         }
                                         else
                                         {
-                                            <label>No Image Captured</label>
+                                        <label>No Image Captured</label>
                                         }
 
-                                    </td>
-                                    <td>
-                                        @(item["AUDIT_STATUS"].ToString() == "1" ? "Yes" : "No")
-                                    </td>
-                                </tr>
+                                </td>
+                                <td>
+                                    @(item["AUDIT_STATUS"].ToString() == "1" ? "Yes" : "No")
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
+                </div>
+                <div class="col-sm-12">
+                    <label class="col-sm-2">VRN:</label>
+                    <input type="text" id="txtVrn" class="col-sm-2 input-sm" placeholder="Enter VRN" />
+                    <button id="btnSearch" onclick="SearchVRN();" class="btn btn-primary">Search</button>
+                </div>
+                <div class="col-sm-12">
+                    <label class="col-sm-2">VRN:</label>
+                    <button id="btnSearch" onclick="Join&Charge();" class="btn btn-primary">Join&Charge</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function SearchVRN() {
+        var InputData = {
+            VehRegNo: $("#txtVrn").val()
+        }
+        $.ajax({
+            type: "GET",
+            url: "SearchVRN",
+            dataType: "JSON",
+            async: true,
+            //data: JSON.stringify(InputData),
+            data:{  VehRegNo: $("#txtVrn").val()},
+            contentType: "application/json; charset=utf-8",
+            success: function (JsonfilterData) {
+                debugger;
+                $('#loader').hide();
+                ResponceData = JsonfilterData;
+                alert(ResponceData.Data);
+
+            },
+            error: function (x, e) {
+                $('#loader').hide();
+            }
+
+        });
+    }
+</script>
