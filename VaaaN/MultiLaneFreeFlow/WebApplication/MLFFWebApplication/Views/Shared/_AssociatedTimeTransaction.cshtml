@@ -9,6 +9,7 @@
             <label class="col-sm-3">@ViewBag.TransactionTime</label>
             <label class="col-sm-2">CrossTalk VRN:</label>
             <label class="col-sm-2">@ViewBag.CrossTalkVRN</label>
+            <input type="hidden" id="hdnTransactionId" value="@ViewBag.TransactionId" />
         </div>
         <div class="col-sm-12">
             <label class="col-sm-2">Cross Talk Class:</label>
@@ -147,7 +148,10 @@
                 </div>
                 <div class="col-sm-12">
                     <label class="col-sm-2">VRN:</label>
-                    <button id="btnSearch" onclick="Join&Charge();" class="btn btn-primary">Join&Charge</button>
+                    <input type="text" id="txtfinalVrn" class="col-sm-2 input-sm"/>
+                    <label class="col-sm-2">Vehicle Class:</label>
+                    @Html.DropDownList("ddlAuditedVehicleClass", (IEnumerable<SelectListItem>)ViewBag.AuditorVehicleClass, new { @class = "col-sm-2 input-sm" })
+                    <button id="btnSearch" onclick="JoinCharge();" class="btn btn-primary">Join&Charge</button>
                 </div>
             </div>
         </div>
@@ -165,6 +169,41 @@
             async: true,
             //data: JSON.stringify(InputData),
             data:{  VehRegNo: $("#txtVrn").val()},
+            contentType: "application/json; charset=utf-8",
+            success: function (JsonfilterData) {
+                debugger;
+                $('#loader').hide();
+                ResponceData = JsonfilterData;
+                alert(ResponceData.Data);
+
+            },
+            error: function (x, e) {
+                $('#loader').hide();
+            }
+
+        });
+    }
+    function JoinCharge()
+    {
+        debugger;
+        var selectedIDs = new Array();
+        $('input:checkbox.checkBox').each(function () {
+            if ($(this).prop('checked')) {
+                selectedIDs.push($(this).val());
+            }
+        });
+        var InputData = {
+            AssociatedTransactionIds: selectedIDs, TransactionId: $('#hdnTransactionId').val()
+
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "JoinTransactions",
+            dataType: "JSON",
+            async: true,
+            data: JSON.stringify(InputData),
+         
             contentType: "application/json; charset=utf-8",
             success: function (JsonfilterData) {
                 debugger;
