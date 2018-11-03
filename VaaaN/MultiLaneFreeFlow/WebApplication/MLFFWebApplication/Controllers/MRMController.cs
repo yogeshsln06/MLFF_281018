@@ -411,7 +411,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             int nfRearEntryId = 0;
             int nffrontEntryId = 0;
             int isBalanceUpdated = 0;
-
+            string VehRegNo = string.Empty;
+            int vehicleClassId = 0;//Get by Audited
             Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
             //get Parent Transaction Data
             transaction.TransactionId = Convert.ToInt32(TransactionId);
@@ -495,18 +496,47 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                             isBalanceUpdated = 1;
                         }
                     }
-                    #region Update Transaction By Manual Review
+                    //Set Is Audited =1 for every transaction
+                    transaction.TMSId = Libraries.CommonLibrary.Constants.GetCurrentTMSId();
+                    transaction.PlazaId = Libraries.CommonLibrary.Constants.GetCurrentPlazaId();
+                    transaction.LaneId = Convert.ToInt32(transactiondata.Rows[0]["LANE_ID"].ToString());
+                    transaction.TransactionId = associatedtransactionId;
+                    transaction.AuditStatus = (int)Libraries.CommonLibrary.Constants.AuditStatus.Reviewed;
+                    transaction.AuditorId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+                    transaction.AuditDate = DateTime.Now;
+                    transaction.AuditedVehicleClassId = vehicleClassId;
+                    transaction.AuditedVRN = VehRegNo;
+                    Libraries.CommonLibrary.BLL.TransactionBLL.UpdateAuditSection(transaction);
+                    strfilter = string.Empty;
+                }
+                #region Update Transaction By Manual Review
+                if (isBalanceUpdated!=1)
+                {
                     //Charging and Notification Logics
+                    //get Customer Vehicle from customer VRN
+                    Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo = new Libraries.CommonLibrary.CBE.CustomerVehicleCBE();
+                    customerVehicleInfo.VehRegNo = VehRegNo;
+                    customerVehicleInfo = Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(customerVehicleInfo);
+                    customerVehicleInfo.VehicleClassId = vehicleClassId;
+
+                    //get customer account info from customer VRN
+                    Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo = new Libraries.CommonLibrary.CBE.CustomerAccountCBE();
+                    customerAccountInfo.AccountId = customerVehicleInfo.AccountId;
+                    Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetCustomerById(customerAccountInfo);
+
                     //financial operation here
-                   // FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+                    FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
                     HelperClass.LogMessage("Financial processing has been done.");
 
-                    //notification operation here
-                   // NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+                    //Update Audited For This Transaction
 
-                    #endregion
+
+                    //notification operation here
+                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
 
                 }
+
+                #endregion
             }
             return Json(result);
         }
