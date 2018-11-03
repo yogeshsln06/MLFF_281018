@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
+using System.Messaging;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -13,6 +14,11 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 {
     public class MRMController : Controller
     {
+        private MessageQueue smsMessageQueue;
+
+        VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCollection lanes;
+        VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection tollRates;
+        VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCollection plazas;
         // GET: MRM
         public ActionResult Index()
         {
@@ -301,7 +307,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.Class = transactiondata.Rows[0]["CTP_VEHICLE_CLASS_NAME"].ToString();
                 ViewBag.NFRear = transactiondata.Rows[0]["FRONT_IMAGE"].ToString();
                 ViewBag.NFFront = transactiondata.Rows[0]["REAR_IMAGE"].ToString();
-
+                
                 //check CT_Entry_ID exists if yes we will not fetch CT_entry_ID associated transaction
                 if (transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != "")
                 {
@@ -404,11 +410,14 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             int ctEntryId = 0;
             int nfRearEntryId = 0;
             int nffrontEntryId = 0;
+            int isBalanceUpdated = 0;
 
             Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
             //get Parent Transaction Data
+            transaction.TransactionId = Convert.ToInt32(TransactionId);
             DataTable parentTransaction = new DataTable();
             parentTransaction= Libraries.CommonLibrary.BLL.TransactionBLL.Transaction_GetById(transaction);
+
             if (parentTransaction != null && parentTransaction.Rows != null && parentTransaction.Rows.Count > 0)
             {
                 //Check CT_ENTRY_ID Exists for parent Transaction
@@ -416,7 +425,21 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 {
                     ctEntryId = Convert.ToInt32(parentTransaction.Rows[0]["CT_ENTRY_ID"].ToString());
                 }
-                //Check CT_ENTRY_ID Exists for parent Transaction
+                //Check NodeFlux Front Entry Id Exists for parent Transaction
+                if (parentTransaction.Rows[0]["NF_ENTRY_ID_FRONT"] != null && parentTransaction.Rows[0]["NF_ENTRY_ID_FRONT"].ToString() != "")
+                {
+                    nffrontEntryId = Convert.ToInt32(parentTransaction.Rows[0]["NF_ENTRY_ID_FRONT"].ToString());
+                }
+                //Check NodeFlux Rear Entry Id Exists for parent Transaction
+                if (parentTransaction.Rows[0]["NF_ENTRY_ID_REAR"] != null && parentTransaction.Rows[0]["NF_ENTRY_ID_REAR"].ToString() != "")
+                {
+                    nfRearEntryId = Convert.ToInt32(parentTransaction.Rows[0]["NF_ENTRY_ID_REAR"].ToString());
+                }
+                //Check Balance Is Updated for this Transaction
+                if (parentTransaction.Rows[0]["IS_BALANCE_UPDATED"].ToString()=="1")
+                {
+                    isBalanceUpdated = 1;
+                }
             }
 
             //Get TransactionTime from Transaction Id
@@ -434,37 +457,274 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
                 if (transactiondata != null && transactiondata.Rows != null && transactiondata.Rows.Count > 0)
                 {
+                    if (ctEntryId!=0)//get Cross Talk Entry If not Exists other wise leave it
+                    {
+                        HelperClass.LogMessage("Trying To Read CTEnrtyId, NodeFlux Rear Entry Id, NodeFlux Front Entry Id");
+                        if (transactiondata.Rows[0]["CT_ENTRY_ID"] != null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != "")
+                        {
+                            HelperClass.LogMessage("CTEnrtyId Found");
+                            ctEntryId = Convert.ToInt32(transactiondata.Rows[0]["CT_ENTRY_ID"].ToString());
+                        }
+                        HelperClass.LogMessage("CTEnrtyId not Found");
+                    }
 
-                    HelperClass.LogMessage("Trying To Read CTEnrtyId, NodeFlux Rear Entry Id, NodeFlux Front Entry Id");
-                    if (transactiondata.Rows[0]["CT_ENTRY_ID"] != null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != "")
+                    if (nffrontEntryId!=0)
                     {
-                        HelperClass.LogMessage("CTEnrtyId Found");
-                        ctEntryId = Convert.ToInt32(transactiondata.Rows[0]["CT_ENTRY_ID"].ToString());
+                        if (transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString() != "")
+                        {
+                            HelperClass.LogMessage("NodeFlux Front Entry Id Found");
+                            nffrontEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString());
+                        }
+                        HelperClass.LogMessage("NodeFlux Front Entry Id not Found");
                     }
-                    HelperClass.LogMessage("CTEnrtyId not Found");
-                    if (transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString() != "")
+                    if (nfRearEntryId!=0)
                     {
-                        HelperClass.LogMessage("NodeFlux Front Entry Id Found");
-                        nffrontEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString());
+                        if (transactiondata.Rows[0]["NF_ENTRY_ID_REAR"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString() != "")
+                        {
+                            HelperClass.LogMessage("NodeFlux Rear Entry Id Found");
+                            nfRearEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString());
+                        }
+                        HelperClass.LogMessage("NodeFlux Rear Entry Id not Found");
                     }
-                    HelperClass.LogMessage("NodeFlux Front Entry Id not Found");
-                    if (transactiondata.Rows[0]["NF_ENTRY_ID_REAR"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString() != "")
-                    {
-                        HelperClass.LogMessage("NodeFlux Rear Entry Id Found");
-                        nfRearEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString());
-                    }
-                    HelperClass.LogMessage("NodeFlux Rear Entry Id not Found");
-                    HelperClass.LogMessage("Ready to update Transaction");
+                    //Check if Balance is not updated in parent transaction then check in child transaction to cut balabce
 
+                    if (isBalanceUpdated!=1)
+                    {
+                        if (transactiondata.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
+                        {
+                            isBalanceUpdated = 1;
+                        }
+                    }
                     #region Update Transaction By Manual Review
+                    //Charging and Notification Logics
+                    //financial operation here
+                   // FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+                    HelperClass.LogMessage("Financial processing has been done.");
+
+                    //notification operation here
+                   // NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
 
                     #endregion
-                
+
                 }
             }
-            //Update transaction
-            //  Libraries.CommonLibrary.BLL.TransactionBLL.up
             return Json(result);
+        }
+        #endregion
+
+        #region-------------Helper Methods--------------------
+        private void FinancialProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction)
+        {
+            //All these to be converted into a ORACLE transaction -- CJS
+            //calculation of deduct amount
+            #region LaneType and TollRate Section
+            decimal tollToDeduct = -1;
+            try
+            {
+                HelperClass.LogMessage("Finding out LaneType and toll rate to deduct...");
+                int laneTypeId = GetLaneTypeByLaneId(transaction.LaneId);
+                HelperClass.LogMessage("LaneType is: " + laneTypeId);
+                tollToDeduct = GetTollRate(Libraries.CommonLibrary.Constants.GetCurrentPlazaId(), laneTypeId, transaction.TransactionDateTime, customerVehicleInfo.VehicleClassId);
+                HelperClass.LogMessage("Toll to deduct is (for motorcycle it may be 0.00): " + tollToDeduct);
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Exception in finding out lane type and toll to deduct. " + ex.ToString());
+                tollToDeduct = -1;
+            }
+            #endregion
+
+            if (tollToDeduct > -1)
+            {
+                #region Account History Section
+                try
+                {
+                    HelperClass.LogMessage("Trying to record in account history table...");
+                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCBE accountHistory = new Libraries.CommonLibrary.CBE.AccountHistoryCBE();
+                    accountHistory.TMSId = transaction.TMSId;
+                    //accountHistory.EntryId = 0;//this  is the auto incremented and primery key of table
+                    accountHistory.AccountId = customerAccountInfo.AccountId;
+                    accountHistory.CustomerVehicleEntryId = customerVehicleInfo.EntryId; //<============================= 
+                    accountHistory.TransactionTypeId = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransactionType.LaneDebit;
+                    accountHistory.TransactionId = transaction.TransactionId;
+                    accountHistory.Amount = tollToDeduct;
+                    accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
+                    accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent; ;//will be updated later on
+                                                                                                                            //accountHistory.ModifierId = 1;//will be updated later on
+                    accountHistory.CreationDate = DateTime.Now;
+                    accountHistory.ModificationDate = DateTime.Now;
+                    accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
+                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                    HelperClass.LogMessage("Recorded in account history table successfully.");
+                }
+                catch (Exception ex)
+                {
+                    HelperClass.LogMessage("Exception in recording in the Account History table. " + ex.ToString());
+                }
+                #endregion
+
+                #region Update Balance Section
+                try
+                {
+                    HelperClass.LogMessage("Trying to update balance in customer account table...");
+                    //should be by by trigger defined in TBL_ACCOUNT_HISTORY
+                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateBalance(customerAccountInfo, (-1 * tollToDeduct));
+                    HelperClass.LogMessage("Balance updated successfully in the customer account.");
+                }
+                catch (Exception ex)
+                {
+                    HelperClass.LogMessage("Exception in updating customer's account balance. " + ex.ToString());
+                }
+                #endregion
+
+                #region Mark transaction as balance updated
+                try
+                {
+                    HelperClass.LogMessage("Trying to update isBalanceUpdated field in transaction table...");
+                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsBalanceUpdated(transaction);
+                    HelperClass.LogMessage("Transaction is marked as balance updated.");
+                }
+                catch (Exception ex)
+                {
+                    HelperClass.LogMessage("Exception in marking the transaction as balance updated. " + ex.ToString());
+                }
+                #endregion
+            }
+            else
+            {
+                HelperClass.LogMessage("Toll to deduct is -1.00. There is some error somewhere.");
+            }
+        }
+
+        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction)
+        {
+            try
+            {
+                HelperClass.LogMessage("Trying to push SMS to MSMQ...");
+                Message smsMessage = new Message();
+                smsMessage.Formatter = new BinaryMessageFormatter();
+                VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail smsDetail = new Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail();
+                //smsDetail.SMSMessage = "Your account has been deducted for Vehicle " + customerVehicleInfo.VehRegNo + " at Location: " + transaction.PlazaId + " at Time: " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT);
+                //Akun anda telah dipotong untuk bertransaksi nomor kendaraan hr36k3032 anda di tempat gantry 1 pada 13 / 10 / 2018 5: 50: 30 pm.
+                smsDetail.SMSMessage = "Akun anda telah dipotong untuk bertransaksi nomor kendaraan " + customerVehicleInfo.VehRegNo + " anda di tempat " + GetPlazaNameById(transaction.PlazaId) + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT) + ".";
+                HelperClass.LogMessage(smsDetail.SMSMessage);
+                smsDetail.AccountId = customerAccountInfo.AccountId;
+                smsDetail.CustomerName = customerAccountInfo.FirstName + " " + customerAccountInfo.LastName;
+                smsDetail.SenderMobileNumber = customerAccountInfo.MobileNo;
+
+                smsMessage.Body = smsDetail;
+                smsMessageQueue.Send(smsMessage);
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Exception in pushing SMS to SMS MSMQ. " + ex.ToString());
+            }
+        }
+        private int GetLaneTypeByLaneId(int laneId)
+        {
+            int result = -1;
+
+            try
+            {
+                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE lane in lanes)
+                {
+                    if (lane.LaneId == laneId)
+                    {
+                        result = lane.LaneTypeId;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result = -1;
+            }
+
+            return result;
+        }
+        private decimal GetTollRate(int plazaId, int laneType, DateTime transactionTime, int vehicleClass)
+        {
+            decimal result = -1;
+
+            try
+            {
+                VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection currentTimeTollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
+
+                DateTime currentStartDate = new DateTime();
+                DateTime currentEndDate = new DateTime();
+                DateTime actualEndDate = new DateTime(); //CJS
+
+                // Get toll rate as per transaction time
+                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in tollRates)
+                {
+                    DateTime currentDate = transactionTime;
+
+                    // Get Start hour and minute
+                    int startHour = Convert.ToInt32(tr.StartTime.Substring(0, 2));
+                    int startMinute = Convert.ToInt32(tr.StartTime.Substring(3, 2));
+
+                    int endHour = Convert.ToInt32(tr.EndTime.Substring(0, 2));
+                    int endMinute = Convert.ToInt32(tr.EndTime.Substring(3, 2));
+
+                    Console.WriteLine(startHour + ", " + startMinute + " -> " + endHour + ", " + endMinute);
+
+                    currentStartDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, startHour, startMinute, currentDate.Second);
+                    currentEndDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, endHour, endMinute, currentDate.Second);
+
+                    if (startHour > endHour)// Cross day
+                    {
+                        actualEndDate = currentEndDate.AddDays(1); //this value need to be assigned to another vehicle CJS
+                    }
+                    else
+                    {
+                        actualEndDate = currentEndDate; //CJS
+                    }
+
+                    if (currentDate > currentStartDate && currentDate < actualEndDate)
+                    {
+                        currentTimeTollRates.Add(tr);
+                    }
+                }
+
+                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in currentTimeTollRates)
+                {
+                    if (tr.PlazaId == plazaId && tr.LaneTypeId == laneType && tr.VehicleClassId == vehicleClass)
+                    {
+                        result = tr.Amount;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to get toll rate." + ex.Message);
+                result = -1;
+            }
+
+            return result;
+        }
+        private string GetPlazaNameById(int plazaId)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE plaza in plazas)
+                {
+                    if (plaza.PlazaId == plazaId)
+                    {
+                        result = plaza.PlazaName;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Exception in getting plaza name for plazaId " + plazaId);
+                result = string.Empty;
+            }
+
+            return result;
         }
         #endregion
     }
