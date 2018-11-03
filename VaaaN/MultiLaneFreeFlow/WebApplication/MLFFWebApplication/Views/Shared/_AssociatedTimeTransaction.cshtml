@@ -148,7 +148,7 @@
                 </div>
                 <div class="col-sm-12">
                     <label class="col-sm-2">VRN:</label>
-                    <input type="text" id="txtfinalVrn" class="col-sm-2 input-sm"/>
+                    <input type="text" id="txtfinalVrn" placeholder="Auditor VRN" class="col-sm-2 input-sm"/>
                     <label class="col-sm-2">Vehicle Class:</label>
                     @Html.DropDownList("ddlAuditedVehicleClass", (IEnumerable<SelectListItem>)ViewBag.AuditorVehicleClass, new { @class = "col-sm-2 input-sm" })
                     <button id="btnSearch" onclick="JoinCharge();" class="btn btn-primary">Join&Charge</button>
@@ -185,7 +185,14 @@
     }
     function JoinCharge()
     {
-        debugger;
+        if ($("#txtfinalVrn").val() == '') {
+            alert('Please Enter Audited VRN');
+            return false;
+        }
+        if ($("#ddlAuditedVehicleClass").val() <1) {
+            alert('Please Select Audited Vehicle Class');
+            return false;
+        }
         var selectedIDs = new Array();
         $('input:checkbox.checkBox').each(function () {
             if ($(this).prop('checked')) {
@@ -193,8 +200,9 @@
             }
         });
         var InputData = {
-            AssociatedTransactionIds: selectedIDs, TransactionId: $('#hdnTransactionId').val()
-
+            AssociatedTransactionIds: selectedIDs, TransactionId: $('#hdnTransactionId').val(),
+            VehRegNo: $('#txtfinalVrn').val(),
+            vehicleClassID: $('#ddlAuditedVehicleClass').val()
         }
 
         $.ajax({
