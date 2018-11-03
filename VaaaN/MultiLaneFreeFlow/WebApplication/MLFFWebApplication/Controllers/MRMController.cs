@@ -19,6 +19,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCollection lanes;
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection tollRates;
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCollection plazas;
+   
         // GET: MRM
         public ActionResult Index()
         {
@@ -404,15 +405,20 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         }
 
         [HttpPost]
-        public JsonResult JoinTransactions(string[] AssociatedTransactionIds, string TransactionId)
+        public JsonResult JoinTransactions(string[] AssociatedTransactionIds, string TransactionId, string VehRegNo, string vehicleClassID)
         {
             int associatedtransactionId = 0;
             int ctEntryId = 0;
             int nfRearEntryId = 0;
             int nffrontEntryId = 0;
             int isBalanceUpdated = 0;
-            string VehRegNo = string.Empty;
-            int vehicleClassId = 0;//Get by Audited
+            int laneId = 0;
+            int vehicleClassId = Convert.ToInt32(vehicleClassID);//Get by Audited
+            DateTime transactionDatetime = DateTime.Now;
+            int isRegistered = 0;
+            int isTransfered = 0;
+            int isViolation = 0;
+            DateTime creationDateTime = DateTime.Now;
             Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
             //get Parent Transaction Data
             transaction.TransactionId = Convert.ToInt32(TransactionId);
@@ -441,103 +447,153 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 {
                     isBalanceUpdated = 1;
                 }
+                if (parentTransaction.Rows[0]["IS_VIOLATION"] != null && parentTransaction.Rows[0]["IS_VIOLATION"].ToString() != "")
+                {
+                    isViolation = Convert.ToInt32(parentTransaction.Rows[0]["IS_VIOLATION"].ToString());
+                }
+                if (parentTransaction.Rows[0]["IS_TRANSFERED"] != null && parentTransaction.Rows[0]["IS_TRANSFERED"].ToString() != "")
+                {
+                    isTransfered = Convert.ToInt32(parentTransaction.Rows[0]["IS_TRANSFERED"].ToString());
+                }
+                if (parentTransaction.Rows[0]["CREATION_DATE"] != null && parentTransaction.Rows[0]["CREATION_DATE"].ToString() != "")
+                {
+                    creationDateTime = Convert.ToDateTime(parentTransaction.Rows[0]["CREATION_DATE"].ToString());
+                }
+                laneId = Convert.ToInt32(parentTransaction.Rows[0]["LANE_ID"].ToString());
+                transaction.LaneId = laneId;
+                transactionDatetime = Convert.ToDateTime(parentTransaction.Rows[0]["TRANSACTION_DATETIME"].ToString());
+                isRegistered = Convert.ToInt32(parentTransaction.Rows[0]["IS_REGISTERED"].ToString());
             }
 
             //Get TransactionTime from Transaction Id
             DataTable transactiondata = new DataTable();
             JsonResult result = new JsonResult();
-            for (int i = 0; i < AssociatedTransactionIds.Length; i++)
+            if (AssociatedTransactionIds!=null)
             {
-                associatedtransactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
-                string strfilter = " WHERE 1=1 ";
-                strfilter += " AND T.TRANSACTION_ID = " + associatedtransactionId;
-                transaction.TransactionId = associatedtransactionId;
-
-                //transactiondata = Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strfilter);
-                transactiondata = Libraries.CommonLibrary.BLL.TransactionBLL.Transaction_GetById(transaction);
-
-                if (transactiondata != null && transactiondata.Rows != null && transactiondata.Rows.Count > 0)
+                for (int i = 0; i < AssociatedTransactionIds.Length; i++)
                 {
-                    if (ctEntryId!=0)//get Cross Talk Entry If not Exists other wise leave it
-                    {
-                        HelperClass.LogMessage("Trying To Read CTEnrtyId, NodeFlux Rear Entry Id, NodeFlux Front Entry Id");
-                        if (transactiondata.Rows[0]["CT_ENTRY_ID"] != null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != "")
-                        {
-                            HelperClass.LogMessage("CTEnrtyId Found");
-                            ctEntryId = Convert.ToInt32(transactiondata.Rows[0]["CT_ENTRY_ID"].ToString());
-                        }
-                        HelperClass.LogMessage("CTEnrtyId not Found");
-                    }
-
-                    if (nffrontEntryId!=0)
-                    {
-                        if (transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString() != "")
-                        {
-                            HelperClass.LogMessage("NodeFlux Front Entry Id Found");
-                            nffrontEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString());
-                        }
-                        HelperClass.LogMessage("NodeFlux Front Entry Id not Found");
-                    }
-                    if (nfRearEntryId!=0)
-                    {
-                        if (transactiondata.Rows[0]["NF_ENTRY_ID_REAR"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString() != "")
-                        {
-                            HelperClass.LogMessage("NodeFlux Rear Entry Id Found");
-                            nfRearEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString());
-                        }
-                        HelperClass.LogMessage("NodeFlux Rear Entry Id not Found");
-                    }
-                    //Check if Balance is not updated in parent transaction then check in child transaction to cut balabce
-
-                    if (isBalanceUpdated!=1)
-                    {
-                        if (transactiondata.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
-                        {
-                            isBalanceUpdated = 1;
-                        }
-                    }
-                    //Set Is Audited =1 for every transaction
-                    transaction.TMSId = Libraries.CommonLibrary.Constants.GetCurrentTMSId();
-                    transaction.PlazaId = Libraries.CommonLibrary.Constants.GetCurrentPlazaId();
-                    transaction.LaneId = Convert.ToInt32(transactiondata.Rows[0]["LANE_ID"].ToString());
+                    associatedtransactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                    string strfilter = " WHERE 1=1 ";
+                    strfilter += " AND T.TRANSACTION_ID = " + associatedtransactionId;
                     transaction.TransactionId = associatedtransactionId;
-                    transaction.AuditStatus = (int)Libraries.CommonLibrary.Constants.AuditStatus.Reviewed;
-                    transaction.AuditorId = Convert.ToInt32(Session["LoggedUserId"].ToString());
-                    transaction.AuditDate = DateTime.Now;
-                    transaction.AuditedVehicleClassId = vehicleClassId;
-                    transaction.AuditedVRN = VehRegNo;
-                    Libraries.CommonLibrary.BLL.TransactionBLL.UpdateAuditSection(transaction);
-                    strfilter = string.Empty;
+
+                    //transactiondata = Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strfilter);
+                    transactiondata = Libraries.CommonLibrary.BLL.TransactionBLL.Transaction_GetById(transaction);
+
+                    if (transactiondata != null && transactiondata.Rows != null && transactiondata.Rows.Count > 0)
+                    {
+                        if (ctEntryId == 0)//get Cross Talk Entry If not Exists other wise leave it
+                        {
+                            HelperClass.LogMessage("Trying To Read CTEnrtyId, NodeFlux Rear Entry Id, NodeFlux Front Entry Id");
+                            if (transactiondata.Rows[0]["CT_ENTRY_ID"] != null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != "")
+                            {
+                                HelperClass.LogMessage("CTEnrtyId Found");
+                                ctEntryId = Convert.ToInt32(transactiondata.Rows[0]["CT_ENTRY_ID"].ToString());
+                            }
+                            HelperClass.LogMessage("CTEnrtyId not Found");
+                        }
+
+                        if (nffrontEntryId == 0)
+                        {
+                            if (transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString() != "")
+                            {
+                                HelperClass.LogMessage("NodeFlux Front Entry Id Found");
+                                nffrontEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_FRONT"].ToString());
+                            }
+                            HelperClass.LogMessage("NodeFlux Front Entry Id not Found");
+                        }
+                        if (nfRearEntryId == 0)
+                        {
+                            if (transactiondata.Rows[0]["NF_ENTRY_ID_REAR"] != null && transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString() != "")
+                            {
+                                HelperClass.LogMessage("NodeFlux Rear Entry Id Found");
+                                nfRearEntryId = Convert.ToInt32(transactiondata.Rows[0]["NF_ENTRY_ID_REAR"].ToString());
+                            }
+                            HelperClass.LogMessage("NodeFlux Rear Entry Id not Found");
+                        }
+                        //Check if Balance is not updated in parent transaction then check in child transaction to cut balabce
+
+                        if (isBalanceUpdated != 1)
+                        {
+                            if (transactiondata.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
+                            {
+                                isBalanceUpdated = 1;
+                            }
+                        }
+                        //Set Is Audited =1 for every transaction
+                        transaction.TMSId = Libraries.CommonLibrary.Constants.GetCurrentTMSId();
+                        transaction.PlazaId = Libraries.CommonLibrary.Constants.GetCurrentPlazaId();
+                        transaction.LaneId = Convert.ToInt32(transactiondata.Rows[0]["LANE_ID"].ToString());
+                        transaction.TransactionId = associatedtransactionId;
+                        transaction.AuditStatus = (int)Libraries.CommonLibrary.Constants.AuditStatus.Reviewed;
+                        transaction.AuditorId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+                        transaction.AuditDate = DateTime.Now;
+                        transaction.AuditedVehicleClassId = vehicleClassId;
+                        transaction.AuditedVRN = VehRegNo;
+                        Libraries.CommonLibrary.BLL.TransactionBLL.UpdateAuditSection(transaction);
+                        strfilter = string.Empty;
+                    }
+
                 }
-                #region Update Transaction By Manual Review
-                if (isBalanceUpdated!=1)
-                {
-                    //Charging and Notification Logics
-                    //get Customer Vehicle from customer VRN
-                    Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo = new Libraries.CommonLibrary.CBE.CustomerVehicleCBE();
-                    customerVehicleInfo.VehRegNo = VehRegNo;
-                    customerVehicleInfo = Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(customerVehicleInfo);
-                    customerVehicleInfo.VehicleClassId = vehicleClassId;
-
-                    //get customer account info from customer VRN
-                    Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo = new Libraries.CommonLibrary.CBE.CustomerAccountCBE();
-                    customerAccountInfo.AccountId = customerVehicleInfo.AccountId;
-                    Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetCustomerById(customerAccountInfo);
-
-                    //financial operation here
-                    FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
-                    HelperClass.LogMessage("Financial processing has been done.");
-
-                    //Update Audited For This Transaction
-
-
-                    //notification operation here
-                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
-
-                }
-
-                #endregion
             }
+            transaction.TransactionDateTime = transactionDatetime;
+            transaction.CrosstalkEntryId = ctEntryId;
+            transaction.NodefluxEntryIdFront = nffrontEntryId;
+            transaction.NodefluxEntryIdRear = nfRearEntryId;
+            transaction.IsBalanceUpdated = isBalanceUpdated;
+            transaction.IsTransfered = isTransfered;
+            transaction.IsViolation = isViolation;
+            transaction.ModifierId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+            transaction.ModificationDate = DateTime.Now;
+            transaction.IsRegistered = isRegistered;
+            transaction.CreationDate = creationDateTime;
+
+            #region Financial and Notification By Manual Review
+            if (isBalanceUpdated != 1)
+            {
+                //Charging and Notification Logics
+                //get Customer Vehicle from customer VRN
+                Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo = new Libraries.CommonLibrary.CBE.CustomerVehicleCBE();
+                customerVehicleInfo.VehRegNo = VehRegNo;
+                customerVehicleInfo = Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(customerVehicleInfo);
+                customerVehicleInfo.VehicleClassId = vehicleClassId;
+
+                //get customer account info from customer VRN
+                Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo = new Libraries.CommonLibrary.CBE.CustomerAccountCBE();
+                customerAccountInfo.AccountId = customerVehicleInfo.AccountId;
+                customerAccountInfo=Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetCustomerById(customerAccountInfo);
+                
+                //financial operation here
+                FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+                //Update Is Blanace Updated =1
+                isBalanceUpdated = 1;
+                HelperClass.LogMessage("Financial processing has been done.");
+                //notification operation here
+                NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+
+            }
+
+            #endregion
+
+            #region Update Audit section For Parent Transaction
+            //Update Audit Section For Parent Transaction
+            transaction.TransactionId = Convert.ToInt32(TransactionId);
+            transaction.LaneId = laneId;
+            transaction.TMSId = Libraries.CommonLibrary.Constants.GetCurrentTMSId();
+            transaction.PlazaId = Libraries.CommonLibrary.Constants.GetCurrentPlazaId();
+            transaction.AuditStatus = (int)Libraries.CommonLibrary.Constants.AuditStatus.Reviewed;
+            transaction.AuditorId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+            transaction.AuditDate = DateTime.Now;
+            transaction.AuditedVehicleClassId = vehicleClassId;
+            transaction.AuditedVRN = VehRegNo;
+            Libraries.CommonLibrary.BLL.TransactionBLL.UpdateAuditSection(transaction);
+            #endregion
+            #region Join Transaction
+            
+            Libraries.CommonLibrary.BLL.TransactionBLL.UpdateTransaction(transaction);
+            #endregion
+
+
             return Json(result);
         }
         #endregion
@@ -656,6 +712,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             try
             {
+                lanes = VaaaN.MLFF.Libraries.CommonLibrary.BLL.LaneBLL.GetAll();
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE lane in lanes)
                 {
                     if (lane.LaneId == laneId)
@@ -683,7 +740,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 DateTime currentStartDate = new DateTime();
                 DateTime currentEndDate = new DateTime();
                 DateTime actualEndDate = new DateTime(); //CJS
-
+                tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
                 // Get toll rate as per transaction time
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in tollRates)
                 {
@@ -718,6 +775,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in currentTimeTollRates)
                 {
+                    
                     if (tr.PlazaId == plazaId && tr.LaneTypeId == laneType && tr.VehicleClassId == vehicleClass)
                     {
                         result = tr.Amount;
@@ -739,6 +797,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             try
             {
+                plazas = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsCollection();
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE plaza in plazas)
                 {
                     if (plaza.PlazaId == plazaId)
