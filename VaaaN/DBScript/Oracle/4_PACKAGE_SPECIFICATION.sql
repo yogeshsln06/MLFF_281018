@@ -913,7 +913,6 @@ AS
       P_CHILD_2_TRANSACTION_ID     IN     NUMBER := NULL,
       P_AUDITED_VRN                IN     NVARCHAR2,
       P_AUDITED_VEHICLE_CLASS_ID   IN     NUMBER,
-      P_AUDITOR_ID                 IN     NUMBER,
-      CUR_OUT                         OUT T_CURSOR);
+      P_AUDITOR_ID                 IN     NUMBER);
 END MLFF_PACKAGE;
 /
