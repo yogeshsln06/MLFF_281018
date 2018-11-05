@@ -267,5 +267,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.FilteredTransactions(filter);
         }
+        public static void JoinAuditTransaction(long parentTransactionId, long childOneTransactionId, long childTwoTransactionId, string auditedVRN, int auditedVehicleClassId, int auditorID)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.JoinAuditTransaction(parentTransactionId, childOneTransactionId, childTwoTransactionId, auditedVRN, auditedVehicleClassId, auditorID);
+        }
+        
     }
 }

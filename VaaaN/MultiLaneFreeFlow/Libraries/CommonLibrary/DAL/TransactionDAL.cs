@@ -247,6 +247,30 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static void JoinAuditTransaction(long parentTransactionId, long childOneTransactionId, long childTwoTransactionId, string auditedVRN, int auditedVehicleClassId, int auditorID)
+        {
+            try
+            {
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "JOIN_AUDIT_TRANSACTIONS";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PARENT_TRANSACTION_ID", DbType.Int64, parentTransactionId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CHILD_1_TRANSACTION_ID", DbType.Int64, childOneTransactionId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CHILD_2_TRANSACTION_ID", DbType.Int64, childTwoTransactionId, ParameterDirection.Input, 50));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_AUDITED_VRN", DbType.String, auditedVRN, ParameterDirection.Input));
+
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_AUDITED_VEHICLE_CLASS_ID", DbType.Int32, auditedVehicleClassId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_AUDITOR_ID", DbType.Int32, auditorID, ParameterDirection.Input));
+              
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         public static void Delete(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction)
         {
             try

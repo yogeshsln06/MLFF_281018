@@ -240,6 +240,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
         public static CBE.CustomerVehicleCBE GetCustomerVehicleByVehRegNo(CBE.CustomerVehicleCBE vehicle)
         {
+            CBE.CustomerVehicleCBE result = null;
             try
             {
 
@@ -250,13 +251,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEH_REG_NO", DbType.String, vehicle.VehRegNo, ParameterDirection.Input));
 
                 vehicles = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
-
-                return vehicles[0];
+                if(vehicles.Count > 0)
+                 result = vehicles[0];
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+            return result;
         }
         #endregion
 
