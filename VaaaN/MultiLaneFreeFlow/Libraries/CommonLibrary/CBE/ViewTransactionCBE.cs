@@ -9,15 +9,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 {
     public class ViewTransactionCBE
     {
+        //[Display(Name = "From Date")]
+        //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        //public DateTime StartTime { get; set; }
+
+        //[Display(Name = "End Date")]
+        //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        //public DateTime EndTime { get; set; }
+
         [Display(Name = "From Date")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime StartTime { get; set; }
+        public String StartDate { get; set; }
 
         [Display(Name = "End Date")]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime EndTime { get; set; }
-
-        public String StartDate { get; set; }
         public String EndDate { get; set; }
 
         [Display(Name = "Plate Number")]
