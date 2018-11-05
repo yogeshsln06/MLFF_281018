@@ -219,25 +219,26 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         }
         public ActionResult ShowTransaction(Libraries.CommonLibrary.CBE.ViewTransactionCBE transaction)
         {
-            DateTime dtstartTime = transaction.StartTime;
+            DateTime dtstartTime = Convert.ToDateTime(transaction.StartDate);
             string strstarttime = dtstartTime.ToString("dd/MM/yyyy HH:mm:ss");
-            DateTime dtendTime = transaction.EndTime;
+            DateTime dtendTime = Convert.ToDateTime(transaction.EndDate);
             string strendtime = dtendTime.ToString("dd/MM/yyyy HH:mm:ss");
-
+            //string strstarttime = transaction.StartDate;
+            //string strendtime = transaction.EndDate;
             string strQuery = " WHERE 1=1 ";
 
-            //if (strstarttime != null && strendtime != null)
-            //{
-            //    strQuery += " AND  TRANSACTION_DATETIME BETWEEN TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS') AND  TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
-            //}
-            //else if (strstarttime != null)
-            //{
-            //    strQuery += " AND  TRANSACTION_DATETIME >= TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS')";
-            //}
-            //else if (strendtime != null)
-            //{
-            //    strQuery += " AND  TRANSACTION_DATETIME <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
-            //}
+            if (strstarttime != null && strendtime != null)
+            {
+                strQuery += " AND  TRANSACTION_DATETIME BETWEEN TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS') AND  TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            else if (strstarttime != null)
+            {
+                strQuery += " AND  TRANSACTION_DATETIME >= TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            else if (strendtime != null)
+            {
+                strQuery += " AND  TRANSACTION_DATETIME <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
             if (transaction.GantryId > 0)
             {
                 strQuery += " AND T.PLAZA_ID = " + transaction.GantryId;
@@ -277,7 +278,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             DataTable dt = new DataTable();
             dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);
-
+            ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
             return PartialView("_ManualTransactions", dt);
         }
 
@@ -380,7 +381,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             DataTable dt = new DataTable();
             dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);
-
+            ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
             return PartialView("_AssociatedTimeTransaction", dt);
         }
 
@@ -639,6 +640,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             transaction.TransactionDateTime = transactionDatetime;
             transaction.ModifierId = Convert.ToInt32(Session["LoggedUserId"].ToString());
             transaction.ModificationDate = DateTime.Now;
+            transaction.TMSId = Libraries.CommonLibrary.Constants.GetCurrentTMSId();
+            transaction.PlazaId = Libraries.CommonLibrary.Constants.GetCurrentPlazaId();
             #region Financial and Notification By Manual Review
             if (isBalanceUpdated != 1)
             {

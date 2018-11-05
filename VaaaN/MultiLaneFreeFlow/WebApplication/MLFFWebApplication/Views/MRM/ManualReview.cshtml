@@ -30,15 +30,15 @@
                         <form data-toggle="validator" role="form">
                             <div class="form-group">
 
-                                @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-1" })
+                                @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-1" })
                                 <div class="col-md-2">
-                                    @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                                    @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
                                 </div>
-                                @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-1" })
+                                @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-1" })
                                 <div class="col-md-2">
-                                    @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                                    @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
                                 </div>
                                 @Html.Label("Gantry", htmlAttributes: new { @class = "control-label col-md-1 required" })
                                 <div class="col-md-2">
@@ -61,8 +61,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <button id="btnShow" type="button" class="btn btn-primary pull-right" onclick="Show()">Filter</button>
-                                   
-                                    
+
+
                                 </div>
                             </div>
                         </form>
@@ -80,58 +80,87 @@
 
 
 <script type="text/javascript">
-    function Show()
-    {
+    function Show() {
+       
         if ($("#ddlGantry").val() == 0) {
             alert("Gantry harus dipilih ");
             return false;
         }
-      
-        var StartTime = $("#StartTime").val();
-        var  EndTime =  $("#EndTime").val();
-        var GantryId =  $("#ddlGantry").val();
-        var VehicleClassId=  $("#ddlVehicleClass").val();
-        var PlateNumber = $("#PlateNumber").val(); 
-        var TransactionCategoryId = $("#ddlTransactionCategory").val();
-        
-        var route = '/MRM/ShowTransaction?StartTime=' + StartTime + '&GantryId=' + GantryId + '&VehicleClassId=' + VehicleClassId + '&PlateNumber=' + PlateNumber + '&TransactionCategoryId=' + TransactionCategoryId;
-        $('#partial').load(route);
 
-        ////if ($("#ddlGantry").val() == 0) {
-        ////    alert("Gantry harus dipilih ");
-        ////    return false;
-        ////}
-        ////var InputDate = {
-        ////    StartTime: $("#StartTime").val(), EndTime: $("#EndTime").val(),
-        ////    GantryId: $("#ddlGantry").val(), VehicleClassId: $("#ddlVehicleClass").val(),
-        ////    PlateNumber: $("#PlateNumber").val(),
-        ////    TransactionCategoryId: $("#ddlTransactionCategory").val()
-        ////}
-        ////// $('#loader').show();
-        ////$.ajax({
-        ////    type: "POST",
-        ////    url: "ShowTransaction",
-        ////    dataType: "JSON",
-        ////    async: false,
-        ////    data: JSON.stringify(InputDate),
-        ////    contentType: "application/json; charset=utf-8",
-        ////    success: function (JsonfilterData) {
-        ////        $('#partial').load();
+        //var StartTime = $("#StartDate").val() + ":00";
+        //var EndTime = $("#EndDate").val() + ":00";
+        //var GantryId = $("#ddlGantry").val();
+        //var VehicleClassId = $("#ddlVehicleClass").val();
+        //var PlateNumber = $("#PlateNumber").val();
+        //var TransactionCategoryId = $("#ddlTransactionCategory").val();
 
-        ////    },
-        ////    error: function (x, e) {
+       // var route = '/MRM/ShowTransaction?StartDate=' + StartTime + '&EndDate=' + EndTime + '&GantryId=' + GantryId + '&VehicleClassId=' + VehicleClassId + '&PlateNumber=' + PlateNumber + '&TransactionCategoryId=' + TransactionCategoryId;
+        //$('#partial').load(route);
+        //, EndDate: $("#EndDate").val(),
+        //GantryId: $("#ddlGantry").val(), VehicleClassId: $("#ddlVehicleClass").val(),
+        //PlateNumber: $("#PlateNumber").val(),
+        //TransactionCategoryId: $("#ddlTransactionCategory").val()
+       
+        var Inputdata = {
+            StartDate: $("#StartDate").val() + ":00",
+            EndDate: $("#EndDate").val() + ":00",
+            GantryId: $("#ddlGantry").val(),
+            VehicleClassId: $("#ddlVehicleClass").val(),
+            PlateNumber: $("#PlateNumber").val(),
+            TransactionCategoryId: $("#ddlTransactionCategory").val()
+        }
+        $('#loader').show();
+        $.ajax({
+            type: "POST",
+            url: "ShowTransaction",
+            //dataType: "JSON",
+            async: true,
+            data: JSON.stringify(Inputdata),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (result) {
+                $('#loader').hide();
+                $('#partial').html(result);
 
-        ////        $('#partial').hide();
-        ////    }
+            },
+            error: function (x, e) {
+                $('#loader').hide();
+                $('#partial').hide();
+            }
 
-        ////});
+        });
     }
 </script>
 <script>
     $(document).ready(function () {
         $("#hfAPIPath").val(JSON.parse('@Html.Raw(Json.Encode(ViewData["apiPath"]))'));
+        jQuery('#StartDate').datetimepicker({
+            format: 'm/d/Y H:i',
+
+        });
+
+        jQuery('#EndDate').datetimepicker({
+            format: 'm/d/Y H:i',
+
+        });
+
+        var d = new Date();
+
+        dd = d.getDate();
+
+        dd = dd > 9 ? dd : '0' + dd;
+
+        mm = (d.getMonth() + 1);
+
+
+        mm = mm > 9 ? mm : '0' + mm;
+
+
+        yy = d.getFullYear();
+
+        $("#StartDate").val(mm + '/' + dd + '/' + yy + " 00:01");
+        $("#EndDate").val(mm + '/' + dd + '/' + yy + " 23:59");
     });
 </script>
 <link rel="stylesheet" type="text/css" href="~/css/jquery.datetimepicker.css" />
 <script src="~/js/jquery.datetimepicker.full.min.js"></script>
-

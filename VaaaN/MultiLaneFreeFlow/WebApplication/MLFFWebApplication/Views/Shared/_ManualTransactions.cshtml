@@ -88,7 +88,7 @@
                                     <td>  
                                         @if (item["FRONT_IMAGE"].ToString()!="")
                                         {
-                                            string path = "http://192.168.1.65:5555/" + item["FRONT_IMAGE"].ToString();
+                                            string path =ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
                                             <img src="@path"  />
                                         }else
                                         {
@@ -98,7 +98,7 @@
                                     <td>
                                         @if (item["REAR_IMAGE"].ToString() != "")
                                         {
-                                            string path = "http://192.168.1.65:5555/" + item["REAR_IMAGE"].ToString();
+                                            string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
                                             <img src="@path" />
                                         }
                                         else
@@ -147,12 +147,12 @@
 
                     </div>
                 </div>
-                <div class="modal-footer">
+                @*<div class="modal-footer">
                    
                     <button type="button" id="btnHideModal" onclick="HideModal()" class="btn btn-primary button button4">
                         Close
                     </button>
-                </div>
+                </div>*@
             </div>
         </div>
     </div>

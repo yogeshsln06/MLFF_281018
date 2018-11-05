@@ -18,7 +18,7 @@
             <label class="col-sm-3">
                 @if (ViewBag.NFRear != "")
             {
-                string path = "http://192.168.1.65:5555/" + ViewBag.NFRear;
+                string path = ViewData["apiPath"] + ViewBag.NFRear;
                     <img src="@path" />
                 }
                 else
@@ -32,7 +32,7 @@
             <label class="col-sm-2">
                 @if (ViewBag.NFFront != "")
             {
-                string path = "http://192.168.1.65:5555/" + ViewBag.NFFront;
+                string path = ViewData["apiPath"] + ViewBag.NFFront;
                     <img src="@path" />
                 }
                 else
@@ -113,7 +113,7 @@
                                 <td>
                                     @if (item["FRONT_IMAGE"].ToString() != "")
                                         {
-                                            string path = "http://192.168.1.65:5555/" + item["FRONT_IMAGE"].ToString();
+                                            string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
                                         <img src="@path" />
                                         }
                                         else
@@ -124,7 +124,7 @@
                                 <td>
                                     @if (item["REAR_IMAGE"].ToString() != "")
                                         {
-                                            string path = "http://192.168.1.65:5555/" + item["REAR_IMAGE"].ToString();
+                                            string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
                                         <img src="@path" />
                                         }
                                         else
