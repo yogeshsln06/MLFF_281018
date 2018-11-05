@@ -1,5 +1,4 @@
-
-/* Formatted on 10/2/2018 11:06:14 AM (QP5 v5.215.12089.38647) */
+/* Formatted on 05/11/2018 10:22:25 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -362,10 +361,10 @@ AS
    /*CrossTalk Event*/
    PROCEDURE CT_PACKET_GETALL (CUR_OUT OUT T_CURSOR);
 
-   PROCEDURE CT_PACKET_GETRECENT(P_PLAZA_ID IN NUMBER,
-                P_TAG_ID IN NVARCHAR2,
-                P_TAG_TIME IN DATE,
-                CUR_OUT OUT T_CURSOR);
+   PROCEDURE CT_PACKET_GETRECENT (P_PLAZA_ID   IN     NUMBER,
+                                  P_TAG_ID     IN     NVARCHAR2,
+                                  P_TAG_TIME   IN     DATE,
+                                  CUR_OUT         OUT T_CURSOR);
 
    PROCEDURE CT_PACKET_INSERT (P_TMS_ID             IN     NUMBER,
                                P_PLAZA_ID           IN     NUMBER,
@@ -407,14 +406,14 @@ AS
    /*NodeFlux Event*/
    PROCEDURE NF_PACKET_GETALL (CUR_OUT OUT T_CURSOR);
 
-   PROCEDURE NF_PACKET_GETBYENTRYID (P_ENTRY_ID               IN NUMBER,
-                CUR_OUT OUT T_CURSOR);
+   PROCEDURE NF_PACKET_GETBYENTRYID (P_ENTRY_ID   IN     NUMBER,
+                                     CUR_OUT         OUT T_CURSOR);
 
-   PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
-                P_VRN IN NVARCHAR2,
-                P_NF_TIME IN DATE,
-                P_CAMERA_POSITION IN NUMBER,
-                CUR_OUT OUT T_CURSOR);
+   PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID                 NUMBER,
+                                  P_VRN               IN     NVARCHAR2,
+                                  P_NF_TIME           IN     DATE,
+                                  P_CAMERA_POSITION   IN     NUMBER,
+                                  CUR_OUT                OUT T_CURSOR);
 
    PROCEDURE NF_PACKET_INSERT (P_ENTRY_ID               OUT NUMBER,
                                P_TMS_ID              IN     NUMBER,
@@ -467,7 +466,7 @@ AS
                                  P_TRANSACTION_ID            OUT NUMBER,
                                  P_TRANSACTION_DATETIME   IN     DATE,
                                  P_CT_ENTRY_ID            IN     NUMBER,
-								  P_IS_REGISTERED           IN NUMBER,
+                                 P_IS_REGISTERED          IN     NUMBER,
                                  P_CREATION_DATE          IN     DATE);
 
    PROCEDURE TRAN_INSERT_BY_NFP_FRONT (
@@ -477,7 +476,7 @@ AS
       P_TRANSACTION_ID            OUT NUMBER,
       P_TRANSACTION_DATETIME   IN     DATE,
       P_NF_ENTRY_ID_FRONT      IN     NUMBER,
-	   P_IS_REGISTERED           IN NUMBER,
+      P_IS_REGISTERED          IN     NUMBER,
       P_CREATION_DATE          IN     DATE);
 
    PROCEDURE TRAN_INSERT_BY_NFP_REAR (P_TMS_ID                 IN     NUMBER,
@@ -486,23 +485,20 @@ AS
                                       P_TRANSACTION_ID            OUT NUMBER,
                                       P_TRANSACTION_DATETIME   IN     DATE,
                                       P_NF_ENTRY_ID_REAR       IN     NUMBER,
-                                      P_IS_REGISTERED           IN NUMBER,
-									   P_CREATION_DATE          IN     DATE);
+                                      P_IS_REGISTERED          IN     NUMBER,
+                                      P_CREATION_DATE          IN     DATE);
 
-   PROCEDURE TRAN_UPDATE_BY_NFP_FRONT (
-      P_TMS_ID                 IN     NUMBER,
-      P_PLAZA_ID               IN     NUMBER,
-      P_LANE_ID                IN     NUMBER,
-      P_TRANSACTION_ID            IN NUMBER,
-      P_NF_ENTRY_ID_FRONT      IN     NUMBER
-	   	  );
+   PROCEDURE TRAN_UPDATE_BY_NFP_FRONT (P_TMS_ID              IN NUMBER,
+                                       P_PLAZA_ID            IN NUMBER,
+                                       P_LANE_ID             IN NUMBER,
+                                       P_TRANSACTION_ID      IN NUMBER,
+                                       P_NF_ENTRY_ID_FRONT   IN NUMBER);
 
-   PROCEDURE TRAN_UPDATE_BY_NFP_REAR (P_TMS_ID                 IN     NUMBER,
-                                      P_PLAZA_ID               IN     NUMBER,
-                                      P_LANE_ID                IN     NUMBER,
-                                      P_TRANSACTION_ID            IN NUMBER,
-                                      P_NF_ENTRY_ID_REAR       IN     NUMBER
-									  );
+   PROCEDURE TRAN_UPDATE_BY_NFP_REAR (P_TMS_ID             IN NUMBER,
+                                      P_PLAZA_ID           IN NUMBER,
+                                      P_LANE_ID            IN NUMBER,
+                                      P_TRANSACTION_ID     IN NUMBER,
+                                      P_NF_ENTRY_ID_REAR   IN NUMBER);
 
    PROCEDURE TRAN_UPDATE (P_TMS_ID                 IN NUMBER,
                           P_PLAZA_ID               IN NUMBER,
@@ -515,7 +511,7 @@ AS
                           P_IS_BALANCE_UPDATED     IN NUMBER,
                           P_IS_TRANSFERED          IN NUMBER,
                           P_IS_VIOLATION           IN NUMBER,
-						  P_IS_REGISTERED           IN NUMBER,
+                          P_IS_REGISTERED          IN NUMBER,
                           P_MODIFIER_ID            IN NUMBER,
                           P_MODIFICATION_DATE      IN DATE);
 
@@ -530,11 +526,11 @@ AS
       P_AUDITED_VEHICLE_CLASS_ID   IN NUMBER,
       P_AUDITED_VRN                IN NVARCHAR2);
 
-   PROCEDURE TRAN_UPDATE_CTP (P_TMS_ID              IN NUMBER,
-                                   P_PLAZA_ID            IN NUMBER,
-                                   P_LANE_ID             IN NUMBER,
-                                   P_TRANSACTION_ID      IN NUMBER,
-                                   P_CT_ENTRY_ID   IN NUMBER);
+   PROCEDURE TRAN_UPDATE_CTP (P_TMS_ID           IN NUMBER,
+                              P_PLAZA_ID         IN NUMBER,
+                              P_LANE_ID          IN NUMBER,
+                              P_TRANSACTION_ID   IN NUMBER,
+                              P_CT_ENTRY_ID      IN NUMBER);
 
 
    PROCEDURE TRAN_UPDATE_NF_FRONT (P_TMS_ID              IN NUMBER,
@@ -549,15 +545,15 @@ AS
                                   P_TRANSACTION_ID     IN NUMBER,
                                   P_NF_ENTRY_ID_REAR   IN NUMBER);
 
-   PROCEDURE TRAN_MARK_AS_VIOLATION (P_TMS_ID             IN NUMBER,
-                                  P_PLAZA_ID           IN NUMBER,
-                                  P_LANE_ID            IN NUMBER,
-                                  P_TRANSACTION_ID     IN NUMBER);
+   PROCEDURE TRAN_MARK_AS_VIOLATION (P_TMS_ID           IN NUMBER,
+                                     P_PLAZA_ID         IN NUMBER,
+                                     P_LANE_ID          IN NUMBER,
+                                     P_TRANSACTION_ID   IN NUMBER);
 
-  PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID             IN NUMBER,
-                                  P_PLAZA_ID           IN NUMBER,
-                                  P_LANE_ID            IN NUMBER,
-                                  P_TRANSACTION_ID     IN NUMBER);
+   PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID           IN NUMBER,
+                                   P_PLAZA_ID         IN NUMBER,
+                                   P_LANE_ID          IN NUMBER,
+                                   P_TRANSACTION_ID   IN NUMBER);
 
    PROCEDURE TRAN_DELETE (P_TRANSACTION_ID IN NUMBER);
 
@@ -567,23 +563,23 @@ AS
 
    PROCEDURE TRAN_GETBYPLAZAID (P_PLAZA_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
-   PROCEDURE TRAN_GET_CORR_IN_ALL (P_TMS_ID         IN     NUMBER,
-                                     P_PLAZA_ID       IN     NUMBER,
-                                     P_TIMESTAMP   IN     DATE,
-                                     P_VRN         IN     NVARCHAR2,
-                                     CUR_OUT             OUT T_CURSOR);
+   PROCEDURE TRAN_GET_CORR_IN_ALL (P_TMS_ID      IN     NUMBER,
+                                   P_PLAZA_ID    IN     NUMBER,
+                                   P_TIMESTAMP   IN     DATE,
+                                   P_VRN         IN     NVARCHAR2,
+                                   CUR_OUT          OUT T_CURSOR);
 
-   PROCEDURE TRAN_GET_CORR_IN_NF (P_TMS_ID         IN     NUMBER,
-                                     P_PLAZA_ID       IN     NUMBER,
-                                     P_TIMESTAMP   IN     DATE,
-                                     P_VRN         IN     NVARCHAR2,
-                                     CUR_OUT             OUT T_CURSOR);
+   PROCEDURE TRAN_GET_CORR_IN_NF (P_TMS_ID      IN     NUMBER,
+                                  P_PLAZA_ID    IN     NUMBER,
+                                  P_TIMESTAMP   IN     DATE,
+                                  P_VRN         IN     NVARCHAR2,
+                                  CUR_OUT          OUT T_CURSOR);
 
-   PROCEDURE TRAN_GET_CORR_IN_CT (P_TMS_ID         IN     NUMBER,
-                                     P_PLAZA_ID       IN     NUMBER,
-                                     P_TIMESTAMP   IN     DATE,
-                                     P_VRN         IN     NVARCHAR2,
-                                     CUR_OUT             OUT T_CURSOR);
+   PROCEDURE TRAN_GET_CORR_IN_CT (P_TMS_ID      IN     NUMBER,
+                                  P_PLAZA_ID    IN     NUMBER,
+                                  P_TIMESTAMP   IN     DATE,
+                                  P_VRN         IN     NVARCHAR2,
+                                  CUR_OUT          OUT T_CURSOR);
 
    PROCEDURE TRAN_LIVEDATA (CUR_OUT OUT T_CURSOR);
 
@@ -614,36 +610,36 @@ AS
    PROCEDURE PLAZA_GETBYID (P_PLAZA_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
    -----------------------LANE----------------------------
-   PROCEDURE LANE_INSERT (P_TMS_ID            IN NUMBER,
-                          P_PLAZA_ID          IN NUMBER,
-                          P_LANE_ID           IN NUMBER,
-                          P_LANE_TYPE_ID      IN NUMBER,
-                          P_LANE_NAME         IN NVARCHAR2,
-                          P_CAMERA_ID_FRONT         IN NUMBER,
-                P_CAMERA_ID_REAR         IN NUMBER,
-                          P_ETC_ANTENNA_ID_FRONT     IN NUMBER,
-                          P_ETC_ANTENNA_ID_REAR     IN NUMBER,
-                          P_CREATION_DATE     IN DATE,
-                          P_TRANSFER_STATUS   IN NUMBER);
-
-   PROCEDURE LANE_UPDATE (P_TMS_ID              IN NUMBER,
-                          P_PLAZA_ID            IN NUMBER,
-                          P_LANE_ID             IN NUMBER,
-                          P_LANE_TYPE_ID        IN NUMBER,
-                          P_LANE_NAME           IN NVARCHAR2,
-                          P_CAMERA_ID_FRONT         IN NUMBER,
+   PROCEDURE LANE_INSERT (P_TMS_ID                 IN NUMBER,
+                          P_PLAZA_ID               IN NUMBER,
+                          P_LANE_ID                IN NUMBER,
+                          P_LANE_TYPE_ID           IN NUMBER,
+                          P_LANE_NAME              IN NVARCHAR2,
+                          P_CAMERA_ID_FRONT        IN NUMBER,
                           P_CAMERA_ID_REAR         IN NUMBER,
-                          P_ETC_ANTENNA_ID_FRONT       IN NUMBER,
-                          P_ETC_ANTENNA_ID_REAR       IN NUMBER,
-                          P_MODIFIED_BY         IN NUMBER,
-                          P_MODIFICATION_DATE   IN DATE,
-                          P_TRANSFER_STATUS     IN NUMBER);
+                          P_ETC_ANTENNA_ID_FRONT   IN NUMBER,
+                          P_ETC_ANTENNA_ID_REAR    IN NUMBER,
+                          P_CREATION_DATE          IN DATE,
+                          P_TRANSFER_STATUS        IN NUMBER);
+
+   PROCEDURE LANE_UPDATE (P_TMS_ID                 IN NUMBER,
+                          P_PLAZA_ID               IN NUMBER,
+                          P_LANE_ID                IN NUMBER,
+                          P_LANE_TYPE_ID           IN NUMBER,
+                          P_LANE_NAME              IN NVARCHAR2,
+                          P_CAMERA_ID_FRONT        IN NUMBER,
+                          P_CAMERA_ID_REAR         IN NUMBER,
+                          P_ETC_ANTENNA_ID_FRONT   IN NUMBER,
+                          P_ETC_ANTENNA_ID_REAR    IN NUMBER,
+                          P_MODIFIED_BY            IN NUMBER,
+                          P_MODIFICATION_DATE      IN DATE,
+                          P_TRANSFER_STATUS        IN NUMBER);
 
    PROCEDURE LANE_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE LANE_GETBYID (P_LANE_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
-   
-    PROCEDURE LANE_GETBYPLAZAID (P_PLAZA_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE LANE_GETBYPLAZAID (P_PLAZA_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
    -----------------------HARDWARE----------------------------
    PROCEDURE HARDWARE_INSERT (P_TMS_ID              IN NUMBER,
@@ -651,7 +647,7 @@ AS
                               P_HARDWARE_ID         IN NUMBER,
                               P_HARDWARE_NAME       IN NVARCHAR2,
                               P_HARDWARE_TYPE       IN NUMBER,
-                              P_HARDWARE_POSITION       IN NUMBER,
+                              P_HARDWARE_POSITION   IN NUMBER,
                               P_MANUFACTURER_NAME   IN NVARCHAR2,
                               P_MODEL_NAME          IN NVARCHAR2,
                               P_IP_ADDRESS          IN NVARCHAR2,
@@ -663,7 +659,7 @@ AS
                               P_HARDWARE_ID         IN NUMBER,
                               P_HARDWARE_NAME       IN NVARCHAR2,
                               P_HARDWARE_TYPE       IN NUMBER,
-                              P_HARDWARE_POSITION       IN NUMBER,
+                              P_HARDWARE_POSITION   IN NUMBER,
                               P_MANUFACTURER_NAME   IN NVARCHAR2,
                               P_MODEL_NAME          IN NVARCHAR2,
                               P_IP_ADDRESS          IN NVARCHAR2,
@@ -674,7 +670,9 @@ AS
    PROCEDURE HARDWARE_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE HARDWARE_GETBYID (P_HARDWARE_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
-   PROCEDURE HARDWARE_GETBYTYPE (P_HARDWARE_TYPE IN NUMBER, CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE HARDWARE_GETBYTYPE (P_HARDWARE_TYPE   IN     NUMBER,
+                                 CUR_OUT              OUT T_CURSOR);
 
    -----------------------VEHICLE CLASS----------------------------
    PROCEDURE VEHICLE_CLASS_INSERT (P_TMS_ID               IN NUMBER,
@@ -846,11 +844,12 @@ AS
                                        P_TMS_ID             IN     NUMBER,
                                        P_ACCOUNT_ID         IN     NUMBER,
                                        CUR_OUT                 OUT T_CURSOR);
-                                       
-    PROCEDURE CUSTOMERVEHICLE_GETBYID (P_ENTRY_ID   IN     NUMBER,CUR_OUT OUT T_CURSOR);
 
-   PROCEDURE CV_GET_BY_TRANCTPENTRYID (P_TRAN_CT_EN_ID IN NUMBER,
-                                       CUR_OUT                 OUT T_CURSOR);
+   PROCEDURE CUSTOMERVEHICLE_GETBYID (P_ENTRY_ID   IN     NUMBER,
+                                      CUR_OUT         OUT T_CURSOR);
+
+   PROCEDURE CV_GET_BY_TRANCTPENTRYID (P_TRAN_CT_EN_ID   IN     NUMBER,
+                                       CUR_OUT              OUT T_CURSOR);
 
    PROCEDURE CUSTOMERVEHICLE_GETBYACCOUNTID (P_TMS_ID       IN     NUMBER,
                                              P_ACCOUNT_ID   IN     NUMBER,
@@ -860,9 +859,10 @@ AS
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYTAGID (P_TAG_ID   IN     NVARCHAR2,
                                           CUR_OUT       OUT T_CURSOR);
- 
-  PROCEDURE CUSTOMERVEHICLE_GETBYVEHREGNO (P_VEH_REG_NO   IN     NVARCHAR2,
-                                          CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE CUSTOMERVEHICLE_GETBYVEHREGNO (P_VEH_REG_NO   IN     NVARCHAR2,
+                                            CUR_OUT           OUT T_CURSOR);
+
    ------------ACCOUNT HISTORY ----------
 
    PROCEDURE ACCOUNT_HISTORY_INSERT (
@@ -906,5 +906,14 @@ AS
    PROCEDURE TRAN_CSV_GETTRANWITHOUTTAG (P_START_TIME   IN     DATE,
                                          P_END_TIME     IN     DATE,
                                          CUR_OUT           OUT T_CURSOR);
+
+   PROCEDURE JOIN_AUDIT_TRANSACTIONS (
+      P_PARENT_TRANSACTION_ID      IN     NUMBER := NULL,
+      P_CHILD_1_TRANSACTION_ID     IN     NUMBER := NULL,
+      P_CHILD_2_TRANSACTION_ID     IN     NUMBER := NULL,
+      P_AUDITED_VRN                IN     NVARCHAR2,
+      P_AUDITED_VEHICLE_CLASS_ID   IN     NUMBER,
+      P_AUDITOR_ID                 IN     NUMBER,
+      CUR_OUT                         OUT T_CURSOR);
 END MLFF_PACKAGE;
 /

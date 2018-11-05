@@ -1,5 +1,4 @@
-
-/* Formatted on 10/2/2018 12:00:49 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 05/11/2018 10:22:51 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -1397,17 +1396,17 @@ AS
          ORDER BY CTP.ENTRY_ID;
    END CT_PACKET_GETALL;
 
-   PROCEDURE CT_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
-                P_TAG_ID IN NVARCHAR2,
-                P_TAG_TIME IN DATE,
-                CUR_OUT OUT T_CURSOR)
+   PROCEDURE CT_PACKET_GETRECENT (P_PLAZA_ID          NUMBER,
+                                  P_TAG_ID     IN     NVARCHAR2,
+                                  P_TAG_TIME   IN     DATE,
+                                  CUR_OUT         OUT T_CURSOR)
    AS
    BEGIN
       OPEN CUR_OUT FOR
            SELECT CTP.TMS_ID,
                   CTP.PLAZA_ID,
                   CTP.ENTRY_ID,
-          CTP.LANE_ID,
+                  CTP.LANE_ID,
                   CTP.EVENT_TYPE,
                   CTP.TIME_STAMP,
                   CTP.UUID,
@@ -1421,12 +1420,12 @@ AS
                   CTP.MODIFIER_ID,
                   CTP.CREATION_DATE,
                   CTP.MODIFICATION_DATE
-             FROM 
-          TBL_CROSSTALK_PACKET CTP
-         WHERE
-          TO_DATE(SUBSTR(CTP.TIME_STAMP, 0, 19),'YYYY-MM-DD HH24:MI:SS') > (P_TAG_TIME - INTERVAL '60' SECOND)
-          AND CTP.PLAZA_ID = P_PLAZA_ID
-            AND CTP.OBJECT_ID = P_TAG_ID
+             FROM TBL_CROSSTALK_PACKET CTP
+            WHERE     TO_DATE (SUBSTR (CTP.TIME_STAMP, 0, 19),
+                               'YYYY-MM-DD HH24:MI:SS') >
+                         (P_TAG_TIME - INTERVAL '60' SECOND)
+                  AND CTP.PLAZA_ID = P_PLAZA_ID
+                  AND CTP.OBJECT_ID = P_TAG_ID
          ORDER BY CTP.ENTRY_ID;
    END CT_PACKET_GETRECENT;
 
@@ -1562,41 +1561,8 @@ AS
          ORDER BY NFP.ENTRY_ID;
    END NF_PACKET_GETALL;
 
-PROCEDURE NF_PACKET_GETBYENTRYID (P_ENTRY_ID               IN NUMBER,
-                CUR_OUT OUT T_CURSOR)
-AS
-   BEGIN
-      OPEN CUR_OUT FOR
-           SELECT NFP.ENTRY_ID,
-                  NFP.TMS_ID,
-                  NFP.EVENT_TYPE,
-                  NFP.TIMESTAMP,
-                  NFP.GANTRY_ID,
-                  NFP.LANE_ID,
-                  NFP.CAMERA_POSITION,
-                  NFP.CAMERA_ID,
-                  NFP.CAMERA_NAME,
-                  NFP.CAMERA_ADDRESS,
-                  NFP.CAMERA_COORDINATE,
-                  NFP.PLATE_NUMBER,
-                  NFP.VEHICLE_CLASS_ID,
-                  NFP.VEHICLE_SPEED,
-                  NFP.PLATE_THUMBNAIL,
-                  NFP.VEHICLE_THUMBNAIL,
-                  NFP.VIDEO_URL,
-                  NFP.CREATION_DATE,
-                  NFP.MODIFIER_ID,
-                  NFP.MODIFICATION_DATE
-             FROM TBL_NODEFLUX_PACKET NFP
-WHERE NFP.ENTRY_ID = P_ENTRY_ID
-         ORDER BY NFP.ENTRY_ID;
-   END NF_PACKET_GETBYENTRYID;
-
-PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
-                P_VRN IN NVARCHAR2,
-                P_NF_TIME IN DATE,
-                P_CAMERA_POSITION IN NUMBER,
-                CUR_OUT OUT T_CURSOR)
+   PROCEDURE NF_PACKET_GETBYENTRYID (P_ENTRY_ID   IN     NUMBER,
+                                     CUR_OUT         OUT T_CURSOR)
    AS
    BEGIN
       OPEN CUR_OUT FOR
@@ -1620,13 +1586,44 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                   NFP.CREATION_DATE,
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
-             FROM 
-          TBL_NODEFLUX_PACKET NFP
-         WHERE
-          NFP.TIMESTAMP > (P_NF_TIME - INTERVAL '60' SECOND)
-          AND NFP.GANTRY_ID = P_PLAZA_ID
-          AND NFP.PLATE_NUMBER = P_VRN
-          AND NFP.CAMERA_POSITION = P_CAMERA_POSITION
+             FROM TBL_NODEFLUX_PACKET NFP
+            WHERE NFP.ENTRY_ID = P_ENTRY_ID
+         ORDER BY NFP.ENTRY_ID;
+   END NF_PACKET_GETBYENTRYID;
+
+   PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID                 NUMBER,
+                                  P_VRN               IN     NVARCHAR2,
+                                  P_NF_TIME           IN     DATE,
+                                  P_CAMERA_POSITION   IN     NUMBER,
+                                  CUR_OUT                OUT T_CURSOR)
+   AS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT NFP.ENTRY_ID,
+                  NFP.TMS_ID,
+                  NFP.EVENT_TYPE,
+                  NFP.TIMESTAMP,
+                  NFP.GANTRY_ID,
+                  NFP.LANE_ID,
+                  NFP.CAMERA_POSITION,
+                  NFP.CAMERA_ID,
+                  NFP.CAMERA_NAME,
+                  NFP.CAMERA_ADDRESS,
+                  NFP.CAMERA_COORDINATE,
+                  NFP.PLATE_NUMBER,
+                  NFP.VEHICLE_CLASS_ID,
+                  NFP.VEHICLE_SPEED,
+                  NFP.PLATE_THUMBNAIL,
+                  NFP.VEHICLE_THUMBNAIL,
+                  NFP.VIDEO_URL,
+                  NFP.CREATION_DATE,
+                  NFP.MODIFIER_ID,
+                  NFP.MODIFICATION_DATE
+             FROM TBL_NODEFLUX_PACKET NFP
+            WHERE     NFP.TIMESTAMP > (P_NF_TIME - INTERVAL '60' SECOND)
+                  AND NFP.GANTRY_ID = P_PLAZA_ID
+                  AND NFP.PLATE_NUMBER = P_VRN
+                  AND NFP.CAMERA_POSITION = P_CAMERA_POSITION
          ORDER BY NFP.ENTRY_ID;
    END NF_PACKET_GETRECENT;
 
@@ -1758,7 +1755,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                                  P_TRANSACTION_ID            OUT NUMBER,
                                  P_TRANSACTION_DATETIME   IN     DATE,
                                  P_CT_ENTRY_ID            IN     NUMBER,
-								 P_IS_REGISTERED           IN NUMBER,
+                                 P_IS_REGISTERED          IN     NUMBER,
                                  P_CREATION_DATE          IN     DATE)
    AS
    BEGIN
@@ -1768,7 +1765,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                                    TRANSACTION_ID,
                                    TRANSACTION_DATETIME,
                                    CT_ENTRY_ID,
-								   IS_REGISTERED,
+                                   IS_REGISTERED,
                                    CREATION_DATE)
            VALUES (P_TMS_ID,
                    P_PLAZA_ID,
@@ -1776,7 +1773,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                    TRANSACTION_SEQ.NEXTVAL,
                    P_TRANSACTION_DATETIME,
                    P_CT_ENTRY_ID,
-				   P_IS_REGISTERED,
+                   P_IS_REGISTERED,
                    P_CREATION_DATE);
 
 
@@ -1795,7 +1792,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
       P_TRANSACTION_ID            OUT NUMBER,
       P_TRANSACTION_DATETIME   IN     DATE,
       P_NF_ENTRY_ID_FRONT      IN     NUMBER,
-	   P_IS_REGISTERED           IN NUMBER,
+      P_IS_REGISTERED          IN     NUMBER,
       P_CREATION_DATE          IN     DATE)
    AS
    BEGIN
@@ -1805,7 +1802,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                                    TRANSACTION_ID,
                                    TRANSACTION_DATETIME,
                                    NF_ENTRY_ID_FRONT,
-								   IS_REGISTERED,
+                                   IS_REGISTERED,
                                    CREATION_DATE)
            VALUES (P_TMS_ID,
                    P_PLAZA_ID,
@@ -1813,7 +1810,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                    TRANSACTION_SEQ.NEXTVAL,
                    P_TRANSACTION_DATETIME,
                    P_NF_ENTRY_ID_FRONT,
-				   P_IS_REGISTERED,
+                   P_IS_REGISTERED,
                    P_CREATION_DATE);
 
       P_TRANSACTION_ID := TRANSACTION_SEQ.CURRVAL;
@@ -1828,7 +1825,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                                       P_TRANSACTION_ID            OUT NUMBER,
                                       P_TRANSACTION_DATETIME   IN     DATE,
                                       P_NF_ENTRY_ID_REAR       IN     NUMBER,
-									   P_IS_REGISTERED           IN NUMBER,
+                                      P_IS_REGISTERED          IN     NUMBER,
                                       P_CREATION_DATE          IN     DATE)
    AS
    BEGIN
@@ -1838,7 +1835,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                                    TRANSACTION_ID,
                                    TRANSACTION_DATETIME,
                                    NF_ENTRY_ID_REAR,
-								   IS_REGISTERED,
+                                   IS_REGISTERED,
                                    CREATION_DATE)
            VALUES (P_TMS_ID,
                    P_PLAZA_ID,
@@ -1846,7 +1843,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                    TRANSACTION_SEQ.NEXTVAL,
                    P_TRANSACTION_DATETIME,
                    P_NF_ENTRY_ID_REAR,
-				   P_IS_REGISTERED,
+                   P_IS_REGISTERED,
                    P_CREATION_DATE);
 
       P_TRANSACTION_ID := TRANSACTION_SEQ.CURRVAL;
@@ -1855,48 +1852,37 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
 
    -------------TRAN_UPDATE_BY_NFP_FRONT-------------
 
-   PROCEDURE TRAN_UPDATE_BY_NFP_FRONT (
-      P_TMS_ID                 IN     NUMBER,
-      P_PLAZA_ID               IN     NUMBER,
-      P_LANE_ID                IN     NUMBER,
-      P_TRANSACTION_ID            IN NUMBER,
-      P_NF_ENTRY_ID_FRONT      IN     NUMBER
-	    )
+   PROCEDURE TRAN_UPDATE_BY_NFP_FRONT (P_TMS_ID              IN NUMBER,
+                                       P_PLAZA_ID            IN NUMBER,
+                                       P_LANE_ID             IN NUMBER,
+                                       P_TRANSACTION_ID      IN NUMBER,
+                                       P_NF_ENTRY_ID_FRONT   IN NUMBER)
    AS
    BEGIN
-      UPDATE 
-        TBL_TRANSACTION 
-      SET 
-        NF_ENTRY_ID_FRONT =  P_NF_ENTRY_ID_FRONT
-		
-      WHERE
-        TMS_ID = P_TMS_ID AND
-        PLAZA_ID = P_PLAZA_ID AND
-        LANE_ID =  P_LANE_ID AND
-        TRANSACTION_ID = P_TRANSACTION_ID;
+      UPDATE TBL_TRANSACTION
+         SET NF_ENTRY_ID_FRONT = P_NF_ENTRY_ID_FRONT
+       WHERE     TMS_ID = P_TMS_ID
+             AND PLAZA_ID = P_PLAZA_ID
+             AND LANE_ID = P_LANE_ID
+             AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_UPDATE_BY_NFP_FRONT;
 
 
    -------------TRAN_UPDATE_BY_NFP_REAR-------------
 
-   PROCEDURE TRAN_UPDATE_BY_NFP_REAR (P_TMS_ID                 IN     NUMBER,
-                                      P_PLAZA_ID               IN     NUMBER,
-                                      P_LANE_ID                IN     NUMBER,
-                                      P_TRANSACTION_ID            IN NUMBER,
-                                      P_NF_ENTRY_ID_REAR       IN     NUMBER
-									 )
+   PROCEDURE TRAN_UPDATE_BY_NFP_REAR (P_TMS_ID             IN NUMBER,
+                                      P_PLAZA_ID           IN NUMBER,
+                                      P_LANE_ID            IN NUMBER,
+                                      P_TRANSACTION_ID     IN NUMBER,
+                                      P_NF_ENTRY_ID_REAR   IN NUMBER)
    AS
    BEGIN
-      UPDATE 
-        TBL_TRANSACTION 
-      SET 
-        NF_ENTRY_ID_REAR =  P_NF_ENTRY_ID_REAR
-		
-      WHERE
-        TMS_ID = P_TMS_ID AND
-        PLAZA_ID = P_PLAZA_ID AND
-        LANE_ID =  P_LANE_ID AND
-        TRANSACTION_ID = P_TRANSACTION_ID;
+      UPDATE TBL_TRANSACTION
+         SET NF_ENTRY_ID_REAR = P_NF_ENTRY_ID_REAR
+       WHERE     TMS_ID = P_TMS_ID
+             AND PLAZA_ID = P_PLAZA_ID
+             AND LANE_ID = P_LANE_ID
+             AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_UPDATE_BY_NFP_REAR;
 
 
@@ -1912,7 +1898,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                           P_IS_BALANCE_UPDATED     IN NUMBER,
                           P_IS_TRANSFERED          IN NUMBER,
                           P_IS_VIOLATION           IN NUMBER,
-						  P_IS_REGISTERED          IN NUMBER,
+                          P_IS_REGISTERED          IN NUMBER,
                           P_MODIFIER_ID            IN NUMBER,
                           P_MODIFICATION_DATE      IN DATE)
    AS
@@ -1925,7 +1911,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
              IS_BALANCE_UPDATED = P_IS_BALANCE_UPDATED,
              IS_TRANSFERED = P_IS_TRANSFERED,
              IS_VIOLATION = P_IS_VIOLATION,
-			 IS_REGISTERED = P_IS_REGISTERED,
+             IS_REGISTERED = P_IS_REGISTERED,
              MODIFIER_ID = P_MODIFIER_ID,
              MODIFICATION_DATE = P_MODIFICATION_DATE
        WHERE     TMS_ID = P_TMS_ID
@@ -1934,12 +1920,11 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
              AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_UPDATE;
 
-   PROCEDURE TRAN_UPDATE_CTP (P_TMS_ID              IN NUMBER,
-                                   P_PLAZA_ID            IN NUMBER,
-                                   P_LANE_ID             IN NUMBER,
-                                   P_TRANSACTION_ID      IN NUMBER,
-                                   P_CT_ENTRY_ID   IN NUMBER
-								    )
+   PROCEDURE TRAN_UPDATE_CTP (P_TMS_ID           IN NUMBER,
+                              P_PLAZA_ID         IN NUMBER,
+                              P_LANE_ID          IN NUMBER,
+                              P_TRANSACTION_ID   IN NUMBER,
+                              P_CT_ENTRY_ID      IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_TRANSACTION
@@ -1954,8 +1939,7 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
                                    P_PLAZA_ID            IN NUMBER,
                                    P_LANE_ID             IN NUMBER,
                                    P_TRANSACTION_ID      IN NUMBER,
-                                   P_NF_ENTRY_ID_FRONT   IN NUMBER
-								   )
+                                   P_NF_ENTRY_ID_FRONT   IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_TRANSACTION
@@ -1982,10 +1966,10 @@ PROCEDURE NF_PACKET_GETRECENT (P_PLAZA_ID NUMBER,
              AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_UPDATE_NF_REAR;
 
-PROCEDURE TRAN_MARK_AS_VIOLATION (P_TMS_ID             IN NUMBER,
-                                  P_PLAZA_ID           IN NUMBER,
-                                  P_LANE_ID            IN NUMBER,
-                                  P_TRANSACTION_ID     IN NUMBER)
+   PROCEDURE TRAN_MARK_AS_VIOLATION (P_TMS_ID           IN NUMBER,
+                                     P_PLAZA_ID         IN NUMBER,
+                                     P_LANE_ID          IN NUMBER,
+                                     P_TRANSACTION_ID   IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_TRANSACTION
@@ -1996,10 +1980,10 @@ PROCEDURE TRAN_MARK_AS_VIOLATION (P_TMS_ID             IN NUMBER,
              AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_MARK_AS_VIOLATION;
 
-PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID             IN NUMBER,
-                                  P_PLAZA_ID           IN NUMBER,
-                                  P_LANE_ID            IN NUMBER,
-                                  P_TRANSACTION_ID     IN NUMBER)
+   PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID           IN NUMBER,
+                                   P_PLAZA_ID         IN NUMBER,
+                                   P_LANE_ID          IN NUMBER,
+                                   P_TRANSACTION_ID   IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_TRANSACTION
@@ -2048,11 +2032,11 @@ PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID             IN NUMBER,
          ORDER BY TRANSACTION_ID;
    END TRAN_GETBYPLAZAID;
 
-   PROCEDURE TRAN_GET_CORR_IN_ALL (P_TMS_ID         IN     NUMBER,
-                                     P_PLAZA_ID       IN     NUMBER,
-                                     P_TIMESTAMP   IN     DATE,
-                                     P_VRN         IN     NVARCHAR2,
-                                     CUR_OUT             OUT T_CURSOR)
+   PROCEDURE TRAN_GET_CORR_IN_ALL (P_TMS_ID      IN     NUMBER,
+                                   P_PLAZA_ID    IN     NUMBER,
+                                   P_TIMESTAMP   IN     DATE,
+                                   P_VRN         IN     NVARCHAR2,
+                                   CUR_OUT          OUT T_CURSOR)
    AS
    BEGIN
       OPEN CUR_OUT FOR
@@ -2067,22 +2051,26 @@ PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID             IN NUMBER,
                                                       AND (  P_TIMESTAMP
                                                            +   30
                                                              / (24 * 60 * 60)))
-        SELECT *
-     FROM 
-        TEMP_TRAN T
-                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1 ON NVL(T.NF_ENTRY_ID_FRONT,0) = NFP1.ENTRY_ID
-                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP2 ON NVL(T.NF_ENTRY_ID_REAR,0) = NFP2.ENTRY_ID
-                LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP ON NVL(T.CT_ENTRY_ID,0) = CTP.ENTRY_ID
-                LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV ON CTP.OBJECT_ID = CV.TAG_ID
-    WHERE 
-        NFP1.PLATE_NUMBER = P_VRN OR NFP2.PLATE_NUMBER = P_VRN OR CV.VEH_REG_NO = P_VRN;
+         SELECT *
+           FROM TEMP_TRAN T
+                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
+                   ON NVL (T.NF_ENTRY_ID_FRONT, 0) = NFP1.ENTRY_ID
+                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP2
+                   ON NVL (T.NF_ENTRY_ID_REAR, 0) = NFP2.ENTRY_ID
+                LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                   ON NVL (T.CT_ENTRY_ID, 0) = CTP.ENTRY_ID
+                LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
+                   ON CTP.OBJECT_ID = CV.TAG_ID
+          WHERE    NFP1.PLATE_NUMBER = P_VRN
+                OR NFP2.PLATE_NUMBER = P_VRN
+                OR CV.VEH_REG_NO = P_VRN;
    END TRAN_GET_CORR_IN_ALL;
 
-   PROCEDURE TRAN_GET_CORR_IN_NF (P_TMS_ID         IN     NUMBER,
-                                     P_PLAZA_ID       IN     NUMBER,
-                                     P_TIMESTAMP   IN     DATE,
-                                     P_VRN         IN     NVARCHAR2,
-                                     CUR_OUT             OUT T_CURSOR)
+   PROCEDURE TRAN_GET_CORR_IN_NF (P_TMS_ID      IN     NUMBER,
+                                  P_PLAZA_ID    IN     NUMBER,
+                                  P_TIMESTAMP   IN     DATE,
+                                  P_VRN         IN     NVARCHAR2,
+                                  CUR_OUT          OUT T_CURSOR)
    AS
    BEGIN
       OPEN CUR_OUT FOR
@@ -2097,20 +2085,20 @@ PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID             IN NUMBER,
                                                       AND (  P_TIMESTAMP
                                                            +   30
                                                              / (24 * 60 * 60)))
-        SELECT *
-     FROM 
-        TEMP_TRAN T
-                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1 ON NVL(T.NF_ENTRY_ID_FRONT,0) = NFP1.ENTRY_ID
-        LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP2 ON NVL(T.NF_ENTRY_ID_REAR,0) = NFP2.ENTRY_ID
-    WHERE 
-        NFP1.PLATE_NUMBER = P_VRN OR NFP2.PLATE_NUMBER = P_VRN;
+         SELECT *
+           FROM TEMP_TRAN T
+                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
+                   ON NVL (T.NF_ENTRY_ID_FRONT, 0) = NFP1.ENTRY_ID
+                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP2
+                   ON NVL (T.NF_ENTRY_ID_REAR, 0) = NFP2.ENTRY_ID
+          WHERE NFP1.PLATE_NUMBER = P_VRN OR NFP2.PLATE_NUMBER = P_VRN;
    END TRAN_GET_CORR_IN_NF;
 
-   PROCEDURE TRAN_GET_CORR_IN_CT (P_TMS_ID         IN     NUMBER,
-                                     P_PLAZA_ID       IN     NUMBER,
-                                     P_TIMESTAMP   IN     DATE,
-                                     P_VRN         IN     NVARCHAR2,
-                                     CUR_OUT             OUT T_CURSOR)
+   PROCEDURE TRAN_GET_CORR_IN_CT (P_TMS_ID      IN     NUMBER,
+                                  P_PLAZA_ID    IN     NUMBER,
+                                  P_TIMESTAMP   IN     DATE,
+                                  P_VRN         IN     NVARCHAR2,
+                                  CUR_OUT          OUT T_CURSOR)
    AS
    BEGIN
       OPEN CUR_OUT FOR
@@ -2125,14 +2113,13 @@ PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID             IN NUMBER,
                                                       AND (  P_TIMESTAMP
                                                            +   30
                                                              / (24 * 60 * 60)))
-       SELECT * 
-        
-    FROM 
-        TEMP_TRAN T
-        INNER JOIN TBL_CROSSTALK_PACKET CTP ON T.CT_ENTRY_ID = CTP.ENTRY_ID
-        INNER JOIN TBL_CUSTOMER_VEHICLE CV ON CTP.OBJECT_ID = CV.TAG_ID
-    WHERE 
-        CV.VEH_REG_NO = P_VRN;
+         SELECT *
+           FROM TEMP_TRAN T
+                INNER JOIN TBL_CROSSTALK_PACKET CTP
+                   ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+                INNER JOIN TBL_CUSTOMER_VEHICLE CV
+                   ON CTP.OBJECT_ID = CV.TAG_ID
+          WHERE CV.VEH_REG_NO = P_VRN;
    END TRAN_GET_CORR_IN_CT;
 
 
@@ -2277,7 +2264,7 @@ PROCEDURE TRAN_MARK_AS_BAL_UPD (P_TMS_ID             IN NUMBER,
        T.IS_BALANCE_UPDATED,
        T.IS_TRANSFERED,
        T.IS_VIOLATION,
-	   T.IS_REGISTERED,
+       T.IS_REGISTERED,
        T.MODIFIER_ID,
        T.CREATION_DATE,
        T.MODIFICATION_DATE,
@@ -2370,17 +2357,17 @@ ORDER BY TRANSACTION_ID';
    END PLAZA_GETBYID;
 
    -----------------------LANE----------------------------
-   PROCEDURE LANE_INSERT (P_TMS_ID            IN NUMBER,
-                          P_PLAZA_ID          IN NUMBER,
-                          P_LANE_ID           IN NUMBER,
-                          P_LANE_TYPE_ID      IN NUMBER,
-                          P_LANE_NAME         IN NVARCHAR2,
-                          P_CAMERA_ID_FRONT         IN NUMBER,
-              P_CAMERA_ID_REAR         IN NUMBER,
-                          P_ETC_ANTENNA_ID_FRONT     IN NUMBER,
-                          P_ETC_ANTENNA_ID_REAR     IN NUMBER,
-                          P_CREATION_DATE     IN DATE,
-                          P_TRANSFER_STATUS   IN NUMBER)
+   PROCEDURE LANE_INSERT (P_TMS_ID                 IN NUMBER,
+                          P_PLAZA_ID               IN NUMBER,
+                          P_LANE_ID                IN NUMBER,
+                          P_LANE_TYPE_ID           IN NUMBER,
+                          P_LANE_NAME              IN NVARCHAR2,
+                          P_CAMERA_ID_FRONT        IN NUMBER,
+                          P_CAMERA_ID_REAR         IN NUMBER,
+                          P_ETC_ANTENNA_ID_FRONT   IN NUMBER,
+                          P_ETC_ANTENNA_ID_REAR    IN NUMBER,
+                          P_CREATION_DATE          IN DATE,
+                          P_TRANSFER_STATUS        IN NUMBER)
    AS
    BEGIN
       INSERT INTO TBL_LANE (TMS_ID,
@@ -2389,7 +2376,7 @@ ORDER BY TRANSACTION_ID';
                             LANE_TYPE_ID,
                             LANE_NAME,
                             CAMERA_ID_FRONT,
-                CAMERA_ID_REAR,
+                            CAMERA_ID_REAR,
                             ETC_ANTENNA_ID_FRONT,
                             ETC_ANTENNA_ID_REAR,
                             CREATION_DATE,
@@ -2400,32 +2387,32 @@ ORDER BY TRANSACTION_ID';
                    P_LANE_TYPE_ID,
                    P_LANE_NAME,
                    P_CAMERA_ID_FRONT,
-P_CAMERA_ID_REAR,
+                   P_CAMERA_ID_REAR,
                    P_ETC_ANTENNA_ID_FRONT,
                    P_ETC_ANTENNA_ID_REAR,
                    P_CREATION_DATE,
                    P_TRANSFER_STATUS);
    END LANE_INSERT;
 
-   PROCEDURE LANE_UPDATE (P_TMS_ID              IN NUMBER,
-                          P_PLAZA_ID            IN NUMBER,
-                          P_LANE_ID             IN NUMBER,
-                          P_LANE_TYPE_ID        IN NUMBER,
-                          P_LANE_NAME           IN NVARCHAR2,
-                          P_CAMERA_ID_FRONT         IN NUMBER,
-              P_CAMERA_ID_REAR         IN NUMBER,
-                          P_ETC_ANTENNA_ID_FRONT       IN NUMBER,
-                          P_ETC_ANTENNA_ID_REAR       IN NUMBER,
-                          P_MODIFIED_BY         IN NUMBER,
-                          P_MODIFICATION_DATE   IN DATE,
-                          P_TRANSFER_STATUS     IN NUMBER)
+   PROCEDURE LANE_UPDATE (P_TMS_ID                 IN NUMBER,
+                          P_PLAZA_ID               IN NUMBER,
+                          P_LANE_ID                IN NUMBER,
+                          P_LANE_TYPE_ID           IN NUMBER,
+                          P_LANE_NAME              IN NVARCHAR2,
+                          P_CAMERA_ID_FRONT        IN NUMBER,
+                          P_CAMERA_ID_REAR         IN NUMBER,
+                          P_ETC_ANTENNA_ID_FRONT   IN NUMBER,
+                          P_ETC_ANTENNA_ID_REAR    IN NUMBER,
+                          P_MODIFIED_BY            IN NUMBER,
+                          P_MODIFICATION_DATE      IN DATE,
+                          P_TRANSFER_STATUS        IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_LANE
          SET LANE_NAME = P_LANE_NAME,
              LANE_TYPE_ID = P_LANE_TYPE_ID,
              CAMERA_ID_FRONT = P_CAMERA_ID_FRONT,
-CAMERA_ID_REAR = P_CAMERA_ID_REAR,
+             CAMERA_ID_REAR = P_CAMERA_ID_REAR,
              ETC_ANTENNA_ID_FRONT = P_ETC_ANTENNA_ID_FRONT,
              ETC_ANTENNA_ID_REAR = P_ETC_ANTENNA_ID_REAR,
              MODIFIED_BY = P_MODIFIED_BY,
@@ -2453,14 +2440,15 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                   L.PLAZA_ID,
                   (SELECT P.PLAZA_NAME
                      FROM TBL_PLAZA P
-                    WHERE P.PLAZA_ID = L.PLAZA_ID) AS PLAZA_NAME,
+                    WHERE P.PLAZA_ID = L.PLAZA_ID)
+                     AS PLAZA_NAME,
                   L.TMS_ID,
                   L.TRANSFER_STATUS,
                   (SELECT H.HARDWARE_NAME
                      FROM TBL_HARDWARE H
                     WHERE H.HARDWARE_ID = L.CAMERA_ID_FRONT)
                      AS CAMERA_NAME_FRONT,
-(SELECT H.HARDWARE_NAME
+                  (SELECT H.HARDWARE_NAME
                      FROM TBL_HARDWARE H
                     WHERE H.HARDWARE_ID = L.CAMERA_ID_REAR)
                      AS CAMERA_NAME_REAR,
@@ -2468,7 +2456,7 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                      FROM TBL_HARDWARE H
                     WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_FRONT)
                      AS ETC_ANTENNA_NAME_FRONT,
-                     (SELECT H.HARDWARE_NAME
+                  (SELECT H.HARDWARE_NAME
                      FROM TBL_HARDWARE H
                     WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_REAR)
                      AS ETC_ANTENNA_NAME_REAR
@@ -2480,79 +2468,81 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
    AS
    BEGIN
       OPEN CUR_OUT FOR
-        SELECT L.CAMERA_ID_FRONT,
-                  L.CAMERA_ID_REAR,
-                  L.CREATION_DATE,
-                  L.ETC_ANTENNA_ID_FRONT,
-                  L.ETC_ANTENNA_ID_REAR,
-                  L.LANE_ID,
-                  L.LANE_TYPE_ID,
-                  L.LANE_NAME,
-                  L.MODIFICATION_DATE,
-                  L.MODIFIED_BY,
-                  L.PLAZA_ID,
-                  (SELECT P.PLAZA_NAME
-                     FROM TBL_PLAZA P
-                    WHERE P.PLAZA_ID = L.PLAZA_ID) AS PLAZA_NAME,
-                  L.TMS_ID,
-                  L.TRANSFER_STATUS,
-                  (SELECT H.HARDWARE_NAME
-                     FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.CAMERA_ID_FRONT)
-                     AS CAMERA_NAME_FRONT,
-(SELECT H.HARDWARE_NAME
-                     FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.CAMERA_ID_REAR)
-                     AS CAMERA_NAME_REAR,
-                  (SELECT H.HARDWARE_NAME
-                     FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_FRONT)
-                     AS ETC_ANTENNA_NAME_FRONT,
-                     (SELECT H.HARDWARE_NAME
-                     FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_REAR)
-                     AS ETC_ANTENNA_NAME_REAR
-             FROM TBL_LANE L
+         SELECT L.CAMERA_ID_FRONT,
+                L.CAMERA_ID_REAR,
+                L.CREATION_DATE,
+                L.ETC_ANTENNA_ID_FRONT,
+                L.ETC_ANTENNA_ID_REAR,
+                L.LANE_ID,
+                L.LANE_TYPE_ID,
+                L.LANE_NAME,
+                L.MODIFICATION_DATE,
+                L.MODIFIED_BY,
+                L.PLAZA_ID,
+                (SELECT P.PLAZA_NAME
+                   FROM TBL_PLAZA P
+                  WHERE P.PLAZA_ID = L.PLAZA_ID)
+                   AS PLAZA_NAME,
+                L.TMS_ID,
+                L.TRANSFER_STATUS,
+                (SELECT H.HARDWARE_NAME
+                   FROM TBL_HARDWARE H
+                  WHERE H.HARDWARE_ID = L.CAMERA_ID_FRONT)
+                   AS CAMERA_NAME_FRONT,
+                (SELECT H.HARDWARE_NAME
+                   FROM TBL_HARDWARE H
+                  WHERE H.HARDWARE_ID = L.CAMERA_ID_REAR)
+                   AS CAMERA_NAME_REAR,
+                (SELECT H.HARDWARE_NAME
+                   FROM TBL_HARDWARE H
+                  WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_FRONT)
+                   AS ETC_ANTENNA_NAME_FRONT,
+                (SELECT H.HARDWARE_NAME
+                   FROM TBL_HARDWARE H
+                  WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_REAR)
+                   AS ETC_ANTENNA_NAME_REAR
+           FROM TBL_LANE L
           WHERE L.LANE_ID = P_LANE_ID;
    END LANE_GETBYID;
-   
+
    PROCEDURE LANE_GETBYPLAZAID (P_PLAZA_ID IN NUMBER, CUR_OUT OUT T_CURSOR)
    AS
    BEGIN
       OPEN CUR_OUT FOR
          SELECT L.CAMERA_ID_FRONT,
-                  L.CAMERA_ID_REAR,
-                  L.CREATION_DATE,
-                  L.ETC_ANTENNA_ID_FRONT,
-                  L.ETC_ANTENNA_ID_REAR,
-                  L.LANE_ID,
-                  L.LANE_TYPE_ID,
-                  L.LANE_NAME,
-                  L.MODIFICATION_DATE,
-                  L.MODIFIED_BY,
-                  L.PLAZA_ID,
-                  (SELECT P.PLAZA_NAME
-                     FROM TBL_PLAZA P
-                    WHERE P.PLAZA_ID = L.PLAZA_ID) AS PLAZA_NAME,
-                  L.TMS_ID,
-                  L.TRANSFER_STATUS,
-                  (SELECT H.HARDWARE_NAME
-                     FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.CAMERA_ID_FRONT)
-                     AS CAMERA_NAME_FRONT,
-(SELECT H.HARDWARE_NAME
-                     FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.CAMERA_ID_REAR)
-                     AS CAMERA_NAME_REAR,
-                  (SELECT H.HARDWARE_NAME
-                     FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_FRONT)
-                     AS ETC_ANTENNA_NAME_FRONT,
-                     (SELECT H.HARDWARE_NAME
-                     FROM TBL_HARDWARE H
-                    WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_REAR)
-                     AS ETC_ANTENNA_NAME_REAR
-             FROM TBL_LANE L
+                L.CAMERA_ID_REAR,
+                L.CREATION_DATE,
+                L.ETC_ANTENNA_ID_FRONT,
+                L.ETC_ANTENNA_ID_REAR,
+                L.LANE_ID,
+                L.LANE_TYPE_ID,
+                L.LANE_NAME,
+                L.MODIFICATION_DATE,
+                L.MODIFIED_BY,
+                L.PLAZA_ID,
+                (SELECT P.PLAZA_NAME
+                   FROM TBL_PLAZA P
+                  WHERE P.PLAZA_ID = L.PLAZA_ID)
+                   AS PLAZA_NAME,
+                L.TMS_ID,
+                L.TRANSFER_STATUS,
+                (SELECT H.HARDWARE_NAME
+                   FROM TBL_HARDWARE H
+                  WHERE H.HARDWARE_ID = L.CAMERA_ID_FRONT)
+                   AS CAMERA_NAME_FRONT,
+                (SELECT H.HARDWARE_NAME
+                   FROM TBL_HARDWARE H
+                  WHERE H.HARDWARE_ID = L.CAMERA_ID_REAR)
+                   AS CAMERA_NAME_REAR,
+                (SELECT H.HARDWARE_NAME
+                   FROM TBL_HARDWARE H
+                  WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_FRONT)
+                   AS ETC_ANTENNA_NAME_FRONT,
+                (SELECT H.HARDWARE_NAME
+                   FROM TBL_HARDWARE H
+                  WHERE H.HARDWARE_ID = L.ETC_ANTENNA_ID_REAR)
+                   AS ETC_ANTENNA_NAME_REAR
+           FROM TBL_LANE L
           WHERE L.PLAZA_ID = P_PLAZA_ID;
    END LANE_GETBYPLAZAID;
 
@@ -2562,7 +2552,7 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                               P_HARDWARE_ID         IN NUMBER,
                               P_HARDWARE_NAME       IN NVARCHAR2,
                               P_HARDWARE_TYPE       IN NUMBER,
-                              P_HARDWARE_POSITION       IN NUMBER,
+                              P_HARDWARE_POSITION   IN NUMBER,
                               P_MANUFACTURER_NAME   IN NVARCHAR2,
                               P_MODEL_NAME          IN NVARCHAR2,
                               P_IP_ADDRESS          IN NVARCHAR2,
@@ -2599,7 +2589,7 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                               P_HARDWARE_ID         IN NUMBER,
                               P_HARDWARE_NAME       IN NVARCHAR2,
                               P_HARDWARE_TYPE       IN NUMBER,
-                              P_HARDWARE_POSITION       IN NUMBER,
+                              P_HARDWARE_POSITION   IN NUMBER,
                               P_MANUFACTURER_NAME   IN NVARCHAR2,
                               P_MODEL_NAME          IN NVARCHAR2,
                               P_IP_ADDRESS          IN NVARCHAR2,
@@ -2611,7 +2601,7 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
       UPDATE TBL_HARDWARE
          SET HARDWARE_NAME = P_HARDWARE_NAME,
              HARDWARE_TYPE = P_HARDWARE_TYPE,
-             HARDWARE_POSITION  = P_HARDWARE_POSITION,
+             HARDWARE_POSITION = P_HARDWARE_POSITION,
              MANUFACTURER_NAME = P_MANUFACTURER_NAME,
              MODEL_NAME = P_MODEL_NAME,
              IP_ADDRESS = P_IP_ADDRESS,
@@ -2640,8 +2630,9 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
            FROM TBL_HARDWARE
           WHERE HARDWARE_ID = P_HARDWARE_ID;
    END HARDWARE_GETBYID;
-   
-  PROCEDURE HARDWARE_GETBYTYPE (P_HARDWARE_TYPE IN NUMBER, CUR_OUT OUT T_CURSOR)
+
+   PROCEDURE HARDWARE_GETBYTYPE (P_HARDWARE_TYPE   IN     NUMBER,
+                                 CUR_OUT              OUT T_CURSOR)
    AS
    BEGIN
       OPEN CUR_OUT FOR
@@ -3181,28 +3172,30 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                 CV.MODIFIED_BY,
                 CV.TRANSFER_STATUS,
                 VC.VEHICLE_CLASS_NAME
-           FROM TBL_CUSTOMER_VEHICLE CV
-           LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
-           ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+           FROM    TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN
+                   TBL_VEHICLE_CLASS VC
+                ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
           WHERE CV.TMS_ID = P_TMS_ID AND CV.ACCOUNT_ID = P_ACCOUNT_ID;
    END CUSTOMER_VEHICLE_GETBYID;
-   
-   PROCEDURE CUSTOMERVEHICLE_GETBYID (P_ENTRY_ID   IN     NUMBER,CUR_OUT OUT T_CURSOR)
+
+   PROCEDURE CUSTOMERVEHICLE_GETBYID (P_ENTRY_ID   IN     NUMBER,
+                                      CUR_OUT         OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
-        SELECT CV.TMS_ID,
-                  CV.ENTRY_ID,
-                  CV.ACCOUNT_ID,
-                  CV.VEH_REG_NO,
-                  CV.TAG_ID,
-                  CV.VEHICLE_CLASS_ID,
-                  CV.CREATION_DATE,
-                  CV.MODIFICATION_DATE,
-                  CV.MODIFIED_BY,
-                  CV.TRANSFER_STATUS,
-                  VC.VEHICLE_CLASS_NAME,
-                 CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                VC.VEHICLE_CLASS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
            FROM TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -3229,8 +3222,10 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                 CV.MODIFICATION_DATE,
                 CV.MODIFIED_BY,
                 CV.TRANSFER_STATUS
-           FROM TBL_CUSTOMER_VEHICLE CV
-           LEFT OUTER JOIN TBL_VEHICLE_CLASS VC ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+           FROM    TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN
+                   TBL_VEHICLE_CLASS VC
+                ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
           WHERE CV.TAG_ID = (SELECT OBJECT_ID
                                FROM TBL_CROSSTALK_PACKET CT
                               WHERE CT.ENTRY_ID = P_TRAN_CT_EN_ID);
@@ -3279,13 +3274,12 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
                   CV.MODIFIED_BY,
                   CV.TRANSFER_STATUS,
                   VC.VEHICLE_CLASS_NAME,
-                 CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
-           FROM TBL_CUSTOMER_VEHICLE CV
-                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
-                   ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
-                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
-                   ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
-           
+                  CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+             FROM TBL_CUSTOMER_VEHICLE CV
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                     ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                     ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
          ORDER BY CV.VEHICLE_CLASS_ID;
    END CUSTOMER_VEHICLE_GETALL;
 
@@ -3294,18 +3288,18 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT CV.TMS_ID,
-                  CV.ENTRY_ID,
-                  CV.ACCOUNT_ID,
-                  CV.VEH_REG_NO,
-                  CV.TAG_ID,
-                  CV.VEHICLE_CLASS_ID,
-                  CV.CREATION_DATE,
-                  CV.MODIFICATION_DATE,
-                  CV.MODIFIED_BY,
-                  CV.TRANSFER_STATUS,
-                  VC.VEHICLE_CLASS_NAME,
-                 CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                VC.VEHICLE_CLASS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
            FROM TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -3315,22 +3309,22 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
    END CUSTOMER_VEHICLE_GETBYTAGID;
 
    PROCEDURE CUSTOMERVEHICLE_GETBYVEHREGNO (P_VEH_REG_NO   IN     NVARCHAR2,
-                                          CUR_OUT       OUT T_CURSOR)
+                                            CUR_OUT           OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT CV.TMS_ID,
-                  CV.ENTRY_ID,
-                  CV.ACCOUNT_ID,
-                  CV.VEH_REG_NO,
-                  CV.TAG_ID,
-                  CV.VEHICLE_CLASS_ID,
-                  CV.CREATION_DATE,
-                  CV.MODIFICATION_DATE,
-                  CV.MODIFIED_BY,
-                  CV.TRANSFER_STATUS,
-                  VC.VEHICLE_CLASS_NAME,
-                 CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                VC.VEHICLE_CLASS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
            FROM TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -3442,41 +3436,43 @@ CAMERA_ID_REAR = P_CAMERA_ID_REAR,
    BEGIN
       OPEN CUR_OUT FOR
            SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
-       UPPER (CUST_VEH.VEH_REG_NO) AS EVI_VEH_NO,
-       UPPER (NFP.PLATE_NUMBER) AS FRONT_VRN,
-       UPPER (NFP1.PLATE_NUMBER) AS REAR_VRN,
-       UPPER (VC1.VEHICLE_CLASS_NAME) AS VEH_NAME_EVI,
-       UPPER (VC2.VEHICLE_CLASS_NAME) AS VEH_NAME_NODEFLUX,
-       TRAN.LANE_ID AS LANE_ID,
-       CTP.FIRST_READ AS EVI_ID,
-       CUST_ACC.ACCOUNT_ID AS OWNER_ID,
-       (CUST_ACC.FIRST_NAME || CUST_ACC.LAST_NAME) AS VEHICLE_OWNER,
-       NVL (ACC_HIST.AMOUNT, 0) AS AMOUNT_CHARGED,
-       NVL (CUST_ACC.ACCOUNT_BALANCE, 0) AS BALANCE,
-       (CASE NVL (ACC_HIST.SMS_SENT, 0) WHEN 1 THEN 'TRUE' ELSE 'FALSE' END)
-          AS SMS_NOTIFICATION
-  FROM TBL_TRANSACTION TRAN
-       LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
-          ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
-       LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
-          ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
-       LEFT OUTER JOIN TBL_VEHICLE_CLASS VC2
-          ON NFP.VEHICLE_CLASS_ID = VC2.VEHICLE_CLASS_ID
-       LEFT OUTER JOIN TBL_ACCOUNT_HISTORY ACC_HIST
-          ON TRAN.TRANSACTION_ID = ACC_HIST.TRANSACTION_ID
-       LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
-          ON TRAN.CT_ENTRY_ID = CTP.ENTRY_ID
-       LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CUST_VEH
-          ON UPPER(CTP.OBJECT_ID) = UPPER(CUST_VEH.TAG_ID)
-
-       LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CUST_ACC
-          ON CUST_VEH.ACCOUNT_ID = CUST_ACC.ACCOUNT_ID
-       LEFT OUTER JOIN TBL_VEHICLE_CLASS VC1
-          ON CUST_VEH.VEHICLE_CLASS_ID = VC1.VEHICLE_CLASS_ID
- WHERE     TRAN.TRANSACTION_DATETIME >= P_START_TIME
-       AND TRAN.TRANSACTION_DATETIME <= P_END_TIME
-AND UPPER (CUST_VEH.VEH_REG_NO) = UPPER (NFP.PLATE_NUMBER)
-AND CUST_VEH.VEHICLE_CLASS_ID = NFP.VEHICLE_CLASS_ID
+                  UPPER (CUST_VEH.VEH_REG_NO) AS EVI_VEH_NO,
+                  UPPER (NFP.PLATE_NUMBER) AS FRONT_VRN,
+                  UPPER (NFP1.PLATE_NUMBER) AS REAR_VRN,
+                  UPPER (VC1.VEHICLE_CLASS_NAME) AS VEH_NAME_EVI,
+                  UPPER (VC2.VEHICLE_CLASS_NAME) AS VEH_NAME_NODEFLUX,
+                  TRAN.LANE_ID AS LANE_ID,
+                  CTP.FIRST_READ AS EVI_ID,
+                  CUST_ACC.ACCOUNT_ID AS OWNER_ID,
+                  (CUST_ACC.FIRST_NAME || CUST_ACC.LAST_NAME) AS VEHICLE_OWNER,
+                  NVL (ACC_HIST.AMOUNT, 0) AS AMOUNT_CHARGED,
+                  NVL (CUST_ACC.ACCOUNT_BALANCE, 0) AS BALANCE,
+                  (CASE NVL (ACC_HIST.SMS_SENT, 0)
+                      WHEN 1 THEN 'TRUE'
+                      ELSE 'FALSE'
+                   END)
+                     AS SMS_NOTIFICATION
+             FROM TBL_TRANSACTION TRAN
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
+                     ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
+                     ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC2
+                     ON NFP.VEHICLE_CLASS_ID = VC2.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_ACCOUNT_HISTORY ACC_HIST
+                     ON TRAN.TRANSACTION_ID = ACC_HIST.TRANSACTION_ID
+                  LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                     ON TRAN.CT_ENTRY_ID = CTP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CUST_VEH
+                     ON UPPER (CTP.OBJECT_ID) = UPPER (CUST_VEH.TAG_ID)
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CUST_ACC
+                     ON CUST_VEH.ACCOUNT_ID = CUST_ACC.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC1
+                     ON CUST_VEH.VEHICLE_CLASS_ID = VC1.VEHICLE_CLASS_ID
+            WHERE     TRAN.TRANSACTION_DATETIME >= P_START_TIME
+                  AND TRAN.TRANSACTION_DATETIME <= P_END_TIME
+                  AND UPPER (CUST_VEH.VEH_REG_NO) = UPPER (NFP.PLATE_NUMBER)
+                  AND CUST_VEH.VEHICLE_CLASS_ID = NFP.VEHICLE_CLASS_ID
          ORDER BY TRAN.TRANSACTION_ID;
    END TRAN_CSV_GETNORMALTRAN;
 
@@ -3517,10 +3513,15 @@ AND CUST_VEH.VEHICLE_CLASS_ID = NFP.VEHICLE_CLASS_ID
                   LEFT OUTER JOIN TBL_VEHICLE_CLASS VC2
                      ON NFP.VEHICLE_CLASS_ID = VC2.VEHICLE_CLASS_ID
             WHERE     TRAN.TRANSACTION_DATETIME >= P_START_TIME
-                  AND TRAN.TRANSACTION_DATETIME <= P_END_TIME AND
-                 (CUST_VEH.VEH_REG_NO IS NULL OR NFP.PLATE_NUMBER IS NULL OR
-            (UPPER (CUST_VEH.VEH_REG_NO) <> UPPER (NFP.PLATE_NUMBER) OR 
-                 (UPPER (CUST_VEH.VEH_REG_NO) = UPPER (NFP.PLATE_NUMBER) AND CUST_VEH.VEHICLE_CLASS_ID <> NFP.VEHICLE_CLASS_ID)))
+                  AND TRAN.TRANSACTION_DATETIME <= P_END_TIME
+                  AND (   CUST_VEH.VEH_REG_NO IS NULL
+                       OR NFP.PLATE_NUMBER IS NULL
+                       OR (   UPPER (CUST_VEH.VEH_REG_NO) <>
+                                 UPPER (NFP.PLATE_NUMBER)
+                           OR (    UPPER (CUST_VEH.VEH_REG_NO) =
+                                      UPPER (NFP.PLATE_NUMBER)
+                               AND CUST_VEH.VEHICLE_CLASS_ID <>
+                                      NFP.VEHICLE_CLASS_ID)))
          ORDER BY TRAN.TRANSACTION_ID;
    END TRAN_CSV_GETVIOTRAN;
 
@@ -3566,5 +3567,110 @@ AND CUST_VEH.VEHICLE_CLASS_ID = NFP.VEHICLE_CLASS_ID
          --AND TRAN.CROSSTALK_VRN = "abc"
          ORDER BY TRAN.TRANSACTION_ID;
    END TRAN_CSV_GETTRANWITHOUTTAG;
+
+   PROCEDURE JOIN_AUDIT_TRANSACTIONS (
+      P_PARENT_TRANSACTION_ID      IN     NUMBER := NULL,
+      P_CHILD_1_TRANSACTION_ID     IN     NUMBER := NULL,
+      P_CHILD_2_TRANSACTION_ID     IN     NUMBER := NULL,
+      P_AUDITED_VRN                IN     NVARCHAR2,
+      P_AUDITED_VEHICLE_CLASS_ID   IN     NUMBER,
+      P_AUDITOR_ID                 IN     NUMBER,
+      CUR_OUT                         OUT T_CURSOR)
+   AS
+      CT_ENTRYID         NUMBER := NULL;
+      NF_ENTRYID_FRONT   NUMBER := NULL;
+      NF_ENTRYID_REAR    NUMBER := NULL;
+   BEGIN
+      --Update Child 1 Transaction
+      IF (P_CHILD_1_TRANSACTION_ID !=0)
+      THEN
+         UPDATE TBL_TRANSACTION
+            SET AUDITOR_ID = P_AUDITOR_ID,
+                AUDIT_STATUS = 1,
+                AUDIT_DATE = SYSDATE,
+                AUDITED_VRN = P_AUDITED_VRN,
+                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID;
+
+         SELECT TC.CT_ENTRY_ID
+           INTO CT_ENTRYID
+           FROM TBL_TRANSACTION TC
+          WHERE TC.TRANSACTION_ID = P_CHILD_1_TRANSACTION_ID;
+
+         SELECT NF_ENTRY_ID_REAR
+           INTO NF_ENTRYID_REAR
+           FROM TBL_TRANSACTION
+          WHERE TRANSACTION_ID = P_CHILD_1_TRANSACTION_ID;
+
+         SELECT NF_ENTRY_ID_FRONT
+           INTO NF_ENTRYID_FRONT
+           FROM TBL_TRANSACTION
+          WHERE TRANSACTION_ID = P_CHILD_1_TRANSACTION_ID;
+      END IF;
+
+      --Update Child 2 Two Transaction If Exists
+      IF (P_CHILD_2_TRANSACTION_ID !=0)
+      THEN
+         UPDATE TBL_TRANSACTION
+            SET AUDITOR_ID = P_AUDITOR_ID,
+                AUDIT_STATUS = 1,
+                AUDIT_DATE = SYSDATE,
+                AUDITED_VRN = P_AUDITED_VRN,
+                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID;
+
+         SELECT TC.CT_ENTRY_ID
+           INTO CT_ENTRYID
+           FROM TBL_TRANSACTION TC
+          WHERE TC.TRANSACTION_ID = P_CHILD_2_TRANSACTION_ID;
+
+         SELECT NF_ENTRY_ID_REAR
+           INTO NF_ENTRYID_REAR
+           FROM TBL_TRANSACTION
+          WHERE TRANSACTION_ID = P_CHILD_1_TRANSACTION_ID;
+
+         SELECT NF_ENTRY_ID_FRONT
+           INTO NF_ENTRYID_FRONT
+           FROM TBL_TRANSACTION
+          WHERE TRANSACTION_ID = P_CHILD_1_TRANSACTION_ID;
+      END IF;
+
+      --Update Parent Transaction for CT_ENTRY IF EXITS
+      IF (CT_ENTRYID IS NOT NULL)
+      THEN
+         UPDATE TBL_TRANSACTION
+            SET CT_ENTRY_ID = CT_ENTRYID,
+                AUDITOR_ID = P_AUDITOR_ID,
+                AUDIT_STATUS = 1,
+                AUDIT_DATE = SYSDATE,
+                AUDITED_VRN = P_AUDITED_VRN,
+                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
+          WHERE TRANSACTION_ID = P_PARENT_TRANSACTION_ID;
+      END IF;
+
+      --Update Parent Transaction for NF_ENTRY_ID_REAR IF EXITS
+      IF (NF_ENTRYID_REAR IS NOT NULL)
+      THEN
+         UPDATE TBL_TRANSACTION
+            SET NF_ENTRY_ID_REAR = NF_ENTRYID_REAR,
+                AUDITOR_ID = P_AUDITOR_ID,
+                AUDIT_STATUS = 1,
+                AUDIT_DATE = SYSDATE,
+                AUDITED_VRN = P_AUDITED_VRN,
+                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
+          WHERE TRANSACTION_ID = P_PARENT_TRANSACTION_ID;
+      END IF;
+
+      --Update Parent Transaction for NF_ENTRY_ID_REAR IF EXITS
+      IF (NF_ENTRYID_FRONT IS NOT NULL)
+      THEN
+         UPDATE TBL_TRANSACTION
+            SET NF_ENTRY_ID_FRONT = NF_ENTRYID_FRONT,
+                AUDITOR_ID = P_AUDITOR_ID,
+                AUDIT_STATUS = 1,
+                AUDIT_DATE = SYSDATE,
+                AUDITED_VRN = P_AUDITED_VRN,
+                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
+          WHERE TRANSACTION_ID = P_PARENT_TRANSACTION_ID;
+      END IF;
+   END JOIN_AUDIT_TRANSACTIONS;
 END MLFF_PACKAGE;
 /
