@@ -604,8 +604,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             int vehicleClassId = Convert.ToInt32(vehicleClassID);//Get by Audited
             DateTime transactionDatetime = DateTime.Now;
             int isBalanceUpdated = 0;
-            int childOneTranasactionId = 0;
-            int childTwoTranasactionId = 0;
+            long childOneTranasactionId = 0;
+            long childTwoTranasactionId = 0;
             StringBuilder returnMessage = new StringBuilder();
 
             //get Parent Transaction Data
@@ -628,11 +628,11 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 //Check Reviewer Selected One Child
                 if (AssociatedTransactionIds.Length>0)
                 {
-                    childOneTranasactionId = Convert.ToInt32(AssociatedTransactionIds[0]);
+                    childOneTranasactionId = Convert.ToInt64(AssociatedTransactionIds[0]);
                 }
                 if (AssociatedTransactionIds.Length > 1)
                 {
-                    childTwoTranasactionId = Convert.ToInt32(AssociatedTransactionIds[1]);
+                    childTwoTranasactionId = Convert.ToInt64(AssociatedTransactionIds[1]);
                 }
             }
             transaction.IsBalanceUpdated = isBalanceUpdated;
@@ -672,7 +672,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             //In this region i have to call new package
             #region Join and Audit Section of Transactions
             //Call Function UpdateAuditJoinTransaction Here
-            // Libraries.CommonLibrary.BLL.TransactionBLL.UpdateTransaction(transaction);
+             Libraries.CommonLibrary.BLL.TransactionBLL.JoinAuditTransaction(transaction.TransactionId, childOneTranasactionId, childTwoTranasactionId, VehRegNo, vehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()));
             #endregion
             returnMessage.Append("SucessFully Audited and Join Transaction");
             result.Data = returnMessage;
