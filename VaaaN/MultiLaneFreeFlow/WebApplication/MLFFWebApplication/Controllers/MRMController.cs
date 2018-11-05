@@ -596,6 +596,88 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        public JsonResult JoinTransactionsNew(string[] AssociatedTransactionIds, string TransactionId, string VehRegNo, string vehicleClassID)
+        {
+            JsonResult result = new JsonResult();          
+            int vehicleClassId = Convert.ToInt32(vehicleClassID);//Get by Audited
+            DateTime transactionDatetime = DateTime.Now;
+            int isBalanceUpdated = 0;
+            int childOneTranasactionId = 0;
+            int childTwoTranasactionId = 0;
+            StringBuilder returnMessage = new StringBuilder();
+
+            //get Parent Transaction Data
+            Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
+            transaction.TransactionId = Convert.ToInt32(TransactionId);
+            DataTable parentTransaction = new DataTable();
+            parentTransaction = Libraries.CommonLibrary.BLL.TransactionBLL.Transaction_GetById(transaction);
+
+            if (parentTransaction != null && parentTransaction.Rows != null && parentTransaction.Rows.Count > 0)
+            {
+                if (parentTransaction.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
+                {
+                    isBalanceUpdated = 1;
+                }
+                transaction.LaneId = Convert.ToInt32(parentTransaction.Rows[0]["LANE_ID"].ToString());
+                transactionDatetime = Convert.ToDateTime(parentTransaction.Rows[0]["TRANSACTION_DATETIME"].ToString());
+            }
+            if (AssociatedTransactionIds != null)
+            {
+                //Check Reviewer Selected One Child
+                if (AssociatedTransactionIds.Length>0)
+                {
+                    childOneTranasactionId = Convert.ToInt32(AssociatedTransactionIds[0]);
+                }
+                if (AssociatedTransactionIds.Length > 1)
+                {
+                    childTwoTranasactionId = Convert.ToInt32(AssociatedTransactionIds[1]);
+                }
+            }
+            transaction.IsBalanceUpdated = isBalanceUpdated;
+            transaction.TransactionDateTime = transactionDatetime;
+            transaction.ModifierId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+            transaction.ModificationDate = DateTime.Now;
+            #region Financial and Notification By Manual Review
+            if (isBalanceUpdated != 1)
+            {
+                //Charging and Notification Logics
+                //get Customer Vehicle from customer VRN
+                Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo = new Libraries.CommonLibrary.CBE.CustomerVehicleCBE();
+                customerVehicleInfo.VehRegNo = VehRegNo;
+                customerVehicleInfo = Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(customerVehicleInfo);
+                customerVehicleInfo.VehicleClassId = vehicleClassId;
+
+                //get customer account info from customer VRN
+                Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo = new Libraries.CommonLibrary.CBE.CustomerAccountCBE();
+                customerAccountInfo.AccountId = customerVehicleInfo.AccountId;
+                customerAccountInfo = Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetCustomerById(customerAccountInfo);
+
+                //financial operation here
+                FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+                //Update Is Blanace Updated =1
+                isBalanceUpdated = 1;
+                HelperClass.LogMessage("Financial processing has been done.");
+                //notification operation here
+                NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+
+            }
+            else
+            {
+                returnMessage.Append("Balance not Deducted as Balance already deducted for this Transaction");
+
+            }
+            #endregion
+            //In this region i have to call new package
+            #region Join and Audit Section of Transactions
+            //Call Function UpdateAuditJoinTransaction Here
+            // Libraries.CommonLibrary.BLL.TransactionBLL.UpdateTransaction(transaction);
+            #endregion
+            returnMessage.Append("SucessFully Audited and Join Transaction");
+            result.Data = returnMessage;
+            return Json(result);
+        }
         #endregion
 
         #region-------------Helper Methods--------------------
