@@ -411,6 +411,8 @@
     <Content Include="Views\Shared\_AssociatedTimeTransaction.cshtml" />
     <Content Include="Views\Report\ReportPage.cshtml" />
     <Content Include="Views\Report\ReportSelection.cshtml" />
+    <Content Include="Views\MRM\ManualReview.cshtml" />
+    <Content Include="Views\Shared\_ManualTransactions.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -426,6 +428,9 @@
       <Project>{cbfca6fa-5b64-48b4-90ec-793a710fa0c2}</Project>
       <Name>CommonLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
