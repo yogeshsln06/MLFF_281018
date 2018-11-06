@@ -25,13 +25,13 @@
                                         <div class="col-md-3">
                                             @Html.DropDownList("ddlTransactionCategory", (IEnumerable<SelectListItem>)ViewBag.ReportType, new { @class = "form-control" })
                                         </div>
-                                        @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "form-label col-md-1" })
+                                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "form-label col-md-1" })
                                         <div class="col-md-3">
-                                            @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                         </div>
-                                        @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "form-label col-md-1" })
+                                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "form-label col-md-1" })
                                         <div class="col-md-3">
-                                            @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                         </div>
                                 </div>
                             </div>
