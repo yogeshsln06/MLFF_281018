@@ -14,12 +14,12 @@ $(document).ready(function () {
     $("#frontvideoview").hide();
     //$("#rearvideoview").hide();
 
-    jQuery('#StartTime').datetimepicker({
+    jQuery('#StartDate').datetimepicker({
         format: 'm/d/Y H:i',
 
     });
 
-    jQuery('#EndTime').datetimepicker({
+    jQuery('#EndDate').datetimepicker({
         format: 'm/d/Y H:i',
 
     });
@@ -38,8 +38,8 @@ $(document).ready(function () {
 
     yy = d.getFullYear();
 
-    $("#StartTime").val(mm + '/' + dd + '/' + yy + " 00:01");
-    $("#EndTime").val(mm + '/' + dd + '/' + yy + " 23:59");
+    $("#StartDate").val(mm + '/' + dd + '/' + yy + " 00:01");
+    $("#EndDate").val(mm + '/' + dd + '/' + yy + " 23:59");
 
     $("#GenerateReport").click(function () {
         GenerateReport();
@@ -61,7 +61,7 @@ function filterData() {
         return false;
     }
     var InputDate = {
-        StartDate: $("#StartTime").val() + ":00", EndDate: $("#EndTime").val() + ":00",
+        StartDate: $("#StartDate").val() + ":00", EndDate: $("#EndDate").val() + ":00",
         GantryId: $("#ddlGantry").val(), VehicleClassId: $("#ddlVehicleClass").val(),
         PlateNumber: $("#PlateNumber").val(),
         TransactionCategoryId: $("#ddlTransactionCategory").val()
@@ -243,7 +243,7 @@ function GenerateReport() {
         type: 'POST',
         url: '../Report/GenerateReport',
         dataType: 'json',
-        data: { startDate: $("#StartTime").val(), endDate: $("#EndTime").val(), rptname: "Sample Report" },
+        data: { startDate: $("#StartDate").val(), endDate: $("#EndDate").val(), rptname: "Sample Report" },
         success: function (result) {
             //location.href = "@Url.Action("ReportPage", "Report")";
             location.href = "../Report/ReportPage";

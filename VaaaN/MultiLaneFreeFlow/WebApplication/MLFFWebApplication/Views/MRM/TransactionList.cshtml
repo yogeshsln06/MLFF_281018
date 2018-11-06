@@ -137,15 +137,15 @@
                             <form data-toggle="validator" role="form">
                                 <div class="form-group">
 
-                                    @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-1" })
+                                    @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-1" })
                                     <div class="col-md-2">
-                                        @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                                        @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                        @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
                                     </div>
-                                    @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-1" })
+                                    @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-1" })
                                     <div class="col-md-2">
-                                        @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                                        @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                        @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
                                     </div>
                                     @Html.Label("Gantry", htmlAttributes: new { @class = "control-label col-md-1 required" })
                                     <div class="col-md-2">
