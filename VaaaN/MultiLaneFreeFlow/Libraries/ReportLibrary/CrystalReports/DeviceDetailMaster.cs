@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VaaaN.MLFF.Libraries.ReportLibrary.CrystalReports {
+namespace VaaaN.ATMS.Libraries.ReportLibrary.CrystalReports {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
