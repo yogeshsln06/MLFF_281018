@@ -900,6 +900,11 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             return result;
         }
+
+        public ActionResult SessionPage()
+        {
+            return View();
+        }
         #endregion
     }
 }

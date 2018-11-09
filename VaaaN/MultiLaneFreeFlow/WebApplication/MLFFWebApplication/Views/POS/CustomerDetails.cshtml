@@ -1,0 +1,217 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.ViewTransactionCBE
+@{
+    ViewBag.Title = "Customer Details";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        <div class="panel-title new-title">
+            Customer Details
+        </div>
+    </div>
+    <div style="height:5px"></div>
+    <div class="panel-body">
+        <div class="col-sm-12">
+            <div class="col-xs-12 well boxshadow">
+                <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
+                    <div class="form-horizontal">
+                        <div class="form-group col-lg-12" style="margin:0%">
+                            <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px">
+                                <hr style="margin-left: 0;width:90%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                            </div>
+                            <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px;width:5%">
+                                <label style="padding-top:10px" class="form-label">Filters</label>
+                            </div>
+                            <div class="col-sm-10 col-md-10 col-lg-10" style="padding-left:1px;padding-right:1px;width:85%">
+                                <hr style="margin-left: 0;  text-align: left;width: 100%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                            </div>
+                        </div>
+                        <form data-toggle="validator" role="form">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-3">
+                                    @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button id="btnShow" type="button" class="btn btn-primary pull-right" onclick="Show()">Filter</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 well boxshadow" id="filterresult">
+                <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
+                    <div class="form-horizontal">
+                        <div class="form-group col-lg-12" style="margin:0%">
+                            <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px">
+                                <hr style="margin-left: 0;width:90%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6" style="padding-left:1px;padding-right:1px;width:12%">
+                                <label style="padding-top:10px" class="form-label">Customer Result</label>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4" style="padding-left:1px;padding-right:1px;width:79%">
+                                <hr style="margin-left: 0;  text-align: left;width: 100%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                            </div>
+                        </div>
+                        <div id="CustmerDetails">
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 well boxshadow" id="filtertab">
+                <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
+                    <div class="form-horizontal">
+                        <div class="form-group col-lg-12" style="margin:0%">
+                            <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px">
+                                <hr style="margin-left: 0;width:90%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6" style="padding-left:1px;padding-right:1px;width:12%">
+                                <label style="padding-top:10px" class="form-label">Customer Details</label>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4" style="padding-left:1px;padding-right:1px;width:79%">
+                                <hr style="margin-left: 0;  text-align: left;width: 100%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff">
+                            </div>
+                        </div>
+                        <div class="clearfix" style="height: 30px;"></div>
+                        <div class="panel-group" id="accordion">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Customer Vehicle</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse1" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="col-md-12">
+                                            <div id="CustmerVehicle">
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Recharge History</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse2" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Transcation History</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function validmobileno(str) {
+        //var pattern = /^(\+62 ((\d{3}([ -]\d{3,})([- ]\d{4,})?)|(\d+)))|(\(\d+\) \d+)|\d{3}( \d+)+|(\d+[ -]\d+)|\d+$/;
+        var pattern = /^\+?([ -]?\d+)+|\(\d+\)([ -]\d+)$/;
+        return String(str).match(pattern);
+    }
+
+    function Show() {
+        if ($("#MobileNo").val() == '') {
+            alert("Mobile Number must be entred");
+            return false;
+        }
+        else if (!validmobileno($("#MobileNo").val())) {
+            alert('Enter valid Mobile Number');
+            return false;
+        }
+
+        var Inputdata = {
+            MobileNo: $("#MobileNo").val(),
+        }
+        $("#filterresult").show();
+        $('#loader').show();
+        $.ajax({
+            type: "POST",
+            url: "FilterCustomer",
+            //dataType: "JSON",
+            async: true,
+            data: JSON.stringify(Inputdata),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (result) {
+                $('#loader').hide();
+                $('#CustmerDetails').html(result);
+
+            },
+            error: function (x, e) {
+                $('#loader').hide();
+                $('#CustmerDetails').hide();
+            }
+
+        });
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $("#hfAPIPath").val(JSON.parse('@Html.Raw(Json.Encode(ViewData["apiPath"]))'));
+        jQuery('#StartDate').datetimepicker({
+            format: 'm/d/Y H:i',
+
+        });
+
+        jQuery('#EndDate').datetimepicker({
+            format: 'm/d/Y H:i',
+
+        });
+
+        var d = new Date();
+
+        dd = d.getDate();
+
+        dd = dd > 9 ? dd : '0' + dd;
+
+        mm = (d.getMonth() + 1);
+
+
+        mm = mm > 9 ? mm : '0' + mm;
+
+
+        yy = d.getFullYear();
+
+        $("#StartDate").val(mm + '/' + dd + '/' + yy + " 00:01");
+        $("#EndDate").val(mm + '/' + dd + '/' + yy + " 23:59");
+
+        $("#filterresult").hide();
+        $("#filtertab").hide();
+        
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="~/css/jquery.datetimepicker.css" />
+<script src="~/js/jquery.datetimepicker.full.min.js"></script>

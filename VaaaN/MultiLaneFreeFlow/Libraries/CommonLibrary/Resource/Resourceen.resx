@@ -279,4 +279,7 @@
   <data name="VehicleRegNo" xml:space="preserve">
     <value>Vehicle Reg No</value>
   </data>
+  <data name="CustomerDetails" xml:space="preserve">
+    <value>Customer Details</value>
+  </data>
 </root>

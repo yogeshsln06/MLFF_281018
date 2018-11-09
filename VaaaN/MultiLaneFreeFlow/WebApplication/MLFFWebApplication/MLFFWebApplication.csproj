@@ -413,6 +413,10 @@
     <Content Include="Views\Report\ReportSelection.cshtml" />
     <Content Include="Views\MRM\ManualReview.cshtml" />
     <Content Include="Views\Shared\_ManualTransactions.cshtml" />
+    <Content Include="Views\POS\CustomerDetails1.cshtml" />
+    <Content Include="Views\POS\_CustomerVehicleDetails.cshtml" />
+    <Content Include="Views\POS\CustomerDetails.cshtml" />
+    <Content Include="Views\POS\_CustomerDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

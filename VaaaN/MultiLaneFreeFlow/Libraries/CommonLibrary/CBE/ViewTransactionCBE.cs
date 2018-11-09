@@ -34,5 +34,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         [Display(Name = "Transaction Category")]
         public Int32 TransactionCategoryId { get; set; }
         public List<CBE.TransactionCBE> Transaction { get; set; }
+
+        [Display(Name = "Mobile Number")]
+        public String MobileNo { get; set; }
     }
 }

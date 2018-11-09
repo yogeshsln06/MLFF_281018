@@ -1,0 +1,124 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>
+
+@{
+    ViewBag.Title = "Customer List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    function GetVehicleDetails(id) {
+        $('#loader').show();
+        $.ajax({
+            type: "POST",
+            url: "CustomerVehicleListbyCustomer?id="+id,
+            async: true,
+           
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (result) {
+                $('#loader').hide();
+                $('#vehicleDetails').html(result);
+
+            },
+            error: function (x, e) {
+                $('#loader').hide();
+                $('#vehicleDetails').hide();
+            }
+
+        });
+       
+    }
+
+    $(document).ready(function () {
+        $('#tableCustomer').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+    });
+
+
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
+        <div class="panel-title new-title">
+            Customer List
+        </div>
+
+    </div>
+    <div style="height:5px"></div>
+    <table id="tableCustomer" class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    Name
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.MobileNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EmailId)
+                </th>
+                <th>
+                  Balance
+                </th>
+                <th>
+                    Account Status
+                </th>
+                <th>
+                    Vehicle Details
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName
+                   )
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MobileNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmailId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AccountBalance)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AccountStatus)
+                    </td>
+                    <td>
+                        <a class="edit" onclick="GetVehicleDetails(@item.AccountId)" >
+                            <i class="fa fa-info-circle" style="@ViewBag.Visibility" aria-hidden="true" title="Customer Vehicle"></i>
+                        </a>
+                      
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+<div id="vehicleDetails">
+
+</div>

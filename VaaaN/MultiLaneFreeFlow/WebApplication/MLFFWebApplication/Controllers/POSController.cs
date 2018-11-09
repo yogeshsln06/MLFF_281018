@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
 using VaaaN.MLFF.WebApplication.Models;
 
 namespace VaaaN.MLFF.WebApplication.Controllers
@@ -188,23 +189,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             }
             return RedirectToAction("RegisterCustomer");
         }
-        [HttpGet]
-        //public PartialViewResult RenderCustomer()
-        //{
-        //    try
-        //    {
-                
-        //    }
-        //    catch (Exception ex)
-        //    {
 
-        //        LogMessage("Failed to load Render Customer in POS Controller" + ex);
-        //    }
-        //    return PartialView();
-        //}
 
-    
-        //Get
         public ActionResult TagSaleList()
         {
 
@@ -226,14 +212,14 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             catch (Exception ex)
             {
 
-                HelperClass.LogMessage("Failed To Load TagSaleList in POS Controller" +ex);
+                HelperClass.LogMessage("Failed To Load TagSaleList in POS Controller" + ex);
             }
             return View(customerDataList);
         }
 
         [HttpGet]
         public ActionResult CustomerTagList(int id)//here id is account id
-        {            
+        {
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> customerVehicleList = new List<Libraries.CommonLibrary.CBE.CustomerVehicleCBE>();
             try
             {
@@ -276,12 +262,12 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 vehicleClassList.Add(new SelectListItem() { Text = "Select Plaza", Value = "0" });
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleClass)
                 {
-                        vehicleClassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id)});
-               }
+                    vehicleClassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
+                }
 
                 ViewBag.VehicleClass = vehicleClassList;
                 ViewBag.AccountId = id;
-                
+
                 #endregion
 
             }
@@ -362,7 +348,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             {
                 TempData["lblerror"] = "Mandatory Field Required";
             }
-           
+
             return RedirectToAction("AddCustomerTag");
         }
 
@@ -378,7 +364,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     return Redirect("SessionPage");
                 }
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
-               
+
                 //Get Customer Detail By ID
                 customerAccountList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetById(id).Cast<Libraries.CommonLibrary.CBE.CustomerAccountCBE>().ToList();
 
@@ -448,5 +434,108 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             }
             return View();
         }
+
+        #region CustomerDetails and Transcation
+        public ActionResult CustomerDetails()
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    return RedirectToAction("SessionPage", "Home");
+                }
+                ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load TagSaleList in POS Controller" + ex);
+            }
+            return View();
+        }
+
+        public ActionResult FilterCustomer(Libraries.CommonLibrary.CBE.ViewTransactionCBE transaction)
+        {
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    return RedirectToAction("SessionPage", "Home");
+                }
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetByMobileNumber(transaction.MobileNo).Cast<CustomerAccountCBE>().ToList();
+               
+
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load TagSaleList in POS Controller" + ex);
+            }
+            return PartialView("_CustomerDetails", customerDataList);
+        }
+
+        public ActionResult CustomerDetails1()
+        {
+
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    return RedirectToAction("SessionPage", "Home");
+                }
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+                //Call Bll To get all Plaza List
+                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
+
+                return View(customerDataList);
+
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load TagSaleList in POS Controller" + ex);
+            }
+            return View(customerDataList);
+        }
+        public ActionResult CustomerVehicleListbyCustomer(int id)
+        {
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerVehicleCBE>();
+            try
+            {
+
+                if (Session["LoggedUserId"] == null)
+                {
+                    return RedirectToAction("SessionPage", "Home");
+                }
+                ViewBag.AccountId = id;
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+
+                CustomerVehicleCBE customer = new CustomerVehicleCBE();
+                customer.AccountId = id;
+                customer.TMSId = Libraries.CommonLibrary.Constants.GetCurrentTMSId();
+
+                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetUserByAccountId(customer).Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE>().ToList();
+                return PartialView("_CustomerVehicleDetails", customerDataList);
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer Vehicle List " + ex.Message.ToString());
+                return PartialView("_CustomerVehicleDetails", customerDataList);
+            }
+
+        }
+        #endregion
+
+
     }
 }

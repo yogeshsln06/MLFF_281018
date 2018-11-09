@@ -29,17 +29,23 @@
         return false;
     }
 
-    if ($("#MobileNo").val().length < 10) {
-        showError('Mobile No. must be 10 digits.');
-
+    if ($("#MobileNo").val() == '') {
+        alert("Mobile Number must be entred");
         return false;
     }
+
+    //if ($("#MobileNo").val().length < 10) {
+    //    showError('Mobile No. must be 10 digits.');
+
+    //    return false;
+    //}
 
     if ($("#EmailId").val() == '') {
         showError('Enter Email Id');
 
         return false;
     }
+
     if (!validEmail($("#EmailId").val())) {
         showError('Enter valid Email Id');
 
@@ -55,6 +61,7 @@
 
     return true;
 }
+
 function EditPage_ValidateUser() {
     if ($("#FirstName").val() == '') {
         showError('Enter First Name');
@@ -68,9 +75,8 @@ function EditPage_ValidateUser() {
         return false;
     }
 
-    if ($("#MobileNo").val().length < 10) {
-        showError('Mobile No. must be 10 digits.');
-
+    if (!validmobileno($("#MobileNo").val())) {
+        showError('Enter valid Mobile Number');
         return false;
     }
 
@@ -79,6 +85,7 @@ function EditPage_ValidateUser() {
 
         return false;
     }
+
     if (!validEmail($("#EmailId").val())) {
         showError('Enter valid Email Id');
 
@@ -91,9 +98,9 @@ function EditPage_ValidateUser() {
         return false;
     }
 
-
     return true;
 }
+
 function validEmail(str) {
     var pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return String(str).match(pattern);
@@ -102,13 +109,19 @@ function validEmail(str) {
 function validTAGId(str) {
     var pattern = /^[0-9a-fA-F]+$/;
     return String(str).match(pattern);
-
 }
+
+function validmobileno(str) {
+    var pattern = /^(\+62 ((\d{3}([ -]\d{3,})([- ]\d{4,})?)|(\d+)))|(\(\d+\) \d+)|\d{3}( \d+)+|(\d+[ -]\d+)|\d+$/;
+    return String(str).match(pattern);
+}
+
 function validIpAddress(str) {
     var pattern = /^(?=.*[^\.]$)((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.?){4}$/;
     return String(str).match(pattern);
 
 }
+
 function showError(errorMsg) {
     $("#lblErrors").text('');
     $("#lblErrors").text(errorMsg);
@@ -129,7 +142,6 @@ function validateCustomer() {
 
     //if ($("#MobileNo").val().length < 13) {
     //    showError('Mobile No. must be 10 digits.');
-
     //    return false;
     //}
 
@@ -289,4 +301,6 @@ function validateCustomerVehicle() {
 
     return true;
 }
+
+
 
