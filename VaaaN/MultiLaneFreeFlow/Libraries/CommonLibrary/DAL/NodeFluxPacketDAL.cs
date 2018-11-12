@@ -42,6 +42,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLATE_THUMBNAIL", DbType.String, nodeFluxPacket.PlateThumbnail, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_THUMBNAIL", DbType.String, nodeFluxPacket.VehicleThumbnail, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VIDEO_URL", DbType.String, nodeFluxPacket.VideoURL, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVIDER", DbType.Int32, nodeFluxPacket.VideoURL, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, nodeFluxPacket.CreationDate, ParameterDirection.Input));
 
 
@@ -81,6 +82,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLATE_THUMBNAIL", DbType.String, nodeFluxPacket.PlateThumbnail, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_THUMBNAIL", DbType.String, nodeFluxPacket.VehicleThumbnail, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VIDEO_URL", DbType.String, nodeFluxPacket.VideoURL, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVIDER", DbType.Int32, nodeFluxPacket.VideoURL, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, nodeFluxPacket.ModifierId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, nodeFluxPacket.ModificationDate, ParameterDirection.Input));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
@@ -304,6 +306,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                     if (dt.Rows[i]["VIDEO_URL"] != DBNull.Value)
                         nodeFluxPacket.VideoURL = Convert.ToString(dt.Rows[i]["VIDEO_URL"]);
+
+                    if (dt.Rows[i]["PROVIDER"] != DBNull.Value)
+                        nodeFluxPacket.Provider = Convert.ToInt32(dt.Rows[i]["PROVIDER"]);
 
                     //other fields
                     if (dt.Rows[i]["MODIFIER_ID"] != DBNull.Value)
