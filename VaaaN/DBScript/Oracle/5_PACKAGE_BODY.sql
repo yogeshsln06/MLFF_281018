@@ -3445,7 +3445,7 @@ BEGIN
                AH.ACCOUNT_ID,
                AH.ENTRY_ID,
                AH.CUSTOMER_VEHICLE_ENTRY_ID,
-               AH.TRANSACTION_TYPE,
+               (CASE AH.TRANSACTION_TYPE WHEN 1 THEN 'Sale' WHEN 2 THEN 'Recharge' WHEN 3 THEN 'Refund' WHEN 4 THEN 'Lane Debit' END ) TRANSACTION_TYPE,
                AH.TRANSACTION_ID,
                AH.AMOUNT,
                AH.SMS_SENT,
