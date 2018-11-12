@@ -1554,6 +1554,7 @@ AS
                   NFP.PLATE_THUMBNAIL,
                   NFP.VEHICLE_THUMBNAIL,
                   NFP.VIDEO_URL,
+                  NFP.PROVIDER,
                   NFP.CREATION_DATE,
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
@@ -1583,6 +1584,7 @@ AS
                   NFP.PLATE_THUMBNAIL,
                   NFP.VEHICLE_THUMBNAIL,
                   NFP.VIDEO_URL,
+                  NFP.PROVIDER,
                   NFP.CREATION_DATE,
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
@@ -1616,6 +1618,7 @@ AS
                   NFP.PLATE_THUMBNAIL,
                   NFP.VEHICLE_THUMBNAIL,
                   NFP.VIDEO_URL,
+                  NFP.PROVIDER,
                   NFP.CREATION_DATE,
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
@@ -1644,6 +1647,7 @@ AS
                                P_PLATE_THUMBNAIL     IN     NVARCHAR2,
                                P_VEHICLE_THUMBNAIL   IN     NVARCHAR2,
                                P_VIDEO_URL           IN     NVARCHAR2,
+                               P_PROVIDER            IN     NUMBER,
                                P_CREATION_DATE       IN     DATE)
    AS
    BEGIN
@@ -1664,6 +1668,7 @@ AS
                                        PLATE_THUMBNAIL,
                                        VEHICLE_THUMBNAIL,
                                        VIDEO_URL,
+                                       PROVIDER,
                                        CREATION_DATE)
            VALUES (NODEFLUX_PACKET_SEQ.NEXTVAL,
                    P_TMS_ID,
@@ -1682,6 +1687,7 @@ AS
                    P_PLATE_THUMBNAIL,
                    P_VEHICLE_THUMBNAIL,
                    P_VIDEO_URL,
+                   P_PROVIDER,
                    P_CREATION_DATE);
 
       P_ENTRY_ID := NODEFLUX_PACKET_SEQ.CURRVAL;
@@ -1704,6 +1710,7 @@ AS
                                P_PLATE_THUMBNAIL     IN NVARCHAR2,
                                P_VEHICLE_THUMBNAIL   IN NVARCHAR2,
                                P_VIDEO_URL           IN NVARCHAR2,
+                               P_PROVIDER            IN NUMBER,
                                P_MODIFIER_ID         IN NUMBER,
                                P_MODIFICATION_DATE   IN DATE)
    AS
@@ -1726,6 +1733,7 @@ AS
              PLATE_THUMBNAIL = P_PLATE_THUMBNAIL,
              VEHICLE_THUMBNAIL = P_VEHICLE_THUMBNAIL,
              VIDEO_URL = P_VIDEO_URL,
+             PROVIDER = P_PROVIDER,
              MODIFIER_ID = P_MODIFIER_ID,
              MODIFICATION_DATE = P_MODIFICATION_DATE
        WHERE     ENTRY_ID = P_ENTRY_ID
@@ -3427,6 +3435,42 @@ ORDER BY TRANSACTION_ID';
                 AH.CREATION_DATE
            FROM TBL_ACCOUNT_HISTORY AH;
    END ACCOUNT_HISTORY_GETALL;
+
+   PROCEDURE ACCOUNT_HISTORY_RECHARGE (P_ACCOUNT_ID   IN     NUMBER,
+                                    CUR_OUT           OUT T_CURSOR)
+IS
+BEGIN
+   OPEN CUR_OUT FOR
+        SELECT AH.TMS_ID,
+               AH.ACCOUNT_ID,
+               AH.ENTRY_ID,
+               AH.CUSTOMER_VEHICLE_ENTRY_ID,
+               (CASE AH.TRANSACTION_TYPE WHEN 1 THEN 'Sale' WHEN 2 THEN 'Recharge' WHEN 3 THEN 'Refund' WHEN 4 THEN 'Lane Debit' END ) TRANSACTION_TYPE,
+               AH.TRANSACTION_ID,
+               AH.AMOUNT,
+               AH.SMS_SENT,
+               AH.EMAIL_SENT,
+               AH.MODIFIED_BY,
+               AH.CREATION_DATE,
+               CA.FIRST_NAME,
+               CA.LAST_NAME,
+               CA.MOB_NUMBER,
+               CA.EMAIL_ID,
+               CA.ACCOUNT_BALANCE,
+               CA.ADDRESS,
+               CV.TAG_ID,
+               CV.VEH_REG_NO,
+               VC.VEHICLE_CLASS_NAME
+          FROM TBL_ACCOUNT_HISTORY AH
+               LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                  ON AH.ACCOUNT_ID = CA.ACCOUNT_ID
+               LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
+                  ON AH.CUSTOMER_VEHICLE_ENTRY_ID = CV.ENTRY_ID
+               LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                  ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+         WHERE AH.ACCOUNT_ID = P_ACCOUNT_ID
+      ORDER BY ENTRY_ID DESC;
+END ACCOUNT_HISTORY_RECHARGE;
 
    -----------------------POC CSV Data----------------
    PROCEDURE TRAN_CSV_GETNORMALTRAN (P_START_TIME   IN     DATE,
