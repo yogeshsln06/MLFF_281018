@@ -53,7 +53,7 @@
     function GetVehicleTranscationHistory(id) {
         $.ajax({
             type: "POST",
-            url: "RechargeHistorybyCustomer?id="+id,
+            url: "TranscationHistorybyCustomer?id="+id,
             async: true,
             contentType: "application/json; charset=utf-8",
             dataType: "html",
@@ -85,7 +85,7 @@
 <table id="tableCustomer" class="table table-condensed table-striped table-hover">
     <thead>
         <tr>
-            <th style="width: 60px;">
+            <th style="width: 20px;">
                 No.
             </th>
             <th style="width: 60px;">
@@ -95,7 +95,7 @@
             <th style="width: 60px;">
                 @Html.DisplayNameFor(model => model.MobileNo)
             </th>
-            <th style="width: 60px;">
+            <th style="width: 100px;">
                 @Html.DisplayNameFor(model => model.EmailId)
             </th>
             <th style="width: 60px;">
