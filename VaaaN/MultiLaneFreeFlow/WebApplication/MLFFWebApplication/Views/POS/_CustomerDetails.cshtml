@@ -9,6 +9,7 @@
         $('#loader').show();
         $("#filtertab").show();
         GetVehicleRechargeHistory(id);
+        GetVehicleTranscationHistory(id);
         $.ajax({
             type: "POST",
             url: "CustomerVehicleListbyCustomer?id="+id,
@@ -31,8 +32,6 @@
     }
 
     function GetVehicleRechargeHistory(id) {
-        $('#loader').show();
-        $("#filtertab").show();
         $.ajax({
             type: "POST",
             url: "RechargeHistorybyCustomer?id="+id,
@@ -40,13 +39,30 @@
             contentType: "application/json; charset=utf-8",
             dataType: "html",
             success: function (result) {
-                $('#loader').hide();
                 $('#RechargeHistory').html(result);
 
             },
             error: function (x, e) {
-                $('#loader').hide();
                 $('#RechargeHistory').hide();
+            }
+
+        });
+       
+    }
+
+    function GetVehicleTranscationHistory(id) {
+        $.ajax({
+            type: "POST",
+            url: "RechargeHistorybyCustomer?id="+id,
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (result) {
+                $('#TranscationHistory').html(result);
+
+            },
+            error: function (x, e) {
+                $('#TranscationHistory').hide();
             }
 
         });

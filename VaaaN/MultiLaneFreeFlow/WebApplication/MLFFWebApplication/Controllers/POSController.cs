@@ -567,6 +567,38 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             }
 
         }
+
+        public ActionResult TranscationHistorybyCustomer(int id)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+
+                if (Session["LoggedUserId"] == null)
+                {
+                    return RedirectToAction("SessionPage", "Home");
+                }
+                ViewBag.AccountId = id;
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+
+                CustomerVehicleCBE customer = new CustomerVehicleCBE();
+                customer.AccountId = id;
+                customer.TMSId = Libraries.CommonLibrary.Constants.GetCurrentTMSId();
+
+                dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.AccountHistoryBYAccountId(id, 4);
+                return PartialView("_CustomerTranscationHistory", dt);
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer Vehicle List " + ex.Message.ToString());
+                return PartialView("_CustomerTranscationHistory", dt);
+            }
+
+        }
         #endregion
 
 
