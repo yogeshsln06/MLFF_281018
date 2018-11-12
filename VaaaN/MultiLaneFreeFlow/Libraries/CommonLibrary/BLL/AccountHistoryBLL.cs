@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCollection GetAll()
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.GetAll();
+        }
+
+        public static DataTable RechargeHistoryByAccount(int AccountId)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.RechargeHistoryByAccount(AccountId);
         }
     }
 }

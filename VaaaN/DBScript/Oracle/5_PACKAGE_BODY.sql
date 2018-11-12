@@ -3436,6 +3436,42 @@ ORDER BY TRANSACTION_ID';
            FROM TBL_ACCOUNT_HISTORY AH;
    END ACCOUNT_HISTORY_GETALL;
 
+   PROCEDURE ACCOUNT_HISTORY_RECHARGE (P_ACCOUNT_ID   IN     NUMBER,
+                                    CUR_OUT           OUT T_CURSOR)
+IS
+BEGIN
+   OPEN CUR_OUT FOR
+        SELECT AH.TMS_ID,
+               AH.ACCOUNT_ID,
+               AH.ENTRY_ID,
+               AH.CUSTOMER_VEHICLE_ENTRY_ID,
+               AH.TRANSACTION_TYPE,
+               AH.TRANSACTION_ID,
+               AH.AMOUNT,
+               AH.SMS_SENT,
+               AH.EMAIL_SENT,
+               AH.MODIFIED_BY,
+               AH.CREATION_DATE,
+               CA.FIRST_NAME,
+               CA.LAST_NAME,
+               CA.MOB_NUMBER,
+               CA.EMAIL_ID,
+               CA.ACCOUNT_BALANCE,
+               CA.ADDRESS,
+               CV.TAG_ID,
+               CV.VEH_REG_NO,
+               VC.VEHICLE_CLASS_NAME
+          FROM TBL_ACCOUNT_HISTORY AH
+               LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                  ON AH.ACCOUNT_ID = CA.ACCOUNT_ID
+               LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
+                  ON AH.CUSTOMER_VEHICLE_ENTRY_ID = CV.ENTRY_ID
+               LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                  ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+         WHERE AH.ACCOUNT_ID = P_ACCOUNT_ID
+      ORDER BY ENTRY_ID DESC;
+END ACCOUNT_HISTORY_RECHARGE;
+
    -----------------------POC CSV Data----------------
    PROCEDURE TRAN_CSV_GETNORMALTRAN (P_START_TIME   IN     DATE,
                                      P_END_TIME     IN     DATE,
