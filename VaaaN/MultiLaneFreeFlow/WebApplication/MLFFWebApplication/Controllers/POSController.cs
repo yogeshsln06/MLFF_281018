@@ -553,7 +553,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 customer.AccountId = id;
                 customer.TMSId = Libraries.CommonLibrary.Constants.GetCurrentTMSId();
 
-                dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.RechargeHistoryByAccount(id);
+                dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.AccountHistoryBYAccountId(id,2);
                 return PartialView("_CustomerRechargeHistory", dt);
 
 
