@@ -1,4 +1,4 @@
-/* Formatted on 05/11/2018 10:22:25 (QP5 v5.215.12089.38647) */
+/* Formatted on 12-11-2018 17.15.47 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -415,7 +415,7 @@ AS
                                   P_CAMERA_POSITION   IN     NUMBER,
                                   CUR_OUT                OUT T_CURSOR);
 
-  PROCEDURE NF_PACKET_INSERT (P_ENTRY_ID               OUT NUMBER,
+   PROCEDURE NF_PACKET_INSERT (P_ENTRY_ID               OUT NUMBER,
                                P_TMS_ID              IN     NUMBER,
                                P_EVENT_TYPE          IN     NVARCHAR2,
                                P_TIMESTAMP           IN     DATE,
@@ -895,9 +895,11 @@ AS
    PROCEDURE ACCOUNT_HISTORY_DELETE (P_TMS_ID IN NUMBER, P_ENTRY_ID NUMBER);
 
    PROCEDURE ACCOUNT_HISTORY_GETALL (CUR_OUT OUT T_CURSOR);
-   
-   PROCEDURE ACCOUNT_HISTORY_RECHARGE (P_ACCOUNT_ID   IN     NUMBER,
-                                    CUR_OUT           OUT T_CURSOR);
+
+   PROCEDURE ACCOUNT_HISTORY_BYACCOUNTID (
+      P_ACCOUNT_ID         IN     NUMBER,
+      P_TRANSACTION_TYPE   IN     NUMBER,
+      CUR_OUT                 OUT T_CURSOR);
 
    -----------------------POC CSV Data----------------
    PROCEDURE TRAN_CSV_GETNORMALTRAN (P_START_TIME   IN     DATE,
@@ -913,11 +915,11 @@ AS
                                          CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE JOIN_AUDIT_TRANSACTIONS (
-      P_PARENT_TRANSACTION_ID      IN     NUMBER := NULL,
-      P_CHILD_1_TRANSACTION_ID     IN     NUMBER := NULL,
-      P_CHILD_2_TRANSACTION_ID     IN     NUMBER := NULL,
-      P_AUDITED_VRN                IN     NVARCHAR2,
-      P_AUDITED_VEHICLE_CLASS_ID   IN     NUMBER,
-      P_AUDITOR_ID                 IN     NUMBER);
+      P_PARENT_TRANSACTION_ID      IN NUMBER := NULL,
+      P_CHILD_1_TRANSACTION_ID     IN NUMBER := NULL,
+      P_CHILD_2_TRANSACTION_ID     IN NUMBER := NULL,
+      P_AUDITED_VRN                IN NVARCHAR2,
+      P_AUDITED_VEHICLE_CLASS_ID   IN NUMBER,
+      P_AUDITOR_ID                 IN NUMBER);
 END MLFF_PACKAGE;
 /
