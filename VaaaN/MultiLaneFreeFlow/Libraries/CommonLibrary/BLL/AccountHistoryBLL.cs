@@ -32,9 +32,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.GetAll();
         }
 
-        public static DataTable RechargeHistoryByAccount(int AccountId)
+        public static DataTable AccountHistoryBYAccountId(int AccountId, int TranactionType)
         {
-            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.RechargeHistoryByAccount(AccountId);
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryBYAccountId(AccountId, TranactionType);
         }
     }
 }

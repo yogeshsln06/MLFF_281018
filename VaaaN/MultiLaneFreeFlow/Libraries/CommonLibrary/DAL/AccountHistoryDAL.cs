@@ -122,16 +122,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         }
 
 
-        public static DataTable RechargeHistoryByAccount(int AccountId)
+        public static DataTable AccountHistoryBYAccountId(int AccountId, int TranactionType)
         {
             DataTable dt = new DataTable();
             try
             {
                 //Stored procedure must have cur_out parameter.
                 //There is no need to add ref cursor for oracle in code.
-                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "ACCOUNT_HISTORY_RECHARGE";
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "ACCOUNT_HISTORY_BYACCOUNTID";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ACCOUNT_ID", DbType.Int32, AccountId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_TYPE", DbType.Int32, TranactionType, ParameterDirection.Input));
                 DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 dt = ds.Tables[tableName];
             }
