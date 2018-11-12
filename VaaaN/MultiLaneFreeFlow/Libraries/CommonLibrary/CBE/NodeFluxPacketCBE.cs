@@ -16,7 +16,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         int tmsId;
         int entryId;
 
-
+         
         string eventType;
         DateTime timeStamp;
         Int32 gantryId;
@@ -33,6 +33,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         string plateThumbnail;
         string vehicleThumbnail;
         string videoURL;
+        int provider;
 
         int modifierId;
         DateTime creationDate;
@@ -251,6 +252,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.videoURL = value;
+            }
+        }
+
+        public int Provider
+        {
+            get
+            {
+                return this.provider;
+            }
+            set
+            {
+                this.provider = value;
             }
         }
 
