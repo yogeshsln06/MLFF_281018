@@ -1554,6 +1554,7 @@ AS
                   NFP.PLATE_THUMBNAIL,
                   NFP.VEHICLE_THUMBNAIL,
                   NFP.VIDEO_URL,
+                  NFP.PROVIDER,
                   NFP.CREATION_DATE,
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
@@ -1583,6 +1584,7 @@ AS
                   NFP.PLATE_THUMBNAIL,
                   NFP.VEHICLE_THUMBNAIL,
                   NFP.VIDEO_URL,
+                  NFP.PROVIDER,
                   NFP.CREATION_DATE,
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
@@ -1616,6 +1618,7 @@ AS
                   NFP.PLATE_THUMBNAIL,
                   NFP.VEHICLE_THUMBNAIL,
                   NFP.VIDEO_URL,
+                  NFP.PROVIDER,
                   NFP.CREATION_DATE,
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
@@ -1644,6 +1647,7 @@ AS
                                P_PLATE_THUMBNAIL     IN     NVARCHAR2,
                                P_VEHICLE_THUMBNAIL   IN     NVARCHAR2,
                                P_VIDEO_URL           IN     NVARCHAR2,
+                               P_PROVIDER            IN     NUMBER,
                                P_CREATION_DATE       IN     DATE)
    AS
    BEGIN
@@ -1664,6 +1668,7 @@ AS
                                        PLATE_THUMBNAIL,
                                        VEHICLE_THUMBNAIL,
                                        VIDEO_URL,
+                                       PROVIDER,
                                        CREATION_DATE)
            VALUES (NODEFLUX_PACKET_SEQ.NEXTVAL,
                    P_TMS_ID,
@@ -1682,6 +1687,7 @@ AS
                    P_PLATE_THUMBNAIL,
                    P_VEHICLE_THUMBNAIL,
                    P_VIDEO_URL,
+                   P_PROVIDER,
                    P_CREATION_DATE);
 
       P_ENTRY_ID := NODEFLUX_PACKET_SEQ.CURRVAL;
@@ -1704,6 +1710,7 @@ AS
                                P_PLATE_THUMBNAIL     IN NVARCHAR2,
                                P_VEHICLE_THUMBNAIL   IN NVARCHAR2,
                                P_VIDEO_URL           IN NVARCHAR2,
+                               P_PROVIDER            IN NUMBER,
                                P_MODIFIER_ID         IN NUMBER,
                                P_MODIFICATION_DATE   IN DATE)
    AS
@@ -1726,6 +1733,7 @@ AS
              PLATE_THUMBNAIL = P_PLATE_THUMBNAIL,
              VEHICLE_THUMBNAIL = P_VEHICLE_THUMBNAIL,
              VIDEO_URL = P_VIDEO_URL,
+             PROVIDER = P_PROVIDER,
              MODIFIER_ID = P_MODIFIER_ID,
              MODIFICATION_DATE = P_MODIFICATION_DATE
        WHERE     ENTRY_ID = P_ENTRY_ID

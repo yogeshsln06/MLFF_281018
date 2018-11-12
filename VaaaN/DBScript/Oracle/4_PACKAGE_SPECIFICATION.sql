@@ -415,7 +415,7 @@ AS
                                   P_CAMERA_POSITION   IN     NUMBER,
                                   CUR_OUT                OUT T_CURSOR);
 
-   PROCEDURE NF_PACKET_INSERT (P_ENTRY_ID               OUT NUMBER,
+  PROCEDURE NF_PACKET_INSERT (P_ENTRY_ID               OUT NUMBER,
                                P_TMS_ID              IN     NUMBER,
                                P_EVENT_TYPE          IN     NVARCHAR2,
                                P_TIMESTAMP           IN     DATE,
@@ -432,6 +432,7 @@ AS
                                P_PLATE_THUMBNAIL     IN     NVARCHAR2,
                                P_VEHICLE_THUMBNAIL   IN     NVARCHAR2,
                                P_VIDEO_URL           IN     NVARCHAR2,
+                               P_PROVIDER            IN     NUMBER,
                                P_CREATION_DATE       IN     DATE);
 
    PROCEDURE NF_PACKET_UPDATE (P_ENTRY_ID            IN NUMBER,
@@ -451,6 +452,7 @@ AS
                                P_PLATE_THUMBNAIL     IN NVARCHAR2,
                                P_VEHICLE_THUMBNAIL   IN NVARCHAR2,
                                P_VIDEO_URL           IN NVARCHAR2,
+                               P_PROVIDER            IN NUMBER,
                                P_MODIFIER_ID         IN NUMBER,
                                P_MODIFICATION_DATE   IN DATE);
 
