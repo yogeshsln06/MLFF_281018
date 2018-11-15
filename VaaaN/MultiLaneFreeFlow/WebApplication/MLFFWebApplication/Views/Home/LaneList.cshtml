@@ -55,9 +55,11 @@
                     @Html.DisplayNameFor(model => model.CameraNameRear)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.EtcReaderName)
+                    @Html.DisplayNameFor(model => model.EtcAntennaNameFront)
                 </th>
-
+                <th>
+                    @Html.DisplayNameFor(model => model.EtcAntennaNameRear)
+                </th>
                 <th>
                  @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Actions
                 </th>
@@ -91,9 +93,11 @@
                         @Html.DisplayFor(modelItem => item.CameraNameRear)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EtcReaderName)
+                        @Html.DisplayFor(modelItem => item.EtcAntennaNameFront)
                     </td>
-
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EtcAntennaNameRear)
+                    </td>
                     <td>
                         <a class="edit" href="@Url.Action("LaneEdit", "Home", new { id = item.LaneId, urltoken = token })">
                             <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>

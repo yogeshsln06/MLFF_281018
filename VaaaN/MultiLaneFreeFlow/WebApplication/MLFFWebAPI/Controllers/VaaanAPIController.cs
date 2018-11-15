@@ -40,7 +40,7 @@ namespace MLFFWebAPI.Controllers
 
         #endregion
 
-        #region API for Cross Talk Data
+        #region API for RFID Data
         [Route("VaaaN/IndonesiaMLFFApi/SendCrossTalkEvent")]
         [HttpPost]
         public async Task<HttpResponseMessage> ReciveFilefromCrosstalk(HttpRequestMessage request)
@@ -197,7 +197,7 @@ namespace MLFFWebAPI.Controllers
         }
         #endregion
 
-        #region API for Node Flux Data
+        #region API for ANPR Data
         [Route("VaaaN/IndonesiaMLFFApi/SendNodefluxEvent")]
         [HttpPost]
         public async Task<HttpResponseMessage> ReciveDatafromNodeflux(NodeFluxPacketJSON objNodeFluxPacketJSON)
@@ -339,6 +339,41 @@ namespace MLFFWebAPI.Controllers
                 ExceptionLogging.SendErrorToText(ex);
                 Log("Error in API Nodeflux Send data to MSMQ : " + ex); ;
             }
+            return response;
+        }
+
+        [Route("VaaaN/IndonesiaMLFFApi/OpenAlpr")]
+        [HttpPost]
+        public HttpResponseMessage OpenAlpr()
+        {
+            string text = Request.Content.ReadAsStringAsync().Result;
+            #region Create Physical Path to save nodeflux JSON Data as file
+            if (!Directory.Exists(rootpath))
+            {
+                Directory.CreateDirectory(rootpath);
+            }
+            filepath = rootpath + "OpenAlpr/";
+            if (!Directory.Exists(filepath))
+            {
+                Directory.CreateDirectory(filepath);
+            }
+            filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+            if (!File.Exists(filepath))
+            {
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, text);
+            }
+            else {
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, text);
+            }
+
+
+            response = Request.CreateResponse(HttpStatusCode.OK);
+            #endregion
+
             return response;
         }
         #endregion
@@ -717,5 +752,40 @@ namespace MLFFWebAPI.Controllers
             return FileName;
         }
         #endregion
+
+        [Route("VaaaN/IndonesiaMLFFApi/JSONPacket")]
+        [HttpPost]
+        public HttpResponseMessage JSONPacket()
+        {
+            string text = Request.Content.ReadAsStringAsync().Result;
+            #region Create Physical Path to save nodeflux JSON Data as file
+            if (!Directory.Exists(rootpath))
+            {
+                Directory.CreateDirectory(rootpath);
+            }
+            filepath = rootpath + "JSONPacket/";
+            if (!Directory.Exists(filepath))
+            {
+                Directory.CreateDirectory(filepath);
+            }
+            filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+            if (!File.Exists(filepath))
+            {
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, text);
+            }
+            else {
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "JSONPacket/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, text);
+            }
+
+
+            response = Request.CreateResponse(HttpStatusCode.OK);
+            #endregion
+
+            return response;
+        }
     }
 }

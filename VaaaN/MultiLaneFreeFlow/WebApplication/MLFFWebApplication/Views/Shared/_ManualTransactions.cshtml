@@ -41,26 +41,17 @@
                                     ANPR FRONT VRN Image
                                 </th>
                                 <th>
+                                    ANPR FRONT VRN Video
+                                </th>
+                                <th>
                                     ANPR REAR VRN Image
+                                </th>
+                                <th>
+                                    ANPR REAR VRN Video
                                 </th>
                                 <th>
                                     Check Associated Transactions
                                 </th>
-                                @*<th>
-                                    IKE VRN
-                                </th>
-                                <th>
-                                    ANPR FRONT VRN
-                                </th>
-                                <th>
-                                    ANPR REAR VRN
-                                </th>
-                                <th>
-                                    Audit Status
-                                </th>
-                                <th>
-                                    Details
-                                </th>*@
                             </tr>
                         </thead>
                         <tbody>
@@ -96,6 +87,18 @@
                                         }
                                     </td>
                                     <td>
+                                        @if (item["FRONT_VIDEO_URL"].ToString() != "")
+                                        {
+                                            string path =item["FRONT_VIDEO_URL"].ToString();
+                                            <img src="@path" />
+                                        }
+                                        else
+                                        {
+                                            <label>No Image Captured</label>
+                                        }
+
+                                    </td>
+                                    <td>
                                         @if (item["REAR_IMAGE"].ToString() != "")
                                         {
                                             string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
@@ -106,6 +109,18 @@
                                             <label>No Image Captured</label>
                                         }
                                        
+                                    </td>
+                                    <td>
+                                        @if (item["REAR_VIDEO_URL"].ToString() != "")
+                                        {
+                                            string path = item["REAR_VIDEO_URL"].ToString();
+                                            <img src="@path" />
+                                        }
+                                        else
+                                        {
+                                            <label>No Image Captured</label>
+                                        }
+
                                     </td>
                                     <td>
                                         <a onclick="CheckAssociated(this);" id="TransactionTime_@item["TRANSACTION_ID"].ToString()" class="edit" data-id="@item["TRANSACTION_ID"].ToString()"><i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i></a>
