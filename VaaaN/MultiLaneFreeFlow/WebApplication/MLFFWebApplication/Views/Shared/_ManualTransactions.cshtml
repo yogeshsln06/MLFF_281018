@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-12"> 
+                <div class="col-md-12">
                     <table id="tableTransaction" class="table table-condensed table-striped table-hover">
                         <thead>
                             <tr>
@@ -26,10 +26,10 @@
                                     Tran Time
                                 </th>
                                 <th>
-                                   Lane Id
+                                    Lane Id
                                 </th>
                                 <th>
-                                   Gantry Id
+                                    Gantry Id
                                 </th>
                                 <th>
                                     IKE VRN
@@ -62,7 +62,7 @@
                                         @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
                                     </td>
                                     <td>
-                                     @item["TRANSACTION_DATETIME"].ToString()
+                                        @item["TRANSACTION_DATETIME"].ToString()
                                     </td>
                                     <td>
                                         @item["LANE_ID"].ToString()
@@ -76,25 +76,27 @@
                                     <td>
                                         @item["CTP_VEHICLE_CLASS_NAME"].ToString()
                                     </td>
-                                    <td>  
-                                        @if (item["FRONT_IMAGE"].ToString()!="")
-                                        {
-                                            string path =ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
-                                            <img src="@path"  />
-                                        }else
-                                        {
-                                           <label>No Image Captured</label>
-                                        }
-                                    </td>
                                     <td>
-                                        @if (item["FRONT_VIDEO_URL"].ToString() != "")
+                                        @if (item["FRONT_IMAGE"].ToString() != "")
                                         {
-                                            string path =item["FRONT_VIDEO_URL"].ToString();
+                                            string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
                                             <img src="@path" />
                                         }
                                         else
                                         {
                                             <label>No Image Captured</label>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item["FRONT_VIDEO_URL"].ToString() != "")
+                                        {
+                                            string path = item["FRONT_VIDEO_URL"].ToString();
+
+                                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <label>No Video Found</label>
                                         }
 
                                     </td>
@@ -108,17 +110,18 @@
                                         {
                                             <label>No Image Captured</label>
                                         }
-                                       
+
                                     </td>
                                     <td>
                                         @if (item["REAR_VIDEO_URL"].ToString() != "")
                                         {
                                             string path = item["REAR_VIDEO_URL"].ToString();
-                                            <img src="@path" />
+                                            @*<i class="fa fa-video" onclick="openVideo(this)" path="@path"></i>*@
+                                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view"></i></a>
                                         }
                                         else
                                         {
-                                            <label>No Image Captured</label>
+                                            <label>No Video Found</label>
                                         }
 
                                     </td>
@@ -126,18 +129,18 @@
                                         <a onclick="CheckAssociated(this);" id="TransactionTime_@item["TRANSACTION_ID"].ToString()" class="edit" data-id="@item["TRANSACTION_ID"].ToString()"><i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i></a>
                                     </td>
                                     @*<td>
-                                        @Html.DisplayFor(modelItem => item["TRANSACTION_DATETIME"])
-                                    </td>
-                                    <td>
-                                        @(item.Direction == 1 ? "Up" : "Down")
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.IPAddress)
-                                    </td>
-                                    <td style="@ViewBag.Visibility">
-                                        <a class="edit" href="@Url.Action("EditEcb", "Home", new {id=item.EcbId })"><i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i></a>
-                                        <a onclick="AddEcbFacility(this);" id="EcbID_@item.EcbId" data-id="@item.EcbId" style="cursor:pointer">Facilities</a>
-                                    </td>*@
+                                            @Html.DisplayFor(modelItem => item["TRANSACTION_DATETIME"])
+                                        </td>
+                                        <td>
+                                            @(item.Direction == 1 ? "Up" : "Down")
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IPAddress)
+                                        </td>
+                                        <td style="@ViewBag.Visibility">
+                                            <a class="edit" href="@Url.Action("EditEcb", "Home", new {id=item.EcbId })"><i class="fa fa-pencil-square-o" aria-hidden="true" title="Edit"></i></a>
+                                            <a onclick="AddEcbFacility(this);" id="EcbID_@item.EcbId" data-id="@item.EcbId" style="cursor:pointer">Facilities</a>
+                                        </td>*@
                                 </tr>
                             }
                         </tbody>
@@ -148,29 +151,30 @@
     </div>
 </div>
 <div class="modal fade" tabindex="-1" id="Associatedmodel"
-         data-keyboard="false" data-backdrop="static">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        ×
-                    </button>
-                    <h4 class="modal-title">Associated transactions</h4>
-                </div>
-                <div class="modal-body" style="padding:0px"><input type="hidden" id="hdnTransactionId" value="0" /> 
-                    <div id="partialassociated">
+     data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    ×
+                </button>
+                <h4 class="modal-title">Associated transactions</h4>
+            </div>
+            <div class="modal-body" style="padding:0px">
+                <input type="hidden" id="hdnTransactionId" value="0" />
+                <div id="partialassociated">
 
-                    </div>
                 </div>
-                @*<div class="modal-footer">
-                   
+            </div>
+            @*<div class="modal-footer">
+
                     <button type="button" id="btnHideModal" onclick="HideModal()" class="btn btn-primary button button4">
                         Close
                     </button>
                 </div>*@
-            </div>
         </div>
     </div>
+</div>
 
 <script src="~/scripts/jquery.dataTables.min.js"></script>
 <script src="~/scripts/dataTables.bootstrap.min.js"></script>
@@ -184,8 +188,7 @@
             "searching": true
         });
     });
-    function CheckAssociated(DataValue)
-    {
+    function CheckAssociated(DataValue) {
         var dataid = $(DataValue).attr("data-id");
         $('#hdnTransactionId').val(dataid);
         var route = '/MRM/AssociatedTransaction?transactionId=' + dataid;
