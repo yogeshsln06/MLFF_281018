@@ -258,6 +258,7 @@ namespace MLFFWebAPI.Controllers
                 nodeFluxCBE.TimeStamp = objNodeFluxPacketJSON.TimeStamp;
                 nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
                 nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
+                nodeFluxCBE.Provider = 1;
                 if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Camera_Position.ToString()))
                     nodeFluxCBE.CameraPosition = string.Empty;
                 else
