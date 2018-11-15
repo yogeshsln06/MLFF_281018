@@ -154,6 +154,7 @@ namespace VMSService
                                 previousStartDate = currentStartDate;
                                 LogMessage("There is change in toll rate time slot so sending toll rate message to vms for current time slot.");
                                 vmsController.SendMessage(currentTimeTollRates);
+                                LogMessage("Data send successfully");
                             }
                             catch (Exception ex)
                             {

@@ -15,7 +15,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.VMS
             #region Variables
 
             // Get from configuration file-TODO
-            string apiURL = "http://vms.intitekno.com/index.php/getapi";
+            //string apiURL = "http://vms.intitekno.com/index.php/getapi";
+            string apiURL = "http://10.213.0.63/node/index.php/getapi";
             string userName = "admin";
             string password = "admin132!";
             string x_api_key = "cda2c99fbf5e19f20d331299c15a4491";
