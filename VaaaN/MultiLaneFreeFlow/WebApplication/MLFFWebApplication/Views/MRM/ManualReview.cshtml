@@ -157,6 +157,8 @@
         var $video = $('#video video'),
             videoSrc = $('source', $video).attr('src', VideoPath);
         $video[0].load();
+        var modal = document.getElementById('myModalVideo');
+        modal.style.display = "block";
     }
     function Show() {
 
