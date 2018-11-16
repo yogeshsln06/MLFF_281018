@@ -294,4 +294,7 @@
   <data name="RFID" xml:space="preserve">
     <value>IKE</value>
   </data>
+  <data name="Successful Transaction" xml:space="preserve">
+    <value>Transaksi yang berhasil</value>
+  </data>
 </root>

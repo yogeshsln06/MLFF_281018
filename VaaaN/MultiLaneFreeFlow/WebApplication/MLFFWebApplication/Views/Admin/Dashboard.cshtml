@@ -22,59 +22,59 @@
         //$('#submodule_8').css({ "font-weight": "bold" });
     });
 </script>
-
-
 <div class="panel panel-info">
     <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
-
         <div class="panel-title new-title">
-            Sucessfull Transaction
+            Successful Transaction
         </div>
 
     </div>
-    <table id="tableTransaction" class="table table-condensed table-striped table-hover table-responsive">
-        <thead>
-            <tr>
-                <th style="width:20px">
-                    Transaction Id
-                </th>
-                <th style="width:60px">
-                    RFID VRN
-                </th>
-                <th style="width:60px">
-                    <div class="col-sm-12">
-                        <div>
-                            ANPR Front VRN
+    <div class="col-md-12 table-responsive">
+
+
+        <table id="tableTransaction" class="table table-condensed table-striped table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th style="width:20px">
+                        Transaction Id
+                    </th>
+                    <th style="width:60px">
+                        RFID VRN
+                    </th>
+                    <th style="width:60px">
+                        <div class="col-sm-12">
+                            <div>
+                                ANPR Front VRN
+                            </div>
+                            <div class="col-sm-6">
+                                Image
+                            </div>
+                            <div class="col-sm-6">
+                                Video
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            Image
+                    </th>
+                    <th style="width:60px">
+                        <div class="col-sm-12">
+                            <div>
+                                ANPR Rear VRN
+                            </div>
+                            <div class="col-sm-6">
+                                Image
+                            </div>
+                            <div class="col-sm-6">
+                                Video
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            Video
-                        </div>
-                    </div>
-                </th>
-                <th style="width:60px">
-                    <div class="col-sm-12">
-                        <div>
-                            ANPR Rear VRN
-                        </div>
-                        <div class="col-sm-6">
-                            Image
-                        </div>
-                        <div class="col-sm-6">
-                            Video
-                        </div>
-                    </div>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (DataRow item in Model.Rows)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow item in Model.Rows)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
+                        @item["TRANSACTION_ID"].ToString()
                     </td>
 
                     <td>
@@ -87,7 +87,7 @@
                                 {
                                     string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
                                     path = path.Replace('/', '^');
-                                    <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
                                 }
                             </div>
                             <div class="col-sm-6">
@@ -95,7 +95,7 @@
                                 {
                                     string path = item["FRONT_VIDEO_URL"].ToString();
                                     path = path.Replace('/', '^');
-                                    <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                 }
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                                 {
                                     string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
                                     path = path.Replace('/', '^');
-                                    <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
                                 }
                             </div>
                             <div class="col-sm-6">
@@ -115,7 +115,7 @@
                                 {
                                     string path = item["REAR_VIDEO_URL"].ToString();
                                     path = path.Replace('/', '^');
-                                    <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                 }
                             </div>
                         </div>
@@ -123,8 +123,9 @@
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
     <div class="modal fade" tabindex="-1" id="ImageData"
          data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog modal-lg">
