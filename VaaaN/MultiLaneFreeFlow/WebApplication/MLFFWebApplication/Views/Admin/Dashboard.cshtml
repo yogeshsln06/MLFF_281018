@@ -40,13 +40,13 @@
                 </th>
 
                 <th>
-                    Cross Talk VRN
+                    RFID VRN
                 </th>
                 <th>
-                    NodeFlux Front VRN
+                    ANPR Front VRN
                 </th>
                 <th>
-                    NodeFlux Rear VRN
+                    ANPR Rear VRN
                 </th>
             </tr>
         </thead>
@@ -62,23 +62,153 @@
                         @item["CTP_VRN"].ToString()
                     </td>
                     <td>
-                        @if (item["FRONT_IMAGE"].ToString() != "")
-                        {
-                            string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
-                            path = path.Replace('/', '^');
-                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                        }
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                @if (item["FRONT_IMAGE"].ToString() != "")
+                                {
+                                    string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
+                                    path = path.Replace('/', '^');
+                                    <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                }
+                            </div>
+                            <div class="col-sm-6">
+                                @if (item["FRONT_VIDEO_URL"].ToString() != "")
+                                {
+                                    string path = item["FRONT_VIDEO_URL"].ToString();
+                                    path = path.Replace('/', '^');
+                                    <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                }
+                            </div>
+                        </div>
                     </td>
                     <td>
-                        @if (item["REAR_IMAGE"].ToString() != "")
-                        {
-                            string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
-                            path = path.Replace('/', '^');
-                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                        }
+                      <div class="col-sm-12">
+                          <div class="col-sm-6">
+                              @if (item["REAR_IMAGE"].ToString() != "")
+                              {
+                                  string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
+                                  path = path.Replace('/', '^');
+                                  <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                              }
+                          </div>
+                          <div class="col-sm-6">
+                              @if (item["REAR_IMAGE"].ToString() != "")
+                              {
+                                  string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
+                                  path = path.Replace('/', '^');
+                                  <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                              }
+                          </div>
+                      </div>
+
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <div class="modal fade" tabindex="-1" id="ImageData"
+         data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #fefefe;margin: 15% auto;padding: 20px; border: 1px solid #888;width: 350px; ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">ANPR Data</h4>
+                </div>
+                <div class="modal-body" style="padding:0px">
+                    <div id="imagediv">
+                        <img src="" id="myimage" height="150" width="300" />
+                    </div>
+                    <div id="video">
+                        <video width="320" height="240" controls>
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<script type="text/javascript">
+    function imageclose() {
+        //var modal = document.getElementById('myModal');
+        //modal.style.display = "none";
+
+        $("#imagediv").hide();
+    }
+
+    function videoclose() {
+        //var modal = document.getElementById('myModalVideo');
+        //modal.style.display = "none";
+        $("#video").hide();
+    }
+    function openimage(ctrl) {
+        videoclose();
+        var ImagePath = $(ctrl).attr('path');
+        $("#myimage").attr('src', findAndReplace(ImagePath, '^', '/'));
+        $("#imagediv").show();
+        //var modal = document.getElementById('myModal');
+        //modal.style.display = "block";
+
+        $('#ImageData').modal('show');
+    }
+
+    function openVideo(ctrl) {
+        imageclose();
+        var VideoPath = $(ctrl).attr('path');
+        var $video = $('#video video'),
+            videoSrc = $('source', $video).attr('src', findAndReplace(VideoPath, '^', '/'));
+        $video[0].load();
+        var modal = document.getElementById('myModalVideo');
+        modal.style.display = "block";
+        $("#video").show();
+    }
+    function Show() {
+        if ($("#ddlGantry").val() == 0) {
+            alert("Gantry harus dipilih ");
+            return false;
+        }
+        var Inputdata = {
+            StartDate: $("#StartDate").val() + ":00",
+            EndDate: $("#EndDate").val() + ":00",
+            GantryId: $("#ddlGantry").val(),
+            VehicleClassId: $("#ddlVehicleClass").val(),
+            PlateNumber: $("#PlateNumber").val(),
+            TransactionCategoryId: $("#ddlTransactionCategory").val()
+        }
+        $('#loader').show();
+        $.ajax({
+            type: "POST",
+            url: "ShowTransaction",
+            //dataType: "JSON",
+            async: true,
+            data: JSON.stringify(Inputdata),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (result) {
+                $('#loader').hide();
+                $('#partial').html(result);
+
+            },
+            error: function (x, e) {
+                $('#loader').hide();
+                $('#partial').hide();
+            }
+
+        });
+    }
+
+    function findAndReplace(string, target, replacement) {
+        var i = 0, length = string.length;
+        for (i; i < length; i++) {
+            string = string.replace(target, replacement);
+        }
+        return string;
+
+    }
+</script>

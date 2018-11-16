@@ -34,7 +34,7 @@
             data: { email: $("#txtemailid").val(), password: $("#txtpassword").val() },
             success: function (result) {
                 if (result === 'valid') {
-                    var url = '/Home/AtmsDashboard';
+                    var url = '/Admin/Dashboard';
                     window.location.href = url;
                 }
                 else (result == 'Invalid')

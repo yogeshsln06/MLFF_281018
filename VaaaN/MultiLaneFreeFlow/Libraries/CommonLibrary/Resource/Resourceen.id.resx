@@ -160,7 +160,7 @@
     <value>Aktif</value>
   </data>
   <data name="Lane" xml:space="preserve">
-    <value>Jalur</value>
+    <value>Lajur</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Bhasa</value>
@@ -281,5 +281,17 @@
   </data>
   <data name="CustomerDetails" xml:space="preserve">
     <value>detil pelanggan</value>
+  </data>
+  <data name="ANPR" xml:space="preserve">
+    <value>ANPR</value>
+  </data>
+  <data name="Front" xml:space="preserve">
+    <value>Depan</value>
+  </data>
+  <data name="Rear" xml:space="preserve">
+    <value>Belakang</value>
+  </data>
+  <data name="RFID" xml:space="preserve">
+    <value>IKE</value>
   </data>
 </root>

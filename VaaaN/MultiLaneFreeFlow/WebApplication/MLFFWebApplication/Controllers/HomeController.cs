@@ -89,7 +89,7 @@ namespace VaaaN.MLFF.WebApplication
                             Response.Cookies.Add(cookie);
                             #endregion
 
-                            RedirectToAction("Userlist", "Home");
+                            RedirectToAction("Dashboard", "Admin");
                         }
                     }
                     else
