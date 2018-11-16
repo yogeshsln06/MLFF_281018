@@ -32,7 +32,6 @@
                         <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                     }
                 </div>
-
             </div>
             <label class="col-sm-2">NodeFlux Rear:</label>
             <div class="col-sm-2">
@@ -52,10 +51,7 @@
                         <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                     }
                 </div>
-
-
             </div>
-            
         </div>
     </div>
 </div>
@@ -69,7 +65,6 @@
                             <tr>
                                 <th>
                                     Select
-                                    @*Transactions*@
                                 </th>
                                 <th>
                                     Tran Id
@@ -115,7 +110,7 @@
                                                value="@item["TRANSACTION_ID"].ToString()" />
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
+                                        @item["TRANSACTION_ID"].ToString()
                                     </td>
                                     <td>
                                         @item["TRANSACTION_DATETIME"].ToString()
@@ -139,10 +134,6 @@
                                             path = path.Replace('/', '^');
                                             <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
                                         }
-                                        else
-                                        {
-                                            @*<label>No Image Captured</label>*@
-                                        }
                                     </td>
                                     <td>
                                         @if (item["FRONT_VIDEO_URL"].ToString() != "")
@@ -151,13 +142,7 @@
                                             path = path.Replace('/', '^');
                                             <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                         }
-                                        else
-                                        {
-                                            @*<label>No Video Found</label>*@
-                                        }
-
                                     </td>
-
                                     <td>
                                         @if (item["REAR_IMAGE"].ToString() != "")
                                         {
@@ -165,11 +150,6 @@
                                             path = path.Replace('/', '^');
                                             <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
                                         }
-                                        else
-                                        {
-                                            @*<label>No Image Captured</label>*@
-                                        }
-
                                     </td>
                                     <td>
                                         @if (item["REAR_VIDEO_URL"].ToString() != "")
@@ -178,13 +158,7 @@
                                             @*<i class="fa fa-video" onclick="openVideo(this)" path="@path"></i>*@
                                             <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                         }
-                                        else
-                                        {
-                                            @*<label>No Video Found</label>*@
-                                        }
-
                                     </td>
-
                                     <td>
                                         @(item["AUDIT_STATUS"].ToString() == "1" ? "Yes" : "No")
                                     </td>
@@ -210,7 +184,6 @@
     </div>
 </div>
 <script type="text/javascript">
-    
     function SearchVRN() {
         $('#loader').show();
         var InputData = {
