@@ -1,0 +1,84 @@
+﻿@using System.Data
+@{
+    ViewBag.Title = "Sucessfull Transaction";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tableTransaction').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+        //$('#module_2').css({ "background-color": "#00B4CE" });
+        //$('#module_2').css({ "font-weight": "bold" });
+        //$('#submodule_8').css({ "background-color": "#00B2aa" });
+        //$('#submodule_8').css({ "font-weight": "bold" });
+    });
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+
+        <div class="panel-title new-title">
+            Sucessfull Transaction
+        </div>
+
+    </div>
+    <table id="tableTransaction" class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Transaction Id
+                </th>
+
+                <th>
+                    Cross Talk VRN
+                </th>
+                <th>
+                    NodeFlux Front VRN
+                </th>
+                <th>
+                    NodeFlux Rear VRN
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow item in Model.Rows)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
+                    </td>
+
+                    <td>
+                        @item["CTP_VRN"].ToString()
+                    </td>
+                    <td>
+                        @if (item["FRONT_IMAGE"].ToString() != "")
+                        {
+                            string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
+                            path = path.Replace('/', '^');
+                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                        }
+                    </td>
+                    <td>
+                        @if (item["REAR_IMAGE"].ToString() != "")
+                        {
+                            string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
+                            path = path.Replace('/', '^');
+                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

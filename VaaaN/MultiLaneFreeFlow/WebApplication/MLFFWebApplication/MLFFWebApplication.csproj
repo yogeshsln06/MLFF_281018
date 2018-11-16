@@ -306,6 +306,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MRMController.cs" />
     <Compile Include="Controllers\POSController.cs" />
@@ -419,6 +420,7 @@
     <Content Include="Views\POS\_CustomerDetails.cshtml" />
     <Content Include="Views\POS\_CustomerRechargeHistory.cshtml" />
     <Content Include="Views\POS\_CustomerTranscationHistory.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
