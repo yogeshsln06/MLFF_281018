@@ -33,6 +33,7 @@
             dataType: 'json',
             data: { email: $("#txtemailid").val(), password: $("#txtpassword").val() },
             success: function (result) {
+                debugger;
                 if (result === 'valid') {
                     var url = '/Admin/Dashboard';
                     window.location.href = url;

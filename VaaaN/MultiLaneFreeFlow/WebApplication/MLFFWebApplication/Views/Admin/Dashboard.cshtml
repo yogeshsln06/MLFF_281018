@@ -32,21 +32,40 @@
         </div>
 
     </div>
-    <table id="tableTransaction" class="table table-condensed table-striped table-hover">
+    <table id="tableTransaction" class="table table-condensed table-striped table-hover table-responsive">
         <thead>
             <tr>
-                <th>
+                <th style="width:20px">
                     Transaction Id
                 </th>
-
-                <th>
+                <th style="width:60px">
                     RFID VRN
                 </th>
-                <th>
-                    ANPR Front VRN
+                <th style="width:60px">
+                    <div class="col-sm-12">
+                        <div>
+                            ANPR Front VRN
+                        </div>
+                        <div class="col-sm-6">
+                            Image
+                        </div>
+                        <div class="col-sm-6">
+                            Video
+                        </div>
+                    </div>
                 </th>
-                <th>
-                    ANPR Rear VRN
+                <th style="width:60px">
+                    <div class="col-sm-12">
+                        <div>
+                            ANPR Rear VRN
+                        </div>
+                        <div class="col-sm-6">
+                            Image
+                        </div>
+                        <div class="col-sm-6">
+                            Video
+                        </div>
+                    </div>
                 </th>
             </tr>
         </thead>
@@ -82,24 +101,24 @@
                         </div>
                     </td>
                     <td>
-                      <div class="col-sm-12">
-                          <div class="col-sm-6">
-                              @if (item["REAR_IMAGE"].ToString() != "")
-                              {
-                                  string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
-                                  path = path.Replace('/', '^');
-                                  <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                              }
-                          </div>
-                          <div class="col-sm-6">
-                              @if (item["REAR_IMAGE"].ToString() != "")
-                              {
-                                  string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
-                                  path = path.Replace('/', '^');
-                                  <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                              }
-                          </div>
-                      </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                @if (item["REAR_IMAGE"].ToString() != "")
+                                {
+                                    string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
+                                    path = path.Replace('/', '^');
+                                    <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                }
+                            </div>
+                            <div class="col-sm-6">
+                                @if (item["REAR_VIDEO_URL"].ToString() != "")
+                                {
+                                    string path = item["REAR_VIDEO_URL"].ToString();
+                                    path = path.Replace('/', '^');
+                                    <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                }
+                            </div>
+                        </div>
 
                     </td>
                 </tr>
