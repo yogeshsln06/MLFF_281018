@@ -14,8 +14,28 @@
         <div class="col-sm-12">
             <label class="col-sm-2">Cross Talk Class:</label>
             <label class="col-sm-1">@ViewBag.Class</label>
-            <label class="col-sm-2">NodeFlux Rear:</label>
+            <label class="col-sm-2">NodeFlux Front:</label>
             <div class="col-sm-3">
+                <div class="col-sm-6">
+                    @if (ViewBag.NFFront != "")
+                    {
+                        string path = ViewData["apiPath"] + ViewBag.NFFront;
+                        path = path.Replace('/', '^');
+                        <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                    }
+                </div>
+                <div class="col-sm-6">
+                    @if (ViewBag.NFFrontVideo != "")
+                    {
+                        string path = ViewBag.NFFrontVideo;
+                        path = path.Replace('/', '^');
+                        <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                    }
+                </div>
+
+            </div>
+            <label class="col-sm-2">NodeFlux Rear:</label>
+            <div class="col-sm-2">
                 <div class="col-sm-6">
                     @if (ViewBag.NFRear != "")
                     {
@@ -35,26 +55,7 @@
 
 
             </div>
-            <label class="col-sm-2">NodeFlux Front:</label>
-            <div class="col-sm-2">
-                <div class="col-sm-6">
-                    @if (ViewBag.NFFront != "")
-                    {
-                        string path = ViewData["apiPath"] + ViewBag.NFFront;
-                        path = path.Replace('/', '^');
-                        <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                    }
-                </div>
-                <div class="col-sm-6">
-                    @if (ViewBag.NFFrontVideo != "")
-                    {
-                        string path = ViewBag.NFFrontVideo;
-                        path = path.Replace('/', '^');
-                        <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
-                    }
-                </div>
-
-            </div>
+            
         </div>
     </div>
 </div>
@@ -209,7 +210,9 @@
     </div>
 </div>
 <script type="text/javascript">
+    
     function SearchVRN() {
+        $('#loader').show();
         var InputData = {
             VehRegNo: $("#txtVrn").val()
         }
@@ -222,7 +225,6 @@
             data: { VehRegNo: $("#txtVrn").val() },
             contentType: "application/json; charset=utf-8",
             success: function (JsonfilterData) {
-                debugger;
                 $('#loader').hide();
                 ResponceData = JsonfilterData;
                 alert(ResponceData.Data);
@@ -260,7 +262,7 @@
             VehRegNo: $('#txtfinalVrn').val(),
             vehicleClassID: $('#ddlAuditedVehicleClass').val()
         }
-
+        $('#loader').show();
         $.ajax({
             type: "POST",
             url: "JoinTransactionsNew",
@@ -270,7 +272,6 @@
 
             contentType: "application/json; charset=utf-8",
             success: function (JsonfilterData) {
-                debugger;
                 $('#loader').hide();
                 ResponceData = JsonfilterData;
                 alert(ResponceData.Data);
