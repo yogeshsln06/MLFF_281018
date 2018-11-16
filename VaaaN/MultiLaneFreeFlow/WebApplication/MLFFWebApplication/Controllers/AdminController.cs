@@ -28,8 +28,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
                 string strQuery = " WHERE 1=1 ";
-              
-                    strQuery += " AND T.IS_BALANCE_UPDATED = " + 1 + " ORDER BY T.TRANSACTION_ID DESC";
+
+                strQuery += " AND T.IS_BALANCE_UPDATED = " + 1;
                 
                
                 dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);
