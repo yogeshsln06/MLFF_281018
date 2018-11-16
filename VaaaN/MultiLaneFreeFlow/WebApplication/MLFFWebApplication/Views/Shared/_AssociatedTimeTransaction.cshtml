@@ -15,32 +15,46 @@
             <label class="col-sm-2">Cross Talk Class:</label>
             <label class="col-sm-1">@ViewBag.Class</label>
             <label class="col-sm-2">NodeFlux Rear:</label>
-            <label class="col-sm-3">
-                @if (ViewBag.NFRear != "")
-            {
-                string path = ViewData["apiPath"] + ViewBag.NFRear;
-                    <img src="@path" />
-                }
-                else
-                {
-                    @ViewBag.NFRear;
+            <div class="col-sm-3">
+                <div class="col-sm-6">
+                    @if (ViewBag.NFRear != "")
+                    {
+                        string path = ViewData["apiPath"] + ViewBag.NFRear;
+                        path = path.Replace('/', '^');
+                        <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                    }
+                </div>
+                <div class="col-sm-6">
+                    @if (ViewBag.NFRearVideo != "")
+                    {
+                        string path = ViewBag.NFRearVideo;
+                        path = path.Replace('/', '^');
+                        <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                    }
+                </div>
 
-            }
 
-            </label>
+            </div>
             <label class="col-sm-2">NodeFlux Front:</label>
-            <label class="col-sm-2">
-                @if (ViewBag.NFFront != "")
-            {
-                string path = ViewData["apiPath"] + ViewBag.NFFront;
-                    <img src="@path" />
-                }
-                else
-                {
-                    @ViewBag.NFFront;
+            <div class="col-sm-2">
+                <div class="col-sm-6">
+                    @if (ViewBag.NFFront != "")
+                    {
+                        string path = ViewData["apiPath"] + ViewBag.NFFront;
+                        path = path.Replace('/', '^');
+                        <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                    }
+                </div>
+                <div class="col-sm-6">
+                    @if (ViewBag.NFFrontVideo != "")
+                    {
+                        string path = ViewBag.NFFrontVideo;
+                        path = path.Replace('/', '^');
+                        <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                    }
+                </div>
 
-            }
-            </label>
+            </div>
         </div>
     </div>
 </div>
@@ -48,12 +62,13 @@
     <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
         <div class="form-horizontal">
             <div class="form-group">
-                <div class="col-md-12">
+                <div class="col-md-12 table-responsive">
                     <table id="tableTransaction" class="table table-condensed table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>
-                                    Select Transactions
+                                    Select
+                                    @*Transactions*@
                                 </th>
                                 <th>
                                     Tran Id
@@ -77,7 +92,13 @@
                                     ANPR FRONT VRN Image
                                 </th>
                                 <th>
+                                    ANPR FRONT VRN Video
+                                </th>
+                                <th>
                                     ANPR REAR VRN Image
+                                </th>
+                                <th>
+                                    ANPR REAR VRN Video
                                 </th>
                                 <th>
                                     Audited
@@ -87,56 +108,86 @@
                         <tbody>
                             @foreach (DataRow item in Model.Rows)
             {
-                            <tr>
-                                <td>
-                                    <input type="checkbox" class="checkBox"
-                                           value="@item["TRANSACTION_ID"].ToString()" />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
-                                </td>
-                                <td>
-                                    @item["TRANSACTION_DATETIME"].ToString()
-                                </td>
-                                <td>
-                                    @item["LANE_ID"].ToString()
-                                </td>
-                                <td>
-                                    @item["PLAZA_ID"].ToString()
-                                </td>
-                                <td>
-                                    @item["CTP_VRN"].ToString()
-                                </td>
-                                <td>
-                                    @item["CTP_VEHICLE_CLASS_NAME"].ToString()
-                                </td>
-                                <td>
-                                    @if (item["FRONT_IMAGE"].ToString() != "")
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="checkBox"
+                                               value="@item["TRANSACTION_ID"].ToString()" />
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
+                                    </td>
+                                    <td>
+                                        @item["TRANSACTION_DATETIME"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["LANE_ID"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["PLAZA_ID"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["CTP_VRN"].ToString()
+                                    </td>
+                                    <td>
+                                        @item["CTP_VEHICLE_CLASS_NAME"].ToString()
+                                    </td>
+                                    <td>
+                                        @if (item["FRONT_IMAGE"].ToString() != "")
                                         {
                                             string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
-                                        <img src="@path" />
+                                            path = path.Replace('/', '^');
+                                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
                                         }
                                         else
                                         {
-                                        <label>No Image Captured</label>
+                                            @*<label>No Image Captured</label>*@
                                         }
-                                </td>
-                                <td>
-                                    @if (item["REAR_IMAGE"].ToString() != "")
+                                    </td>
+                                    <td>
+                                        @if (item["FRONT_VIDEO_URL"].ToString() != "")
                                         {
-                                            string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
-                                        <img src="@path" />
+                                            string path = item["FRONT_VIDEO_URL"].ToString();
+                                            path = path.Replace('/', '^');
+                                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                         }
                                         else
                                         {
-                                        <label>No Image Captured</label>
+                                            @*<label>No Video Found</label>*@
                                         }
 
-                                </td>
-                                <td>
-                                    @(item["AUDIT_STATUS"].ToString() == "1" ? "Yes" : "No")
-                                </td>
-                            </tr>
+                                    </td>
+
+                                    <td>
+                                        @if (item["REAR_IMAGE"].ToString() != "")
+                                        {
+                                            string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
+                                            path = path.Replace('/', '^');
+                                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                        }
+                                        else
+                                        {
+                                            @*<label>No Image Captured</label>*@
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (item["REAR_VIDEO_URL"].ToString() != "")
+                                        {
+                                            string path = item["REAR_VIDEO_URL"].ToString();
+                                            @*<i class="fa fa-video" onclick="openVideo(this)" path="@path"></i>*@
+                                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                        }
+                                        else
+                                        {
+                                            @*<label>No Video Found</label>*@
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @(item["AUDIT_STATUS"].ToString() == "1" ? "Yes" : "No")
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -148,7 +199,7 @@
                 </div>
                 <div class="col-sm-12">
                     <label class="col-sm-2">VRN:</label>
-                    <input type="text" id="txtfinalVrn" placeholder="Auditor VRN" class="col-sm-2 input-sm"/>
+                    <input type="text" id="txtfinalVrn" placeholder="Auditor VRN" class="col-sm-2 input-sm" />
                     <label class="col-sm-2">Vehicle Class:</label>
                     @Html.DropDownList("ddlAuditedVehicleClass", (IEnumerable<SelectListItem>)ViewBag.AuditorVehicleClass, new { @class = "col-sm-2 input-sm" })
                     <button id="btnSearch" onclick="JoinCharge();" class="btn btn-primary">Join&Charge</button>
@@ -168,7 +219,7 @@
             dataType: "JSON",
             async: true,
             //data: JSON.stringify(InputData),
-            data:{  VehRegNo: $("#txtVrn").val()},
+            data: { VehRegNo: $("#txtVrn").val() },
             contentType: "application/json; charset=utf-8",
             success: function (JsonfilterData) {
                 debugger;
@@ -183,13 +234,12 @@
 
         });
     }
-    function JoinCharge()
-    {
+    function JoinCharge() {
         if ($("#txtfinalVrn").val() == '') {
             alert('Please Enter Audited VRN');
             return false;
         }
-        if ($("#ddlAuditedVehicleClass").val() <1) {
+        if ($("#ddlAuditedVehicleClass").val() < 1) {
             alert('Please Select Audited Vehicle Class');
             return false;
         }
@@ -204,7 +254,7 @@
             alert('You cannot join more than two trancation.');
             return false;
         }
-        
+
         var InputData = {
             AssociatedTransactionIds: selectedIDs, TransactionId: $('#hdnTransactionId').val(),
             VehRegNo: $('#txtfinalVrn').val(),
@@ -217,7 +267,7 @@
             dataType: "JSON",
             async: true,
             data: JSON.stringify(InputData),
-         
+
             contentType: "application/json; charset=utf-8",
             success: function (JsonfilterData) {
                 debugger;

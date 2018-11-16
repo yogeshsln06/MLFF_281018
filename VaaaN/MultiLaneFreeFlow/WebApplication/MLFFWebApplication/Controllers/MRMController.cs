@@ -309,7 +309,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.Class = transactiondata.Rows[0]["CTP_VEHICLE_CLASS_NAME"].ToString();
                 ViewBag.NFRear = transactiondata.Rows[0]["FRONT_IMAGE"].ToString();
                 ViewBag.NFFront = transactiondata.Rows[0]["REAR_IMAGE"].ToString();
-                
+                ViewBag.NFFrontVideo = transactiondata.Rows[0]["FRONT_VIDEO_URL"].ToString();
+                ViewBag.NFRearVideo = transactiondata.Rows[0]["REAR_VIDEO_URL"].ToString();
                 //check CT_Entry_ID exists if yes we will not fetch CT_entry_ID associated transaction
                 if (transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != "")
                 {
