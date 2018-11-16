@@ -332,6 +332,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 {
                     Send(s);
                     RandomWaitWithinOneMinute(); //in seconds
+                    MessageBox.Show("Success");
                 }
             }
 
