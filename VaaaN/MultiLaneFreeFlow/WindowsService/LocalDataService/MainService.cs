@@ -215,12 +215,12 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 //if (receiveRecord)
                 //{
-                    mq.Receive();
-                    sw.Stop();
+                mq.Receive();
+                sw.Stop();
                 //}
                 //else
                 //{
-                    //receive and send to failed queue
+                //receive and send to failed queue
                 //}
 
                 inBoxQueue.BeginPeek();
@@ -818,9 +818,6 @@ namespace VaaaN.MLFF.WindowsServices
                                                         {
                                                             LogMessage("Transaction found to update...");
                                                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = associatedNodeFluxTrans[0];
-
-                                                            
-
                                                             if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                             {
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPFront(transaction, nfpEntryId);
@@ -845,12 +842,12 @@ namespace VaaaN.MLFF.WindowsServices
                                                     {
                                                         if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                         {
-                                                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId,1);
+                                                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, 1);
                                                             LogMessage("Transaction inserted by nf entry id front.");
                                                         }
                                                         else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                         {
-                                                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId,1);
+                                                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, 1);
                                                             LogMessage("Transaction inserted by nf entry id rear.");
                                                         }
                                                         else
@@ -878,7 +875,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 if (nfp.CameraPosition == "1") // 1 means front, 2 means rear
                                                 {
                                                     LogMessage("Inserting NFP (front) into main transaction table...");
-                                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId,0);
+                                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, 0);
                                                     LogMessage("Record inserted successfully.");
 
                                                     //we cannot do financial operation as because this VRN does not exist in the system, will be reviewed in manual review
@@ -886,7 +883,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 else if (nfp.CameraPosition == "2") // 1 means front, 2 means rear
                                                 {
                                                     LogMessage("Inserting NFP (rear) into main transaction table...");
-                                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId,0);
+                                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, 0);
                                                     LogMessage("Record inserted successfully.");
 
                                                     //we cannot do financial operation as because this VRN does not exist in the system, will be reviewed in manual review
@@ -1548,6 +1545,15 @@ namespace VaaaN.MLFF.WindowsServices
             return result;
         }
         #endregion
+
+        public Double CalculateSpeed(int Distance, DateTime StartTime, DateTime EndTime)
+        {
+            Double Speed = 0;
+            var time = (EndTime - StartTime).TotalSeconds;
+            Speed = Distance / time;
+            return Speed;
+
+        }
 
         #region Service Logger
         private void LogMessage(String message)

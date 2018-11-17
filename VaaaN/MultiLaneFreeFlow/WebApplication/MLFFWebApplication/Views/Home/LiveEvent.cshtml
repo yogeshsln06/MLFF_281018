@@ -80,6 +80,10 @@
         height: 150px;
         width: 200px;
     }
+
+    .panel-body {
+    padding: 0px;
+}
 </style>
 <div class="panel panel-info">
     <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
@@ -88,7 +92,6 @@
 
         </div>
     </div>
-    <div style="height:5px"></div>
     <div class="panel-body">
         <div class="col-sm-12">
             <form data-toggle="validator" role="form">
@@ -100,51 +103,49 @@
                 </div>
             </form>
         </div>
-        <div class="clearfix" style="height: 70px;"></div>
+        <div class="clearfix"></div>
         <div class="panel-group" id="accordion">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">IKE</a>
+                        <a >IKE</a>
                     </h4>
                 </div>
                 <div id="collapse1" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <div class="col-md-12">
-                            <table id="tableCrossTalk" class="table table-condensed table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align:left; width:60px;">
-                                          @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry
-                                        </th>
-                                        <th style="text-align:left; width:60px;">
-                                            Lajur
-                                        </th>
-                                        <th style="text-align:left; width:60px;">
-                                          @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
-                                        </th>
-                                        <th style="width:60px;">
-                                            @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
-                                        </th>
-                                        <th style="width:60px;">
-                                            Date Time
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
+                    <div class="panel-body table-responsive">
+                        <table id="tableCrossTalk" class="table table-condensed table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; width:60px;">
+                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry
+                                    </th>
+                                    <th style="text-align:left; width:60px;">
+                                        Lajur
+                                    </th>
+                                    <th style="text-align:left; width:60px;">
+                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
+                                    </th>
+                                    <th style="width:60px;">
+                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
+                                    </th>
+                                    <th style="width:60px;">
+                                        Date Time
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">ANPR - Front</a>
+                        <a>ANPR - Front</a>
                     </h4>
                 </div>
-                <div id="collapse2" class="panel-collapse collapse">
-                    <div class="panel-body">
+                <div id="collapse2" class="panel-collapse collapse in">
+                    <div class="panel-body table-responsive">
                         <table id="tableNodeFluxFront" class="table table-condensed table-striped table-hover">
                             <thead>
                                 <tr>
@@ -177,47 +178,43 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">ANPR - Rear</a>
+                        @*<a data-toggle="collapse" data-parent="#accordion" href="#collapse3">ANPR - Rear</a>*@
+                        <a >ANPR - Rear</a>
                     </h4>
                 </div>
-                <div id="collapse3" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <table id="tableNodeFluxRear" class="table table-condensed table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align:left; width:60px;">
-                                             @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry
-                                            </th>
-                                            <th style="text-align:left; width:60px;">
-                                                Lajur
-                                            </th>
-                                            <th style="text-align:left; width:60px;">
-                                              @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
-                                            </th>
-                                            <th style="width:60px;">
-                                              @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
-                                            </th>
-                                            <th style="width:60px;">
-                                                Date Time
-                                            </th>
-                                            <th style="width:60px;">
-                                                Files
-                                            </th>
+                <div id="collapse3" class="panel-collapse collapse in">
+                    <div class="panel-body table-responsive">
+                        <table id="tableNodeFluxRear" class="table table-condensed table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; width:60px;">
+                                        Gantry
+                                    </th>
+                                    <th style="text-align:left; width:60px;">
+                                        Lajur
+                                    </th>
+                                    <th style="text-align:left; width:60px;">
+                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
+                                    </th>
+                                    <th style="width:60px;">
+                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
+                                    </th>
+                                    <th style="width:60px;">
+                                        Date Time
+                                    </th>
+                                    <th style="width:60px;">
+                                        Files
+                                    </th>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 </div>
 <div id="myModal" class="modal">
     <!-- Modal content -->
@@ -239,5 +236,3 @@
         </div>
     </div>
 </div>
-
-
