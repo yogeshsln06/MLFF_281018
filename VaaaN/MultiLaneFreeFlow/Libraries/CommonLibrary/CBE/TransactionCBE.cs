@@ -48,6 +48,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private string auditedVRN = string.Empty;
 
         private int isRegistered = 0;//0=Unknown, 1=Registered, 2=Unregistered
+        private double vehicleSpeed = 0;
         #endregion
 
         #region Properties
@@ -395,6 +396,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.isRegistered = value;
+            }
+        }
+
+        public Double VehicleSpeed
+        {
+            get
+            {
+                return this.vehicleSpeed;
+            }
+            set
+            {
+                this.vehicleSpeed = value;
             }
         }
         #endregion

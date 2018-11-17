@@ -11,6 +11,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses
         string databaseServer;
         string databaseUser;
         string databasePassword;
+        int distance;
         #endregion
 
         #region Constructor
@@ -19,6 +20,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses
             this.databaseServer = String.Empty;
             this.databaseUser = String.Empty;
             this.databasePassword = String.Empty;
+            this.distance = 0;
         }
         #endregion
 
@@ -37,6 +39,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses
         {
             get { return this.databasePassword; }
             set { this.databasePassword = value; }
+        }
+        public int Distance
+        {
+            get { return this.distance; }
+            set { this.distance = value; }
         }
         
         #endregion

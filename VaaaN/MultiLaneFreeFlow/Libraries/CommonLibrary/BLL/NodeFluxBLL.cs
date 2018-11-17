@@ -55,5 +55,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.NodeFluxDAL.GetRecent(plazaId, vrn, nodeFluxReportingTime, cameraPosition);
         }
 
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE GetByEntryId(int entryId)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.NodeFluxDAL.GetByEntryId(entryId);
+        }
+
     }
 }
