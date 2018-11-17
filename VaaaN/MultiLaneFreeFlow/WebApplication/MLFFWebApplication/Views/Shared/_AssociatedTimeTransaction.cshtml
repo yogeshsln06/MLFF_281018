@@ -32,6 +32,7 @@
                         <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                     }
                 </div>
+
             </div>
             <label class="col-sm-2">NodeFlux Rear:</label>
             <div class="col-sm-2">
@@ -51,7 +52,10 @@
                         <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                     }
                 </div>
+
+
             </div>
+
         </div>
     </div>
 </div>
@@ -63,40 +67,55 @@
                     <table id="tableTransaction" class="table table-condensed table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>
+                                <th style="width:20px">
                                     Select
+                                    @*Transactions*@
                                 </th>
-                                <th>
+                                <th style="width:20px">
                                     Tran Id
                                 </th>
-                                <th>
+                                <th style="width:60px">
                                     Tran Time
                                 </th>
-                                <th>
+                                <th style="width:60px">
                                     Lane Id
                                 </th>
-                                <th>
+                                <th style="width:60px">
                                     Gantry Id
                                 </th>
-                                <th>
+                                <th style="width:60px">
                                     IKE VRN
                                 </th>
-                                <th>
+                                <th style="width:60px">
                                     IKE Class
                                 </th>
-                                <th>
-                                    ANPR FRONT VRN Image
+                                <th style="width:100px">
+                                    <div class="col-sm-12">
+                                        <div style="text-align:center;">
+                                            ANPR Front
+                                        </div>
+                                        <div class="col-sm-6">
+                                            Image
+                                        </div>
+                                        <div class="col-sm-6">
+                                            Video
+                                        </div>
+                                    </div>
                                 </th>
-                                <th>
-                                    ANPR FRONT VRN Video
+                                <th style="width:100px">
+                                    <div class="col-sm-12">
+                                        <div style="text-align:center;">
+                                            ANPR Rear
+                                        </div>
+                                        <div class="col-sm-6">
+                                            Image
+                                        </div>
+                                        <div class="col-sm-6">
+                                            Video
+                                        </div>
+                                    </div>
                                 </th>
-                                <th>
-                                    ANPR REAR VRN Image
-                                </th>
-                                <th>
-                                    ANPR REAR VRN Video
-                                </th>
-                                <th>
+                                <th style="width:60px">
                                     Audited
                                 </th>
                             </tr>
@@ -128,37 +147,46 @@
                                         @item["CTP_VEHICLE_CLASS_NAME"].ToString()
                                     </td>
                                     <td>
-                                        @if (item["FRONT_IMAGE"].ToString() != "")
-                                        {
-                                            string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
-                                            path = path.Replace('/', '^');
-                                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                                        }
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-6">
+                                                @if (item["FRONT_IMAGE"].ToString() != "")
+                                                {
+                                                    string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
+                                                    path = path.Replace('/', '^');
+                                                <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                                }
+                                            </div>
+                                            <div class="col-sm-6">
+                                                @if (item["FRONT_VIDEO_URL"].ToString() != "")
+                                                {
+                                                    string path = item["FRONT_VIDEO_URL"].ToString();
+                                                    path = path.Replace('/', '^');
+                                                <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                                }
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>
-                                        @if (item["FRONT_VIDEO_URL"].ToString() != "")
-                                        {
-                                            string path = item["FRONT_VIDEO_URL"].ToString();
-                                            path = path.Replace('/', '^');
-                                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
-                                        }
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-6">
+                                                @if (item["REAR_IMAGE"].ToString() != "")
+                                                {
+                                                    string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
+                                                    path = path.Replace('/', '^');
+                                                <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                                }
+                                            </div>
+                                            <div class="col-sm-6">
+                                                @if (item["REAR_VIDEO_URL"].ToString() != "")
+                                                {
+                                                    string path = item["REAR_VIDEO_URL"].ToString();
+                                                    path = path.Replace('/', '^');
+                                                <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                                }
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td>
-                                        @if (item["REAR_IMAGE"].ToString() != "")
-                                        {
-                                            string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
-                                            path = path.Replace('/', '^');
-                                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (item["REAR_VIDEO_URL"].ToString() != "")
-                                        {
-                                            string path = item["REAR_VIDEO_URL"].ToString();
-                                            @*<i class="fa fa-video" onclick="openVideo(this)" path="@path"></i>*@
-                                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
-                                        }
-                                    </td>
+
                                     <td>
                                         @(item["AUDIT_STATUS"].ToString() == "1" ? "Yes" : "No")
                                     </td>
@@ -184,6 +212,7 @@
     </div>
 </div>
 <script type="text/javascript">
+
     function SearchVRN() {
         $('#loader').show();
         var InputData = {
