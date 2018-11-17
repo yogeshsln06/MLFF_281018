@@ -43,6 +43,7 @@ namespace VaaaN.MLFF.WindowsServices
         int mediumCount = 0;
         int bigCount = 0;
         string counterString = string.Empty;
+        VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration generalFileConfig;
         #endregion
 
         #region Constructor
@@ -51,7 +52,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
             //DateTime dt = DateTime.ParseExact("13/10/2018 23:24:25.111", "dd/MM/yyyy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
@@ -820,11 +821,25 @@ namespace VaaaN.MLFF.WindowsServices
                                                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = associatedNodeFluxTrans[0];
                                                             if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                             {
+                                                                // update the VEHICLE speed
+                                                                if (transaction.NodefluxEntryIdRear > 0)
+                                                                {
+                                                                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfPacket;
+                                                                    nfPacket = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetByEntryId(transaction.NodefluxEntryIdRear);
+                                                                    transaction.VehicleSpeed = CalculateSpeed(nfpDateTime, nfPacket.TimeStamp);
+                                                                }
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPFront(transaction, nfpEntryId);
                                                                 LogMessage("nf entry id front has been updated in transaction.");
                                                             }
                                                             else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                             {
+                                                                // update the VEHICLE speed
+                                                                if (transaction.NodefluxEntryIdFront > 0)
+                                                                {
+                                                                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfPacket;
+                                                                    nfPacket = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetByEntryId(transaction.NodefluxEntryIdFront);
+                                                                    transaction.VehicleSpeed = CalculateSpeed(nfPacket.TimeStamp, nfpDateTime);
+                                                                }
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPRear(transaction, nfpEntryId);
                                                                 LogMessage("nf entry id rear has been updated in transaction.");
                                                             }
@@ -1546,10 +1561,11 @@ namespace VaaaN.MLFF.WindowsServices
         }
         #endregion
 
-        public Double CalculateSpeed(int Distance, DateTime StartTime, DateTime EndTime)
+        public Double CalculateSpeed(DateTime StartTime, DateTime EndTime)
         {
+            int Distance = generalFileConfig.Distance * 1000;
             Double Speed = 0;
-            var time = (EndTime - StartTime).TotalSeconds;
+            var time = ((EndTime - StartTime).TotalHours);
             Speed = Distance / time;
             return Speed;
 
