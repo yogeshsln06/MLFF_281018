@@ -55,11 +55,9 @@ namespace VaaaN.MLFF.WebApplication.Models
                     link = string.Empty;
                     ResourceManager rm = new ResourceManager(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen));
                     string someString = rm.GetString(module.ModuleName);
-                
 
                     if ((subModules.Count == 0) || module.ModuleId == 7) //7 for reports
                     { 
-
                         if (module.IsGuiVisible != 0)
                         {
                             sb.Append("<a id=\"module_" + module.ModuleId + "\" class=\"parent list-group-item list-group-item-info\"   data-parent=\"#MainMenu\" href=\"" + module.ModuleUrl.ToLower() + "\">");//module.Url
@@ -221,8 +219,6 @@ namespace VaaaN.MLFF.WebApplication.Models
 
             return displayAttribute[0].Name;
         }
-
-
         public static IEnumerable<SelectListItem> GetHardwareType()
         {
             var selectList = new List<SelectListItem>();

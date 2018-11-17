@@ -1,4 +1,4 @@
-/* Formatted on 12-11-2018 17.14.02 (QP5 v5.215.12089.38647) */
+/* Formatted on 17/11/2018 12:05:07 PM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -3726,5 +3726,186 @@ ORDER BY TRANSACTION_ID';
              AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
        WHERE TRANSACTION_ID = P_PARENT_TRANSACTION_ID;
    END JOIN_AUDIT_TRANSACTIONS;
+
+
+   ------------CUSTOMER QUEUE ----------
+
+   PROCEDURE CUSTOMER_QUEUE_INSERT (
+      P_TMS_ID                     IN NUMBER,
+      P_FIRST_NAME                 IN NVARCHAR2,
+      P_LAST_NAME                  IN NVARCHAR2,
+      P_MOB_NUMBER                 IN NVARCHAR2,
+      P_EMAIL_ID                   IN NVARCHAR2,
+      P_DESCRIPTION                IN NVARCHAR2,
+      P_ADDRESS                    IN NVARCHAR2,
+      P_STATUS                     IN NUMBER,
+      P_CUSTOMER_IMAGE_PATH        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_1        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_2        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_3        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_4        IN NVARCHAR2,
+      P_VEHICLE_IMAGE_PATH_FRONT   IN NVARCHAR2,
+      P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
+      P_IS_DOC_VERIFIED            IN NUMBER,
+      P_CREATION_DATE              IN DATE)
+   AS
+   BEGIN
+      INSERT INTO TBL_CUSTOMER_QUEUE (TMS_ID,
+                                      CUSTOMER_QUEUE_ID,
+                                      FIRST_NAME,
+                                      LAST_NAME,
+                                      MOB_NUMBER,
+                                      EMAIL_ID,
+                                      DESCRIPTION,
+                                      ADDRESS,
+                                      STATUS,
+                                      CUSTOMER_IMAGE_PATH,
+                                      SCANNED_DOCS_PATH_1,
+                                      SCANNED_DOCS_PATH_2,
+                                      SCANNED_DOCS_PATH_3,
+                                      SCANNED_DOCS_PATH_4,
+                                      VEHICLE_IMAGE_PATH_FRONT,
+                                      VEHICLE_IMAGE_PATH_REAR,
+                                      IS_DOC_VERIFIED,
+                                      CREATION_DATE)
+           VALUES (P_TMS_ID,
+                   CUSTOMER_QUEUE_SEQ.NEXTVAL,
+                   P_FIRST_NAME,
+                   P_LAST_NAME,
+                   P_MOB_NUMBER,
+                   P_EMAIL_ID,
+                   P_DESCRIPTION,
+                   P_ADDRESS,
+                   P_STATUS,
+                   P_CUSTOMER_IMAGE_PATH,
+                   P_SCANNED_DOCS_PATH_1,
+                   P_SCANNED_DOCS_PATH_2,
+                   P_SCANNED_DOCS_PATH_3,
+                   P_SCANNED_DOCS_PATH_4,
+                   P_VEHICLE_IMAGE_PATH_FRONT,
+                   P_VEHICLE_IMAGE_PATH_REAR,
+                   P_IS_DOC_VERIFIED,
+                   P_CREATION_DATE);
+   END CUSTOMER_QUEUE_INSERT;
+
+
+
+   PROCEDURE CUSTOMER_QUEUE_UPDATE (
+      P_TMS_ID                     IN NUMBER,
+      P_CUSTOMER_QUEUE_ID          IN NUMBER,
+      P_FIRST_NAME                 IN NVARCHAR2,
+      P_LAST_NAME                  IN NVARCHAR2,
+      P_MOB_NUMBER                 IN NVARCHAR2,
+      P_EMAIL_ID                   IN NVARCHAR2,
+      P_DESCRIPTION                IN NVARCHAR2,
+      P_ADDRESS                    IN NVARCHAR2,
+      P_STATUS                     IN NUMBER,
+      P_APPOINTMENT_LOCATION       IN NVARCHAR2,
+      P_APPOINTMENT_DATE           IN DATE,
+      P_CUSTOMER_IMAGE_PATH        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_1        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_2        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_3        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_4        IN NVARCHAR2,
+      P_VEHICLE_IMAGE_PATH_FRONT   IN NVARCHAR2,
+      P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
+      P_IS_DOC_VERIFIED            IN NUMBER,
+      P_MODIFIER_ID                IN NUMBER,
+      P_MODIFICATION_DATE          IN DATE)
+   AS
+   BEGIN
+      UPDATE TBL_CUSTOMER_QUEUE
+         SET FIRST_NAME = P_FIRST_NAME,
+             LAST_NAME = P_LAST_NAME,
+             MOB_NUMBER = P_MOB_NUMBER,
+             EMAIL_ID = P_EMAIL_ID,
+             DESCRIPTION = P_DESCRIPTION,
+             ADDRESS = P_ADDRESS,
+             STATUS = P_STATUS,
+             APPOINTMENT_LOCATION = P_APPOINTMENT_LOCATION,
+             APPOINTMENT_DATE = P_APPOINTMENT_DATE,
+             CUSTOMER_IMAGE_PATH = P_CUSTOMER_IMAGE_PATH,
+             SCANNED_DOCS_PATH_1 = P_SCANNED_DOCS_PATH_1,
+             SCANNED_DOCS_PATH_2 = P_SCANNED_DOCS_PATH_2,
+             SCANNED_DOCS_PATH_3 = P_SCANNED_DOCS_PATH_3,
+             SCANNED_DOCS_PATH_4 = P_SCANNED_DOCS_PATH_4,
+             VEHICLE_IMAGE_PATH_FRONT = P_VEHICLE_IMAGE_PATH_FRONT,
+             VEHICLE_IMAGE_PATH_REAR = P_VEHICLE_IMAGE_PATH_REAR,
+             IS_DOC_VERIFIED = P_IS_DOC_VERIFIED,
+             MODIFIER_ID = P_MODIFIER_ID,
+             MODIFICATION_DATE = P_MODIFICATION_DATE
+       WHERE TMS_ID = P_TMS_ID AND CUSTOMER_QUEUE_ID = P_CUSTOMER_QUEUE_ID;
+   END CUSTOMER_QUEUE_UPDATE;
+
+   PROCEDURE CUSTOMER_QUEUE_DELETE (P_TMS_ID              IN NUMBER,
+                                    P_CUSTOMER_QUEUE_ID      NUMBER)
+   AS
+   BEGIN
+      DELETE TBL_CUSTOMER_QUEUE
+       WHERE TMS_ID = P_TMS_ID AND CUSTOMER_QUEUE_ID = P_CUSTOMER_QUEUE_ID;
+   END CUSTOMER_QUEUE_DELETE;
+
+   PROCEDURE CUSTOMER_QUEUE_GETALL (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT CQ.TMS_ID,
+                CQ.CUSTOMER_QUEUE_ID,
+                CQ.FIRST_NAME,
+                CQ.LAST_NAME,
+                CQ.MOB_NUMBER,
+                CQ.EMAIL_ID,
+                CQ.DESCRIPTION,
+                CQ.ADDRESS,
+                CQ.STATUS,
+                CQ.APPOINTMENT_LOCATION,
+                CQ.APPOINTMENT_DATE,
+                CQ.CUSTOMER_IMAGE_PATH,
+                CQ.SCANNED_DOCS_PATH_1,
+                CQ.SCANNED_DOCS_PATH_2,
+                CQ.SCANNED_DOCS_PATH_3,
+                CQ.SCANNED_DOCS_PATH_4,
+                CQ.VEHICLE_IMAGE_PATH_FRONT,
+                CQ.VEHICLE_IMAGE_PATH_REAR,
+                CQ.IS_DOC_VERIFIED,
+                CQ.CREATION_DATE,
+                CQ.MODIFIER_ID,
+                CQ.MODIFICATION_DATE
+           FROM TBL_CUSTOMER_QUEUE CQ;
+   END CUSTOMER_QUEUE_GETALL;
+
+   PROCEDURE CUSTOMER_QUEUE_GETBYID (P_TMS_ID              IN     NUMBER,
+                                     P_CUSTOMER_QUEUE_ID   IN     NUMBER,
+                                     CUR_OUT                  OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT CQ.TMS_ID,
+                  CQ.CUSTOMER_QUEUE_ID,
+                  CQ.FIRST_NAME,
+                  CQ.LAST_NAME,
+                  CQ.MOB_NUMBER,
+                  CQ.EMAIL_ID,
+                  CQ.DESCRIPTION,
+                  CQ.ADDRESS,
+                  CQ.STATUS,
+                  CQ.APPOINTMENT_LOCATION,
+                  CQ.APPOINTMENT_DATE,
+                  CQ.CUSTOMER_IMAGE_PATH,
+                  CQ.SCANNED_DOCS_PATH_1,
+                  CQ.SCANNED_DOCS_PATH_2,
+                  CQ.SCANNED_DOCS_PATH_3,
+                  CQ.SCANNED_DOCS_PATH_4,
+                  CQ.VEHICLE_IMAGE_PATH_FRONT,
+                  CQ.VEHICLE_IMAGE_PATH_REAR,
+                  CQ.IS_DOC_VERIFIED,
+                  CQ.CREATION_DATE,
+                  CQ.MODIFIER_ID,
+                  CQ.MODIFICATION_DATE
+             FROM TBL_CUSTOMER_QUEUE CQ
+            WHERE     CQ.TMS_ID = P_TMS_ID
+                  AND CUSTOMER_QUEUE_ID = P_CUSTOMER_QUEUE_ID
+         ORDER BY CUSTOMER_QUEUE_ID DESC;
+   END CUSTOMER_QUEUE_GETBYID;
 END MLFF_PACKAGE;
 /

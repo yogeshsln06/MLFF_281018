@@ -119,6 +119,7 @@
     <Compile Include="BLL\UserSubmoduleRightBLL.cs" />
     <Compile Include="BLL\VehicleClassBLL.cs" />
     <Compile Include="CBE\CrossTalkEvent.cs" />
+    <Compile Include="CBE\CustomerQueueCBE.cs" />
     <Compile Include="CBE\GantryLiveDataCBE.cs" />
     <Compile Include="CBE\LiveEventCBE.cs" />
     <Compile Include="CBE\NodeFluxEvent.cs" />
@@ -168,6 +169,7 @@
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="DAL\AccountHistoryDAL.cs" />
+    <Compile Include="DAL\CustomerQueueDAL.cs" />
     <Compile Include="DAL\CustomerVehicleDAL.cs" />
     <Compile Include="DAL\LaneDAL.cs" />
     <Compile Include="DAL\HardwareDAL.cs" />

@@ -2633,9 +2633,6 @@ namespace VaaaN.MLFF.WebApplication
         }
 
         #region Helper Method
-
-
-
         public List<Dictionary<string, object>> GetTableRows(DataTable dtData)
         {
             List<Dictionary<string, object>>
@@ -2653,8 +2650,6 @@ namespace VaaaN.MLFF.WebApplication
             }
             return lstRows;
         }
-
-
 
         //bool ISAuthorize(int userId, string strlink)
         //{
