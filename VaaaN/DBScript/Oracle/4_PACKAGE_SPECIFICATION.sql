@@ -1,4 +1,4 @@
-/* Formatted on 12-11-2018 17.15.47 (QP5 v5.215.12089.38647) */
+/* Formatted on 17/11/2018 12:04:45 PM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -921,5 +921,58 @@ AS
       P_AUDITED_VRN                IN NVARCHAR2,
       P_AUDITED_VEHICLE_CLASS_ID   IN NUMBER,
       P_AUDITOR_ID                 IN NUMBER);
+
+   ------------CUSTOMER QUEUE ----------
+
+   PROCEDURE CUSTOMER_QUEUE_INSERT (
+      P_TMS_ID                     IN NUMBER,
+      P_FIRST_NAME                 IN NVARCHAR2,
+      P_LAST_NAME                  IN NVARCHAR2,
+      P_MOB_NUMBER                 IN NVARCHAR2,
+      P_EMAIL_ID                   IN NVARCHAR2,
+      P_DESCRIPTION                IN NVARCHAR2,
+      P_ADDRESS                    IN NVARCHAR2,
+      P_STATUS                     IN NUMBER,
+      P_CUSTOMER_IMAGE_PATH        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_1        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_2        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_3        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_4        IN NVARCHAR2,
+      P_VEHICLE_IMAGE_PATH_FRONT   IN NVARCHAR2,
+      P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
+      P_IS_DOC_VERIFIED            IN NUMBER,
+      P_CREATION_DATE              IN DATE);
+
+   PROCEDURE CUSTOMER_QUEUE_UPDATE (
+      P_TMS_ID                     IN NUMBER,
+      P_CUSTOMER_QUEUE_ID          IN NUMBER,
+      P_FIRST_NAME                 IN NVARCHAR2,
+      P_LAST_NAME                  IN NVARCHAR2,
+      P_MOB_NUMBER                 IN NVARCHAR2,
+      P_EMAIL_ID                   IN NVARCHAR2,
+      P_DESCRIPTION                IN NVARCHAR2,
+      P_ADDRESS                    IN NVARCHAR2,
+      P_STATUS                     IN NUMBER,
+      P_APPOINTMENT_LOCATION       IN NVARCHAR2,
+      P_APPOINTMENT_DATE           IN DATE,
+      P_CUSTOMER_IMAGE_PATH        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_1        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_2        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_3        IN NVARCHAR2,
+      P_SCANNED_DOCS_PATH_4        IN NVARCHAR2,
+      P_VEHICLE_IMAGE_PATH_FRONT   IN NVARCHAR2,
+      P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
+      P_IS_DOC_VERIFIED            IN NUMBER,
+      P_MODIFIER_ID                IN NUMBER,
+      P_MODIFICATION_DATE          IN DATE);
+
+   PROCEDURE CUSTOMER_QUEUE_DELETE (P_TMS_ID              IN NUMBER,
+                                    P_CUSTOMER_QUEUE_ID      NUMBER);
+
+   PROCEDURE CUSTOMER_QUEUE_GETALL (CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE CUSTOMER_QUEUE_GETBYID (P_TMS_ID              IN     NUMBER,
+                                     P_CUSTOMER_QUEUE_ID   IN     NUMBER,
+                                     CUR_OUT                  OUT T_CURSOR);
 END MLFF_PACKAGE;
 /
