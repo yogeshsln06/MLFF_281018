@@ -1,4 +1,4 @@
-/* Formatted on 17/11/2018 12:05:07 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 18/11/2018 11:58:52 AM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -1864,7 +1864,7 @@ AS
                                        P_PLAZA_ID            IN NUMBER,
                                        P_LANE_ID             IN NUMBER,
                                        P_TRANSACTION_ID      IN NUMBER,
-                                       P_VEHICLESPEED         IN DECIMAL,
+                                       P_VEHICLESPEED        IN DECIMAL,
                                        P_NF_ENTRY_ID_FRONT   IN NUMBER)
    AS
    BEGIN
@@ -1874,16 +1874,16 @@ AS
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
-             
-    IF (P_VEHICLESPEED > 0)
-        THEN
-            UPDATE TBL_TRANSACTION
-            SET    VEHICLESPEED=P_VEHICLESPEED
-            WHERE   TMS_ID = P_TMS_ID
-             AND PLAZA_ID = P_PLAZA_ID
-             AND LANE_ID = P_LANE_ID
-             AND TRANSACTION_ID = P_TRANSACTION_ID;
-        END IF;
+
+      IF (P_VEHICLESPEED > 0)
+      THEN
+         UPDATE TBL_TRANSACTION
+            SET VEHICLESPEED = P_VEHICLESPEED
+          WHERE     TMS_ID = P_TMS_ID
+                AND PLAZA_ID = P_PLAZA_ID
+                AND LANE_ID = P_LANE_ID
+                AND TRANSACTION_ID = P_TRANSACTION_ID;
+      END IF;
    END TRAN_UPDATE_BY_NFP_FRONT;
 
 
@@ -1903,15 +1903,16 @@ AS
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
-    IF (P_VEHICLESPEED>0)
-        THEN
-            UPDATE TBL_TRANSACTION
-            SET    VEHICLESPEED=P_VEHICLESPEED
-            WHERE     TMS_ID = P_TMS_ID
-             AND PLAZA_ID = P_PLAZA_ID
-             AND LANE_ID = P_LANE_ID
-             AND TRANSACTION_ID = P_TRANSACTION_ID;
-        END IF;
+
+      IF (P_VEHICLESPEED > 0)
+      THEN
+         UPDATE TBL_TRANSACTION
+            SET VEHICLESPEED = P_VEHICLESPEED
+          WHERE     TMS_ID = P_TMS_ID
+                AND PLAZA_ID = P_PLAZA_ID
+                AND LANE_ID = P_LANE_ID
+                AND TRANSACTION_ID = P_TRANSACTION_ID;
+      END IF;
    END TRAN_UPDATE_BY_NFP_REAR;
 
 
@@ -3768,7 +3769,10 @@ ORDER BY TRANSACTION_ID';
       P_VEHICLE_IMAGE_PATH_FRONT   IN NVARCHAR2,
       P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
       P_IS_DOC_VERIFIED            IN NUMBER,
-      P_CREATION_DATE              IN DATE)
+      P_CREATION_DATE              IN DATE,
+      P_CUSTOMER_RES_ID            IN NUMBER,
+      P_VEHICLE_CERT_ID            IN NUMBER,
+      P_VEHICLE_IMAGE_PATH_SIDE    IN NVARCHAR2)
    AS
    BEGIN
       INSERT INTO TBL_CUSTOMER_QUEUE (TMS_ID,
@@ -3788,7 +3792,10 @@ ORDER BY TRANSACTION_ID';
                                       VEHICLE_IMAGE_PATH_FRONT,
                                       VEHICLE_IMAGE_PATH_REAR,
                                       IS_DOC_VERIFIED,
-                                      CREATION_DATE)
+                                      CREATION_DATE,
+                                      CUSTOMER_RES_ID,
+                                      VEHICLE_CERT_ID,
+                                      VEHICLE_IMAGE_PATH_SIDE)
            VALUES (P_TMS_ID,
                    CUSTOMER_QUEUE_SEQ.NEXTVAL,
                    P_FIRST_NAME,
@@ -3806,7 +3813,10 @@ ORDER BY TRANSACTION_ID';
                    P_VEHICLE_IMAGE_PATH_FRONT,
                    P_VEHICLE_IMAGE_PATH_REAR,
                    P_IS_DOC_VERIFIED,
-                   P_CREATION_DATE);
+                   P_CREATION_DATE,
+                   P_CUSTOMER_RES_ID,
+                   P_VEHICLE_CERT_ID,
+                   P_VEHICLE_IMAGE_PATH_SIDE);
    END CUSTOMER_QUEUE_INSERT;
 
 
@@ -3832,7 +3842,10 @@ ORDER BY TRANSACTION_ID';
       P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
       P_IS_DOC_VERIFIED            IN NUMBER,
       P_MODIFIER_ID                IN NUMBER,
-      P_MODIFICATION_DATE          IN DATE)
+      P_MODIFICATION_DATE          IN DATE,
+      P_CUSTOMER_RES_ID            IN NUMBER,
+      P_VEHICLE_CERT_ID            IN NUMBER,
+      P_VEHICLE_IMAGE_PATH_SIDE    IN NVARCHAR2)
    AS
    BEGIN
       UPDATE TBL_CUSTOMER_QUEUE
@@ -3854,7 +3867,10 @@ ORDER BY TRANSACTION_ID';
              VEHICLE_IMAGE_PATH_REAR = P_VEHICLE_IMAGE_PATH_REAR,
              IS_DOC_VERIFIED = P_IS_DOC_VERIFIED,
              MODIFIER_ID = P_MODIFIER_ID,
-             MODIFICATION_DATE = P_MODIFICATION_DATE
+             MODIFICATION_DATE = P_MODIFICATION_DATE,
+             CUSTOMER_RES_ID = P_CUSTOMER_RES_ID,
+             VEHICLE_CERT_ID = P_VEHICLE_CERT_ID,
+             VEHICLE_IMAGE_PATH_SIDE = P_VEHICLE_IMAGE_PATH_SIDE
        WHERE TMS_ID = P_TMS_ID AND CUSTOMER_QUEUE_ID = P_CUSTOMER_QUEUE_ID;
    END CUSTOMER_QUEUE_UPDATE;
 
@@ -3891,7 +3907,10 @@ ORDER BY TRANSACTION_ID';
                 CQ.IS_DOC_VERIFIED,
                 CQ.CREATION_DATE,
                 CQ.MODIFIER_ID,
-                CQ.MODIFICATION_DATE
+                CQ.MODIFICATION_DATE,
+                CQ.CUSTOMER_RES_ID,
+                CQ.VEHICLE_CERT_ID,
+                CQ.VEHICLE_IMAGE_PATH_SIDE
            FROM TBL_CUSTOMER_QUEUE CQ;
    END CUSTOMER_QUEUE_GETALL;
 
@@ -3922,7 +3941,10 @@ ORDER BY TRANSACTION_ID';
                   CQ.IS_DOC_VERIFIED,
                   CQ.CREATION_DATE,
                   CQ.MODIFIER_ID,
-                  CQ.MODIFICATION_DATE
+                  CQ.MODIFICATION_DATE,
+                  CQ.CUSTOMER_RES_ID,
+                  CQ.VEHICLE_CERT_ID,
+                  CQ.VEHICLE_IMAGE_PATH_SIDE
              FROM TBL_CUSTOMER_QUEUE CQ
             WHERE     CQ.TMS_ID = P_TMS_ID
                   AND CUSTOMER_QUEUE_ID = P_CUSTOMER_QUEUE_ID

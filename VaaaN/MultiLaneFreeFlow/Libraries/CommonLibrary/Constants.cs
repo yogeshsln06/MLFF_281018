@@ -464,7 +464,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             Active,
             Inactive
         }
-
+        public enum CustomerQueueStatus 
+        {
+            Unknown = 0,
+            Open,
+            Arranged,
+            Processed
+        };
         public static string[] ECBStatusDescription = new string[]
         {
             "Idle",//0

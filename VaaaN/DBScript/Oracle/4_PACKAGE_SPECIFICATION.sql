@@ -1,4 +1,4 @@
-/* Formatted on 17/11/2018 12:04:45 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 18/11/2018 11:56:37 AM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -494,14 +494,14 @@ AS
                                        P_PLAZA_ID            IN NUMBER,
                                        P_LANE_ID             IN NUMBER,
                                        P_TRANSACTION_ID      IN NUMBER,
-									   P_VEHICLESPEED		 IN DECIMAL,
+                                       P_VEHICLESPEED        IN DECIMAL,
                                        P_NF_ENTRY_ID_FRONT   IN NUMBER);
 
    PROCEDURE TRAN_UPDATE_BY_NFP_REAR (P_TMS_ID             IN NUMBER,
                                       P_PLAZA_ID           IN NUMBER,
                                       P_LANE_ID            IN NUMBER,
                                       P_TRANSACTION_ID     IN NUMBER,
-									  P_VEHICLESPEED	   IN DECIMAL,
+                                      P_VEHICLESPEED       IN DECIMAL,
                                       P_NF_ENTRY_ID_REAR   IN NUMBER);
 
    PROCEDURE TRAN_UPDATE (P_TMS_ID                 IN NUMBER,
@@ -943,7 +943,10 @@ AS
       P_VEHICLE_IMAGE_PATH_FRONT   IN NVARCHAR2,
       P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
       P_IS_DOC_VERIFIED            IN NUMBER,
-      P_CREATION_DATE              IN DATE);
+      P_CREATION_DATE              IN DATE,
+      P_CUSTOMER_RES_ID            IN NUMBER,
+      P_VEHICLE_CERT_ID            IN NUMBER,
+      P_VEHICLE_IMAGE_PATH_SIDE    IN NVARCHAR2);
 
    PROCEDURE CUSTOMER_QUEUE_UPDATE (
       P_TMS_ID                     IN NUMBER,
@@ -966,7 +969,10 @@ AS
       P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
       P_IS_DOC_VERIFIED            IN NUMBER,
       P_MODIFIER_ID                IN NUMBER,
-      P_MODIFICATION_DATE          IN DATE);
+      P_MODIFICATION_DATE          IN DATE,
+      P_CUSTOMER_RES_ID            IN NUMBER,
+      P_VEHICLE_CERT_ID            IN NUMBER,
+      P_VEHICLE_IMAGE_PATH_SIDE    IN NVARCHAR2);
 
    PROCEDURE CUSTOMER_QUEUE_DELETE (P_TMS_ID              IN NUMBER,
                                     P_CUSTOMER_QUEUE_ID      NUMBER);

@@ -31,6 +31,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private Int32 modifierId;
         private DateTime creationDate;
         private DateTime modificationDate;
+        private Int32 customerResidentId;
+        private Int32 vehicleCertificateId;
+        private String vehicleImagePathSide;
+
         public CustomerQueueCBE()
         {
             this.tmsId = 0;
@@ -55,6 +59,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.modifierId = 0;
             this.creationDate = DateTime.Now;
             this.modificationDate = DateTime.Now;
+            this.customerResidentId = 0;
+            this.vehicleCertificateId = 0;
+            this.vehicleImagePathSide = String.Empty;
         }
         public int TmsId
         {
@@ -343,8 +350,44 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-       
+        public int CustomerResidentId
+        {
+            get
+            {
+                return this.customerResidentId;
+            }
 
+            set
+            {
+                this.customerResidentId = value;
+            }
+        }
+
+        public int VehicleCertificateId
+        {
+            get
+            {
+                return this.vehicleCertificateId;
+            }
+
+            set
+            {
+                this.vehicleCertificateId = value;
+            }
+        }
+
+        public string VehicleImagePathSide
+        {
+            get
+            {
+                return this.vehicleImagePathSide;
+            }
+
+            set
+            {
+                this.vehicleImagePathSide = value;
+            }
+        }
     }
 
     public class CustomerQueueCollection : CollectionBase

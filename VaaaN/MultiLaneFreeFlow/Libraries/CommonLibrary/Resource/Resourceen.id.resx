@@ -297,4 +297,10 @@
   <data name="Successful Transaction" xml:space="preserve">
     <value>Transaksi yang berhasil</value>
   </data>
+  <data name="CustomerQueue" xml:space="preserve">
+    <value>Customer Queue</value>
+  </data>
+  <data name="RegisteredCustomer" xml:space="preserve">
+    <value>Registered Customer</value>
+  </data>
 </root>

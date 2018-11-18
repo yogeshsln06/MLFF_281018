@@ -282,4 +282,10 @@
   <data name="CustomerDetails" xml:space="preserve">
     <value>Customer Details</value>
   </data>
+  <data name="CustomerQueue" xml:space="preserve">
+    <value>Customer Queue</value>
+  </data>
+  <data name="RegisteredCustomer" xml:space="preserve">
+    <value>Registered Customer</value>
+  </data>
 </root>

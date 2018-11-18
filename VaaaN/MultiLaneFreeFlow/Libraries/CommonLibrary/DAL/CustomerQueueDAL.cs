@@ -33,14 +33,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ADDRESS", DbType.String, customerQueue.Address, ParameterDirection.Input, 200));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_STATUS", DbType.Int32, customerQueue.Status, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CUSTOMER_IMAGE_PATH", DbType.String, customerQueue.CustomerImagePath, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_1", DbType.String, customerQueue.ScannedDocsPath1, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_2", DbType.String, customerQueue.ScannedDocsPath2, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_3", DbType.String, customerQueue.ScannedDocsPath3, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_4", DbType.String, customerQueue.ScannedDocsPath4, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_FRONT", DbType.String, customerQueue.VehicleImagePathFront, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_REAR", DbType.String, customerQueue.VehicleImagePathRear, ParameterDirection.Input, 150));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_1", DbType.String, customerQueue.ScannedDocsPath1, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_2", DbType.String, customerQueue.ScannedDocsPath2, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_3", DbType.String, customerQueue.ScannedDocsPath3, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_4", DbType.String, customerQueue.ScannedDocsPath4, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_FRONT", DbType.String, customerQueue.VehicleImagePathFront, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_REAR", DbType.String, customerQueue.VehicleImagePathRear, ParameterDirection.Input, 200));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_DOC_VERIFIED", DbType.Int32, customerQueue.IsDocVerified, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, customerQueue.CreationDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CUSTOMER_RES_ID", DbType.Int32, customerQueue.CustomerResidentId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_CERT_ID", DbType.Int32, customerQueue.VehicleCertificateId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_SIDE", DbType.String, customerQueue.VehicleImagePathSide, ParameterDirection.Input, 200));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
             catch (Exception ex)
@@ -68,15 +71,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_APPOINTMENT_LOCATION", DbType.String, customerQueue.AppointmentLocation, ParameterDirection.Input, 50));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_APPOINTMENT_DATE", DbType.DateTime, customerQueue.AppointmentDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CUSTOMER_IMAGE_PATH", DbType.String, customerQueue.CustomerImagePath, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_1", DbType.String, customerQueue.ScannedDocsPath1, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_2", DbType.String, customerQueue.ScannedDocsPath2, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_3", DbType.String, customerQueue.ScannedDocsPath3, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_4", DbType.String, customerQueue.ScannedDocsPath4, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_FRONT", DbType.String, customerQueue.VehicleImagePathFront, ParameterDirection.Input, 150));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_REAR", DbType.String, customerQueue.VehicleImagePathRear, ParameterDirection.Input, 150));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_1", DbType.String, customerQueue.ScannedDocsPath1, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_2", DbType.String, customerQueue.ScannedDocsPath2, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_3", DbType.String, customerQueue.ScannedDocsPath3, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SCANNED_DOCS_PATH_4", DbType.String, customerQueue.ScannedDocsPath4, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_FRONT", DbType.String, customerQueue.VehicleImagePathFront, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_REAR", DbType.String, customerQueue.VehicleImagePathRear, ParameterDirection.Input, 200));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_DOC_VERIFIED", DbType.Int32, customerQueue.IsDocVerified, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, customerQueue.ModifierId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, customerQueue.ModificationDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CUSTOMER_RES_ID", DbType.Int32, customerQueue.CustomerResidentId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_CERT_ID", DbType.Int32, customerQueue.VehicleCertificateId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_IMAGE_PATH_SIDE", DbType.String, customerQueue.VehicleImagePathSide, ParameterDirection.Input, 200));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
             catch (Exception ex)
@@ -207,6 +213,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                     if (dt.Rows[i]["MODIFICATION_DATE"] != DBNull.Value)
                         customerQueue.ModificationDate = Convert.ToDateTime(dt.Rows[i]["MODIFICATION_DATE"]);
+
+                    if (dt.Rows[i]["CUSTOMER_RES_ID"] != DBNull.Value)
+                        customerQueue.CustomerResidentId = Convert.ToInt32(dt.Rows[i]["CUSTOMER_RES_ID"]);
+
+                    if (dt.Rows[i]["VEHICLE_CERT_ID"] != DBNull.Value)
+                        customerQueue.VehicleCertificateId = Convert.ToInt32(dt.Rows[i]["VEHICLE_CERT_ID"]);
+
+                    if (dt.Rows[i]["VEHICLE_IMAGE_PATH_SIDE"] != DBNull.Value)
+                        customerQueue.VehicleImagePathSide = Convert.ToString(dt.Rows[i]["VEHICLE_IMAGE_PATH_SIDE"]);
 
                     customerQueues.Add(customerQueue);
                 }
