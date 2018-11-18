@@ -67,14 +67,14 @@
                     <table id="tableTransaction" class="table table-condensed table-striped table-hover">
                         <thead>
                             <tr>
-                                <th style="width:20px">
+                                <th style="width:60px">
                                     Select
                                     @*Transactions*@
                                 </th>
-                                <th style="width:20px">
+                                <th style="width:60px">
                                     Tran Id
                                 </th>
-                                <th style="width:60px">
+                                <th style="width:120px">
                                     Tran Time
                                 </th>
                                 <th style="width:60px">
@@ -89,7 +89,7 @@
                                 <th style="width:60px">
                                     IKE Class
                                 </th>
-                                <th style="width:100px">
+                                <th style="width:120px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
                                             ANPR Front
@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th style="width:100px">
+                                <th style="width:120px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
                                             ANPR Rear
@@ -116,6 +116,9 @@
                                     </div>
                                 </th>
                                 <th style="width:60px">
+                                    Speed
+                                </th>
+                                <th>
                                     Audited
                                 </th>
                             </tr>
@@ -129,7 +132,7 @@
                                                value="@item["TRANSACTION_ID"].ToString()" />
                                     </td>
                                     <td>
-                                        @item["TRANSACTION_ID"].ToString()
+                                        @Html.DisplayFor(modelItem => item["TRANSACTION_ID"])
                                     </td>
                                     <td>
                                         @item["TRANSACTION_DATETIME"].ToString()
@@ -153,7 +156,7 @@
                                                 {
                                                     string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
                                                     path = path.Replace('/', '^');
-                                                <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                                    <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
                                                 }
                                             </div>
                                             <div class="col-sm-6">
@@ -161,7 +164,7 @@
                                                 {
                                                     string path = item["FRONT_VIDEO_URL"].ToString();
                                                     path = path.Replace('/', '^');
-                                                <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                                    <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                                 }
                                             </div>
                                         </div>
@@ -173,7 +176,7 @@
                                                 {
                                                     string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
                                                     path = path.Replace('/', '^');
-                                                <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                                    <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
                                                 }
                                             </div>
                                             <div class="col-sm-6">
@@ -181,12 +184,14 @@
                                                 {
                                                     string path = item["REAR_VIDEO_URL"].ToString();
                                                     path = path.Replace('/', '^');
-                                                <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                                    <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                                 }
                                             </div>
                                         </div>
                                     </td>
-
+                                    <td>
+                                        @item["VEHICLESPEED"].ToString() Km/h
+                                    </td>
                                     <td>
                                         @(item["AUDIT_STATUS"].ToString() == "1" ? "Yes" : "No")
                                     </td>
