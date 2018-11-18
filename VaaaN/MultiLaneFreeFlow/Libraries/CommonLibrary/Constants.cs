@@ -97,13 +97,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             [Display(Name = "--Must Review--")]
             AllTransaction = 0,
 
-            [Display(Name = "Cross Talk Data")]
+            [Display(Name = "IKE Data")]
             OnlyCrossTalk = 1,
 
-            [Display(Name = "Nodeflux Data Front")]
+            [Display(Name = "ANPR Front")]
             OnlyNFFront = 2,
 
-            [Display(Name = "Nodeflux Data Rear")]
+            [Display(Name = "ANPR Rear")]
             OnlyNFRear = 3,
 
         
