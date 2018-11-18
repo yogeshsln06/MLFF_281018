@@ -236,6 +236,7 @@
     <Content Include="Images\profile.png" />
     <Content Include="Images\report.jpg" />
     <Content Include="Images\route.png" />
+    <Content Include="Images\smarterplogo.png" />
     <Content Include="Images\spinner-circle.svg" />
     <Content Include="Images\vaaan.png" />
     <Content Include="js\custom.js" />
