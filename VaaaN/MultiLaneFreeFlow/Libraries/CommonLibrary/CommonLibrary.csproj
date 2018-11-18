@@ -94,6 +94,7 @@
     <Compile Include="BLL\AccountHistoryBLL.cs" />
     <Compile Include="BLL\CustomerAccountBLL.cs" />
     <Compile Include="BLL\CrossTalkBLL.cs" />
+    <Compile Include="BLL\CustomerQueueBLL.cs" />
     <Compile Include="BLL\CustomerVehicleBLL.cs" />
     <Compile Include="BLL\NodeFluxBLL.cs" />
     <Compile Include="BLL\PlazaBLL.cs" />
