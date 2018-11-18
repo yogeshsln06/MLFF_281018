@@ -223,6 +223,7 @@
     <Content Include="Images\adminlogin.jpg" />
     <Content Include="Images\chng.png" />
     <Content Include="Images\active_met.png" />
+    <Content Include="Images\ERPlogo-gantry.png" />
     <Content Include="Images\inactive_atcc.png" />
     <Content Include="Images\inactive_cctv.png" />
     <Content Include="Images\inactive_ecb.png" />
