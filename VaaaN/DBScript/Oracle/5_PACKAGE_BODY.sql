@@ -1864,6 +1864,7 @@ AS
                                        P_PLAZA_ID            IN NUMBER,
                                        P_LANE_ID             IN NUMBER,
                                        P_TRANSACTION_ID      IN NUMBER,
+                                       P_VEHICLESPEED         IN DECIMAL,
                                        P_NF_ENTRY_ID_FRONT   IN NUMBER)
    AS
    BEGIN
@@ -1873,6 +1874,16 @@ AS
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
+             
+    IF (P_VEHICLESPEED > 0)
+        THEN
+            UPDATE TBL_TRANSACTION
+            SET    VEHICLESPEED=P_VEHICLESPEED
+            WHERE   TMS_ID = P_TMS_ID
+             AND PLAZA_ID = P_PLAZA_ID
+             AND LANE_ID = P_LANE_ID
+             AND TRANSACTION_ID = P_TRANSACTION_ID;
+        END IF;
    END TRAN_UPDATE_BY_NFP_FRONT;
 
 
@@ -1882,6 +1893,7 @@ AS
                                       P_PLAZA_ID           IN NUMBER,
                                       P_LANE_ID            IN NUMBER,
                                       P_TRANSACTION_ID     IN NUMBER,
+                                      P_VEHICLESPEED       IN DECIMAL,
                                       P_NF_ENTRY_ID_REAR   IN NUMBER)
    AS
    BEGIN
@@ -1891,6 +1903,15 @@ AS
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
+    IF (P_VEHICLESPEED>0)
+        THEN
+            UPDATE TBL_TRANSACTION
+            SET    VEHICLESPEED=P_VEHICLESPEED
+            WHERE     TMS_ID = P_TMS_ID
+             AND PLAZA_ID = P_PLAZA_ID
+             AND LANE_ID = P_LANE_ID
+             AND TRANSACTION_ID = P_TRANSACTION_ID;
+        END IF;
    END TRAN_UPDATE_BY_NFP_REAR;
 
 

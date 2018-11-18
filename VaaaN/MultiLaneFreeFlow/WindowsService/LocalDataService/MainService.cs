@@ -52,7 +52,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
             //DateTime dt = DateTime.ParseExact("13/10/2018 23:24:25.111", "dd/MM/yyyy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
@@ -84,7 +84,7 @@ namespace VaaaN.MLFF.WindowsServices
             try
             {
                 LogMessage("Starting TDM service logger thread...");
-
+                generalFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration.Deserialize();
                 loggerThread = new Thread(new ThreadStart(this.LoggerThreadFunction));
                 loggerThread.IsBackground = true;
                 loggerThread.Start();
@@ -1563,12 +1563,20 @@ namespace VaaaN.MLFF.WindowsServices
 
         public Double CalculateSpeed(DateTime StartTime, DateTime EndTime)
         {
-            int Distance = generalFileConfig.Distance * 1000;
             Double Speed = 0;
-            var time = ((EndTime - StartTime).TotalHours);
-            Speed = Distance / time;
-            return Speed;
 
+            try
+            {
+                int Distance = generalFileConfig.Distance;
+                var time = ((EndTime - StartTime).TotalSeconds);
+                Speed = Distance / time;
+
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Error in Calculate Speed. " + ex.ToString());
+            }
+            return (3.6 * Speed);
         }
 
         #region Service Logger

@@ -494,12 +494,14 @@ AS
                                        P_PLAZA_ID            IN NUMBER,
                                        P_LANE_ID             IN NUMBER,
                                        P_TRANSACTION_ID      IN NUMBER,
+									   P_VEHICLESPEED		 IN DECIMAL,
                                        P_NF_ENTRY_ID_FRONT   IN NUMBER);
 
    PROCEDURE TRAN_UPDATE_BY_NFP_REAR (P_TMS_ID             IN NUMBER,
                                       P_PLAZA_ID           IN NUMBER,
                                       P_LANE_ID            IN NUMBER,
                                       P_TRANSACTION_ID     IN NUMBER,
+									  P_VEHICLESPEED	   IN DECIMAL,
                                       P_NF_ENTRY_ID_REAR   IN NUMBER);
 
    PROCEDURE TRAN_UPDATE (P_TMS_ID                 IN NUMBER,
