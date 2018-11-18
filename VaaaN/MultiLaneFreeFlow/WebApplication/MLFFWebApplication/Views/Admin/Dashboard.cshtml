@@ -1,6 +1,7 @@
-﻿@using System.Data
+﻿
+@using System.Data
 @{
-    ViewBag.Title = "Sucessfull Transaction";
+    ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
 }
 
@@ -10,7 +11,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#tableTransaction').dataTable({
+        $('#tableSucessfullTransaction').dataTable({
             "paging": true,
             "ordering": false,
             "info": true,
@@ -23,20 +24,23 @@
     });
 </script>
 <div class="panel panel-info">
-    <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
         <div class="panel-title new-title">
             Successful Transaction
         </div>
 
     </div>
-    <div class="col-md-12 table-responsive">
-
-
-        <table id="tableTransaction" class="table table-condensed table-striped table-hover table-responsive">
+    <div class="table-responsive">
+        <table id="tableSucessfullTransaction" class="table table-condensed table-striped table-hover">
             <thead>
                 <tr>
-                    <th style="width:20px">
+                    
+                    <th style="width:40px">
                         Transaction Id
+                    </th>
+                    <th style="width:60px">
+                        Transaction Date Time
                     </th>
                     <th style="width:60px">
                         RFID VRN
@@ -67,65 +71,76 @@
                             </div>
                         </div>
                     </th>
+                    <th style="width:60px">
+                        Vehicle Speed
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (DataRow item in Model.Rows)
             {
-                <tr>
-                    <td>
-                        @item["TRANSACTION_ID"].ToString()
-                    </td>
+                    <tr>
+                       
+                        <td>
+                            @item["TRANSACTION_ID"].ToString()
+                        </td>
+                        <td>
+                            @item["TRANSACTION_DATETIME"].ToString()
+                        </td>
+                        <td>
+                            @item["CTP_VRN"].ToString()
+                        </td>
+                        <td>
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    @if (item["FRONT_IMAGE"].ToString() != "")
+                                    {
+                                        string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
+                                        path = path.Replace('/', '^');
+                                        <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                    }
+                                </div>
+                                <div class="col-sm-6">
+                                    @if (item["FRONT_VIDEO_URL"].ToString() != "")
+                                    {
+                                        string path = item["FRONT_VIDEO_URL"].ToString();
+                                        path = path.Replace('/', '^');
+                                        <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    @if (item["REAR_IMAGE"].ToString() != "")
+                                    {
+                                        string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
+                                        path = path.Replace('/', '^');
+                                        <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                    }
+                                </div>
+                                <div class="col-sm-6">
+                                    @if (item["REAR_VIDEO_URL"].ToString() != "")
+                                    {
+                                        string path = item["REAR_VIDEO_URL"].ToString();
+                                        path = path.Replace('/', '^');
+                                        <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                    }
+                                </div>
+                            </div>
 
-                    <td>
-                        @item["CTP_VRN"].ToString()
-                    </td>
-                    <td>
-                        <div class="col-sm-12">
-                            <div class="col-sm-6">
-                                @if (item["FRONT_IMAGE"].ToString() != "")
-                                {
-                                    string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
-                                    path = path.Replace('/', '^');
-                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                                }
-                            </div>
-                            <div class="col-sm-6">
-                                @if (item["FRONT_VIDEO_URL"].ToString() != "")
-                                {
-                                    string path = item["FRONT_VIDEO_URL"].ToString();
-                                    path = path.Replace('/', '^');
-                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
-                                }
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="col-sm-12">
-                            <div class="col-sm-6">
-                                @if (item["REAR_IMAGE"].ToString() != "")
-                                {
-                                    string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
-                                    path = path.Replace('/', '^');
-                            <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
-                                }
-                            </div>
-                            <div class="col-sm-6">
-                                @if (item["REAR_VIDEO_URL"].ToString() != "")
-                                {
-                                    string path = item["REAR_VIDEO_URL"].ToString();
-                                    path = path.Replace('/', '^');
-                            <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
-                                }
-                            </div>
-                        </div>
-
-                    </td>
-                </tr>
-            }
+                        </td>
+                        <td>
+                            @item["VEHICLESPEED"].ToString() Km/h
+                        </td>
+                    </tr>
+                }
             </tbody>
+
         </table>
     </div>
+
     <div class="modal fade" tabindex="-1" id="ImageData"
          data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog modal-lg">
