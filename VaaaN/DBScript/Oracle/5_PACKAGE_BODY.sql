@@ -1,4 +1,4 @@
-/* Formatted on 18/11/2018 11:58:52 AM (QP5 v5.215.12089.38647) */
+/* Formatted on 19/11/2018 4.34.13 PM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -2303,7 +2303,7 @@ AS
        T.AUDIT_DATE,
        T.AUDITED_VEHICLE_CLASS_ID,
        T.AUDITED_VRN,
-	   T.VEHICLESPEED,
+       T.VEHICLESPEED,
        AH.AMOUNT
          
     FROM TBL_TRANSACTION T 
@@ -3751,205 +3751,121 @@ ORDER BY TRANSACTION_ID';
    END JOIN_AUDIT_TRANSACTIONS;
 
 
-   ------------CUSTOMER QUEUE ----------
-
-   PROCEDURE CUSTOMER_QUEUE_INSERT (
+   -----------------------VEHICLE CLASS MAPPING----------------------------
+   PROCEDURE VEHICLE_CLASS_MAPPING_INSERT (
       P_TMS_ID                     IN NUMBER,
-      P_FIRST_NAME                 IN NVARCHAR2,
-      P_LAST_NAME                  IN NVARCHAR2,
-      P_MOB_NUMBER                 IN NVARCHAR2,
-      P_EMAIL_ID                   IN NVARCHAR2,
-      P_DESCRIPTION                IN NVARCHAR2,
-      P_ADDRESS                    IN NVARCHAR2,
-      P_STATUS                     IN NUMBER,
-      P_CUSTOMER_IMAGE_PATH        IN NVARCHAR2,
-      P_SCANNED_DOCS_PATH_1        IN NVARCHAR2,
-      P_SCANNED_DOCS_PATH_2        IN NVARCHAR2,
-      P_SCANNED_DOCS_PATH_3        IN NVARCHAR2,
-      P_SCANNED_DOCS_PATH_4        IN NVARCHAR2,
-      P_VEHICLE_IMAGE_PATH_FRONT   IN NVARCHAR2,
-      P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
-      P_IS_DOC_VERIFIED            IN NUMBER,
+      P_MAPPING_VEHICLE_CLASS_ID   IN NUMBER,
+      P_MLFF_VEHICLE_CLASS_ID      IN NUMBER,
+      P_ANPR_VEHICLE_CLASS_ID      IN NUMBER,
+      P_ANPR_VEHICLE_CLASS_NAME    IN NVARCHAR2,
       P_CREATION_DATE              IN DATE,
-      P_CUSTOMER_RES_ID            IN NUMBER,
-      P_VEHICLE_CERT_ID            IN NUMBER,
-      P_VEHICLE_IMAGE_PATH_SIDE    IN NVARCHAR2)
+      P_TRANSFER_STATUS            IN NUMBER)
    AS
    BEGIN
-      INSERT INTO TBL_CUSTOMER_QUEUE (TMS_ID,
-                                      CUSTOMER_QUEUE_ID,
-                                      FIRST_NAME,
-                                      LAST_NAME,
-                                      MOB_NUMBER,
-                                      EMAIL_ID,
-                                      DESCRIPTION,
-                                      ADDRESS,
-                                      STATUS,
-                                      CUSTOMER_IMAGE_PATH,
-                                      SCANNED_DOCS_PATH_1,
-                                      SCANNED_DOCS_PATH_2,
-                                      SCANNED_DOCS_PATH_3,
-                                      SCANNED_DOCS_PATH_4,
-                                      VEHICLE_IMAGE_PATH_FRONT,
-                                      VEHICLE_IMAGE_PATH_REAR,
-                                      IS_DOC_VERIFIED,
-                                      CREATION_DATE,
-                                      CUSTOMER_RES_ID,
-                                      VEHICLE_CERT_ID,
-                                      VEHICLE_IMAGE_PATH_SIDE)
+      INSERT INTO TBL_VEHICLE_CLASS_MAPPING (TMS_ID,
+                                             MAPPING_VEHICLE_CLASS_ID,
+                                             MLFF_VEHICLE_CLASS_ID,
+                                             ANPR_VEHICLE_CLASS_ID,
+                                             ANPR_VEHICLE_CLASS_NAME,
+                                             CREATION_DATE,
+                                             TRANSFER_STATUS)
            VALUES (P_TMS_ID,
-                   CUSTOMER_QUEUE_SEQ.NEXTVAL,
-                   P_FIRST_NAME,
-                   P_LAST_NAME,
-                   P_MOB_NUMBER,
-                   P_EMAIL_ID,
-                   P_DESCRIPTION,
-                   P_ADDRESS,
-                   P_STATUS,
-                   P_CUSTOMER_IMAGE_PATH,
-                   P_SCANNED_DOCS_PATH_1,
-                   P_SCANNED_DOCS_PATH_2,
-                   P_SCANNED_DOCS_PATH_3,
-                   P_SCANNED_DOCS_PATH_4,
-                   P_VEHICLE_IMAGE_PATH_FRONT,
-                   P_VEHICLE_IMAGE_PATH_REAR,
-                   P_IS_DOC_VERIFIED,
+                   P_MAPPING_VEHICLE_CLASS_ID,
+                   P_MLFF_VEHICLE_CLASS_ID,
+                   P_ANPR_VEHICLE_CLASS_ID,
+                   P_ANPR_VEHICLE_CLASS_NAME,
                    P_CREATION_DATE,
-                   P_CUSTOMER_RES_ID,
-                   P_VEHICLE_CERT_ID,
-                   P_VEHICLE_IMAGE_PATH_SIDE);
-   END CUSTOMER_QUEUE_INSERT;
+                   P_TRANSFER_STATUS);
+   END VEHICLE_CLASS_MAPPING_INSERT;
 
-
-
-   PROCEDURE CUSTOMER_QUEUE_UPDATE (
+   PROCEDURE VEHICLE_CLASS_MAPPING_UPDATE (
       P_TMS_ID                     IN NUMBER,
-      P_CUSTOMER_QUEUE_ID          IN NUMBER,
-      P_FIRST_NAME                 IN NVARCHAR2,
-      P_LAST_NAME                  IN NVARCHAR2,
-      P_MOB_NUMBER                 IN NVARCHAR2,
-      P_EMAIL_ID                   IN NVARCHAR2,
-      P_DESCRIPTION                IN NVARCHAR2,
-      P_ADDRESS                    IN NVARCHAR2,
-      P_STATUS                     IN NUMBER,
-      P_APPOINTMENT_LOCATION       IN NVARCHAR2,
-      P_APPOINTMENT_DATE           IN DATE,
-      P_CUSTOMER_IMAGE_PATH        IN NVARCHAR2,
-      P_SCANNED_DOCS_PATH_1        IN NVARCHAR2,
-      P_SCANNED_DOCS_PATH_2        IN NVARCHAR2,
-      P_SCANNED_DOCS_PATH_3        IN NVARCHAR2,
-      P_SCANNED_DOCS_PATH_4        IN NVARCHAR2,
-      P_VEHICLE_IMAGE_PATH_FRONT   IN NVARCHAR2,
-      P_VEHICLE_IMAGE_PATH_REAR    IN NVARCHAR2,
-      P_IS_DOC_VERIFIED            IN NUMBER,
-      P_MODIFIER_ID                IN NUMBER,
+      P_MAPPING_VEHICLE_CLASS_ID   IN NUMBER,
+      P_MLFF_VEHICLE_CLASS_ID      IN NUMBER,
+      P_ANPR_VEHICLE_CLASS_ID      IN NUMBER,
+      P_ANPR_VEHICLE_CLASS_NAME    IN NVARCHAR2,
+      P_MODIFIED_BY                IN NUMBER,
       P_MODIFICATION_DATE          IN DATE,
-      P_CUSTOMER_RES_ID            IN NUMBER,
-      P_VEHICLE_CERT_ID            IN NUMBER,
-      P_VEHICLE_IMAGE_PATH_SIDE    IN NVARCHAR2)
+      P_TRANSFER_STATUS            IN NUMBER)
    AS
    BEGIN
-      UPDATE TBL_CUSTOMER_QUEUE
-         SET FIRST_NAME = P_FIRST_NAME,
-             LAST_NAME = P_LAST_NAME,
-             MOB_NUMBER = P_MOB_NUMBER,
-             EMAIL_ID = P_EMAIL_ID,
-             DESCRIPTION = P_DESCRIPTION,
-             ADDRESS = P_ADDRESS,
-             STATUS = P_STATUS,
-             APPOINTMENT_LOCATION = P_APPOINTMENT_LOCATION,
-             APPOINTMENT_DATE = P_APPOINTMENT_DATE,
-             CUSTOMER_IMAGE_PATH = P_CUSTOMER_IMAGE_PATH,
-             SCANNED_DOCS_PATH_1 = P_SCANNED_DOCS_PATH_1,
-             SCANNED_DOCS_PATH_2 = P_SCANNED_DOCS_PATH_2,
-             SCANNED_DOCS_PATH_3 = P_SCANNED_DOCS_PATH_3,
-             SCANNED_DOCS_PATH_4 = P_SCANNED_DOCS_PATH_4,
-             VEHICLE_IMAGE_PATH_FRONT = P_VEHICLE_IMAGE_PATH_FRONT,
-             VEHICLE_IMAGE_PATH_REAR = P_VEHICLE_IMAGE_PATH_REAR,
-             IS_DOC_VERIFIED = P_IS_DOC_VERIFIED,
-             MODIFIER_ID = P_MODIFIER_ID,
-             MODIFICATION_DATE = P_MODIFICATION_DATE,
-             CUSTOMER_RES_ID = P_CUSTOMER_RES_ID,
-             VEHICLE_CERT_ID = P_VEHICLE_CERT_ID,
-             VEHICLE_IMAGE_PATH_SIDE = P_VEHICLE_IMAGE_PATH_SIDE
-       WHERE TMS_ID = P_TMS_ID AND CUSTOMER_QUEUE_ID = P_CUSTOMER_QUEUE_ID;
-   END CUSTOMER_QUEUE_UPDATE;
+      UPDATE TBL_VEHICLE_CLASS_MAPPING
+         SET MLFF_VEHICLE_CLASS_ID = P_MLFF_VEHICLE_CLASS_ID,
+             ANPR_VEHICLE_CLASS_ID = P_ANPR_VEHICLE_CLASS_ID,
+             ANPR_VEHICLE_CLASS_NAME = P_ANPR_VEHICLE_CLASS_NAME,
+             MODIFIED_BY = P_MODIFIED_BY,
+             MODIFICATION_DATE = MODIFICATION_DATE,
+             TRANSFER_STATUS = P_TRANSFER_STATUS
+       WHERE     TMS_ID = P_TMS_ID
+             AND MAPPING_VEHICLE_CLASS_ID = P_MAPPING_VEHICLE_CLASS_ID;
+   END VEHICLE_CLASS_MAPPING_UPDATE;
 
-   PROCEDURE CUSTOMER_QUEUE_DELETE (P_TMS_ID              IN NUMBER,
-                                    P_CUSTOMER_QUEUE_ID      NUMBER)
+   PROCEDURE VEHICLE_CLASS_MAPPING_GETALL (CUR_OUT OUT T_CURSOR)
    AS
    BEGIN
-      DELETE TBL_CUSTOMER_QUEUE
-       WHERE TMS_ID = P_TMS_ID AND CUSTOMER_QUEUE_ID = P_CUSTOMER_QUEUE_ID;
-   END CUSTOMER_QUEUE_DELETE;
+      OPEN CUR_OUT FOR
+           SELECT VCM.TMS_ID,
+                  VCM.MAPPING_VEHICLE_CLASS_ID,
+                  VCM.MLFF_VEHICLE_CLASS_ID,
+                   VC.VEHICLE_CLASS_NAME AS MLFF_VEHICLE_CLASS_NAME,
+                  VCM.ANPR_VEHICLE_CLASS_ID,
+                  VCM.ANPR_VEHICLE_CLASS_NAME,
+                  VCM.CREATION_DATE,
+                  VCM.MODIFIED_BY,
+                  VCM.MODIFICATION_DATE,
+                  VCM.TRANSFER_STATUS
+             FROM    TBL_VEHICLE_CLASS_MAPPING VCM
+                  LEFT OUTER JOIN
+                     TBL_VEHICLE_CLASS VC
+                  ON VCM.MLFF_VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+         ORDER BY MAPPING_VEHICLE_CLASS_ID;
+   END VEHICLE_CLASS_MAPPING_GETALL;
 
-   PROCEDURE CUSTOMER_QUEUE_GETALL (CUR_OUT OUT T_CURSOR)
-   IS
+   PROCEDURE VEHICLE_CLASS_MAPPING_GETBYID (
+      P_MAPPING_VEHICLE_CLASS_ID   IN     NUMBER,
+      CUR_OUT                         OUT T_CURSOR)
+   AS
    BEGIN
       OPEN CUR_OUT FOR
-         SELECT CQ.TMS_ID,
-                CQ.CUSTOMER_QUEUE_ID,
-                CQ.FIRST_NAME,
-                CQ.LAST_NAME,
-                CQ.MOB_NUMBER,
-                CQ.EMAIL_ID,
-                CQ.DESCRIPTION,
-                CQ.ADDRESS,
-                CQ.STATUS,
-                CQ.APPOINTMENT_LOCATION,
-                CQ.APPOINTMENT_DATE,
-                CQ.CUSTOMER_IMAGE_PATH,
-                CQ.SCANNED_DOCS_PATH_1,
-                CQ.SCANNED_DOCS_PATH_2,
-                CQ.SCANNED_DOCS_PATH_3,
-                CQ.SCANNED_DOCS_PATH_4,
-                CQ.VEHICLE_IMAGE_PATH_FRONT,
-                CQ.VEHICLE_IMAGE_PATH_REAR,
-                CQ.IS_DOC_VERIFIED,
-                CQ.CREATION_DATE,
-                CQ.MODIFIER_ID,
-                CQ.MODIFICATION_DATE,
-                CQ.CUSTOMER_RES_ID,
-                CQ.VEHICLE_CERT_ID,
-                CQ.VEHICLE_IMAGE_PATH_SIDE
-           FROM TBL_CUSTOMER_QUEUE CQ;
-   END CUSTOMER_QUEUE_GETALL;
+         SELECT VCM.TMS_ID,
+                VCM.MAPPING_VEHICLE_CLASS_ID,
+                VCM.MLFF_VEHICLE_CLASS_ID,
+                VC.VEHICLE_CLASS_NAME AS MLFF_VEHICLE_CLASS_NAME,
+                VCM.ANPR_VEHICLE_CLASS_ID,
+                VCM.ANPR_VEHICLE_CLASS_NAME,
+                VCM.CREATION_DATE,
+                VCM.MODIFIED_BY,
+                VCM.MODIFICATION_DATE,
+                VCM.TRANSFER_STATUS
+           FROM    TBL_VEHICLE_CLASS_MAPPING VCM
+                LEFT OUTER JOIN
+                   TBL_VEHICLE_CLASS VC
+                ON VCM.MLFF_VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+          WHERE MAPPING_VEHICLE_CLASS_ID = P_MAPPING_VEHICLE_CLASS_ID;
+   END VEHICLE_CLASS_MAPPING_GETBYID;
 
-   PROCEDURE CUSTOMER_QUEUE_GETBYID (P_TMS_ID              IN     NUMBER,
-                                     P_CUSTOMER_QUEUE_ID   IN     NUMBER,
-                                     CUR_OUT                  OUT T_CURSOR)
-   IS
+   PROCEDURE VEHICLECLASS_MAPPING_GETBYNAME (
+      P_ANPR_VEHICLE_CLASS_NAME   IN     NVARCHAR2,
+      CUR_OUT                        OUT T_CURSOR)
+   AS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT CQ.TMS_ID,
-                  CQ.CUSTOMER_QUEUE_ID,
-                  CQ.FIRST_NAME,
-                  CQ.LAST_NAME,
-                  CQ.MOB_NUMBER,
-                  CQ.EMAIL_ID,
-                  CQ.DESCRIPTION,
-                  CQ.ADDRESS,
-                  CQ.STATUS,
-                  CQ.APPOINTMENT_LOCATION,
-                  CQ.APPOINTMENT_DATE,
-                  CQ.CUSTOMER_IMAGE_PATH,
-                  CQ.SCANNED_DOCS_PATH_1,
-                  CQ.SCANNED_DOCS_PATH_2,
-                  CQ.SCANNED_DOCS_PATH_3,
-                  CQ.SCANNED_DOCS_PATH_4,
-                  CQ.VEHICLE_IMAGE_PATH_FRONT,
-                  CQ.VEHICLE_IMAGE_PATH_REAR,
-                  CQ.IS_DOC_VERIFIED,
-                  CQ.CREATION_DATE,
-                  CQ.MODIFIER_ID,
-                  CQ.MODIFICATION_DATE,
-                  CQ.CUSTOMER_RES_ID,
-                  CQ.VEHICLE_CERT_ID,
-                  CQ.VEHICLE_IMAGE_PATH_SIDE
-             FROM TBL_CUSTOMER_QUEUE CQ
-            WHERE     CQ.TMS_ID = P_TMS_ID
-                  AND CUSTOMER_QUEUE_ID = P_CUSTOMER_QUEUE_ID
-         ORDER BY CUSTOMER_QUEUE_ID DESC;
-   END CUSTOMER_QUEUE_GETBYID;
+         SELECT VCM.TMS_ID,
+                VCM.MAPPING_VEHICLE_CLASS_ID,
+                VCM.MLFF_VEHICLE_CLASS_ID,
+                VC.VEHICLE_CLASS_NAME AS MLFF_VEHICLE_CLASS_NAME,
+                VCM.ANPR_VEHICLE_CLASS_ID,
+                VCM.ANPR_VEHICLE_CLASS_NAME,
+                VCM.CREATION_DATE,
+                VCM.MODIFIED_BY,
+                VCM.MODIFICATION_DATE,
+                VCM.TRANSFER_STATUS
+           FROM    TBL_VEHICLE_CLASS_MAPPING VCM
+                LEFT OUTER JOIN
+                   TBL_VEHICLE_CLASS VC
+                ON VCM.MLFF_VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+          WHERE LOWER (ANPR_VEHICLE_CLASS_NAME) =
+                   LOWER (P_ANPR_VEHICLE_CLASS_NAME);
+   END VEHICLECLASS_MAPPING_GETBYNAME;
 END MLFF_PACKAGE;
 /
