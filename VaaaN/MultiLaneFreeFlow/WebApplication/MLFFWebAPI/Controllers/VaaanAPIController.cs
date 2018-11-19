@@ -951,7 +951,7 @@ namespace MLFFWebAPI.Controllers
             catch (Exception)
             {
 
-                anprName = string.Empty;
+                anprName = "nodeflux";
             }
 
             return anprName;
