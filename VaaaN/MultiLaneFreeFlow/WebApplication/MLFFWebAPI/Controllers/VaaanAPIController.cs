@@ -20,6 +20,7 @@ using MLFFWebAPI.Models;
 using VaaaN.MLFF.Libraries.CommonLibrary;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using VaaaN.MLFF.Libraries.CommonLibrary.BLL;
 
 namespace MLFFWebAPI.Controllers
 {
@@ -35,7 +36,7 @@ namespace MLFFWebAPI.Controllers
         DataSet ds = new DataSet();
         DataTable dt = new DataTable();
         XmlReader xmlFile;
-
+        string anprName = string.Empty;
 
 
         #endregion
@@ -198,10 +199,13 @@ namespace MLFFWebAPI.Controllers
         #endregion
 
         #region API for ANPR Data
+      
+        #region NodeFlux Data
         [Route("VaaaN/IndonesiaMLFFApi/SendNodefluxEvent")]
         [HttpPost]
         public async Task<HttpResponseMessage> ReciveDatafromNodeflux(NodeFluxPacketJSON objNodeFluxPacketJSON)
         {
+
             try
             {
                 #region Serialize the nodeflux JSON Data
@@ -236,7 +240,7 @@ namespace MLFFWebAPI.Controllers
                 response = Request.CreateResponse(HttpStatusCode.OK);
                 #endregion
             }
-            catch (IOException) 
+            catch (IOException)
             {
                 string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
                 var guid = Guid.NewGuid().ToString();
@@ -249,134 +253,265 @@ namespace MLFFWebAPI.Controllers
                 ExceptionLogging.SendErrorToText(ex);
                 Log("Error in API to save Nodeflux File : " + ex);
             }
-
-            try
+            if (ANPRName().ToLower() == "nodeflux")
             {
-                #region Pass data to CBE Liberrary
-                NodeFluxPacketCBE nodeFluxCBE = new NodeFluxPacketCBE();
-                nodeFluxCBE.EventType = objNodeFluxPacketJSON.Event_Type;
-                nodeFluxCBE.TimeStamp = objNodeFluxPacketJSON.TimeStamp;
-                nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
-                nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
-                nodeFluxCBE.Provider = 1;
-                if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Camera_Position.ToString()))
-                    nodeFluxCBE.CameraPosition = string.Empty;
-                else
-                    nodeFluxCBE.CameraPosition = objNodeFluxPacketJSON.Camera.Camera_Position.ToString();
-
-                nodeFluxCBE.CameraId = objNodeFluxPacketJSON.Camera.Id;
-                nodeFluxCBE.CameraName = objNodeFluxPacketJSON.Camera.Name;
-                if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Address))
-                    nodeFluxCBE.CameraAddress = string.Empty;
-                else
-                    nodeFluxCBE.CameraAddress = objNodeFluxPacketJSON.Camera.Address;
-                if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 2)
+                try
                 {
-                    nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString() + "," + objNodeFluxPacketJSON.Camera.Coordinate[1].ToString();
+                    #region Pass data to CBE Liberrary
+                    NodeFluxPacketCBE nodeFluxCBE = new NodeFluxPacketCBE();
+                    nodeFluxCBE.EventType = objNodeFluxPacketJSON.Event_Type;
+                    nodeFluxCBE.TimeStamp = objNodeFluxPacketJSON.TimeStamp;
+                    nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
+                    nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
+                    nodeFluxCBE.Provider = 1;
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Camera_Position.ToString()))
+                        nodeFluxCBE.CameraPosition = string.Empty;
+                    else
+                        nodeFluxCBE.CameraPosition = objNodeFluxPacketJSON.Camera.Camera_Position.ToString();
+
+                    nodeFluxCBE.CameraId = objNodeFluxPacketJSON.Camera.Id;
+                    nodeFluxCBE.CameraName = objNodeFluxPacketJSON.Camera.Name;
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Address))
+                        nodeFluxCBE.CameraAddress = string.Empty;
+                    else
+                        nodeFluxCBE.CameraAddress = objNodeFluxPacketJSON.Camera.Address;
+                    if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 2)
+                    {
+                        nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString() + "," + objNodeFluxPacketJSON.Camera.Coordinate[1].ToString();
+                    }
+                    else if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 1)
+                    {
+                        nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString();
+                    }
+                    else {
+                        nodeFluxCBE.CamaraCoordinate = string.Empty;
+                    }
+                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
+                    nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
+                    nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
+
+                    #region Convert 64 bit String into PNG Image
+                    filepath = rootpath + @"Thumbnail\Plates\";
+                    if (!Directory.Exists(filepath))
+                    {
+                        Directory.CreateDirectory(filepath);
+                    }
+                    string imgfilepath = string.Empty;
+                    string FileName = string.Empty;
+                    FileName = "VRN_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                    imgfilepath = filepath + FileName;
+                    nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
+                    imgfilepath = string.Empty;
+                    FileName = string.Empty;
+                    filepath = rootpath + @"Thumbnail\Vehicle\";
+                    if (!Directory.Exists(filepath))
+                    {
+                        Directory.CreateDirectory(filepath);
+                    }
+                    FileName = "Vehicle_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                    imgfilepath = filepath + FileName;
+                    nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
+
+                    #endregion
+
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Video_URL))
+                        nodeFluxCBE.VideoURL = string.Empty;
+                    else
+                        nodeFluxCBE.VideoURL = objNodeFluxPacketJSON.Data.Video_URL;
+                    #endregion
+
+                    #region Send data to MSMQ
+                    NodeFluxPacket nfp = new NodeFluxPacket();
+                    nfp.Source = "Source";
+                    nfp.Destination = "Destination";
+                    nfp.Payload = nodeFluxCBE;
+                    nfp.TimeStamp = DateTime.Now;
+
+                    Message m = new Message();
+                    m.Formatter = new BinaryMessageFormatter();
+                    m.Body = nfp;
+                    m.Recoverable = true;
+                    inBoxQueue = Queue.Create(Queue.inBoxQueueName);
+                    inBoxQueue.Send(m);
+                    #endregion
                 }
-                else if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 1)
+                catch (Exception ex)
                 {
-                    nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString();
+
+                    ExceptionLogging.SendErrorToText(ex);
+                    Log("Error in API Nodeflux Send data to MSMQ : " + ex); ;
                 }
-                else {
-                    nodeFluxCBE.CamaraCoordinate = string.Empty;
-                }
-                nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
-                nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
-                nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
-
-                #region Convert 64 bit String into PNG Image
-                filepath = rootpath + @"Thumbnail\Plates\";
-                if (!Directory.Exists(filepath))
-                {
-                    Directory.CreateDirectory(filepath);
-                }
-                //dateTimeFormat24HForFileName
-
-                string imgfilepath = string.Empty;
-                string FileName = string.Empty;
-                FileName = "VRN_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
-                imgfilepath = filepath + FileName;
-                nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
-                imgfilepath = string.Empty;
-                FileName = string.Empty;
-                filepath = rootpath + @"Thumbnail\Vehicle\";
-                if (!Directory.Exists(filepath))
-                {
-                    Directory.CreateDirectory(filepath);
-                }
-                FileName = "Vehicle_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
-                imgfilepath = filepath + FileName;
-                nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
-
-                #endregion
-
-                if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Video_URL))
-                    nodeFluxCBE.VideoURL = string.Empty;
-                else
-                    nodeFluxCBE.VideoURL = objNodeFluxPacketJSON.Data.Video_URL;
-                #endregion
-
-                #region Send data to MSMQ
-                NodeFluxPacket nfp = new NodeFluxPacket();
-                nfp.Source = "Source";
-                nfp.Destination = "Destination";
-                nfp.Payload = nodeFluxCBE;
-                nfp.TimeStamp = DateTime.Now;
-
-                Message m = new Message();
-                m.Formatter = new BinaryMessageFormatter();
-                m.Body = nfp;
-                m.Recoverable = true;
-                inBoxQueue = Queue.Create(Queue.inBoxQueueName);
-                //eventQueue = Queue.Create(Queue.eventQueue);
-                inBoxQueue.Send(m);
-                //eventQueue.Send(m);
-                #endregion
-            }
-            catch (Exception ex)
-            {
-
-                ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API Nodeflux Send data to MSMQ : " + ex); ;
             }
             return response;
         }
+        #endregion
 
+        #region Open ALPR
         [Route("VaaaN/IndonesiaMLFFApi/OpenAlpr")]
         [HttpPost]
-        public HttpResponseMessage OpenAlpr()
+
+        public async Task<HttpResponseMessage> ReciveDatafromOpenAlpr(OpenALPRPacketJSON objOpenALPRPacketJSON)
         {
-            string text = Request.Content.ReadAsStringAsync().Result;
-            #region Create Physical Path to save nodeflux JSON Data as file
-            if (!Directory.Exists(rootpath))
+            try
             {
-                Directory.CreateDirectory(rootpath);
+                #region Serialize the OpenAlpr JSON Data
+                string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
+                await Task.Delay(100);
+                #endregion
+
+                #region Create Physical Path to save OpenAlpr JSON Data as file
+                if (!Directory.Exists(rootpath))
+                {
+                    Directory.CreateDirectory(rootpath);
+                }
+                filepath = rootpath + "OpenAlpr/";
+                if (!Directory.Exists(filepath))
+                {
+                    Directory.CreateDirectory(filepath);
+                }
+                filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Dispose();
+                    File.WriteAllText(filepath, jsonString);
+                }
+                else {
+                    var guid = Guid.NewGuid().ToString();
+                    filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                    File.Create(filepath).Dispose();
+                    File.WriteAllText(filepath, jsonString);
+                }
+
+
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                #endregion
             }
-            filepath = rootpath + "OpenAlpr/";
-            if (!Directory.Exists(filepath))
+            catch (IOException)
             {
-                Directory.CreateDirectory(filepath);
-            }
-            filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
-            if (!File.Exists(filepath))
-            {
-                File.Create(filepath).Dispose();
-                File.WriteAllText(filepath, text);
-            }
-            else {
+                string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
                 var guid = Guid.NewGuid().ToString();
                 filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
                 File.Create(filepath).Dispose();
-                File.WriteAllText(filepath, text);
+                File.WriteAllText(filepath, jsonString);
             }
+            catch (Exception ex)
+            {
+                ExceptionLogging.SendErrorToText(ex);
+                Log("Error in API to save OpenAlpr File : " + ex);
+            }
+            if (ANPRName().ToLower() == "openalpr")
+            {
+                try
+                {
+                    #region Pass data to CBE Liberrary
+                    NodeFluxPacketCBE nodeFluxCBE = new NodeFluxPacketCBE();
+                    nodeFluxCBE.EventType = objOpenALPRPacketJSON.agent_type;
+                    nodeFluxCBE.TimeStamp = Constants.UTCtoDateTime(objOpenALPRPacketJSON.epoch_end);
+                    nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
+                    nodeFluxCBE.LaneId = 0;//objNodeFluxPacketJSON.Camera.Lane_Id;
+                    nodeFluxCBE.Provider = 2;
+                    nodeFluxCBE.CameraPosition = string.Empty;
+                    nodeFluxCBE.CameraId = objOpenALPRPacketJSON.camera_id;
+                    nodeFluxCBE.CameraName = objOpenALPRPacketJSON.web_server_config.camera_label;
+                    nodeFluxCBE.CameraAddress = string.Empty;
+                    nodeFluxCBE.CamaraCoordinate = string.Empty;
+                    nodeFluxCBE.PlateNumber = objOpenALPRPacketJSON.best_plate_number;
+                    nodeFluxCBE.VehicleClassName = VehicleClassForOpenALPR(objOpenALPRPacketJSON);
+                    nodeFluxCBE.VehicleSpeed = 0;
+                    nodeFluxCBE.PlateThumbnail = string.Empty;
+                    nodeFluxCBE.VehicleThumbnail = string.Empty;
+                    nodeFluxCBE.VideoURL = string.Empty;
+                    //#region Convert 64 bit String into PNG Image
+                    //filepath = rootpath + @"Thumbnail\Plates\";
+                    //if (!Directory.Exists(filepath))
+                    //{
+                    //    Directory.CreateDirectory(filepath);
+                    //}
+                    ////dateTimeFormat24HForFileName
 
+                    //string imgfilepath = string.Empty;
+                    //string FileName = string.Empty;
+                    //FileName = "VRN_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                    //imgfilepath = filepath + FileName;
+                    //nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
+                    //imgfilepath = string.Empty;
+                    //FileName = string.Empty;
+                    //filepath = rootpath + @"Thumbnail\Vehicle\";
+                    //if (!Directory.Exists(filepath))
+                    //{
+                    //    Directory.CreateDirectory(filepath);
+                    //}
+                    //FileName = "Vehicle_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                    //imgfilepath = filepath + FileName;
+                    //nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
 
-            response = Request.CreateResponse(HttpStatusCode.OK);
-            #endregion
+                    //#endregion
 
+                    //if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Video_URL))
+                    //    nodeFluxCBE.VideoURL = string.Empty;
+                    //else
+                    //    nodeFluxCBE.VideoURL = objNodeFluxPacketJSON.Data.Video_URL;
+                    #endregion
+
+                    #region Send data to MSMQ
+                    NodeFluxPacket nfp = new NodeFluxPacket();
+                    nfp.Source = "Source";
+                    nfp.Destination = "Destination";
+                    nfp.Payload = nodeFluxCBE;
+                    nfp.TimeStamp = DateTime.Now;
+
+                    Message m = new Message();
+                    m.Formatter = new BinaryMessageFormatter();
+                    m.Body = nfp;
+                    m.Recoverable = true;
+                    inBoxQueue = Queue.Create(Queue.inBoxQueueName);
+                    inBoxQueue.Send(m);
+                    #endregion
+                }
+                catch (Exception ex)
+                {
+
+                    ExceptionLogging.SendErrorToText(ex);
+                    Log("Error in API OpenAlpr Send data to MSMQ : " + ex); ;
+                }
+            }
             return response;
         }
+        #endregion
+
+        //public HttpResponseMessage OpenAlpr()
+        //{
+        //    string text = Request.Content.ReadAsStringAsync().Result;
+        //    #region Create Physical Path to save nodeflux JSON Data as file
+        //    if (!Directory.Exists(rootpath))
+        //    {
+        //        Directory.CreateDirectory(rootpath);
+        //    }
+        //    filepath = rootpath + "OpenAlpr/";
+        //    if (!Directory.Exists(filepath))
+        //    {
+        //        Directory.CreateDirectory(filepath);
+        //    }
+        //    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+        //    if (!File.Exists(filepath))
+        //    {
+        //        File.Create(filepath).Dispose();
+        //        File.WriteAllText(filepath, text);
+        //    }
+        //    else {
+        //        var guid = Guid.NewGuid().ToString();
+        //        filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+        //        File.Create(filepath).Dispose();
+        //        File.WriteAllText(filepath, text);
+        //    }
+
+
+        //    response = Request.CreateResponse(HttpStatusCode.OK);
+        //    #endregion
+
+        //    return response;
+        //}
+
         #endregion
 
         #region API for SEND SMS Data
@@ -788,5 +923,39 @@ namespace MLFFWebAPI.Controllers
 
             return response;
         }
+
+        #region Helper Method
+        public string VehicleClassForOpenALPR(OpenALPRPacketJSON objOpenALPRPacketJSON)
+        {
+            string vehicleClass = string.Empty;
+            VehicleClassMappingCBE vehicleClassCBE = new VehicleClassMappingCBE();
+            VehicleClassMappingCollection vehicleClassMappingCollection = new VehicleClassMappingCollection();
+            List<bodytype> SortedList = objOpenALPRPacketJSON.vehicle.body_type.OrderByDescending(o => o.confidence).ToList();
+            if (SortedList.Count > 0)
+            {
+                vehicleClassCBE.ANPRVehicleClassName = SortedList[0].name;
+                vehicleClassCBE = VehicleClassMappingBLL.GetVehicleClassByANPRName(vehicleClassCBE);
+                if (!string.IsNullOrEmpty(vehicleClassCBE.MLFFVehicleClassName))
+                    vehicleClass = vehicleClassCBE.MLFFVehicleClassName;
+            }
+
+            return vehicleClass;
+        }
+
+        public string ANPRName()
+        {
+            try
+            {
+                anprName = System.Configuration.ConfigurationManager.AppSettings["apiPath"].ToString();
+            }
+            catch (Exception)
+            {
+
+                anprName = string.Empty;
+            }
+
+            return anprName;
+        }
+        #endregion
     }
 }

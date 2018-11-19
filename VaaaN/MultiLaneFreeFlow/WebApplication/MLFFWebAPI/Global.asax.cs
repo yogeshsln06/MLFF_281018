@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using MLFFWebAPI.MessageHandlers;
 
 namespace MLFFWebAPI
 {
@@ -18,6 +19,7 @@ namespace MLFFWebAPI
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //GlobalConfiguration.Configuration.MessageHandlers.Add(new ApiKeyMessageHandler());
         }
     }
 }
