@@ -1336,6 +1336,25 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             service.WaitForStatus(ServiceControllerStatus.Running, timeout);
         }
 
+        public static DateTime UTCtoDateTime(string timestamp)
+        {
+            DateTime dt = DateTime.Now;
+            try
+            {
+                if (!string.IsNullOrEmpty(timestamp))
+                {
+                    double Dtimestamp = Convert.ToDouble(timestamp);
+                    dt = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Dtimestamp / 1000d)).ToLocalTime();
+                   
+                }
+            }
+            catch (Exception)
+            {
+                dt = DateTime.Now;
+            }
+            return dt;
+        }
+
         #endregion
 
         #region Regex

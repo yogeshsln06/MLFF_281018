@@ -387,4 +387,40 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 
         public string Video_URL { get; set; }
     }
+
+    public class OpenALPRPacketJSON
+    {
+        public string epoch_start { get; set; }
+        public string epoch_end { get; set; }
+        public Int32 camera_id { get; set; }
+        public string agent_uid { get; set; }
+        public string company_id { get; set; }
+        public string agent_type { get; set; }
+        public string best_uuid { get; set; }
+        public string best_plate_number { get; set; }
+
+        public vehicleDetails vehicle { get; set; }
+        public web_server_configDetails web_server_config { get; set; }
+        
+
+
+    }
+    
+    
+    public class vehicleDetails
+    {
+        public List<bodytype> body_type { get; set; }
+    }
+
+    public class bodytype
+    {
+        public decimal confidence { get; set; }
+        public string name { get; set; }
+    }
+
+    public class web_server_configDetails
+    {
+        public string agent_label { get; set; }
+        public string camera_label { get; set; }
+    }
 }
