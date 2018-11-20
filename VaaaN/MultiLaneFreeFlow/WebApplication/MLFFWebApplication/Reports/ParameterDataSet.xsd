@@ -12,10 +12,11 @@
   <xs:element name="ParameterDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ParameterDataSet" msprop:Generator_UserDSName="ParameterDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="ParameterData" msprop:Generator_TableClassName="ParameterDataDataTable" msprop:Generator_TableVarName="tableParameterData" msprop:Generator_RowChangedName="ParameterDataRowChanged" msprop:Generator_TablePropName="ParameterData" msprop:Generator_RowDeletingName="ParameterDataRowDeleting" msprop:Generator_RowChangingName="ParameterDataRowChanging" msprop:Generator_RowEvHandlerName="ParameterDataRowChangeEventHandler" msprop:Generator_RowDeletedName="ParameterDataRowDeleted" msprop:Generator_RowClassName="ParameterDataRow" msprop:Generator_UserTableName="ParameterData" msprop:Generator_RowEvArgName="ParameterDataRowChangeEvent">
+        <xs:element name="ParameterData" msprop:Generator_TableClassName="ParameterDataDataTable" msprop:Generator_TableVarName="tableParameterData" msprop:Generator_TablePropName="ParameterData" msprop:Generator_RowDeletingName="ParameterDataRowDeleting" msprop:Generator_RowChangingName="ParameterDataRowChanging" msprop:Generator_RowEvHandlerName="ParameterDataRowChangeEventHandler" msprop:Generator_RowDeletedName="ParameterDataRowDeleted" msprop:Generator_UserTableName="ParameterData" msprop:Generator_RowChangedName="ParameterDataRowChanged" msprop:Generator_RowEvArgName="ParameterDataRowChangeEvent" msprop:Generator_RowClassName="ParameterDataRow">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="StartDate" msprop:Generator_ColumnVarNameInTable="columnStartDate" msprop:Generator_ColumnPropNameInRow="StartDate" msprop:Generator_ColumnPropNameInTable="StartDateColumn" msprop:Generator_UserColumnName="StartDate" type="xs:string" minOccurs="0" />
+              <xs:element name="start_date" msprop:Generator_ColumnVarNameInTable="columnstart_date" msprop:Generator_ColumnPropNameInRow="start_date" msprop:Generator_ColumnPropNameInTable="start_dateColumn" msprop:Generator_UserColumnName="start_date" type="xs:string" minOccurs="0" />
+              <xs:element name="end_date" msprop:Generator_ColumnVarNameInTable="columnend_date" msprop:Generator_ColumnPropNameInRow="end_date" msprop:Generator_ColumnPropNameInTable="end_dateColumn" msprop:Generator_UserColumnName="end_date" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

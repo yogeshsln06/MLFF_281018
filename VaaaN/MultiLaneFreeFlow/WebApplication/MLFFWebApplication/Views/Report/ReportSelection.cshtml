@@ -8,103 +8,97 @@
 <script src="~/js/jquery.datetimepicker.full.min.js"></script>
 <script src="~/js/userValidation.js"></script>
 <script src="~/js/ManualReview.js"></script>
-@using (Html.BeginForm("ReportSelection", "Report", FormMethod.Post))
-{
-    <div class="grid-container">
-        <div class="panel panel-info" style="margin-top:20px">
-            <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
-                <h1 class="panel-title new-title">Report Selection</h1>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <form role="form">
-                            <div class="col-xs-12 well" style="border: 1px solid; box-shadow: 1px 1px 1px 1px #888888;margin-bottom:0%">
-                                <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
-                                        @Html.Label("Select Report:", htmlAttributes: new { @class = "form-label col-md-1 required" })
-                                        <div class="col-md-3">
-                                            @Html.DropDownList("ddlTransactionCategory", (IEnumerable<SelectListItem>)ViewBag.ReportType, new { @class = "form-control" })
-                                        </div>
-                                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "form-label col-md-1" })
-                                        <div class="col-md-3">
-                                            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                                        </div>
-                                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "form-label col-md-1" })
-                                        <div class="col-md-3">
-                                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                                        </div>
+<div class="grid-container">
+    <div class="panel panel-info" style="margin-top:20px">
+        <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
+            <h1 class="panel-title new-title">Report Selection</h1>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form data-toggle="validator" role="form">
+                        <div class="col-xs-12 well" style="border: 1px solid; box-shadow: 1px 1px 1px 1px #888888;margin-bottom:0%">
+                            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
+                                @Html.LabelFor(model => model.ReportCategory, htmlAttributes: new { @class = "form-label col-md-1 required" })
+                                <div class="col-md-3">
+                                    @Html.DropDownListFor(model => model.ReportCategory, (IEnumerable<SelectListItem>)ViewBag.ReportType, new { @class = "form-control" })
+                                </div>
+                                @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "form-label col-md-1" })
+                                <div class="col-md-3">
+                                    @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                </div>
+                                @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "form-label col-md-1" })
+                                <div class="col-md-3">
+                                    @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                 </div>
                             </div>
-                            <div class="form-group col-lg-12" style="margin:0%">
-                                <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px">
-                                    <hr style="margin-left: 0;width:90%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff" />
-                                </div>
-                                <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px;width:5%">
-                                    <label style="padding-top:10px" class="form-label">Filters</label>
-                                </div>
-                                <div class="col-sm-10 col-md-10 col-lg-10" style="padding-left:1px;padding-right:1px;width:85%">
-                                    <hr style="margin-left: 0;  text-align: left;width: 100%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff" />
-                                </div>
+                        </div>
+                        <div class="form-group col-lg-12" style="margin:0%">
+                            <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px">
+                                <hr style="margin-left: 0;width:90%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff" />
                             </div>
-                            <div class="col-xs-12 well" style="border: 1px solid ;box-shadow: 1px 1px 1px 1px #888888">
-                                <div class="form-group col-lg-12" style="margin:.1%">
-                                    <div class="col-md-2">
-                                        <label class="form-label">Gantry: </label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.DropDownList("ddlGantry", (IEnumerable<SelectListItem>)ViewBag.Gantry, new { @class = "form-control" })
-                                    </div>
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">Lajur: </label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.DropDownList("ddlLane", (IEnumerable<SelectListItem>)ViewBag.Lane, new { @class = "form-control" })
-                                    </div>
-                                    <div class="col-md-1"></div>
+                            <div class="col-sm-1 col-md-1 col-lg-1" style="padding-left:1px;padding-right:1px;width:5%">
+                                <label style="padding-top:10px" class="form-label">Filters</label>
+                            </div>
+                            <div class="col-sm-10 col-md-10 col-lg-10" style="padding-left:1px;padding-right:1px;width:85%">
+                                <hr style="margin-left: 0;  text-align: left;width: 100%;border-top: 1px solid #8c8b8b;border-bottom: 1px solid #fff" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 well" style="border: 1px solid ;box-shadow: 1px 1px 1px 1px #888888">
+                            <div class="form-group col-lg-12" style="margin:.1%">
+                                <div class="col-md-2">
+                                    <label class="form-label">Gantry: </label>
                                 </div>
-                                <div class="form-group col-lg-12" style="margin:.1%">
-                                    <div class="col-md-2">
-                                        <label class="form-label">Vehicle Class: </label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.DropDownList("ddlVehicleClass", (IEnumerable<SelectListItem>)ViewBag.VehicleClass, new { @class = "form-control" })
-                                    </div>
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-2">
-                                        <label class="form-label">Trans Category: </label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.DropDownList("ddlTransactionCategory", (IEnumerable<SelectListItem>)ViewBag.TransactionCategory, new { @class = "form-control" })
-                                    </div>
-                                    <div class="col-md-1"></div>
+                                <div class="col-md-3">
+                                    @Html.DropDownList("ddlGantry", (IEnumerable<SelectListItem>)ViewBag.Gantry, new { @class = "form-control" })
                                 </div>
-
+                                <div class="col-md-1"></div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Lajur: </label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.DropDownList("ddlLane", (IEnumerable<SelectListItem>)ViewBag.Lane, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                            <div class="form-group col-lg-12" style="margin:.1%">
+                                <div class="col-md-2">
+                                    <label class="form-label">Vehicle Class: </label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.DropDownList("ddlVehicleClass", (IEnumerable<SelectListItem>)ViewBag.VehicleClass, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-1"></div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Trans Category: </label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.DropDownList("ddlTransactionCategory", (IEnumerable<SelectListItem>)ViewBag.TransactionCategory, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-1"></div>
                             </div>
 
-                            <div class="clearfix"></div>
-                            <div class="clearfix"></div>
-                            <div class="col-xs-12 text-center" style="margin:1%">
-                                <button type="button" id="GenerateReport" class="btn btn-primary ">Generate Report</button>
-                            </div>
-
-                        </form>
+                        </div>
                         <div class="clearfix"></div>
-                    </div>
-                </div>
+                        <div class="col-xs-12 text-center" style="margin:1%">
+                            <button type="button" id="GenerateReport" class="btn btn-primary ">Generate Report</button>
+                        </div>
 
-            </div>
-            <div id="divReportSection" style="display:none;">
-                <div class="panel panel-primary" style="margin-bottom:0px">
-                    <div class="panel-heading">
-                        <h1 class="panel-title text-center">Report</h1>
-                    </div>
+                    </form>
+                    <div class="clearfix"></div>
                 </div>
-                @*<iframe id="rptPMSReport" src="~/Reports/ReportViewer.aspx" height="600" width="800"></iframe>*@
             </div>
 
         </div>
+        <div id="divReportSection" style="display:none;">
+            <div class="panel panel-primary" style="margin-bottom:0px">
+                <div class="panel-heading">
+                    <h1 class="panel-title text-center">Report</h1>
+                </div>
+            </div>
+        </div>
+
     </div>
-}
+</div>
 
 

@@ -20,17 +20,17 @@ namespace VaaaN.MLFF.WebApplication.Reports {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("ParameterDataSet")]
+    [global::System.Xml.Serialization.XmlRootAttribute("ReportDataSet")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class ParameterDataSet : global::System.Data.DataSet {
+    public partial class ReportDataSet : global::System.Data.DataSet {
         
-        private ParameterDataDataTable tableParameterData;
+        private TBL_TRANSACTIONDataTable tableTBL_TRANSACTION;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public ParameterDataSet() {
+        public ReportDataSet() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -41,7 +41,7 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected ParameterDataSet(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected ReportDataSet(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -54,8 +54,8 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["ParameterData"] != null)) {
-                    base.Tables.Add(new ParameterDataDataTable(ds.Tables["ParameterData"]));
+                if ((ds.Tables["TBL_TRANSACTION"] != null)) {
+                    base.Tables.Add(new TBL_TRANSACTIONDataTable(ds.Tables["TBL_TRANSACTION"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -79,9 +79,9 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public ParameterDataDataTable ParameterData {
+        public TBL_TRANSACTIONDataTable TBL_TRANSACTION {
             get {
-                return this.tableParameterData;
+                return this.tableTBL_TRANSACTION;
             }
         }
         
@@ -127,7 +127,7 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            ParameterDataSet cln = ((ParameterDataSet)(base.Clone()));
+            ReportDataSet cln = ((ReportDataSet)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -152,8 +152,8 @@ namespace VaaaN.MLFF.WebApplication.Reports {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["ParameterData"] != null)) {
-                    base.Tables.Add(new ParameterDataDataTable(ds.Tables["ParameterData"]));
+                if ((ds.Tables["TBL_TRANSACTION"] != null)) {
+                    base.Tables.Add(new TBL_TRANSACTIONDataTable(ds.Tables["TBL_TRANSACTION"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -188,10 +188,10 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tableParameterData = ((ParameterDataDataTable)(base.Tables["ParameterData"]));
+            this.tableTBL_TRANSACTION = ((TBL_TRANSACTIONDataTable)(base.Tables["TBL_TRANSACTION"]));
             if ((initTable == true)) {
-                if ((this.tableParameterData != null)) {
-                    this.tableParameterData.InitVars();
+                if ((this.tableTBL_TRANSACTION != null)) {
+                    this.tableTBL_TRANSACTION.InitVars();
                 }
             }
         }
@@ -199,18 +199,18 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitClass() {
-            this.DataSetName = "ParameterDataSet";
+            this.DataSetName = "ReportDataSet";
             this.Prefix = "";
-            this.Namespace = "http://tempuri.org/ParameterDataSet.xsd";
+            this.Namespace = "http://tempuri.org/ReportDataSet.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableParameterData = new ParameterDataDataTable();
-            base.Tables.Add(this.tableParameterData);
+            this.tableTBL_TRANSACTION = new TBL_TRANSACTIONDataTable();
+            base.Tables.Add(this.tableTBL_TRANSACTION);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializeParameterData() {
+        private bool ShouldSerializeTBL_TRANSACTION() {
             return false;
         }
         
@@ -225,7 +225,7 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            ParameterDataSet ds = new ParameterDataSet();
+            ReportDataSet ds = new ReportDataSet();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -270,23 +270,35 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void ParameterDataRowChangeEventHandler(object sender, ParameterDataRowChangeEvent e);
+        public delegate void TBL_TRANSACTIONRowChangeEventHandler(object sender, TBL_TRANSACTIONRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class ParameterDataDataTable : global::System.Data.TypedTableBase<ParameterDataRow> {
+        public partial class TBL_TRANSACTIONDataTable : global::System.Data.TypedTableBase<TBL_TRANSACTIONRow> {
             
-            private global::System.Data.DataColumn columnstart_date;
+            private global::System.Data.DataColumn columnTRANSACTION_ID;
             
-            private global::System.Data.DataColumn columnend_date;
+            private global::System.Data.DataColumn columnTRANSACTION_DATETIME;
+            
+            private global::System.Data.DataColumn columnLANE_ID;
+            
+            private global::System.Data.DataColumn columnPLAZA_ID;
+            
+            private global::System.Data.DataColumn columnCTP_VRN;
+            
+            private global::System.Data.DataColumn columnCTP_VEHICLE_CLASS_NAME;
+            
+            private global::System.Data.DataColumn columnVEHICLESPEED;
+            
+            private global::System.Data.DataColumn columnIS_BALANCE_UPDATED;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ParameterDataDataTable() {
-                this.TableName = "ParameterData";
+            public TBL_TRANSACTIONDataTable() {
+                this.TableName = "TBL_TRANSACTION";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -294,7 +306,7 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal ParameterDataDataTable(global::System.Data.DataTable table) {
+            internal TBL_TRANSACTIONDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -311,24 +323,72 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected ParameterDataDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected TBL_TRANSACTIONDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn start_dateColumn {
+            public global::System.Data.DataColumn TRANSACTION_IDColumn {
                 get {
-                    return this.columnstart_date;
+                    return this.columnTRANSACTION_ID;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn end_dateColumn {
+            public global::System.Data.DataColumn TRANSACTION_DATETIMEColumn {
                 get {
-                    return this.columnend_date;
+                    return this.columnTRANSACTION_DATETIME;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn LANE_IDColumn {
+                get {
+                    return this.columnLANE_ID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PLAZA_IDColumn {
+                get {
+                    return this.columnPLAZA_ID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CTP_VRNColumn {
+                get {
+                    return this.columnCTP_VRN;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CTP_VEHICLE_CLASS_NAMEColumn {
+                get {
+                    return this.columnCTP_VEHICLE_CLASS_NAME;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn VEHICLESPEEDColumn {
+                get {
+                    return this.columnVEHICLESPEED;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn IS_BALANCE_UPDATEDColumn {
+                get {
+                    return this.columnIS_BALANCE_UPDATED;
                 }
             }
             
@@ -343,46 +403,52 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ParameterDataRow this[int index] {
+            public TBL_TRANSACTIONRow this[int index] {
                 get {
-                    return ((ParameterDataRow)(this.Rows[index]));
+                    return ((TBL_TRANSACTIONRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event ParameterDataRowChangeEventHandler ParameterDataRowChanging;
+            public event TBL_TRANSACTIONRowChangeEventHandler TBL_TRANSACTIONRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event ParameterDataRowChangeEventHandler ParameterDataRowChanged;
+            public event TBL_TRANSACTIONRowChangeEventHandler TBL_TRANSACTIONRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event ParameterDataRowChangeEventHandler ParameterDataRowDeleting;
+            public event TBL_TRANSACTIONRowChangeEventHandler TBL_TRANSACTIONRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event ParameterDataRowChangeEventHandler ParameterDataRowDeleted;
+            public event TBL_TRANSACTIONRowChangeEventHandler TBL_TRANSACTIONRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void AddParameterDataRow(ParameterDataRow row) {
+            public void AddTBL_TRANSACTIONRow(TBL_TRANSACTIONRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ParameterDataRow AddParameterDataRow(string start_date, string end_date) {
-                ParameterDataRow rowParameterDataRow = ((ParameterDataRow)(this.NewRow()));
+            public TBL_TRANSACTIONRow AddTBL_TRANSACTIONRow(string TRANSACTION_ID, string TRANSACTION_DATETIME, string LANE_ID, string PLAZA_ID, string CTP_VRN, string CTP_VEHICLE_CLASS_NAME, string VEHICLESPEED, string IS_BALANCE_UPDATED) {
+                TBL_TRANSACTIONRow rowTBL_TRANSACTIONRow = ((TBL_TRANSACTIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        start_date,
-                        end_date};
-                rowParameterDataRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowParameterDataRow);
-                return rowParameterDataRow;
+                        TRANSACTION_ID,
+                        TRANSACTION_DATETIME,
+                        LANE_ID,
+                        PLAZA_ID,
+                        CTP_VRN,
+                        CTP_VEHICLE_CLASS_NAME,
+                        VEHICLESPEED,
+                        IS_BALANCE_UPDATED};
+                rowTBL_TRANSACTIONRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowTBL_TRANSACTIONRow);
+                return rowTBL_TRANSACTIONRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                ParameterDataDataTable cln = ((ParameterDataDataTable)(base.Clone()));
+                TBL_TRANSACTIONDataTable cln = ((TBL_TRANSACTIONDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -390,49 +456,67 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new ParameterDataDataTable();
+                return new TBL_TRANSACTIONDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columnstart_date = base.Columns["start_date"];
-                this.columnend_date = base.Columns["end_date"];
+                this.columnTRANSACTION_ID = base.Columns["TRANSACTION_ID"];
+                this.columnTRANSACTION_DATETIME = base.Columns["TRANSACTION_DATETIME"];
+                this.columnLANE_ID = base.Columns["LANE_ID"];
+                this.columnPLAZA_ID = base.Columns["PLAZA_ID"];
+                this.columnCTP_VRN = base.Columns["CTP_VRN"];
+                this.columnCTP_VEHICLE_CLASS_NAME = base.Columns["CTP_VEHICLE_CLASS_NAME"];
+                this.columnVEHICLESPEED = base.Columns["VEHICLESPEED"];
+                this.columnIS_BALANCE_UPDATED = base.Columns["IS_BALANCE_UPDATED"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columnstart_date = new global::System.Data.DataColumn("start_date", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnstart_date);
-                this.columnend_date = new global::System.Data.DataColumn("end_date", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnend_date);
+                this.columnTRANSACTION_ID = new global::System.Data.DataColumn("TRANSACTION_ID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTRANSACTION_ID);
+                this.columnTRANSACTION_DATETIME = new global::System.Data.DataColumn("TRANSACTION_DATETIME", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTRANSACTION_DATETIME);
+                this.columnLANE_ID = new global::System.Data.DataColumn("LANE_ID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLANE_ID);
+                this.columnPLAZA_ID = new global::System.Data.DataColumn("PLAZA_ID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPLAZA_ID);
+                this.columnCTP_VRN = new global::System.Data.DataColumn("CTP_VRN", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCTP_VRN);
+                this.columnCTP_VEHICLE_CLASS_NAME = new global::System.Data.DataColumn("CTP_VEHICLE_CLASS_NAME", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCTP_VEHICLE_CLASS_NAME);
+                this.columnVEHICLESPEED = new global::System.Data.DataColumn("VEHICLESPEED", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnVEHICLESPEED);
+                this.columnIS_BALANCE_UPDATED = new global::System.Data.DataColumn("IS_BALANCE_UPDATED", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIS_BALANCE_UPDATED);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ParameterDataRow NewParameterDataRow() {
-                return ((ParameterDataRow)(this.NewRow()));
+            public TBL_TRANSACTIONRow NewTBL_TRANSACTIONRow() {
+                return ((TBL_TRANSACTIONRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new ParameterDataRow(builder);
+                return new TBL_TRANSACTIONRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(ParameterDataRow);
+                return typeof(TBL_TRANSACTIONRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.ParameterDataRowChanged != null)) {
-                    this.ParameterDataRowChanged(this, new ParameterDataRowChangeEvent(((ParameterDataRow)(e.Row)), e.Action));
+                if ((this.TBL_TRANSACTIONRowChanged != null)) {
+                    this.TBL_TRANSACTIONRowChanged(this, new TBL_TRANSACTIONRowChangeEvent(((TBL_TRANSACTIONRow)(e.Row)), e.Action));
                 }
             }
             
@@ -440,8 +524,8 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.ParameterDataRowChanging != null)) {
-                    this.ParameterDataRowChanging(this, new ParameterDataRowChangeEvent(((ParameterDataRow)(e.Row)), e.Action));
+                if ((this.TBL_TRANSACTIONRowChanging != null)) {
+                    this.TBL_TRANSACTIONRowChanging(this, new TBL_TRANSACTIONRowChangeEvent(((TBL_TRANSACTIONRow)(e.Row)), e.Action));
                 }
             }
             
@@ -449,8 +533,8 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.ParameterDataRowDeleted != null)) {
-                    this.ParameterDataRowDeleted(this, new ParameterDataRowChangeEvent(((ParameterDataRow)(e.Row)), e.Action));
+                if ((this.TBL_TRANSACTIONRowDeleted != null)) {
+                    this.TBL_TRANSACTIONRowDeleted(this, new TBL_TRANSACTIONRowChangeEvent(((TBL_TRANSACTIONRow)(e.Row)), e.Action));
                 }
             }
             
@@ -458,14 +542,14 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.ParameterDataRowDeleting != null)) {
-                    this.ParameterDataRowDeleting(this, new ParameterDataRowChangeEvent(((ParameterDataRow)(e.Row)), e.Action));
+                if ((this.TBL_TRANSACTIONRowDeleting != null)) {
+                    this.TBL_TRANSACTIONRowDeleting(this, new TBL_TRANSACTIONRowChangeEvent(((TBL_TRANSACTIONRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void RemoveParameterDataRow(ParameterDataRow row) {
+            public void RemoveTBL_TRANSACTIONRow(TBL_TRANSACTIONRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -474,7 +558,7 @@ namespace VaaaN.MLFF.WebApplication.Reports {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                ParameterDataSet ds = new ParameterDataSet();
+                ReportDataSet ds = new ReportDataSet();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -492,7 +576,7 @@ namespace VaaaN.MLFF.WebApplication.Reports {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "ParameterDataDataTable";
+                attribute2.FixedValue = "TBL_TRANSACTIONDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -536,71 +620,241 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class ParameterDataRow : global::System.Data.DataRow {
+        public partial class TBL_TRANSACTIONRow : global::System.Data.DataRow {
             
-            private ParameterDataDataTable tableParameterData;
+            private TBL_TRANSACTIONDataTable tableTBL_TRANSACTION;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal ParameterDataRow(global::System.Data.DataRowBuilder rb) : 
+            internal TBL_TRANSACTIONRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableParameterData = ((ParameterDataDataTable)(this.Table));
+                this.tableTBL_TRANSACTION = ((TBL_TRANSACTIONDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string start_date {
+            public string TRANSACTION_ID {
                 get {
                     try {
-                        return ((string)(this[this.tableParameterData.start_dateColumn]));
+                        return ((string)(this[this.tableTBL_TRANSACTION.TRANSACTION_IDColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'start_date\' in table \'ParameterData\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'TRANSACTION_ID\' in table \'TBL_TRANSACTION\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableParameterData.start_dateColumn] = value;
+                    this[this.tableTBL_TRANSACTION.TRANSACTION_IDColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string end_date {
+            public string TRANSACTION_DATETIME {
                 get {
                     try {
-                        return ((string)(this[this.tableParameterData.end_dateColumn]));
+                        return ((string)(this[this.tableTBL_TRANSACTION.TRANSACTION_DATETIMEColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'end_date\' in table \'ParameterData\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'TRANSACTION_DATETIME\' in table \'TBL_TRANSACTION\' is DBNull." +
+                                "", e);
                     }
                 }
                 set {
-                    this[this.tableParameterData.end_dateColumn] = value;
+                    this[this.tableTBL_TRANSACTION.TRANSACTION_DATETIMEColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool Isstart_dateNull() {
-                return this.IsNull(this.tableParameterData.start_dateColumn);
+            public string LANE_ID {
+                get {
+                    try {
+                        return ((string)(this[this.tableTBL_TRANSACTION.LANE_IDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'LANE_ID\' in table \'TBL_TRANSACTION\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTBL_TRANSACTION.LANE_IDColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Setstart_dateNull() {
-                this[this.tableParameterData.start_dateColumn] = global::System.Convert.DBNull;
+            public string PLAZA_ID {
+                get {
+                    try {
+                        return ((string)(this[this.tableTBL_TRANSACTION.PLAZA_IDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PLAZA_ID\' in table \'TBL_TRANSACTION\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTBL_TRANSACTION.PLAZA_IDColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool Isend_dateNull() {
-                return this.IsNull(this.tableParameterData.end_dateColumn);
+            public string CTP_VRN {
+                get {
+                    try {
+                        return ((string)(this[this.tableTBL_TRANSACTION.CTP_VRNColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CTP_VRN\' in table \'TBL_TRANSACTION\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTBL_TRANSACTION.CTP_VRNColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Setend_dateNull() {
-                this[this.tableParameterData.end_dateColumn] = global::System.Convert.DBNull;
+            public string CTP_VEHICLE_CLASS_NAME {
+                get {
+                    try {
+                        return ((string)(this[this.tableTBL_TRANSACTION.CTP_VEHICLE_CLASS_NAMEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CTP_VEHICLE_CLASS_NAME\' in table \'TBL_TRANSACTION\' is DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableTBL_TRANSACTION.CTP_VEHICLE_CLASS_NAMEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string VEHICLESPEED {
+                get {
+                    try {
+                        return ((string)(this[this.tableTBL_TRANSACTION.VEHICLESPEEDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'VEHICLESPEED\' in table \'TBL_TRANSACTION\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTBL_TRANSACTION.VEHICLESPEEDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string IS_BALANCE_UPDATED {
+                get {
+                    try {
+                        return ((string)(this[this.tableTBL_TRANSACTION.IS_BALANCE_UPDATEDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IS_BALANCE_UPDATED\' in table \'TBL_TRANSACTION\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTBL_TRANSACTION.IS_BALANCE_UPDATEDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTRANSACTION_IDNull() {
+                return this.IsNull(this.tableTBL_TRANSACTION.TRANSACTION_IDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTRANSACTION_IDNull() {
+                this[this.tableTBL_TRANSACTION.TRANSACTION_IDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTRANSACTION_DATETIMENull() {
+                return this.IsNull(this.tableTBL_TRANSACTION.TRANSACTION_DATETIMEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTRANSACTION_DATETIMENull() {
+                this[this.tableTBL_TRANSACTION.TRANSACTION_DATETIMEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsLANE_IDNull() {
+                return this.IsNull(this.tableTBL_TRANSACTION.LANE_IDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetLANE_IDNull() {
+                this[this.tableTBL_TRANSACTION.LANE_IDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPLAZA_IDNull() {
+                return this.IsNull(this.tableTBL_TRANSACTION.PLAZA_IDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPLAZA_IDNull() {
+                this[this.tableTBL_TRANSACTION.PLAZA_IDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCTP_VRNNull() {
+                return this.IsNull(this.tableTBL_TRANSACTION.CTP_VRNColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCTP_VRNNull() {
+                this[this.tableTBL_TRANSACTION.CTP_VRNColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCTP_VEHICLE_CLASS_NAMENull() {
+                return this.IsNull(this.tableTBL_TRANSACTION.CTP_VEHICLE_CLASS_NAMEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCTP_VEHICLE_CLASS_NAMENull() {
+                this[this.tableTBL_TRANSACTION.CTP_VEHICLE_CLASS_NAMEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsVEHICLESPEEDNull() {
+                return this.IsNull(this.tableTBL_TRANSACTION.VEHICLESPEEDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetVEHICLESPEEDNull() {
+                this[this.tableTBL_TRANSACTION.VEHICLESPEEDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsIS_BALANCE_UPDATEDNull() {
+                return this.IsNull(this.tableTBL_TRANSACTION.IS_BALANCE_UPDATEDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetIS_BALANCE_UPDATEDNull() {
+                this[this.tableTBL_TRANSACTION.IS_BALANCE_UPDATEDColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -608,22 +862,22 @@ namespace VaaaN.MLFF.WebApplication.Reports {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class ParameterDataRowChangeEvent : global::System.EventArgs {
+        public class TBL_TRANSACTIONRowChangeEvent : global::System.EventArgs {
             
-            private ParameterDataRow eventRow;
+            private TBL_TRANSACTIONRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ParameterDataRowChangeEvent(ParameterDataRow row, global::System.Data.DataRowAction action) {
+            public TBL_TRANSACTIONRowChangeEvent(TBL_TRANSACTIONRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ParameterDataRow Row {
+            public TBL_TRANSACTIONRow Row {
                 get {
                     return this.eventRow;
                 }

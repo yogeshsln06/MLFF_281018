@@ -99,17 +99,18 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             return View();
         }
 
-        public JsonResult GenerateReport(string startDate, string endDate, string rptname)
+        [HttpPost]
+        public JsonResult GenerateReport(VaaaN.MLFF.Libraries.CommonLibrary.CBE.ViewTransactionCBE objViewTransactionCBE)
         {
-            JsonResult result = new JsonResult();
 
+            JsonResult result = new JsonResult();
             Session["startDate"] = null;
             Session["endDate"] = null;
             Session["rptname"] = null;
 
-            Session["startDate"] = startDate;
-            Session["endDate"] = endDate;
-            Session["rptname"] = rptname;
+            Session["startDate"] = objViewTransactionCBE.StartDate;
+            Session["endDate"] = objViewTransactionCBE.EndDate;
+            Session["rptname"] = objViewTransactionCBE.ReportCategory;
 
             result.Data = "saved";
 
@@ -141,7 +142,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         #region Helper Method
 
 
-      
+
         #endregion
 
     }

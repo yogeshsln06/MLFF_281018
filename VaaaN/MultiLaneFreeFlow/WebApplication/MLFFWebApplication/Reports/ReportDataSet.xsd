@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReportDataSet" targetNamespace="http://tempuri.org/ReportDataSet.xsd" xmlns:mstns="http://tempuri.org/ReportDataSet.xsd" xmlns="http://tempuri.org/ReportDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReportDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ReportDataSet" msprop:Generator_UserDSName="ReportDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="TBL_TRANSACTION" msprop:Generator_TableClassName="TBL_TRANSACTIONDataTable" msprop:Generator_TableVarName="tableTBL_TRANSACTION" msprop:Generator_RowChangedName="TBL_TRANSACTIONRowChanged" msprop:Generator_TablePropName="TBL_TRANSACTION" msprop:Generator_RowDeletingName="TBL_TRANSACTIONRowDeleting" msprop:Generator_RowChangingName="TBL_TRANSACTIONRowChanging" msprop:Generator_RowEvHandlerName="TBL_TRANSACTIONRowChangeEventHandler" msprop:Generator_RowDeletedName="TBL_TRANSACTIONRowDeleted" msprop:Generator_RowClassName="TBL_TRANSACTIONRow" msprop:Generator_UserTableName="TBL_TRANSACTION" msprop:Generator_RowEvArgName="TBL_TRANSACTIONRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TRANSACTION_ID" msprop:Generator_ColumnVarNameInTable="columnTRANSACTION_ID" msprop:Generator_ColumnPropNameInRow="TRANSACTION_ID" msprop:Generator_ColumnPropNameInTable="TRANSACTION_IDColumn" msprop:Generator_UserColumnName="TRANSACTION_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="TRANSACTION_DATETIME" msprop:Generator_ColumnVarNameInTable="columnTRANSACTION_DATETIME" msprop:Generator_ColumnPropNameInRow="TRANSACTION_DATETIME" msprop:Generator_ColumnPropNameInTable="TRANSACTION_DATETIMEColumn" msprop:Generator_UserColumnName="TRANSACTION_DATETIME" type="xs:string" minOccurs="0" />
+              <xs:element name="LANE_ID" msprop:Generator_ColumnVarNameInTable="columnLANE_ID" msprop:Generator_ColumnPropNameInRow="LANE_ID" msprop:Generator_ColumnPropNameInTable="LANE_IDColumn" msprop:Generator_UserColumnName="LANE_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="PLAZA_ID" msprop:Generator_ColumnVarNameInTable="columnPLAZA_ID" msprop:Generator_ColumnPropNameInRow="PLAZA_ID" msprop:Generator_ColumnPropNameInTable="PLAZA_IDColumn" msprop:Generator_UserColumnName="PLAZA_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="CTP_VRN" msprop:Generator_ColumnVarNameInTable="columnCTP_VRN" msprop:Generator_ColumnPropNameInRow="CTP_VRN" msprop:Generator_ColumnPropNameInTable="CTP_VRNColumn" msprop:Generator_UserColumnName="CTP_VRN" type="xs:string" minOccurs="0" />
+              <xs:element name="CTP_VEHICLE_CLASS_NAME" msprop:Generator_ColumnVarNameInTable="columnCTP_VEHICLE_CLASS_NAME" msprop:Generator_ColumnPropNameInRow="CTP_VEHICLE_CLASS_NAME" msprop:Generator_ColumnPropNameInTable="CTP_VEHICLE_CLASS_NAMEColumn" msprop:Generator_UserColumnName="CTP_VEHICLE_CLASS_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="VEHICLESPEED" msprop:Generator_ColumnVarNameInTable="columnVEHICLESPEED" msprop:Generator_ColumnPropNameInRow="VEHICLESPEED" msprop:Generator_ColumnPropNameInTable="VEHICLESPEEDColumn" msprop:Generator_UserColumnName="VEHICLESPEED" type="xs:string" minOccurs="0" />
+              <xs:element name="IS_BALANCE_UPDATED" msprop:Generator_ColumnVarNameInTable="columnIS_BALANCE_UPDATED" msprop:Generator_ColumnPropNameInRow="IS_BALANCE_UPDATED" msprop:Generator_ColumnPropNameInTable="IS_BALANCE_UPDATEDColumn" msprop:Generator_UserColumnName="IS_BALANCE_UPDATED" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

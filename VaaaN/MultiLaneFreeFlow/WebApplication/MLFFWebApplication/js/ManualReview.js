@@ -234,25 +234,34 @@ function imageclose() {
 }
 
 function GenerateReport() {
-    //if (!validate()) {
-    //    return false;
-    //}
-    var rptname = $("#ddlTransactionCategory").val();
-
+    if ($("#ReportCategory").val() == 0) {
+        alert('Report must be selected');
+        return false;
+    }
+    var Inputdata = {
+        StartDate: $("#StartDate").val(),
+        EndDate: $("#EndDate").val(),
+        ReportCategory: $("#ReportCategory").val(),
+    }
+    $('#loader').show();
     $.ajax({
-        type: 'POST',
+        type: "POST",
         url: '../Report/GenerateReport',
-        dataType: 'json',
-        data: { startDate: $("#StartDate").val(), endDate: $("#EndDate").val(), rptname: "Sample Report" },
-        success: function (result) {
-            //location.href = "@Url.Action("ReportPage", "Report")";
+        dataType: "JSON",
+        async: true,
+        data: JSON.stringify(Inputdata),
+        contentType: "application/json; charset=utf-8",
+        success: function (JsonfilterData) {
+            $('#loader').hide();
             location.href = "../Report/ReportPage";
 
         },
         error: function (ex) {
+            $('#loader').hide();
             alert('Unable to generate report ' + ex)
 
         }
+
     });
 }
 

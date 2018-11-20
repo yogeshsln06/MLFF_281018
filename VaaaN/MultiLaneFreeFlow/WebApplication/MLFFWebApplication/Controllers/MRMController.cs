@@ -350,7 +350,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 //Return No Transaction
             }
             //Case 2 Cross Talk entry Id Exists and Nodeflux Front Entry Id Exists and Nodeflux Rear Entry Id not Exists
-            if (ctEntryId != 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+            else if (ctEntryId != 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
             {
                 strQuery += " AND T.NF_ENTRY_ID_REAR IS NOT NULL";
             }
@@ -364,20 +364,20 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             {
                 strQuery += " AND (T.NF_ENTRY_ID_FRONT IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL)";
             }
-            //Case 7 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id Exists
-            else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+            //Case 5 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id Exists
+            else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId != 0)
             {
                 strQuery += " AND T.CT_ENTRY_ID IS NOT NULL ";
             }
-            //Case 8 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id NOT Exists
+            //Case 6 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id NOT Exists
             else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
             {
                 strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL) ";
             }
-            //Case 9 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Not Exists and Nodeflux Rear Entry Id Exists
+            //Case 7 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Not Exists and Nodeflux Rear Entry Id Exists
             else if (ctEntryId == 0 && nffrontEntryId == 0 && nfRearEntryId != 0)
             {
-                strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL) ";
+                strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_FRONT IS NOT NULL) ";
             }
 
             DataTable dt = new DataTable();

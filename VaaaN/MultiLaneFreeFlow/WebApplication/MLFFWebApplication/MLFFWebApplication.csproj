@@ -254,18 +254,6 @@
     <Content Include="js\Login.js" />
     <Content Include="js\ManualReview.js" />
     <Content Include="js\userValidation.js" />
-    <Content Include="Reports\DataSetCommon.xsc">
-      <DependentUpon>DataSetCommon.xsd</DependentUpon>
-    </Content>
-    <Content Include="Reports\DataSetCommon.xss">
-      <DependentUpon>DataSetCommon.xsd</DependentUpon>
-    </Content>
-    <Content Include="Reports\ParameterDataSet.xsc">
-      <DependentUpon>ParameterDataSet.xsd</DependentUpon>
-    </Content>
-    <Content Include="Reports\ParameterDataSet.xss">
-      <DependentUpon>ParameterDataSet.xsd</DependentUpon>
-    </Content>
     <Content Include="Reports\ReportViewer.aspx" />
     <Content Include="scripts\ai.0.15.0-build58334.js" />
     <Content Include="scripts\ai.0.15.0-build58334.min.js" />
@@ -276,16 +264,39 @@
     <None Include="Properties\PublishProfiles\MLFF_WebApplication.pubxml" />
     <None Include="Properties\PublishProfiles\Pub.pubxml" />
     <None Include="Properties\PublishProfiles\web.pubxml" />
-    <None Include="Reports\DataSetCommon.xsd">
+    <Content Include="Reports\ParameterDataSet.xsc">
+      <DependentUpon>ParameterDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\CommonDataSet.xsc">
+      <DependentUpon>CommonDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\CommonDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSetCommon.Designer.cs</LastGenOutput>
+      <LastGenOutput>CommonDataSet.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Reports\CommonDataSet.xss">
+      <DependentUpon>CommonDataSet.xsd</DependentUpon>
+    </Content>
     <None Include="Reports\ParameterDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>ParameterDataSet1.Designer.cs</LastGenOutput>
+      <LastGenOutput>ParameterDataSet.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="Reports\ParameterDataSet.xss">
+      <DependentUpon>ParameterDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reports\ReportDataSet.xsc">
+      <DependentUpon>ReportDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="Reports\ReportDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ReportDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reports\ReportDataSet.xss">
+      <DependentUpon>ReportDataSet.xsd</DependentUpon>
+    </Content>
     <None Include="scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="scripts\bootstrap-datepicker.js" />
     <Content Include="scripts\dataTables.bootstrap.min.js" />
@@ -319,15 +330,20 @@
     </Compile>
     <Compile Include="Models\HelperClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reports\DataSetCommon.Designer.cs">
-      <DependentUpon>DataSetCommon.xsd</DependentUpon>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Reports\CommonDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommonDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\ParameterDataSet1.Designer.cs">
-      <DependentUpon>ParameterDataSet.xsd</DependentUpon>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Reports\ParameterDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ParameterDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReportDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReportDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Reports\ReportViewer.aspx.cs">
       <DependentUpon>ReportViewer.aspx</DependentUpon>

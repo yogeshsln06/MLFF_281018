@@ -122,7 +122,7 @@ namespace MLFFWebAPI.Controllers
                         #region Pass data to CBE Liberrary
                         CrossTalkPacketCBE crosstalkPacketCBE = new CrossTalkPacketCBE();
                         crosstalkPacketCBE.EventType = dr["type"].ToString();
-                        crosstalkPacketCBE.TimeStamp = dr["timestamp"].ToString();
+                        crosstalkPacketCBE.TimeStamp = Constants.UTCtoDateTime(dr["timestamp"].ToString());
                         crosstalkPacketCBE.UUID = dr["uuid"].ToString();
                         crosstalkPacketCBE.LocationId = dr["locationId"].ToString();
                         crosstalkPacketCBE.ParentUUID = dr["parentUUID"].ToString();
@@ -316,8 +316,10 @@ namespace MLFFWebAPI.Controllers
 
                     if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Video_URL))
                         nodeFluxCBE.VideoURL = string.Empty;
-                    else
+                    else if (objNodeFluxPacketJSON.Data.Video_URL.Contains("http"))
                         nodeFluxCBE.VideoURL = objNodeFluxPacketJSON.Data.Video_URL;
+                    else
+                        nodeFluxCBE.VideoURL = "http://" + objNodeFluxPacketJSON.Data.Video_URL;
                     #endregion
 
                     #region Send data to MSMQ

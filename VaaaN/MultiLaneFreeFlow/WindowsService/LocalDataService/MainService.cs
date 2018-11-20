@@ -52,7 +52,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+           //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
             //DateTime dt = DateTime.ParseExact("13/10/2018 23:24:25.111", "dd/MM/yyyy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
@@ -532,7 +532,7 @@ namespace VaaaN.MLFF.WindowsServices
                                     {
                                         LogMessage("Trying to update TMSId, CreationDate etc. in nodeflux packet..");
                                         nfp.TMSId = currentTMSId;
-
+                                        nfp.TimeStamp = ConversionDateTime(nfp.TimeStamp.ToString(), "nodeflux");
                                         LogMessage("Camera id is: " + nfp.CameraId);
 
                                         //in case of nodeflux not giving lane id and plaza id peek laneid and plazaid by hardwareid. 
@@ -716,11 +716,12 @@ namespace VaaaN.MLFF.WindowsServices
 
                                         //is the VRN actually exist in the system?
                                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE associatedCVNF = DoesVRNExist(nfp.PlateNumber);
+                                        DateTime nfpDateTime = Convert.ToDateTime(nfp.TimeStamp);
                                         if (associatedCVNF != null)
                                         {
                                             #region Checking VRN in recent transactions in tbl_transaction
                                             LogMessage("VRN exists in the system, checking whether it is in recent transactions or not...");
-                                            DateTime nfpDateTime = Convert.ToDateTime(nfp.TimeStamp);
+                                           
                                             LogMessage("Search criteria: " + nfp.TMSId + ", " + nfp.GantryId + ", " + nfpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + " " + nfp.PlateNumber);
                                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedCrossTalkTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInCrossTalk(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
                                             #endregion
@@ -826,7 +827,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 {
                                                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfPacket;
                                                                     nfPacket = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetByEntryId(transaction.NodefluxEntryIdRear);
-                                                                    transaction.VehicleSpeed = CalculateSpeed(nfpDateTime, nfPacket.TimeStamp);
+                                                                    transaction.VehicleSpeed = CalculateSpeed(nfpDateTime, Convert.ToDateTime(nfPacket.TimeStamp));
                                                                 }
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPFront(transaction, nfpEntryId);
                                                                 LogMessage("nf entry id front has been updated in transaction.");
@@ -838,7 +839,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 {
                                                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfPacket;
                                                                     nfPacket = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetByEntryId(transaction.NodefluxEntryIdFront);
-                                                                    transaction.VehicleSpeed = CalculateSpeed(nfPacket.TimeStamp, nfpDateTime);
+                                                                    transaction.VehicleSpeed = CalculateSpeed(Convert.ToDateTime(nfPacket.TimeStamp), nfpDateTime);
                                                                 }
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPRear(transaction, nfpEntryId);
                                                                 LogMessage("nf entry id rear has been updated in transaction.");
@@ -880,38 +881,112 @@ namespace VaaaN.MLFF.WindowsServices
                                         }
                                         else
                                         {
-                                            //***if exists in tbl_transaction updat it, otherwise insert***//
-                                            //the vrn does not exists two cases may arrise
-                                            //A. The vrn is a erroneous detection by nodeflux 
-                                            //B. the vehicle is new and not exist in our customervehicle list
-                                            #region Insert into main transaction table 
+
+
+                                            //no associated vrn found in Database
+                                            #region Create/ Update a transaction Main transaction table 
                                             try
                                             {
-                                                if (nfp.CameraPosition == "1") // 1 means front, 2 means rear
-                                                {
-                                                    LogMessage("Inserting NFP (front) into main transaction table...");
-                                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, 0);
-                                                    LogMessage("Record inserted successfully.");
+                                                LogMessage("VRN not exists. Checking associated nodeflux transaction...");
 
-                                                    //we cannot do financial operation as because this VRN does not exist in the system, will be reviewed in manual review
-                                                }
-                                                else if (nfp.CameraPosition == "2") // 1 means front, 2 means rear
-                                                {
-                                                    LogMessage("Inserting NFP (rear) into main transaction table...");
-                                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, 0);
-                                                    LogMessage("Record inserted successfully.");
+                                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
 
-                                                    //we cannot do financial operation as because this VRN does not exist in the system, will be reviewed in manual review
+                                                if (associatedNodeFluxTrans.Count > 0)
+                                                {
+                                                    if (associatedNodeFluxTrans.Count == 1)
+                                                    {
+                                                        LogMessage("Transaction found to update...");
+                                                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = associatedNodeFluxTrans[0];
+                                                        if (nfp.CameraPosition == "1") //1 means front, 2 means rear
+                                                        {
+                                                            // update the VEHICLE speed
+                                                            if (transaction.NodefluxEntryIdRear > 0)
+                                                            {
+                                                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfPacket;
+                                                                nfPacket = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetByEntryId(transaction.NodefluxEntryIdRear);
+                                                                transaction.VehicleSpeed = CalculateSpeed(nfpDateTime, Convert.ToDateTime(nfPacket.TimeStamp));
+                                                            }
+                                                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPFront(transaction, nfpEntryId);
+                                                            LogMessage("nf entry id front has been updated in transaction.");
+                                                        }
+                                                        else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
+                                                        {
+                                                            // update the VEHICLE speed
+                                                            if (transaction.NodefluxEntryIdFront > 0)
+                                                            {
+                                                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfPacket;
+                                                                nfPacket = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetByEntryId(transaction.NodefluxEntryIdFront);
+                                                                transaction.VehicleSpeed = CalculateSpeed(Convert.ToDateTime(nfPacket.TimeStamp), nfpDateTime);
+                                                            }
+                                                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPRear(transaction, nfpEntryId);
+                                                            LogMessage("nf entry id rear has been updated in transaction.");
+                                                        }
+                                                        else
+                                                        {
+                                                            LogMessage("Invalid camera position. " + nfp.CameraPosition);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        LogMessage("Abnormal case.");
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    LogMessage("Invalid camera position. " + nfp.CameraPosition);
+                                                    if (nfp.CameraPosition == "1") //1 means front, 2 means rear
+                                                    {
+                                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, 1);
+                                                        LogMessage("Transaction inserted by nf entry id front.");
+                                                    }
+                                                    else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
+                                                    {
+                                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, 1);
+                                                        LogMessage("Transaction inserted by nf entry id rear.");
+                                                    }
+                                                    else
+                                                    {
+                                                        LogMessage("Invalid camera position. " + nfp.CameraPosition);
+                                                    }
                                                 }
                                             }
                                             catch (Exception ex)
                                             {
-                                                LogMessage("Failed to insert nodeflux packet in main transaction table." + ex.Message);
+                                                LogMessage("Exception in inserting/updating in main transaction table. " + ex.ToString());
                                             }
+                                            #endregion
+
+                                            //***if exists in tbl_transaction updat it, otherwise insert***//
+                                            //the vrn does not exists two cases may arrise
+                                            //A. The vrn is a erroneous detection by nodeflux 
+                                            //B. the vehicle is new and not exist in our customervehicle list
+                                            #region Insert into main transaction table Comment due to invaild case
+                                            //try
+                                            //{
+                                            //    if (nfp.CameraPosition == "1") // 1 means front, 2 means rear
+                                            //    {
+                                            //        LogMessage("Inserting NFP (front) into main transaction table...");
+                                            //        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, 0);
+                                            //        LogMessage("Record inserted successfully.");
+
+                                            //        //we cannot do financial operation as because this VRN does not exist in the system, will be reviewed in manual review
+                                            //    }
+                                            //    else if (nfp.CameraPosition == "2") // 1 means front, 2 means rear
+                                            //    {
+                                            //        LogMessage("Inserting NFP (rear) into main transaction table...");
+                                            //        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, 0);
+                                            //        LogMessage("Record inserted successfully.");
+
+                                            //        //we cannot do financial operation as because this VRN does not exist in the system, will be reviewed in manual review
+                                            //    }
+                                            //    else
+                                            //    {
+                                            //        LogMessage("Invalid camera position. " + nfp.CameraPosition);
+                                            //    }
+                                            //}
+                                            //catch (Exception ex)
+                                            //{
+                                            //    LogMessage("Failed to insert nodeflux packet in main transaction table." + ex.Message);
+                                            //}
                                             #endregion
                                         }
                                     }
@@ -1648,9 +1723,6 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
     }
-
-
-
 
 }
 

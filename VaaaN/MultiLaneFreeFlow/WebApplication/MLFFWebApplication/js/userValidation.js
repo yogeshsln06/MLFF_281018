@@ -34,12 +34,6 @@
         return false;
     }
 
-    //if ($("#MobileNo").val().length < 10) {
-    //    showError('Mobile No. must be 10 digits.');
-
-    //    return false;
-    //}
-
     if ($("#EmailId").val() == '') {
         showError('Enter Email Id');
 
@@ -101,11 +95,20 @@ function EditPage_ValidateUser() {
     return true;
 }
 
+function ValidateReport() {
+    if ($("#ReportCategory").val() == 0) {
+        showError('Report must be selected');
+        return false;
+    }
+    
+}
+
 function validEmail(str) {
     var pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return String(str).match(pattern);
 
 }
+
 function validTAGId(str) {
     var pattern = /^[0-9a-fA-F]+$/;
     return String(str).match(pattern);
