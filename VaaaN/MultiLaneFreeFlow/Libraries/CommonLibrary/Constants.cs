@@ -1359,6 +1359,19 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             return cTime;
         }
 
+        public static string ConversionDateTime(string timestamp)
+        {
+            try
+            {
+                return Convert.ToDateTime(timestamp).ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
+            }
+            catch (Exception)
+            {
+
+                return DateTime.Now.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H); ;
+            }
+        }
+
         #endregion
 
         #region Regex
