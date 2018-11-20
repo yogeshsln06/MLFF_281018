@@ -1591,9 +1591,6 @@ namespace VaaaN.MLFF.WindowsServices
 
         #endregion
 
-        #region Convert Timestamp to date time
-
-        #endregion
 
         public Double CalculateSpeed(DateTime StartTime, DateTime EndTime)
         {

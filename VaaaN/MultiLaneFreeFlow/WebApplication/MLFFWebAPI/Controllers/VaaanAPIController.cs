@@ -260,7 +260,7 @@ namespace MLFFWebAPI.Controllers
                     #region Pass data to CBE Liberrary
                     NodeFluxPacketCBE nodeFluxCBE = new NodeFluxPacketCBE();
                     nodeFluxCBE.EventType = objNodeFluxPacketJSON.Event_Type;
-                    nodeFluxCBE.TimeStamp = objNodeFluxPacketJSON.TimeStamp;
+                    nodeFluxCBE.TimeStamp = Constants.ConversionDateTime(objNodeFluxPacketJSON.TimeStamp);
                     nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
                     nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
                     nodeFluxCBE.Provider = 1;
