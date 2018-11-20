@@ -52,7 +52,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-           //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
             //DateTime dt = DateTime.ParseExact("13/10/2018 23:24:25.111", "dd/MM/yyyy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
@@ -279,7 +279,7 @@ namespace VaaaN.MLFF.WindowsServices
                                         {
                                             LogMessage("Trying to update TMSId, Creation Date etc. in the CBE...");
                                             ctp.TMSId = currentTMSId;
-                                            ctp.TimeStamp = ConversionDateTime(ctp.TimeStamp, "crosstalk");
+                                            //ctp.TimeStamp = ConversionDateTime(ctp.TimeStamp, "crosstalk");
 
                                             //in case of crosstalk not giving lane id and plaza id peek laneid and plazaid by hardwareid. 
                                             //hardwareid is assigned to specific lane of specific plaza.
@@ -311,7 +311,7 @@ namespace VaaaN.MLFF.WindowsServices
 
                                                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkEvent ctEvent = new Libraries.CommonLibrary.CBE.CrossTalkEvent();
 
-                                                ctEvent.Timestamp = Convert.ToDateTime(ConversionDateTime(ctp.TimeStamp, "crosstalk"));
+                                                ctEvent.Timestamp = Convert.ToDateTime(ctp.TimeStamp);// Convert.ToDateTime(ConversionDateTime(ctp.TimeStamp, "crosstalk"));
                                                 ctEvent.PlazaId = ctp.PlazaId;
                                                 ctEvent.PlazaName = GetPlazaNameById(ctp.PlazaId);
                                                 ctEvent.LaneName = GetLaneNameById(ctp.LaneId);
@@ -532,7 +532,7 @@ namespace VaaaN.MLFF.WindowsServices
                                     {
                                         LogMessage("Trying to update TMSId, CreationDate etc. in nodeflux packet..");
                                         nfp.TMSId = currentTMSId;
-                                        nfp.TimeStamp = ConversionDateTime(nfp.TimeStamp.ToString(), "nodeflux");
+                                        //nfp.TimeStamp = ConversionDateTime(nfp.TimeStamp.ToString(), "nodeflux");
                                         LogMessage("Camera id is: " + nfp.CameraId);
 
                                         //in case of nodeflux not giving lane id and plaza id peek laneid and plazaid by hardwareid. 
@@ -721,7 +721,7 @@ namespace VaaaN.MLFF.WindowsServices
                                         {
                                             #region Checking VRN in recent transactions in tbl_transaction
                                             LogMessage("VRN exists in the system, checking whether it is in recent transactions or not...");
-                                           
+
                                             LogMessage("Search criteria: " + nfp.TMSId + ", " + nfp.GantryId + ", " + nfpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + " " + nfp.PlateNumber);
                                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedCrossTalkTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInCrossTalk(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
                                             #endregion
@@ -1592,48 +1592,7 @@ namespace VaaaN.MLFF.WindowsServices
         #endregion
 
         #region Convert Timestamp to date time
-        private string ConversionDateTime(string timestamp, string SourceFilter)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(timestamp))
-                {
-                    if (SourceFilter.ToLower() == "crosstalk")
-                    {
-                        double Dtimestamp = Convert.ToDouble(timestamp);
-                        DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Dtimestamp / 1000d)).ToLocalTime();
-                        return dt.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
-                    }
-                    else if (SourceFilter.ToLower() == "nodeflux")
-                    {
-                        return Convert.ToDateTime(timestamp).ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
 
-                    }
-                    else
-                    {
-                        return timestamp;
-                    }
-                }
-                else
-                {
-                    return timestamp;
-                }
-            }
-            catch (Exception)
-            {
-
-                return timestamp;
-            }
-        }
-
-        private Int32 DateTimeToUnixTimestamp(DateTime dt)
-        {
-            Int32 result = 0;
-
-            result = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-
-            return result;
-        }
         #endregion
 
         public Double CalculateSpeed(DateTime StartTime, DateTime EndTime)
