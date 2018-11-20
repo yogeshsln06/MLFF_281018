@@ -1,5 +1,5 @@
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -66,7 +66,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         /// Possible transfer Status.
         /// </summary>
 
-       
+
         public enum ReviewTransactionCategory
         {
             [Display(Name = "--Must Review--")]
@@ -107,7 +107,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             [Display(Name = "ANPR Rear")]
             OnlyNFRear = 3,
 
-        
+
             //[Display(Name = "EVI & ANPR data missmatch")]
             //EVI_ANPRMissMatch = 3,
             //[Display(Name = "OCR Missing")]
@@ -278,7 +278,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             [Display(Name = "ANPR Camera")]
             ANPRCamera = 1,
             [Display(Name = "RFID Reader")]
-            RFIDReader=2
+            RFIDReader = 2
         }
 
         public static string[] HardwareTypeName = new string[]
@@ -465,7 +465,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             Active,
             Inactive
         }
-        public enum CustomerQueueStatus 
+        public enum CustomerQueueStatus
         {
             Unknown = 0,
             Open,
@@ -1336,23 +1336,27 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             service.WaitForStatus(ServiceControllerStatus.Running, timeout);
         }
 
-        public static DateTime UTCtoDateTime(string timestamp)
+        public static string UTCtoDateTime(string timestamp)
         {
             DateTime dt = DateTime.Now;
+            string cTime = "";
             try
             {
                 if (!string.IsNullOrEmpty(timestamp))
                 {
                     double Dtimestamp = Convert.ToDouble(timestamp);
                     dt = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Dtimestamp / 1000d)).ToLocalTime();
-                   
+
+                    cTime = dt.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
+
                 }
             }
             catch (Exception)
             {
                 dt = DateTime.Now;
+                cTime = dt.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
             }
-            return dt;
+            return cTime;
         }
 
         #endregion

@@ -154,7 +154,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 13, " +
+                                "\"Id\": 17, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Alam Sutra\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +
@@ -247,7 +247,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 14, " +
+                                "\"Id\": 20, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Alam Sutra\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +
@@ -332,7 +332,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 {
                     Send(s);
                     RandomWaitWithinOneMinute(); //in seconds
-                    MessageBox.Show("Success");
+                   // MessageBox.Show("Success");
                 }
             }
 

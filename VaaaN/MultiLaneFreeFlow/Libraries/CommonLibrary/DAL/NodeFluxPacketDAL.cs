@@ -28,7 +28,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ENTRY_ID", DbType.Int32, entryId, ParameterDirection.Output));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, nodeFluxPacket.TMSId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_EVENT_TYPE", DbType.String, nodeFluxPacket.EventType, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TIMESTAMP", DbType.DateTime, nodeFluxPacket.TimeStamp, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TIMESTAMP", DbType.String, nodeFluxPacket.TimeStamp, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_GANTRY_ID", DbType.Int32, nodeFluxPacket.GantryId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, nodeFluxPacket.LaneId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CAMERA_POSITION", DbType.String, nodeFluxPacket.CameraPosition, ParameterDirection.Input, 100));
@@ -68,7 +68,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ENTRY_ID", DbType.Int32, nodeFluxPacket.EntryId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, nodeFluxPacket.TMSId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_EVENT_TYPE", DbType.String, nodeFluxPacket.EventType, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TIMESTAMP", DbType.DateTime, nodeFluxPacket.TimeStamp, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TIMESTAMP", DbType.String, nodeFluxPacket.TimeStamp, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_GANTRY_ID", DbType.Int32, nodeFluxPacket.GantryId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, nodeFluxPacket.LaneId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CAMERA_POSITION", DbType.String, nodeFluxPacket.CameraPosition, ParameterDirection.Input, 100));
@@ -262,7 +262,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                         nodeFluxPacket.EventType = Convert.ToString(dt.Rows[i]["EVENT_TYPE"]);
 
                     if (dt.Rows[i]["TIMESTAMP"] != DBNull.Value)
-                        nodeFluxPacket.TimeStamp = Convert.ToDateTime(dt.Rows[i]["TIMESTAMP"]);
+                        nodeFluxPacket.TimeStamp = Convert.ToString(dt.Rows[i]["TIMESTAMP"]);
 
                     if (dt.Rows[i]["GANTRY_ID"] != DBNull.Value)
                         nodeFluxPacket.GantryId = Convert.ToInt32(dt.Rows[i]["GANTRY_ID"]);

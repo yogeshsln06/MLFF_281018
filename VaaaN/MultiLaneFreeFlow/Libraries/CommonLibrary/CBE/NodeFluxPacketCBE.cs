@@ -18,7 +18,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 
          
         string eventType;
-        DateTime timeStamp;
+        string timeStamp;
         Int32 gantryId;
         Int32 laneId;
         string camaraPosition;
@@ -91,7 +91,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [JsonProperty("timestamp")]
-        public DateTime TimeStamp
+        public string TimeStamp
         {
             get
             {
@@ -342,7 +342,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
     public class NodeFluxPacketJSON
     {
         public string Event_Type { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public string TimeStamp { get; set; }
         public Int32 Gantry_Id { get; set; }
        
         public CameraFields Camera { get; set; }

@@ -9,9 +9,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 {
     public class ViewTransactionCBE
     {
-        //[Display(Name = "From Date")]
-        //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        //public DateTime StartTime { get; set; }
+        [Display(Name = "Select Report")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public Int32 ReportCategory { get; set; }
 
         //[Display(Name = "End Date")]
         //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
