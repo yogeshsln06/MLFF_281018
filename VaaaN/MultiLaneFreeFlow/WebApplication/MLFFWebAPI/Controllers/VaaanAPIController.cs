@@ -199,62 +199,62 @@ namespace MLFFWebAPI.Controllers
         #endregion
 
         #region API for ANPR Data
-      
+
         #region NodeFlux Data
         [Route("VaaaN/IndonesiaMLFFApi/SendNodefluxEvent")]
         [HttpPost]
         public async Task<HttpResponseMessage> ReciveDatafromNodeflux(NodeFluxPacketJSON objNodeFluxPacketJSON)
         {
-
-            try
+            if (ANPRName().ToLower() == "nodeflux")
             {
-                #region Serialize the nodeflux JSON Data
-                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
-                await Task.Delay(100);
-                #endregion
+                try
+                {
+                    #region Serialize the nodeflux JSON Data
+                    string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                    await Task.Delay(100);
+                    #endregion
 
-                #region Create Physical Path to save nodeflux JSON Data as file
-                if (!Directory.Exists(rootpath))
-                {
-                    Directory.CreateDirectory(rootpath);
+                    #region Create Physical Path to save nodeflux JSON Data as file
+                    if (!Directory.Exists(rootpath))
+                    {
+                        Directory.CreateDirectory(rootpath);
+                    }
+                    filepath = rootpath + "NodeFlux/";
+                    if (!Directory.Exists(filepath))
+                    {
+                        Directory.CreateDirectory(filepath);
+                    }
+                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                    if (!File.Exists(filepath))
+                    {
+                        File.Create(filepath).Dispose();
+                        File.WriteAllText(filepath, jsonString);
+                    }
+                    else {
+                        var guid = Guid.NewGuid().ToString();
+                        filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                        File.Create(filepath).Dispose();
+                        File.WriteAllText(filepath, jsonString);
+                    }
+
+
+                    response = Request.CreateResponse(HttpStatusCode.OK);
+                    #endregion
                 }
-                filepath = rootpath + "NodeFlux/";
-                if (!Directory.Exists(filepath))
+                catch (IOException)
                 {
-                    Directory.CreateDirectory(filepath);
-                }
-                filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
-                if (!File.Exists(filepath))
-                {
-                    File.Create(filepath).Dispose();
-                    File.WriteAllText(filepath, jsonString);
-                }
-                else {
+                    string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
                     var guid = Guid.NewGuid().ToString();
                     filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
                     File.Create(filepath).Dispose();
                     File.WriteAllText(filepath, jsonString);
                 }
+                catch (Exception ex)
+                {
+                    ExceptionLogging.SendErrorToText(ex);
+                    Log("Error in API to save Nodeflux File : " + ex);
+                }
 
-
-                response = Request.CreateResponse(HttpStatusCode.OK);
-                #endregion
-            }
-            catch (IOException)
-            {
-                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
-                var guid = Guid.NewGuid().ToString();
-                filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
-                File.Create(filepath).Dispose();
-                File.WriteAllText(filepath, jsonString);
-            }
-            catch (Exception ex)
-            {
-                ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API to save Nodeflux File : " + ex);
-            }
-            if (ANPRName().ToLower() == "nodeflux")
-            {
                 try
                 {
                     #region Pass data to CBE Liberrary
@@ -352,55 +352,57 @@ namespace MLFFWebAPI.Controllers
 
         public async Task<HttpResponseMessage> ReciveDatafromOpenAlpr(OpenALPRPacketJSON objOpenALPRPacketJSON)
         {
-            try
+            if (ANPRName().ToLower() == "openalpr")
             {
-                #region Serialize the OpenAlpr JSON Data
-                string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
-                await Task.Delay(100);
-                #endregion
+                try
+                {
 
-                #region Create Physical Path to save OpenAlpr JSON Data as file
-                if (!Directory.Exists(rootpath))
-                {
-                    Directory.CreateDirectory(rootpath);
+                    #region Serialize the OpenAlpr JSON Data
+                    string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
+                    await Task.Delay(100);
+                    #endregion
+
+                    #region Create Physical Path to save OpenAlpr JSON Data as file
+                    if (!Directory.Exists(rootpath))
+                    {
+                        Directory.CreateDirectory(rootpath);
+                    }
+                    filepath = rootpath + "OpenAlpr/";
+                    if (!Directory.Exists(filepath))
+                    {
+                        Directory.CreateDirectory(filepath);
+                    }
+                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                    if (!File.Exists(filepath))
+                    {
+                        File.Create(filepath).Dispose();
+                        File.WriteAllText(filepath, jsonString);
+                    }
+                    else {
+                        var guid = Guid.NewGuid().ToString();
+                        filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                        File.Create(filepath).Dispose();
+                        File.WriteAllText(filepath, jsonString);
+                    }
+
+
+                    response = Request.CreateResponse(HttpStatusCode.OK);
+                    #endregion
                 }
-                filepath = rootpath + "OpenAlpr/";
-                if (!Directory.Exists(filepath))
+                catch (IOException)
                 {
-                    Directory.CreateDirectory(filepath);
-                }
-                filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
-                if (!File.Exists(filepath))
-                {
-                    File.Create(filepath).Dispose();
-                    File.WriteAllText(filepath, jsonString);
-                }
-                else {
+                    string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
                     var guid = Guid.NewGuid().ToString();
                     filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
                     File.Create(filepath).Dispose();
                     File.WriteAllText(filepath, jsonString);
                 }
+                catch (Exception ex)
+                {
+                    ExceptionLogging.SendErrorToText(ex);
+                    Log("Error in API to save OpenAlpr File : " + ex);
+                }
 
-
-                response = Request.CreateResponse(HttpStatusCode.OK);
-                #endregion
-            }
-            catch (IOException)
-            {
-                string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
-                var guid = Guid.NewGuid().ToString();
-                filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
-                File.Create(filepath).Dispose();
-                File.WriteAllText(filepath, jsonString);
-            }
-            catch (Exception ex)
-            {
-                ExceptionLogging.SendErrorToText(ex);
-                Log("Error in API to save OpenAlpr File : " + ex);
-            }
-            if (ANPRName().ToLower() == "openalpr")
-            {
                 try
                 {
                     #region Pass data to CBE Liberrary
@@ -946,7 +948,7 @@ namespace MLFFWebAPI.Controllers
         {
             try
             {
-                anprName = System.Configuration.ConfigurationManager.AppSettings["apiPath"].ToString();
+                anprName = System.Configuration.ConfigurationManager.AppSettings["anprName"].ToString();
             }
             catch (Exception)
             {
