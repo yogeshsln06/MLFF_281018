@@ -25,7 +25,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 {
                     return RedirectToAction("SessionPage", "Home");
                 }
-                ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
+                HelperClass.LogMessage("API URL : " + HelperClass.GetAPIUrl());
+                ViewData["apiPath"] = HelperClass.GetAPIUrl();
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
                 string strQuery = " WHERE 1=1 ";
 

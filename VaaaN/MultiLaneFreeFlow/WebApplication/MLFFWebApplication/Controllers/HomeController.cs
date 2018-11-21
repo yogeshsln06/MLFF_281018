@@ -1867,7 +1867,7 @@ namespace VaaaN.MLFF.WebApplication
         public ActionResult LiveEvent()
         {
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE> laneDataList = new List<Libraries.CommonLibrary.CBE.LaneCBE>();
-            ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
+            ViewData["apiPath"] = HelperClass.GetAPIUrl();
             try
             {
                 if (Session["LoggedUserId"] == null)

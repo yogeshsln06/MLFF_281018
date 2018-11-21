@@ -25,7 +25,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 {
                     return RedirectToAction("SessionPage", "Home");
                 }
-                ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
+                ViewData["apiPath"] = HelperClass.GetAPIUrl();
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
 
                 #region Gantry Class Dropdown

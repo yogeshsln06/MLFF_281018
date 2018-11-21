@@ -33,7 +33,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 {
                     return RedirectToAction("SessionPage", "Home");
                 }
-                ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
+                ViewData["apiPath"] = HelperClass.GetAPIUrl();
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
                 #region Gantry Class Dropdown
                 List<SelectListItem> gantryList = new List<SelectListItem>();
@@ -176,7 +176,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 {
                     return RedirectToAction("SessionPage", "Home");
                 }
-                ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
+                ViewData["apiPath"] = HelperClass.GetAPIUrl();
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
                 #region Gantry Class Dropdown
                 List<SelectListItem> gantryList = new List<SelectListItem>();
@@ -278,7 +278,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             DataTable dt = new DataTable();
             dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);
-            ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
+            ViewData["apiPath"] = HelperClass.GetAPIUrl();
             return PartialView("_ManualTransactions", dt);
         }
 
@@ -382,7 +382,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             DataTable dt = new DataTable();
             dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);
-            ViewData["apiPath"] = System.Configuration.ConfigurationManager.AppSettings["apiPath"];
+            ViewData["apiPath"] = HelperClass.GetAPIUrl();
             return PartialView("_AssociatedTimeTransaction", dt);
         }
 
