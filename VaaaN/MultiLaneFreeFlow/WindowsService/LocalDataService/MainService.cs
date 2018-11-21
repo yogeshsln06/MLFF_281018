@@ -1120,8 +1120,8 @@ namespace VaaaN.MLFF.WindowsServices
                 smsMessage.Formatter = new BinaryMessageFormatter();
                 VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail smsDetail = new Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail();
                 //smsDetail.SMSMessage = "Your account has been deducted for Vehicle " + customerVehicleInfo.VehRegNo + " at Location: " + transaction.PlazaId + " at Time: " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT);
-                //Akun anda telah dipotong untuk bertransaksi nomor kendaraan hr36k3032 anda di tempat gantry 1 pada 13 / 10 / 2018 5: 50: 30 pm.
-                smsDetail.SMSMessage = "Akun anda telah dipotong untuk bertransaksi nomor kendaraan " + customerVehicleInfo.VehRegNo + " anda di tempat " + GetPlazaNameById(transaction.PlazaId) + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT) + ".";
+                //Akun anda telah dipotong untuk bertransaksi nomor kendaraan hr36k3032 anda di tempat gantry 1 pada 13 / 10 / 2018 5: 50: 30 pm.//DateTime.Now.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H)
+                smsDetail.SMSMessage = "Akun anda telah dipotong untuk bertransaksi nomor kendaraan " + customerVehicleInfo.VehRegNo + " anda di tempat " + GetPlazaNameById(transaction.PlazaId) + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24H) + ".";
                 LogMessage(smsDetail.SMSMessage);
                 smsDetail.AccountId = customerAccountInfo.AccountId;
                 smsDetail.CustomerName = customerAccountInfo.FirstName + " " + customerAccountInfo.LastName;

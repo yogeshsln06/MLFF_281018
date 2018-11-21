@@ -1368,7 +1368,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             catch (Exception)
             {
 
-                return DateTime.Now.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H); ;
+                return DateTime.Now.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
             }
         }
 

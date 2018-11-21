@@ -57,12 +57,12 @@ namespace VaaaN.MLFF.WebApplication.Models
                     string someString = rm.GetString(module.ModuleName);
 
                     if ((subModules.Count == 0) || module.ModuleId == 7) //7 for reports
-                    { 
+                    {
                         if (module.IsGuiVisible != 0)
                         {
                             sb.Append("<a id=\"module_" + module.ModuleId + "\" class=\"parent list-group-item list-group-item-info\"   data-parent=\"#MainMenu\" href=\"" + module.ModuleUrl.ToLower() + "\">");//module.Url
-                           //// sb.Append("<i  style=\"padding-right:10%; padding-left:1%;\" class=\"" + "" + "\"></i>"+ module.ModuleName + "</a>");
-                            sb.Append("<i  style=\"padding-right:10%; padding-left:1%;\" class=\"" + "" + "\"></i>"+ someString + "</a>");
+                                                                                                                                                                                                                 //// sb.Append("<i  style=\"padding-right:10%; padding-left:1%;\" class=\"" + "" + "\"></i>"+ module.ModuleName + "</a>");
+                            sb.Append("<i  style=\"padding-right:10%; padding-left:1%;\" class=\"" + "" + "\"></i>" + someString + "</a>");
 
                         }
                     }
@@ -341,6 +341,11 @@ namespace VaaaN.MLFF.WebApplication.Models
                 return null;
 
             return displayAttribute[0].Name;
+        }
+
+        public static string GetAPIUrl()
+        {
+            return System.Configuration.ConfigurationManager.AppSettings["apiPath"] + HttpContext.Current.Request.Url.Host + System.Configuration.ConfigurationManager.AppSettings["apiPort"];
         }
     }
 }

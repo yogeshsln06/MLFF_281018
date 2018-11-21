@@ -161,7 +161,7 @@ namespace SMSService
                                 smsOutgoing.MessageReceiveTime = DateTime.Now;
                                 smsOutgoing.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
                                 smsOutgoing.AttemptCount = 0;
-                                smsOutgoing.CreationDate = DateTime.Now;
+                                smsOutgoing.CreationDate = Convert.ToDateTime(DateTime.Now.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24H));
                                 smsOutgoing.ModificationDate = DateTime.Now;
                                 smsOutgoing.ModifiedBy = 0;
 
