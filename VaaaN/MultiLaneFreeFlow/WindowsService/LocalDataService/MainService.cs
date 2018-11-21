@@ -1533,8 +1533,6 @@ namespace VaaaN.MLFF.WindowsServices
             try
             {
                 int classId = Convert.ToInt32(epc.Substring(0, 2));
-
-
                 string vrnPart = epc.Substring(2);
                 string temp1 = string.Empty;
                 List<byte> bytes = new List<byte>();
@@ -1595,13 +1593,15 @@ namespace VaaaN.MLFF.WindowsServices
         public Double CalculateSpeed(DateTime StartTime, DateTime EndTime)
         {
             Double Speed = 0;
-
+            LogMessage("Calculate Speed Start Date Time : " + StartTime.ToString()+ " End Date Time : " + EndTime.ToString() );
             try
             {
                 int Distance = generalFileConfig.Distance;
+                LogMessage("Check Distance : " + Distance.ToString());
                 var time = ((EndTime - StartTime).TotalSeconds);
+                LogMessage("Check Time Taken : " + time);
                 Speed = Distance / time;
-
+                LogMessage("Speed in m/s : " + Speed);
             }
             catch (Exception ex)
             {
