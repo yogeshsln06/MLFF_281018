@@ -415,12 +415,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("VEHICLE_OWNER,");
                 sb.Append("AMOUNT_CHARGED,");
                 sb.Append("BALANCE,");
-                sb.Append("FRONT_PLATE_THUMBNAIL,");
-                sb.Append("FRONT_VEHICLE_THUMBNAIL,");
-                sb.Append("FRONT_VIDEO_URL,");
-                sb.Append("REAR_PLATE_THUMBNAIL,");
-                sb.Append("REAR_VEHICLE_THUMBNAIL,");
-                sb.Append("REAR_VIDEO_URL,");
+                //sb.Append("FRONT_PLATE_THUMBNAIL,");
+                //sb.Append("FRONT_VEHICLE_THUMBNAIL,");
+                //sb.Append("FRONT_VIDEO_URL,");
+                //sb.Append("REAR_PLATE_THUMBNAIL,");
+                //sb.Append("REAR_VEHICLE_THUMBNAIL,");
+                //sb.Append("REAR_VIDEO_URL,");
                 sb.Append("SMS_NOTIFICATION_STATUS");
             }
 
@@ -547,65 +547,65 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(",");
                 }
 
-                //FRONT_PLATE_THUMBNAIL
-                if (dr["FRONT_PLATE_THUMBNAIL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["FRONT_PLATE_THUMBNAIL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
+                ////FRONT_PLATE_THUMBNAIL
+                //if (dr["FRONT_PLATE_THUMBNAIL"] != DBNull.Value)
+                //{
+                //    sb.Append(Convert.ToString(dr["FRONT_PLATE_THUMBNAIL"]) + ",");
+                //}
+                //else
+                //{
+                //    sb.Append(",");
+                //}
 
-                //FRONT_VEHICLE_THUMBNAIL
-                if (dr["FRONT_VEHICLE_THUMBNAIL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["FRONT_VEHICLE_THUMBNAIL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
+                ////FRONT_VEHICLE_THUMBNAIL
+                //if (dr["FRONT_VEHICLE_THUMBNAIL"] != DBNull.Value)
+                //{
+                //    sb.Append(Convert.ToString(dr["FRONT_VEHICLE_THUMBNAIL"]) + ",");
+                //}
+                //else
+                //{
+                //    sb.Append(",");
+                //}
 
-                //FRONT_VIDEO_URL
-                if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
+                ////FRONT_VIDEO_URL
+                //if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
+                //{
+                //    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]) + ",");
+                //}
+                //else
+                //{
+                //    sb.Append(",");
+                //}
 
-                //REAR_PLATE_THUMBNAIL
-                if (dr["REAR_PLATE_THUMBNAIL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["REAR_PLATE_THUMBNAIL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
+                ////REAR_PLATE_THUMBNAIL
+                //if (dr["REAR_PLATE_THUMBNAIL"] != DBNull.Value)
+                //{
+                //    sb.Append(Convert.ToString(dr["REAR_PLATE_THUMBNAIL"]) + ",");
+                //}
+                //else
+                //{
+                //    sb.Append(",");
+                //}
 
-                //REAR_VEHICLE_THUMBNAIL
-                if (dr["REAR_VEHICLE_THUMBNAIL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["REAR_VEHICLE_THUMBNAIL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
+                ////REAR_VEHICLE_THUMBNAIL
+                //if (dr["REAR_VEHICLE_THUMBNAIL"] != DBNull.Value)
+                //{
+                //    sb.Append(Convert.ToString(dr["REAR_VEHICLE_THUMBNAIL"]) + ",");
+                //}
+                //else
+                //{
+                //    sb.Append(",");
+                //}
 
-                //REAR_VIDEO_URL
-                if (dr["REAR_VIDEO_URL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
+                ////REAR_VIDEO_URL
+                //if (dr["REAR_VIDEO_URL"] != DBNull.Value)
+                //{
+                //    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]) + ",");
+                //}
+                //else
+                //{
+                //    sb.Append(",");
+                //}
 
                 //SMS_NOTIFICATION
                 if (dr["SMS_NOTIFICATION"] != DBNull.Value)
@@ -625,16 +625,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             if (dt.Rows.Count > 0)
             {
                 sb.Append("TIME_STAMP,");
-                sb.Append("FRONT_PLATE_NUMBER,");
-                sb.Append("REAR_PLATE_NUMBER,");
-                sb.Append("ANPR_VEHICLE_CLASS,");
+                sb.Append("EVI_VEH_NO,");
+                sb.Append("FRONT_VRN,");
+                sb.Append("REAR_VRN,");
+                sb.Append("VEH_NAME_EVI,");
+                sb.Append("VEH_NAME_NODEFLUX,");
                 sb.Append("LANE_ID,");
-                sb.Append("FRONT_PLATE_THUMBNAIL,");
-                sb.Append("FRONT_VEHICLE_THUMBNAIL,");
-                sb.Append("FRONT_VIDEO_URL,");
-                sb.Append("REAR_PLATE_THUMBNAIL,");
-                sb.Append("REAR_VEHICLE_THUMBNAIL,");
-                sb.Append("REAR_VIDEO_URL");
+                sb.Append("EVI_ID,");
+                sb.Append("OWNER_ID,");
+                sb.Append("VEHICLE_OWNER");
+                sb.Append("AMOUNT_CHARGED");
+                sb.Append("SMS_NOTIFICATION");
             }
 
             foreach (DataRow dr in dt.Rows)
@@ -645,6 +646,16 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 if (dr["TIME_STAMP"] != DBNull.Value)
                 {
                     sb.Append(Convert.ToDateTime(dr["TIME_STAMP"]).ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24HOracleQuery) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //EVI_VEH_NO
+                if (dr["EVI_VEH_NO"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["EVI_VEH_NO"]) + ",");
                 }
                 else
                 {
@@ -671,6 +682,16 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(",");
                 }
 
+                //VEH_NAME_EVI
+                if (dr["VEH_NAME_EVI"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["VEH_NAME_EVI"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
                 //VEH_NAME_NODEFLUX
                 if (dr["VEH_NAME_NODEFLUX"] != DBNull.Value)
                 {
@@ -691,60 +712,42 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(",");
                 }
 
-                //FRONT_PLATE_THUMBNAIL
-                if (dr["FRONT_PLATE_THUMBNAIL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["FRONT_PLATE_THUMBNAIL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
-
-                //FRONT_VEHICLE_THUMBNAIL
-                if (dr["FRONT_VEHICLE_THUMBNAIL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["FRONT_VEHICLE_THUMBNAIL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
-
-                //FRONT_VIDEO_URL
-                if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
-
                 //REAR_PLATE_THUMBNAIL
-                if (dr["REAR_PLATE_THUMBNAIL"] != DBNull.Value)
+                if (dr["EVI_ID"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["REAR_PLATE_THUMBNAIL"]) + ",");
+                    sb.Append(Convert.ToString(dr["EVI_ID"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
 
-                //REAR_VEHICLE_THUMBNAIL
-                if (dr["REAR_VEHICLE_THUMBNAIL"] != DBNull.Value)
+                //OWNER_ID
+                if (dr["OWNER_ID"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["REAR_VEHICLE_THUMBNAIL"]) + ",");
+                    sb.Append(Convert.ToString(dr["OWNER_ID"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
 
-                //REAR_VIDEO_URL
-                if (dr["REAR_VIDEO_URL"] != DBNull.Value)
+                //VEHICLE_OWNER
+                if (dr["VEHICLE_OWNER"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]));
+                    sb.Append(Convert.ToString(dr["VEHICLE_OWNER"]));
+                }
+
+                //AMOUNT_CHARGED
+                if (dr["AMOUNT_CHARGED"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["AMOUNT_CHARGED"]));
+                }
+
+                //SMS_NOTIFICATION
+                if (dr["SMS_NOTIFICATION"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["SMS_NOTIFICATION"]));
                 }
             }
 

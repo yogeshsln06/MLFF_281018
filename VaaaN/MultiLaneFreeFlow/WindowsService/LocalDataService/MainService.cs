@@ -935,12 +935,12 @@ namespace VaaaN.MLFF.WindowsServices
                                                 {
                                                     if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                     {
-                                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, 1);
+                                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, 2);
                                                         LogMessage("Transaction inserted by nf entry id front.");
                                                     }
                                                     else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                     {
-                                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, 1);
+                                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, 2);
                                                         LogMessage("Transaction inserted by nf entry id rear.");
                                                     }
                                                     else
@@ -1607,7 +1607,7 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Error in Calculate Speed. " + ex.ToString());
             }
-            return (3.6 * Speed);
+            return Math.Round(3.6 * Speed);
         }
 
         #region Service Logger

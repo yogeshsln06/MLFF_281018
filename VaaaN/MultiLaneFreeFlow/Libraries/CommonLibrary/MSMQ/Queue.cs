@@ -9,7 +9,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.MSMQ
         public static string failedQueueName = ".\\Private$\\failedQueue";
 
         public static string eventQueue = ".\\Private$\\eventQueue";
-        public static TimeSpan eventQueueTimeOut = new TimeSpan(1, 0, 10);
+        public static TimeSpan eventQueueTimeOut = new TimeSpan(1, 0, 3);
 
         public static string localEventQueue = ".\\Private$\\localEventQueue";
         public static TimeSpan localEventQueueTimeOut = new TimeSpan(1, 0, 10);

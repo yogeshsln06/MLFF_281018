@@ -25,12 +25,12 @@
                                 <th style="width:120px">
                                     Tran Time
                                 </th>
-                                <th style="width:60px">
-                                    Lane Id
-                                </th>
-                                <th style="width:60px">
-                                    Gantry Id
-                                </th>
+                                @*<th style="width:60px">
+                                        Lane Id
+                                    </th>
+                                    <th style="width:60px">
+                                        Gantry Id
+                                    </th>*@
                                 <th style="width:60px">
                                     IKE VRN
                                 </th>
@@ -42,10 +42,10 @@
                                         <div style="text-align:center;">
                                             ANPR Front
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-10">
                                             Image
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-2">
                                             Video
                                         </div>
                                     </div>
@@ -55,16 +55,16 @@
                                         <div style="text-align:center;">
                                             ANPR Rear
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-10">
                                             Image
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-2">
                                             Video
                                         </div>
                                     </div>
                                 </th>
                                 <th style="width:60px">
-                                   Speed
+                                    Speed
                                 </th>
                                 <th style="width:60px">
                                     Check Associated Transactions
@@ -81,12 +81,12 @@
                                     <td>
                                         @item["TRANSACTION_DATETIME"].ToString()
                                     </td>
-                                    <td>
-                                        @item["LANE_ID"].ToString()
-                                    </td>
-                                    <td>
-                                        @item["PLAZA_ID"].ToString()
-                                    </td>
+                                    @*<td>
+                                            @item["LANE_ID"].ToString()
+                                        </td>
+                                        <td>
+                                            @item["PLAZA_ID"].ToString()
+                                        </td>*@
                                     <td>
                                         @item["CTP_VRN"].ToString()
                                     </td>
@@ -95,15 +95,19 @@
                                     </td>
                                     <td>
                                         <div class="col-sm-12">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-10">
                                                 @if (item["FRONT_IMAGE"].ToString() != "")
                                                 {
                                                     string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
-                                                    path = path.Replace('/', '^');
-                                                    <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                                    string path1 = path.Replace('/', '^');
+                                                    <span onclick="openimage(this);" path="@path1">
+                                                        @*<i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i>*@
+                                                        <img src="@path" height="40" width="100" />
+                                                    </span>
+
                                                 }
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-2">
                                                 @if (item["FRONT_VIDEO_URL"].ToString() != "")
                                                 {
                                                     string path = item["FRONT_VIDEO_URL"].ToString();
@@ -115,15 +119,18 @@
                                     </td>
                                     <td>
                                         <div class="col-sm-12">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-10">
                                                 @if (item["REAR_IMAGE"].ToString() != "")
                                                 {
                                                     string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
-                                                    path = path.Replace('/', '^');
-                                                    <a onclick="openimage(this);" class="edit" path="@path"><i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i></a>
+                                                    string path1 = path.Replace('/', '^');
+                                                    <span onclick="openimage(this);" path="@path1">
+                                                        @*<i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i>*@
+                                                        <img src="@path" height="40" width="100" />
+                                                    </span>
                                                 }
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-2">
                                                 @if (item["REAR_VIDEO_URL"].ToString() != "")
                                                 {
                                                     string path = item["REAR_VIDEO_URL"].ToString();
