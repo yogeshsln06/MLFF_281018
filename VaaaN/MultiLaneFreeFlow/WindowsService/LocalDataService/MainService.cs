@@ -1044,6 +1044,10 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("LaneType is: " + laneTypeId);
                 tollToDeduct = GetTollRate(currentTMSId, laneTypeId, transaction.TransactionDateTime, customerVehicleInfo.VehicleClassId);
                 LogMessage("Toll to deduct is (for motorcycle it may be 0.00): " + tollToDeduct);
+                if (tollToDeduct > -1)
+                {
+                    tollToDeduct = 0;
+                }
             }
             catch (Exception ex)
             {
@@ -1596,7 +1600,7 @@ namespace VaaaN.MLFF.WindowsServices
         public Double CalculateSpeed(DateTime StartTime, DateTime EndTime)
         {
             Double Speed = 0;
-            LogMessage("Calculate Speed Start Date Time : " + StartTime.ToString()+ " End Date Time : " + EndTime.ToString() );
+            LogMessage("Calculate Speed Start Date Time : " + StartTime.ToString() + " End Date Time : " + EndTime.ToString());
             try
             {
                 int Distance = generalFileConfig.Distance;
