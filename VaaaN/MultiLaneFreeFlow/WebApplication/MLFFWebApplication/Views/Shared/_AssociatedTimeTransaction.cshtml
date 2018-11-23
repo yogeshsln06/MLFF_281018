@@ -169,6 +169,10 @@
                                                     </span>
 
                                                 }
+                                                else {
+                                                    @item["FRONT_VRN"].ToString()
+
+                                                }
                                             </div>
                                             <div class="col-sm-2">
                                                 @if (item["FRONT_VIDEO_URL"].ToString() != "")
@@ -177,6 +181,7 @@
                                                     path = path.Replace('/', '^');
                                                     <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                                 }
+                                               
                                             </div>
                                         </div>
                                     </td>
@@ -191,6 +196,10 @@
                                                         @*<i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i>*@
                                                         <img src="@path" height="40" width="100" />
                                                     </span>
+                                                }
+                                                else {
+                                                    @item["REAR_VRN"].ToString()
+
                                                 }
                                             </div>
                                             <div class="col-sm-2">

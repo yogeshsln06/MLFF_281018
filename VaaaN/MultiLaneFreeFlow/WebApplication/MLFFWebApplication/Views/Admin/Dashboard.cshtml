@@ -36,7 +36,7 @@
             <thead>
                 <tr>
                     
-                    <th style="width:40px">
+                    <th style="width:20px">
                         Transaction Id
                     </th>
                     <th style="width:60px">
@@ -45,28 +45,28 @@
                     <th style="width:60px">
                         RFID VRN
                     </th>
-                    <th style="width:60px">
+                    <th style="width:120px">
                         <div class="col-sm-12">
                             <div>
                                 ANPR Front VRN
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-10">
                                 Image
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-2">
                                 Video
                             </div>
                         </div>
                     </th>
-                    <th style="width:60px">
+                    <th style="width:120px">
                         <div class="col-sm-12">
                             <div>
                                 ANPR Rear VRN
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-10">
                                 Image
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-2">
                                 Video
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                             @item["CTP_VRN"].ToString()
                         </td>
                         <td>
-                            <div class="col-sm-12">
+                            @*<div class="col-sm-12">
                                 <div class="col-sm-6">
                                     @if (item["FRONT_IMAGE"].ToString() != "")
                                     {
@@ -108,10 +108,37 @@
                                         <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                     }
                                 </div>
+                            </div>*@
+                            <div class="col-sm-12">
+                                <div class="col-sm-10">
+                                    @if (item["FRONT_IMAGE"].ToString() != "")
+                                    {
+                                        string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
+                                        string path1 = path.Replace('/', '^');
+                                        <span onclick="openimage(this);" path="@path1">
+                                            @*<i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i>*@
+                                            <img src="@path" height="40" width="100" />
+                                        </span>
+
+                                    }
+                                    else {
+                                        @item["FRONT_VRN"].ToString()
+
+                                    }
+                                </div>
+                                <div class="col-sm-2">
+                                    @if (item["FRONT_VIDEO_URL"].ToString() != "")
+                                    {
+                                        string path = item["FRONT_VIDEO_URL"].ToString();
+                                        path = path.Replace('/', '^');
+                                        <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                    }
+                                </div>
                             </div>
+
                         </td>
                         <td>
-                            <div class="col-sm-12">
+                            @*<div class="col-sm-12">
                                 <div class="col-sm-6">
                                     @if (item["REAR_IMAGE"].ToString() != "")
                                     {
@@ -128,7 +155,34 @@
                                         <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                     }
                                 </div>
+                            </div>*@
+                            <div class="col-sm-12">
+                                <div class="col-sm-10">
+                                    @if (item["REAR_IMAGE"].ToString() != "")
+                                    {
+                                        string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
+                                        string path1 = path.Replace('/', '^');
+                                        <span onclick="openimage(this);" path="@path1">
+                                            @*<i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i>*@
+                                            <img src="@path" height="40" width="100" />
+                                        </span>
+                                    }
+                                    else {
+                                        @item["REAR_VRN"].ToString()
+
+                                    }
+                                </div>
+                                <div class="col-sm-2">
+                                    @if (item["REAR_VIDEO_URL"].ToString() != "")
+                                    {
+                                        string path = item["REAR_VIDEO_URL"].ToString();
+                                        path = path.Replace('/', '^');
+                                        <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                    }
+                                </div>
                             </div>
+
+
 
                         </td>
                         <td>

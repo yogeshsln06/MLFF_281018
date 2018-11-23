@@ -1,4 +1,4 @@
-/* Formatted on 22/11/2018 1.59.07 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 11/23/2018 1:40:09 AM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -2322,7 +2322,7 @@ AS
     LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH ON  T.TRANSACTION_ID = AH.TRANSACTION_ID '
          || P_FILTER
          || '
-ORDER BY TRANSACTION_ID';
+ORDER BY TRANSACTION_ID DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_GETFILTERED;
@@ -2857,7 +2857,6 @@ ORDER BY TRANSACTION_ID';
    END TOLL_RATE_GETALL;
 
 
-
    ------------SMS HISTORY ----------
    PROCEDURE SMS_HISTORY_INSERT (P_ENTRY_ID                     OUT NUMBER,
                                  P_TMS_ID                    IN     NUMBER,
@@ -2875,42 +2874,55 @@ ORDER BY TRANSACTION_ID';
                                  P_CREATION_DATE             IN     DATE,
                                  P_MODIFICATION_DATE         IN     DATE,
                                  P_MODIFIED_BY               IN     NUMBER)
-   AS
+   IS
+      C_COUNT_HISTORY   NUMBER;
    BEGIN
-      INSERT INTO TBL_SMS_COMM_HISTORY (ENTRY_ID,
-                                        TMS_ID,
-                                        CUSTOMER_ACCOUNT_ID,
-                                        CUSTOMER_NAME,
-                                        MOBILE_NUMBER,
-                                        MESSAGE_DIRECTION,
-                                        MESSAGE_BODY,
-                                        SENT_STATUS,
-                                        RECEIVED_PROCESS_STATUS,
-                                        MESSAGE_SEND_TIME,
-                                        MESSAGE_RECEIVE_TIME,
-                                        MESSAGE_DELIVERY_STATUS,
-                                        ATTEMPT_COUNT,
-                                        CREATION_DATE,
-                                        MODIFICATION_DATE,
-                                        MODIFIED_BY)
-           VALUES (SMS_COMM_HISTORY_SEQ.NEXTVAL,
-                   P_TMS_ID,
-                   P_CUSTOMER_ACCOUNT_ID,
-                   P_CUSTOMER_NAME,
-                   P_MOBILE_NUMBER,
-                   P_MESSAGE_DIRECTION,
-                   P_MESSAGE_BODY,
-                   P_SENT_STATUS,
-                   P_RECEIVED_PROCESS_STATUS,
-                   P_MESSAGE_SEND_TIME,
-                   P_MESSAGE_RECEIVE_TIME,
-                   P_MESSAGE_DELIVERY_STATUS,
-                   P_ATTEMPT_COUNT,
-                   P_CREATION_DATE,
-                   P_MODIFICATION_DATE,
-                   P_MODIFIED_BY);
+      C_COUNT_HISTORY := 0;
 
-      SELECT SMS_COMM_HISTORY_SEQ.CURRVAL INTO P_ENTRY_ID FROM DUAL;
+      SELECT COUNT (*)
+        INTO C_COUNT_HISTORY
+        FROM TBL_SMS_COMM_HISTORY
+       WHERE     CUSTOMER_ACCOUNT_ID = P_CUSTOMER_ACCOUNT_ID
+             AND CUSTOMER_NAME = P_CUSTOMER_NAME
+             AND MESSAGE_BODY = P_MESSAGE_BODY;
+
+      IF (C_COUNT_HISTORY = 0)
+      THEN
+         INSERT INTO TBL_SMS_COMM_HISTORY (ENTRY_ID,
+                                           TMS_ID,
+                                           CUSTOMER_ACCOUNT_ID,
+                                           CUSTOMER_NAME,
+                                           MOBILE_NUMBER,
+                                           MESSAGE_DIRECTION,
+                                           MESSAGE_BODY,
+                                           SENT_STATUS,
+                                           RECEIVED_PROCESS_STATUS,
+                                           MESSAGE_SEND_TIME,
+                                           MESSAGE_RECEIVE_TIME,
+                                           MESSAGE_DELIVERY_STATUS,
+                                           ATTEMPT_COUNT,
+                                           CREATION_DATE,
+                                           MODIFICATION_DATE,
+                                           MODIFIED_BY)
+              VALUES (SMS_COMM_HISTORY_SEQ.NEXTVAL,
+                      P_TMS_ID,
+                      P_CUSTOMER_ACCOUNT_ID,
+                      P_CUSTOMER_NAME,
+                      P_MOBILE_NUMBER,
+                      P_MESSAGE_DIRECTION,
+                      P_MESSAGE_BODY,
+                      P_SENT_STATUS,
+                      P_RECEIVED_PROCESS_STATUS,
+                      P_MESSAGE_SEND_TIME,
+                      P_MESSAGE_RECEIVE_TIME,
+                      P_MESSAGE_DELIVERY_STATUS,
+                      P_ATTEMPT_COUNT,
+                      P_CREATION_DATE,
+                      P_MODIFICATION_DATE,
+                      P_MODIFIED_BY);
+
+         SELECT SMS_COMM_HISTORY_SEQ.CURRVAL INTO P_ENTRY_ID FROM DUAL;
+      END IF;
    END SMS_HISTORY_INSERT;
 
    PROCEDURE SMS_HISTORY_UPDATE (P_ENTRY_ID                  IN NUMBER,
@@ -3669,8 +3681,9 @@ ORDER BY TRANSACTION_ID';
                 AUDIT_STATUS = 1,
                 AUDIT_DATE = SYSDATE,
                 AUDITED_VRN = P_AUDITED_VRN,
-                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID;
-
+                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
+                WHERE TRANSACTION_ID = P_CHILD_1_TRANSACTION_ID;
+                
          SELECT NVL (TC.CT_ENTRY_ID, 0)
            INTO CT_ENTRYID
            FROM TBL_TRANSACTION TC
@@ -3695,8 +3708,9 @@ ORDER BY TRANSACTION_ID';
                 AUDIT_STATUS = 1,
                 AUDIT_DATE = SYSDATE,
                 AUDITED_VRN = P_AUDITED_VRN,
-                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID;
-
+                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
+                WHERE TRANSACTION_ID = P_CHILD_2_TRANSACTION_ID;
+                
          IF (NVL (CT_ENTRYID, 0) = 0)
          THEN
             SELECT NVL (TC.CT_ENTRY_ID, 0)

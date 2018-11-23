@@ -30,7 +30,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
                 string strQuery = " WHERE 1=1 ";
 
-                strQuery += " AND T.IS_BALANCE_UPDATED = " + 1;
+                strQuery += " AND (NVL(T.CT_ENTRY_ID,0) > 0 AND (NVL(T.NF_ENTRY_ID_FRONT,0) > 0 OR NVL(T.NF_ENTRY_ID_REAR,0) > 0))";
                 
                
                 dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);

@@ -50,6 +50,9 @@
                                         </div>
                                     </div>
                                 </th>
+                                <th style="width:60px">
+                                    ANPR FRONT Class
+                                </th>
                                 <th style="width:120px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
@@ -62,6 +65,9 @@
                                             Video
                                         </div>
                                     </div>
+                                </th>
+                                <th style="width:60px">
+                                    ANPR REAR Class
                                 </th>
                                 <th style="width:60px">
                                     Speed
@@ -106,6 +112,10 @@
                                                     </span>
 
                                                 }
+                                                else {
+                                                    @item["FRONT_VRN"].ToString()
+                                                    
+                                                }
                                             </div>
                                             <div class="col-sm-2">
                                                 @if (item["FRONT_VIDEO_URL"].ToString() != "")
@@ -113,6 +123,10 @@
                                                     string path = item["FRONT_VIDEO_URL"].ToString();
                                                     path = path.Replace('/', '^');
                                                     <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                                }
+                                                else {
+                                                    @item["REAR_VRN"].ToString()
+
                                                 }
                                             </div>
                                         </div>

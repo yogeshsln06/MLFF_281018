@@ -301,6 +301,8 @@ namespace VaaaN.MLFF.WindowsServices
                                             ctp.ModificationDate = System.DateTime.Now;
                                             LogMessage("Crosstalk CBE updated successfully.");
 
+
+                                            #region Insert Into Even Queue for Live Event
                                             try
                                             {
                                                 LogMessage("Trying to push crosstalk event to event queue...");
@@ -327,6 +329,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             {
                                                 LogMessage("Exception in pushing crosstalk event to event queue. " + ex.ToString());
                                             }
+                                            #endregion
 
 
                                         }
