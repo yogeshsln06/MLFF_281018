@@ -143,8 +143,22 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("entryId: " + this.entryId.ToString() + Environment.NewLine);
-            sb.Append("customerAccountId: " + this.customerAccountId.ToString() + Environment.NewLine);
+            sb.Append("entryId: " + this.entryId + Environment.NewLine);
+            sb.Append("tmsId: " + this.tmsId + Environment.NewLine);
+            sb.Append("customerAccountId: " + this.customerAccountId + Environment.NewLine);
+            sb.Append("customerName: " + this.customerName + Environment.NewLine);
+            sb.Append("mobileNumber: " + this.mobileNumber + Environment.NewLine);
+            sb.Append("messageDirection: " + this.messageDirection + Environment.NewLine);
+            sb.Append("messageBody: " + this.messageBody + Environment.NewLine);
+            sb.Append("sentStatus: " + this.sentStatus + Environment.NewLine);
+            sb.Append("receivedProcessStatus: " + this.receivedProcessStatus + Environment.NewLine);
+            sb.Append("messageSendDateTime: " + this.messageSendDateTime + Environment.NewLine);
+            sb.Append("messageReceiveTime: " + this.messageReceiveTime + Environment.NewLine);
+            sb.Append("messageDeliveryStatus: " + this.messageDeliveryStatus + Environment.NewLine);
+            sb.Append("attemptCount: " + this.attemptCount + Environment.NewLine);
+            sb.Append("creationDate: " + this.creationDate + Environment.NewLine);
+            sb.Append("modificationDate: " + this.modificationDate + Environment.NewLine);
+            sb.Append("modifiedBy: " + this.modifiedBy + Environment.NewLine);
 
             return sb.ToString();
         }
