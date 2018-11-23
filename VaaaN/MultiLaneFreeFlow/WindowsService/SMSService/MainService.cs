@@ -165,7 +165,7 @@ namespace SMSService
                                 smsOutgoing.ModificationDate = DateTime.Now;
                                 smsOutgoing.ModifiedBy = 0;
 
-                                LogMessage("Inserting sms communication history...");
+                                LogMessage("Inserting sms communication history. Detail:" + smsOutgoing.ToString());
                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(smsOutgoing);
                                 LogMessage("SMS communication history updated successfully.");
                             }

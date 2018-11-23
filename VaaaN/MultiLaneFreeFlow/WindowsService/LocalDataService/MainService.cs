@@ -1123,6 +1123,7 @@ namespace VaaaN.MLFF.WindowsServices
             try
             {
                 LogMessage("Trying to push SMS to MSMQ...");
+
                 Message smsMessage = new Message();
                 smsMessage.Formatter = new BinaryMessageFormatter();
                 VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail smsDetail = new Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail();
@@ -1135,7 +1136,10 @@ namespace VaaaN.MLFF.WindowsServices
                 smsDetail.SenderMobileNumber = customerAccountInfo.MobileNo;
 
                 smsMessage.Body = smsDetail;
+
+                LogMessage("Detail:" + smsDetail.ToString());
                 smsMessageQueue.Send(smsMessage);
+                LogMessage("Message pushed successfully to MSMQ.");
             }
             catch (Exception ex)
             {
