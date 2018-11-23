@@ -27,48 +27,62 @@
                                 </th>
                                 @*<th style="width:60px">
                                         Lane Id
-                                    </th>
-                                    <th style="width:60px">
-                                        Gantry Id
                                     </th>*@
                                 <th style="width:60px">
-                                    IKE VRN
-                                </th>
-                                <th style="width:60px">
-                                    IKE Class
+                                    Gantry Id
                                 </th>
                                 <th style="width:120px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
-                                            ANPR Front
+                                            IKE
                                         </div>
-                                        <div class="col-sm-10">
-                                            Image
+                                        <div class="col-sm-6">
+                                            Plate
                                         </div>
-                                        <div class="col-sm-2">
-                                            Video
+                                        <div class="col-sm-6">
+                                            Class
                                         </div>
                                     </div>
                                 </th>
-                                <th style="width:60px">
-                                    ANPR FRONT Class
-                                </th>
-                                <th style="width:120px">
+                                <th style="width:240px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
-                                            ANPR Rear
+                                            Front ANPR
                                         </div>
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-3">
+                                            Plate
+                                        </div>
+                                        <div class="col-sm-3">
+                                            Class
+                                        </div>
+                                        <div class="col-sm-3">
                                             Image
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-3">
                                             Video
                                         </div>
                                     </div>
                                 </th>
-                                <th style="width:60px">
-                                    ANPR REAR Class
+                                <th style="width:240px">
+                                    <div class="col-sm-12">
+                                        <div style="text-align:center;">
+                                            Rear ANPR
+                                        </div>
+                                        <div class="col-sm-3">
+                                            Plate
+                                        </div>
+                                        <div class="col-sm-3">
+                                            Class
+                                        </div>
+                                        <div class="col-sm-3">
+                                            Image
+                                        </div>
+                                        <div class="col-sm-3">
+                                            Video
+                                        </div>
+                                    </div>
                                 </th>
+
                                 <th style="width:60px">
                                     Speed
                                 </th>
@@ -90,67 +104,77 @@
                                     @*<td>
                                             @item["LANE_ID"].ToString()
                                         </td>
-                                        <td>
-                                            @item["PLAZA_ID"].ToString()
-                                        </td>*@
+                                    *@
                                     <td>
-                                        @item["CTP_VRN"].ToString()
-                                    </td>
-                                    <td>
-                                        @item["CTP_VEHICLE_CLASS_NAME"].ToString()
+                                        @item["PLAZA_ID"].ToString()
                                     </td>
                                     <td>
                                         <div class="col-sm-12">
-                                            <div class="col-sm-10">
-                                                @if (item["FRONT_IMAGE"].ToString() != "")
-                                                {
-                                                    string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
-                                                    string path1 = path.Replace('/', '^');
-                                                    <span onclick="openimage(this);" path="@path1">
-                                                        @*<i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i>*@
-                                                        <img src="@path" height="40" width="100" />
-                                                    </span>
-
-                                                }
-                                                else {
-                                                    @item["FRONT_VRN"].ToString()
-                                                    
-                                                }
+                                            <div class="col-sm-6">
+                                                @item["CTP_VRN"].ToString()
                                             </div>
-                                            <div class="col-sm-2">
-                                                @if (item["FRONT_VIDEO_URL"].ToString() != "")
-                                                {
-                                                    string path = item["FRONT_VIDEO_URL"].ToString();
-                                                    path = path.Replace('/', '^');
-                                                    <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
-                                                }
-                                                else {
-                                                    @item["REAR_VRN"].ToString()
-
-                                                }
+                                            <div class="col-sm-6">
+                                                @item["CTP_VEHICLE_CLASS_NAME"].ToString()
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="col-sm-12">
-                                            <div class="col-sm-10">
+                                            <div class="col-sm-3">
+                                                @item["FRONT_VRN"].ToString()
+                                            </div>
+                                            <div class="col-sm-3">
+                                                @item["NFP_VEHICLE_CLASS_NAME_FRONT"].ToString()
+                                            </div>
+                                            <div class="col-sm-3">
+                                                @if (item["FRONT_IMAGE"].ToString() != "")
+                                                {
+                                                    string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
+                                                    string path1 = path.Replace('/', '^');
+                                                <span onclick="openimage(this);" path="@path1">
+                                                    <img src="@path" height="40" width="100" />
+                                                </span>
+
+                                                }
+                                            </div>
+                                            <div class="col-sm-3">
+                                                @if (item["FRONT_VIDEO_URL"].ToString() != "")
+                                                {
+                                                    string path = item["FRONT_VIDEO_URL"].ToString();
+                                                    path = path.Replace('/', '^');
+                                                <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-3">
+                                                @item["REAR_VRN"].ToString()
+                                            </div>
+                                            <div class="col-sm-3">
+                                                @item["NFP_VEHICLE_CLASS_NAME_REAR"].ToString()
+                                            </div>
+                                            <div class="col-sm-3">
                                                 @if (item["REAR_IMAGE"].ToString() != "")
                                                 {
                                                     string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
                                                     string path1 = path.Replace('/', '^');
                                                     <span onclick="openimage(this);" path="@path1">
-                                                        @*<i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i>*@
                                                         <img src="@path" height="40" width="100" />
                                                     </span>
+
                                                 }
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-3">
                                                 @if (item["REAR_VIDEO_URL"].ToString() != "")
                                                 {
                                                     string path = item["REAR_VIDEO_URL"].ToString();
                                                     path = path.Replace('/', '^');
                                                     <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                                 }
+
                                             </div>
                                         </div>
                                     </td>
