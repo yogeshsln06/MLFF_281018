@@ -87,7 +87,7 @@
                                     Speed
                                 </th>
                                 <th style="width:60px">
-                                    Check Associated Transactions
+                                    Action
                                 </th>
                             </tr>
                         </thead>
@@ -131,9 +131,9 @@
                                                 {
                                                     string path = ViewData["apiPath"] + item["FRONT_IMAGE"].ToString();
                                                     string path1 = path.Replace('/', '^');
-                                                <span onclick="openimage(this);" path="@path1">
-                                                    <img src="@path" height="40" width="100" />
-                                                </span>
+                                                    <span onclick="openimage(this);" path="@path1">
+                                                        <img src="@path" height="40" width="60" />
+                                                    </span>
 
                                                 }
                                             </div>
@@ -142,7 +142,7 @@
                                                 {
                                                     string path = item["FRONT_VIDEO_URL"].ToString();
                                                     path = path.Replace('/', '^');
-                                                <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
+                                                    <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                                                 }
 
                                             </div>
@@ -162,7 +162,7 @@
                                                     string path = ViewData["apiPath"] + item["REAR_IMAGE"].ToString();
                                                     string path1 = path.Replace('/', '^');
                                                     <span onclick="openimage(this);" path="@path1">
-                                                        <img src="@path" height="40" width="100" />
+                                                        <img src="@path" height="40" width="60" />
                                                     </span>
 
                                                 }

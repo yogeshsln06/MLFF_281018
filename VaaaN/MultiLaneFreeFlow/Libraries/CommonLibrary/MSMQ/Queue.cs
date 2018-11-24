@@ -5,8 +5,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.MSMQ
 {
     public class Queue
     {
-        public static string inBoxQueueName = ".\\Private$\\inBoxQueue";
-        public static string failedQueueName = ".\\Private$\\failedQueue";
+        public static string inBoxQueueNameIKE = ".\\Private$\\inBoxQueueIKE";
+        public static string inBoxQueueNameANPR = ".\\Private$\\inBoxQueueANPR";
+        public static string failedQueueNameIKE = ".\\Private$\\failedQueueIKE";
+        public static string failedQueueNameANPR = ".\\Private$\\failedQueueANPR";
 
         public static string eventQueue = ".\\Private$\\eventQueue";
         public static TimeSpan eventQueueTimeOut = new TimeSpan(1, 0, 3);

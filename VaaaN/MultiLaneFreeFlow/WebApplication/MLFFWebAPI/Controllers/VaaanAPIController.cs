@@ -30,7 +30,8 @@ namespace MLFFWebAPI.Controllers
     {
         #region Globel Variable 
         HttpResponseMessage response = null;
-        static System.Messaging.MessageQueue inBoxQueue;
+        static System.Messaging.MessageQueue inBoxQueueIKE;
+        static System.Messaging.MessageQueue inBoxQueueANPR;
         string filepath = "";
         string rootpath = HttpContext.Current.Server.MapPath("~/events/" + DateTime.Now.ToString("dd-MMM-yyyy") + "/");
         DataSet ds = new DataSet();
@@ -170,10 +171,8 @@ namespace MLFFWebAPI.Controllers
                             m.Formatter = new BinaryMessageFormatter();
                             m.Body = ctp;
                             m.Recoverable = true;
-                            inBoxQueue = Queue.Create(Queue.inBoxQueueName);
-                            //eventQueue = Queue.Create(Queue.eventQueue);
-                            inBoxQueue.Send(m);
-                            //eventQueue.Send(m);
+                            inBoxQueueIKE = Queue.Create(Queue.inBoxQueueNameIKE);
+                            inBoxQueueIKE.Send(m);
                         }
                         catch (Exception ex)
                         {
@@ -333,8 +332,8 @@ namespace MLFFWebAPI.Controllers
                     m.Formatter = new BinaryMessageFormatter();
                     m.Body = nfp;
                     m.Recoverable = true;
-                    inBoxQueue = Queue.Create(Queue.inBoxQueueName);
-                    inBoxQueue.Send(m);
+                    inBoxQueueANPR = Queue.Create(Queue.inBoxQueueNameANPR);
+                    inBoxQueueANPR.Send(m);
                     #endregion
                 }
                 catch (Exception ex)
@@ -468,8 +467,8 @@ namespace MLFFWebAPI.Controllers
                     m.Formatter = new BinaryMessageFormatter();
                     m.Body = nfp;
                     m.Recoverable = true;
-                    inBoxQueue = Queue.Create(Queue.inBoxQueueName);
-                    inBoxQueue.Send(m);
+                    inBoxQueueANPR = Queue.Create(Queue.inBoxQueueNameANPR);
+                    inBoxQueueANPR.Send(m);
                     #endregion
                 }
                 catch (Exception ex)

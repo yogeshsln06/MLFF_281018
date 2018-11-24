@@ -1623,7 +1623,9 @@ AS
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
              FROM TBL_NODEFLUX_PACKET NFP
-            WHERE     NFP.TIMESTAMP > (P_NF_TIME - INTERVAL '60' SECOND)
+            WHERE  TO_DATE (SUBSTR (NFP.TIMESTAMP, 0, 19),
+                               'YYYY-MM-DD HH24:MI:SS') >
+                         (P_NF_TIME - INTERVAL '60' SECOND)
                   AND NFP.GANTRY_ID = P_PLAZA_ID
                   AND NFP.PLATE_NUMBER = P_VRN
                   AND NFP.CAMERA_POSITION = P_CAMERA_POSITION

@@ -29,8 +29,10 @@ namespace VaaaN.MLFF.WindowsServices
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection tollRates;
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCollection vehicleClasses;
 
-        private MessageQueue failedQueue;
-        private MessageQueue inBoxQueue;
+        private MessageQueue failedQueueIKE;
+        private MessageQueue failedQueueANPR;
+        private MessageQueue inBoxQueueANPR;
+        private MessageQueue inBoxQueueIKE;
         private MessageQueue smsMessageQueue;
         private MessageQueue eventQueue;
         int ctpEntryId = 0;
@@ -43,7 +45,16 @@ namespace VaaaN.MLFF.WindowsServices
         int mediumCount = 0;
         int bigCount = 0;
         string counterString = string.Empty;
+        List<IkePktData> ikeRecentDataList = new List<IkePktData>();
+        List<ANPRPktData> ANPRRecentDataList = new List<ANPRPktData>();
+
         VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration generalFileConfig;
+
+        Thread listUpdaterThread;
+
+        DateTime lastListUpdateTime = System.DateTime.MinValue;
+
+        volatile Boolean stopListUpdatingThread = false;
         #endregion
 
         #region Constructor
@@ -103,11 +114,14 @@ namespace VaaaN.MLFF.WindowsServices
                 lanes = VaaaN.MLFF.Libraries.CommonLibrary.BLL.LaneBLL.GetAll();
                 plazas = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsCollection();
                 hardwares = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetAll();
-                customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsCollection();
-                customerVehicles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsCollection();
-                tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
+                //customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsCollection();
+                //customerVehicles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsCollection();
                 vehicleClasses = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAllAsCollection();
+                tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
 
+                listUpdaterThread = new Thread(new ThreadStart(this.ListUpdatingThreadFunction));
+                listUpdaterThread.IsBackground = true;
+                listUpdaterThread.Start();
                 LogMessage("Required collections has been accessed.");
             }
             catch (Exception ex)
@@ -144,11 +158,18 @@ namespace VaaaN.MLFF.WindowsServices
             try
             {
                 LogMessage("Trying to start LDS service...");
-                this.inBoxQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.inBoxQueueName);
-                inBoxQueue.PeekCompleted += new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
-                inBoxQueue.BeginPeek();
-
-                this.failedQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueName);
+                #region IKE Queue
+                this.inBoxQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.inBoxQueueNameIKE);
+                inBoxQueueIKE.PeekCompleted += new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+                inBoxQueueIKE.BeginPeek();
+                this.failedQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueNameIKE);
+                #endregion
+                #region ANPR Queue
+                this.inBoxQueueANPR = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.inBoxQueueNameANPR);
+                inBoxQueueANPR.PeekCompleted += new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+                inBoxQueueANPR.BeginPeek();
+                this.failedQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueNameANPR);
+                #endregion
                 LogMessage("LDS service started successfully.");
             }
             catch (Exception ex)
@@ -161,7 +182,18 @@ namespace VaaaN.MLFF.WindowsServices
         {
             try
             {
-                inBoxQueue.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+                inBoxQueueIKE.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+                inBoxQueueANPR.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+
+                stopListUpdatingThread = true;
+                Thread.Sleep(2000);
+                if (listUpdaterThread != null)
+                {
+                    if (listUpdaterThread.IsAlive == true)
+                    {
+                        listUpdaterThread.Abort();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -204,7 +236,8 @@ namespace VaaaN.MLFF.WindowsServices
                 m.Formatter = new BinaryMessageFormatter();
                 LogMessage("Processing InBoxQueue message.");
 
-                ProcessQueueMessage(m);
+                ProcessQueueMessageIKE(m);
+                ProcessQueueMessageANPR(m);
                 receiveRecord = true;
             }
             catch (Exception ex)
@@ -224,14 +257,15 @@ namespace VaaaN.MLFF.WindowsServices
                 //receive and send to failed queue
                 //}
 
-                inBoxQueue.BeginPeek();
+                inBoxQueueIKE.BeginPeek();
+                inBoxQueueANPR.BeginPeek();
             }
         }
         #endregion
 
         #region Helper Methods
 
-        private void ProcessQueueMessage(Message m)
+        private void ProcessQueueMessageIKE(Message m)
         {
             if (m != null)
             {
@@ -243,7 +277,7 @@ namespace VaaaN.MLFF.WindowsServices
                     if (m.Body is VaaaN.MLFF.Libraries.CommonLibrary.Common.CrossTalkPacket)
                     {
                         #region CrossTalk packet
-                        LogMessage("==CROSSTALK PACKET==");
+                        LogMessage("==IKE==");
 
                         VaaaN.MLFF.Libraries.CommonLibrary.Common.CrossTalkPacket crossTalkPacket = (VaaaN.MLFF.Libraries.CommonLibrary.Common.CrossTalkPacket)m.Body;
 
@@ -267,6 +301,12 @@ namespace VaaaN.MLFF.WindowsServices
                                     LogMessage("Checking the tag exists in the system or not. " + ctp.ObjectId);
                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE associatedCVCT = DoesTagExist(ctp.ObjectId);
                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE associatedCACT = null;
+                                    //if (associatedCVCT == null)
+                                    //{
+                                    //    customerVehicles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsCollection();
+                                    //    customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsCollection();
+                                    //    associatedCVCT = DoesTagExist(ctp.ObjectId);
+                                    //}
                                     if (associatedCVCT != null)
                                     {
                                         LogMessage("Tag exists.");
@@ -348,6 +388,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             #region Step 2: Send to local database
                                             try
                                             {
+                                                ikeRecentDataList.Add(new IkePktData { ObjectId = ctp.ObjectId, PlazaId = ctp.PlazaId, currentDateTime = DateTime.Now });
                                                 LogMessage("Sending crosstalk packet to local database. " + ctp.ObjectId);
                                                 ctpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.Insert(ctp);
                                                 LogMessage("Crosstalk packet inserted successfully.");
@@ -361,7 +402,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     LogMessage("Trying to send to failed queue...");
 
                                                     m.Recoverable = true;
-                                                    failedQueue.Send(m);
+                                                    failedQueueIKE.Send(m);
 
                                                     LogMessage("Message sent to failed queue.");
                                                 }
@@ -504,10 +545,35 @@ namespace VaaaN.MLFF.WindowsServices
                         }
                         #endregion
                     }
-                    else if (m.Body is VaaaN.MLFF.Libraries.CommonLibrary.Common.NodeFluxPacket)
+                    else
+                    {
+                        LogMessage("Current object is not valid packet. " + m.Body.ToString());
+                    }
+                    #endregion
+                }
+                else
+                {
+                    LogMessage("Message body is null.");
+                }
+            }
+            else
+            {
+                LogMessage("Message is null.");
+            }
+        }
+        private void ProcessQueueMessageANPR(Message m)
+        {
+            if (m != null)
+            {
+                m.Formatter = new BinaryMessageFormatter();
+
+                if (m.Body != null)
+                {
+                    #region Processing packets
+                    if (m.Body is VaaaN.MLFF.Libraries.CommonLibrary.Common.NodeFluxPacket)
                     {
                         #region NodeFlux packet
-                        LogMessage("==NODEFLUX PACKET==");
+                        LogMessage("==ANPR==");
 
                         VaaaN.MLFF.Libraries.CommonLibrary.Common.NodeFluxPacket nfpBody = (VaaaN.MLFF.Libraries.CommonLibrary.Common.NodeFluxPacket)m.Body;
                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfp = null;
@@ -629,11 +695,12 @@ namespace VaaaN.MLFF.WindowsServices
                                     //whether the vrn exists or does not exist, we have to push it to local table after checking the case of
                                     //multiple reporting
                                     LogMessage("Checking existing nodeflux records for: " + nfp.PlateNumber);
-                                    if (string.IsNullOrEmpty(nfp.PlateNumber))
+                                    if (string.IsNullOrEmpty(nfp.PlateNumber) || nfp.PlateNumber == "Not Detected")
                                     {
                                         #region Send to local nodeflux database
                                         try
                                         {
+
                                             LogMessage("VRN is blank. Sending to local nodeflux table...");
                                             nfpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.Insert(nfp);
                                             LogMessage("Nodeflux record with blank VRN inserted successfully.");
@@ -647,7 +714,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             {
                                                 LogMessage("Trying to send to failed queue...");
                                                 m.Recoverable = true;
-                                                failedQueue.Send(m);
+                                                failedQueueANPR.Send(m);
                                                 LogMessage("Message sent to failed queue.");
                                             }
                                             catch (Exception exc)
@@ -692,6 +759,7 @@ namespace VaaaN.MLFF.WindowsServices
                                         try
                                         {
                                             LogMessage("Sending to local nodeflux table. Plate number is: " + nfp.PlateNumber);
+                                            ANPRRecentDataList.Add(new ANPRPktData { VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, cameraPosition = Convert.ToInt32(nfp.CameraPosition), currentDateTime = DateTime.Now });
                                             nfpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.Insert(nfp);
                                             LogMessage("NodeFlux packet inserted successfully.");
                                         }
@@ -705,7 +773,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 LogMessage("Trying to send to failed queue...");
 
                                                 m.Recoverable = true;
-                                                failedQueue.Send(m);
+                                                failedQueueANPR.Send(m);
 
                                                 LogMessage("Message sent to failed queue.");
                                             }
@@ -1222,6 +1290,9 @@ namespace VaaaN.MLFF.WindowsServices
 
             try
             {
+                //VaaaN.MLFF.Libraries.CommonLibrary.BLL.RoleBLL.GetAll().Select(x => new SelectListItem { Text = x.RoleName, Value = x.RoleId.ToString() });
+                //var carsWithIds = customerVehicles.select(a => new { a.id, a.cars.color, a.cars.model })
+
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE cvc in customerVehicles)
                 {
                     if (cvc.TagId.ToLower() == tagId.ToLower())
@@ -1244,16 +1315,23 @@ namespace VaaaN.MLFF.WindowsServices
             bool result = false;
             try
             {
-                VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkPacketCollection ctPackets = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.GetRecent(plazaId, tagId, tagReportingTime);
-
-                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkPacketCBE ctp in ctPackets)
+                ikeRecentDataList.RemoveAll(e => e.currentDateTime < DateTime.Now.AddMinutes(-1));
+                if (ikeRecentDataList.Any(e => (e.PlazaId == plazaId && e.ObjectId == tagId)))
                 {
-                    if (ctp.ObjectId.ToLower() == tagId.ToLower())
-                    {
-                        result = true;
-                        break;
-                    }
+                    result = true;
                 }
+                //ikeRecentDataList.Any(x => (x.PlazaId == plazaId && x.ObjectId = tagId));
+                // ikeRecentDataList.Select(x => x.ObjectId= tagId && x.PlazaId=plazaId);
+                //    VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkPacketCollection ctPackets = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.GetRecent(plazaId, tagId, tagReportingTime);
+
+                //    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkPacketCBE ctp in ctPackets)
+                //    {
+                //        if (ctp.ObjectId.ToLower() == tagId.ToLower())
+                //        {
+                //            result = true;
+                //            break;
+                //        }
+                //    }
             }
             catch (Exception ex)
             {
@@ -1268,16 +1346,22 @@ namespace VaaaN.MLFF.WindowsServices
             bool result = false;
             try
             {
-                VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCollection nfPackets = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetRecent(plazaId, vrn, nodeFluxReportingTime, cameraPosition);
-
-                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfp in nfPackets)
+                ANPRRecentDataList.RemoveAll(e => e.currentDateTime < DateTime.Now.AddMinutes(-1));
+                if (ANPRRecentDataList.Any(e => (e.PlazaId == plazaId && e.VRN == vrn && e.cameraPosition == cameraPosition)))
                 {
-                    if (nfp.PlateNumber.ToLower() == vrn.ToLower())
-                    {
-                        result = true;
-                        break;
-                    }
+                    result = true;
                 }
+
+                //VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCollection nfPackets = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetRecent(plazaId, vrn, nodeFluxReportingTime, cameraPosition);
+
+                //foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfp in nfPackets)
+                //{
+                //    if (nfp.PlateNumber.ToLower() == vrn.ToLower())
+                //    {
+                //        result = true;
+                //        break;
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -1659,6 +1743,34 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
         #endregion
+
+        private void ListUpdatingThreadFunction()
+        {
+            //for the time being we can ignore deleted records
+            while (!stopListUpdatingThread)
+            {
+                try
+                {
+                    customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsCollection();
+                    customerVehicles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsCollection();
+                    //get customers and customer vehicles where modificationdate >  lastListUpdateTime (consider insert and delete both)
+                    //update customer collection (add if new record found in database, remove if deleted record found in database
+                    //update customer vehicle collection (add if new record found in database, remove if deleted record found in database
+                }
+
+                catch (Exception ex)
+                {
+                    LogMessage("Exception in ListUpdatingThreadFunction(). " + ex.ToString());
+                }
+                finally
+                {
+                    lastListUpdateTime = System.DateTime.Now; //ç==========================important
+                    Thread.Sleep(2000);
+                }
+
+            }
+
+        }
     }
 
     public class TagStructure
@@ -1690,6 +1802,24 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
     }
+
+    public class IkePktData
+    {
+        public string ObjectId { get; set; }
+        public Int32 PlazaId { get; set; }
+        public DateTime currentDateTime { get; set; }
+    }
+
+    public class ANPRPktData
+    {
+        public string VRN { get; set; }
+        public Int32 PlazaId { get; set; }
+        public Int32 cameraPosition { get; set; }
+
+        public DateTime currentDateTime { get; set; }
+    }
+
+   
 
 }
 
