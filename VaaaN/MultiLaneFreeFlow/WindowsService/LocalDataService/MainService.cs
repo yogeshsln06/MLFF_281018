@@ -65,7 +65,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
             //DateTime dt = DateTime.ParseExact("13/10/2018 23:24:25.111", "dd/MM/yyyy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
