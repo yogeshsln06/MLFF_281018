@@ -160,13 +160,13 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("Trying to start LDS service...");
                 #region IKE Queue
                 this.inBoxQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.inBoxQueueNameIKE);
-                inBoxQueueIKE.PeekCompleted += new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+                inBoxQueueIKE.PeekCompleted += new PeekCompletedEventHandler(InBoxQueueIKE_PeekCompleted);
                 inBoxQueueIKE.BeginPeek();
                 this.failedQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueNameIKE);
                 #endregion
                 #region ANPR Queue
                 this.inBoxQueueANPR = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.inBoxQueueNameANPR);
-                inBoxQueueANPR.PeekCompleted += new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+                inBoxQueueANPR.PeekCompleted += new PeekCompletedEventHandler(InBoxQueueANPR_PeekCompleted);
                 inBoxQueueANPR.BeginPeek();
                 this.failedQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueNameANPR);
                 #endregion
@@ -182,8 +182,8 @@ namespace VaaaN.MLFF.WindowsServices
         {
             try
             {
-                inBoxQueueIKE.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
-                inBoxQueueANPR.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+                inBoxQueueIKE.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueueIKE_PeekCompleted);
+                inBoxQueueANPR.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueueANPR_PeekCompleted);
 
                 stopListUpdatingThread = true;
                 Thread.Sleep(2000);
@@ -222,7 +222,7 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
 
-        void InBoxQueue_PeekCompleted(object sender, PeekCompletedEventArgs e)
+        void InBoxQueueIKE_PeekCompleted(object sender, PeekCompletedEventArgs e)
         {
             bool receiveRecord = false;
             Stopwatch sw = new Stopwatch();
@@ -237,6 +237,44 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("Processing InBoxQueue message.");
 
                 ProcessQueueMessageIKE(m);
+                receiveRecord = true;
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Error in peeking inbox queue. " + ex.ToString());
+                receiveRecord = false;
+            }
+            finally
+            {
+                //if (receiveRecord)
+                //{
+                mq.Receive();
+                sw.Stop();
+                //}
+                //else
+                //{
+                //receive and send to failed queue
+                //}
+
+                inBoxQueueIKE.BeginPeek();
+                inBoxQueueANPR.BeginPeek();
+            }
+        }
+
+        void InBoxQueueANPR_PeekCompleted(object sender, PeekCompletedEventArgs e)
+        {
+            bool receiveRecord = false;
+            Stopwatch sw = new Stopwatch();
+            MessageQueue mq = (MessageQueue)sender;
+
+            try
+            {
+                sw.Start();
+
+                Message m = (Message)mq.EndPeek(e.AsyncResult);
+                m.Formatter = new BinaryMessageFormatter();
+                LogMessage("Processing InBoxQueue message.");
+
                 ProcessQueueMessageANPR(m);
                 receiveRecord = true;
             }
@@ -1819,7 +1857,7 @@ namespace VaaaN.MLFF.WindowsServices
         public DateTime currentDateTime { get; set; }
     }
 
-   
+
 
 }
 
