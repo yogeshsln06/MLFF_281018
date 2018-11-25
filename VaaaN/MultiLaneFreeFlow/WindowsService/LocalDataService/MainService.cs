@@ -916,6 +916,14 @@ namespace VaaaN.MLFF.WindowsServices
                                                     //in the main transaction table, if found update the nodeflux related fields. this is normal transaction
                                                     if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                     {
+                                                        if (transaction.NodefluxEntryIdRear > 0)
+                                                        {
+                                                            List<ANPRPktData> VehicleTimeStamp = ANPRRecentDataList.Where(trans => (trans.PlazaId == transaction.PlazaId && trans.PktId == transaction.NodefluxEntryIdRear)).OrderByDescending(o => o.PacketTimeStamp).ToList();
+                                                            if (VehicleTimeStamp.Count > 0)
+                                                            {
+                                                                transaction.VehicleSpeed = CalculateSpeed(nfpDateTime, VehicleTimeStamp[0].PacketTimeStamp);
+                                                            }
+                                                        }
                                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateNodefluxSectionFront(transaction, nfpEntryId);
                                                         LogMessage("Transaction updated by nf entry id front.");
                                                         var obj = TranscationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
@@ -923,6 +931,14 @@ namespace VaaaN.MLFF.WindowsServices
                                                     }
                                                     else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                     {
+                                                        if (transaction.NodefluxEntryIdFront > 0)
+                                                        {
+                                                            List<ANPRPktData> VehicleTimeStamp = ANPRRecentDataList.Where(trans => (trans.PlazaId == transaction.PlazaId && trans.PktId == transaction.NodefluxEntryIdFront)).OrderByDescending(o => o.PacketTimeStamp).ToList();
+                                                            if (VehicleTimeStamp.Count > 0)
+                                                            {
+                                                                transaction.VehicleSpeed = CalculateSpeed(nfpDateTime, VehicleTimeStamp[0].PacketTimeStamp);
+                                                            }
+                                                        }
                                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateNodefluxSectionRear(transaction, nfpEntryId);
                                                         var obj = TranscationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
                                                         if (obj != null) obj.AnprRId = nfpEntryId;
