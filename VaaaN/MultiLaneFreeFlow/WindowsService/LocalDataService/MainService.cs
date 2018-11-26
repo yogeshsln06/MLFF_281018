@@ -49,6 +49,7 @@ namespace VaaaN.MLFF.WindowsServices
         List<ANPRPktData> ANPRRecentDataList = new List<ANPRPktData>();
         List<TranscationData> TranscationDataList = new List<TranscationData>();
         List<TranscationData> TranscationDataFilterList = new List<TranscationData>();
+        List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE> TollRateFilteredList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>();
 
         VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration generalFileConfig;
 
@@ -489,6 +490,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         transaction.PlazaId = Filtertransaction.PlazaId;
                                                         transaction.LaneId = Filtertransaction.LaneId;
                                                         transaction.TransactionId = Filtertransaction.TranscationId;
+                                                        transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
                                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateCrossTalkSection(transaction, ctpEntryId);//, eviVehicleClassId, eviVRN);
                                                         var obj = TranscationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
                                                         if (obj != null) obj.IKEId = ctpEntryId;
@@ -894,6 +896,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     transaction.PlazaId = Filtertransaction.PlazaId;
                                                     transaction.LaneId = Filtertransaction.LaneId;
                                                     transaction.TransactionId = Filtertransaction.TranscationId;
+                                                    transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
                                                     #region Get customer vehicle and customer account
                                                     //Get vehicle details of the associated tagid (VRN, Customer Account id etc)
                                                     LogMessage("Getting vehicle details...");
@@ -1020,6 +1023,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                             transaction.PlazaId = Filtertransaction.PlazaId;
                                                             transaction.LaneId = Filtertransaction.LaneId;
                                                             transaction.TransactionId = Filtertransaction.TranscationId;
+                                                            transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
                                                             if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                             {
                                                                 // update the VEHICLE speed
@@ -1118,6 +1122,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         transaction.PlazaId = Filtertransaction.PlazaId;
                                                         transaction.LaneId = Filtertransaction.LaneId;
                                                         transaction.TransactionId = Filtertransaction.TranscationId;
+                                                        transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
                                                         if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                         {
                                                             // update the VEHICLE speed
@@ -1520,7 +1525,7 @@ namespace VaaaN.MLFF.WindowsServices
                 DateTime currentStartDate = new DateTime();
                 DateTime currentEndDate = new DateTime();
                 DateTime actualEndDate = new DateTime(); //CJS
-
+                //TollRateFilteredList = FilterToolRate(plazaId, laneType, transactionTime, vehicleClass);
                 // Get toll rate as per transaction time
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in tollRates)
                 {
@@ -1529,7 +1534,8 @@ namespace VaaaN.MLFF.WindowsServices
                     // Get Start hour and minute
                     int startHour = Convert.ToInt32(tr.StartTime.Substring(0, 2));
                     int startMinute = Convert.ToInt32(tr.StartTime.Substring(3, 2));
-
+                    int transcationHours = Convert.ToInt32(currentDate.TimeOfDay.Hours);
+                    int transcationMinutes = Convert.ToInt32(currentDate.TimeOfDay.Minutes);
                     int endHour = Convert.ToInt32(tr.EndTime.Substring(0, 2));
                     int endMinute = Convert.ToInt32(tr.EndTime.Substring(3, 2));
 
@@ -1540,7 +1546,15 @@ namespace VaaaN.MLFF.WindowsServices
 
                     if (startHour > endHour)// Cross day
                     {
-                        actualEndDate = currentEndDate.AddDays(1); //this value need to be assigned to another vehicle CJS
+                        if (transcationHours >= 0)
+                        {
+                            actualEndDate = currentEndDate;
+                            currentStartDate = currentStartDate.AddDays(-1); //this value need to be assigned to another vehicle CJS
+                        }
+                        else {
+                            currentStartDate = currentEndDate.AddDays(-1); //this value need to be assigned to another vehicle CJS
+                            currentStartDate = currentEndDate.AddDays(1); //this value need to be assigned to another vehicle CJS
+                        }
                     }
                     else
                     {
@@ -1811,6 +1825,13 @@ namespace VaaaN.MLFF.WindowsServices
             else {
                 return TranscationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == Vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30))).ToList();
             }
+        }
+
+
+        public List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE> FilterToolRate(int plazaId, int laneType, DateTime transactionTime, int vehicleClass)
+        {
+            return tollRates.Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>().Where(trans => (trans.PlazaId == plazaId && trans.LaneTypeId == laneType && trans.VehicleClassId == vehicleClass)).ToList();
+            //return tollRates.Cast<List>.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == Vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30))).ToList();
         }
 
 
