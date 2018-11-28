@@ -67,7 +67,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
             //DateTime dt = DateTime.ParseExact("13/10/2018 23:24:25.111", "dd/MM/yyyy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
@@ -495,7 +495,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateCrossTalkSection(transaction, ctpEntryId);//, eviVehicleClassId, eviVRN);
                                                         var obj = TranscationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
                                                         if (obj != null) obj.IKEId = ctpEntryId;
-                                                        LogMessage("Record updated successfully.");
+                                                        LogMessage("IKE Transcation Updated successfully.");
                                                         #endregion
 
                                                         #region Get vehicle class matced to VRN front and rear
@@ -1894,6 +1894,7 @@ namespace VaaaN.MLFF.WindowsServices
                     customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsCollection();
                     customerVehicles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsCollection();
                     hardwares = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetAll();
+                    tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
                     //get customers and customer vehicles where modificationdate >  lastListUpdateTime (consider insert and delete both)
                     //update customer collection (add if new record found in database, remove if deleted record found in database
                     //update customer vehicle collection (add if new record found in database, remove if deleted record found in database
