@@ -75,7 +75,95 @@
                             <label for="TagId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.TagId</label>
                             @Html.EditorFor(model => model.TagId, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Tag Id" } })
                         </div>
-
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="VehicleRegistrationCerticateId" class="form-label required">Vehicle Certificate Id</label>
+                            @Html.EditorFor(model => model.VehicleRegistrationCerticateId, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Registration Certification Id" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="Address" class="form-label required">Address</label>
+                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Address" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="brand" class="form-label required">Brand</label>
+                            @Html.DropDownList("Brand", (IEnumerable<SelectListItem>)ViewBag.brandName, new { @class = "form-control", placeholder = "Brand" })
+                                              </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="VehicleType" class="form-label required">Vehicle Type</label>
+                            @Html.DropDownList("VehicleType", (IEnumerable<SelectListItem>)ViewBag.typeName, new { @class = "form-control", placeholder = "Vehicle Type" })
+                           
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="VehicleCategory" class="form-label required">Vehicle Category</label>
+                            @Html.DropDownList("VehicleCategory", (IEnumerable<SelectListItem>)ViewBag.categoryName, new { @class = "form-control", placeholder = "Vehicle Category" })
+                         
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="FuelType" class="form-label required">Fuel Type</label>
+                            @Html.DropDownList("FuelType", (IEnumerable<SelectListItem>)ViewBag.fuelTypeName, new { @class = "form-control", placeholder = "Fuel Type" })
+                          
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="ModelNo" class="form-label required">Model No</label>
+                            @Html.EditorFor(model => model.ModelNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Model No" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="ManufacturingYear" class="form-label required">Manufacturing Year</label>
+                            @Html.EditorFor(model => model.ManufacturingYear, new { htmlAttributes = new { @class = "form-control", placeholder = "Manufacturing Year" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="CyclinderCapacity" class="form-label required">Cyclinder Capacity</label>
+                            @Html.EditorFor(model => model.CyclinderCapacity, new { htmlAttributes = new { @class = "form-control", placeholder = "Cyclinder Capacity" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="FrameNumber" class="form-label required">Frame Number</label>
+                            @Html.EditorFor(model => model.FrameNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Frame Number" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="EngineNumber" class="form-label required">Engine Number</label>
+                            @Html.EditorFor(model => model.EngineNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Engine Number" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="VehicleColor" class="form-label required">Vehicle Color</label>
+                            @Html.DropDownList("VehicleColor", (IEnumerable<SelectListItem>)ViewBag.vehicleColorName, new { @class = "form-control", placeholder = "Vehicle Color" })
+                         
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="LicencePlateColor" class="form-label required">Licence Plate Color</label>
+                            @Html.DropDownList("LicencePlateColor", (IEnumerable<SelectListItem>)ViewBag.licencePlateColorName, new { @class = "form-control", placeholder = "Licence Plate Color" })
+                           
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="RegistrationYear" class="form-label required">Registration Year</label>
+                            @Html.EditorFor(model => model.RegistrationYear, new { htmlAttributes = new { @class = "form-control", placeholder = "Registration Year" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="LocationCode" class="form-label required">Location Code</label>
+                            @Html.EditorFor(model => model.LocationCode, new { htmlAttributes = new { @class = "form-control", placeholder = "LocationCode" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="VehicleImageFront" class="form-label required">Front Image</label>
+                            <input name="FrontImage" id="FrontImage" type="file" />
+                            @*@Html.EditorFor(model => model.VehicleImageFront, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Front Image" } })*@
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="VehicleImageRear" class="form-label required">Rear Image</label>
+                            <input name="RearImage" id="RearImage" type="file" />
+                            @*@Html.EditorFor(model => model.VehicleImageRear, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Rear Image" } })*@
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="VehicleImageRightSide" class="form-label required">Right Side Image</label>
+                            <input name="RightSideImage" id="RightSideImage" type="file" />
+                            @*@Html.EditorFor(model => model.VehicleImageRightSide, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Right Side Image" } })*@
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="VehicleImageLeftSide" class="form-label required">Left Side Image</label>
+                            <input name="LeftSideImage" id="LeftSideImage" type="file" />
+                             @*@Html.EditorFor(model => model.VehicleImageLeftSide, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Left Side Image" } })*@
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            <label for="ValidUntil" class="form-label required">Valid Until</label>
+                            @Html.EditorFor(model => model.ValidUntil, new { htmlAttributes = new { @class = "form-control", placeholder = "Valid Until" } })
+                        </div>
                         <div class="clearfix"></div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4" style="float:right">
                             <span id="lblErrors" style="color:red;"></span>

@@ -1449,9 +1449,9 @@ namespace VaaaN.MLFF.WebApplication
                 {
                     customer.LastName = string.Empty;
                 }
-                if (string.IsNullOrEmpty(customer.Address))
+                if (string.IsNullOrEmpty(customer.AddressLine1))
                 {
-                    customer.Address = string.Empty;
+                    customer.AddressLine1 = string.Empty;
                 }
 
                 customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
@@ -1542,9 +1542,9 @@ namespace VaaaN.MLFF.WebApplication
                 {
                     customer.LastName = string.Empty;
                 }
-                if (string.IsNullOrEmpty(customer.Address))
+                if (string.IsNullOrEmpty(customer.AddressLine1))
                 {
-                    customer.Address = string.Empty;
+                    customer.AddressLine1 = string.Empty;
                 }
 
                 customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
@@ -1669,7 +1669,72 @@ namespace VaaaN.MLFF.WebApplication
             }
             ViewBag.customerclassList = customerclassList;
             #endregion
+            #region Vehicle Brand
+            List<SelectListItem> brandList = new List<SelectListItem>();
+            Array arbrand = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleBrand));
 
+            for (int i = 0; i < arbrand.Length; i++)
+            {
+                brandList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleBrandName[i], Value = System.Convert.ToString((int)arbrand.GetValue(i)) });
+            }
+            ViewBag.brandName = brandList;
+
+            #endregion
+            #region Vehicle Type
+            List<SelectListItem> typeList = new List<SelectListItem>();
+            Array artype = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleType));
+
+            for (int i = 0; i < artype.Length; i++)
+            {
+                typeList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleTypeName[i], Value = System.Convert.ToString((int)artype.GetValue(i)) });
+            }
+            ViewBag.typeName = typeList;
+
+            #endregion
+            #region Vehicle Category
+            List<SelectListItem> categoryList = new List<SelectListItem>();
+            Array arcategory = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleCategory));
+
+            for (int i = 0; i < arcategory.Length; i++)
+            {
+                categoryList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleCategoryName[i], Value = System.Convert.ToString((int)arcategory.GetValue(i)) });
+            }
+            ViewBag.categoryName = categoryList;
+
+            #endregion
+            #region Fuel Type
+            List<SelectListItem> fuelTypeList = new List<SelectListItem>();
+            Array arcfuelType = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelType));
+
+            for (int i = 0; i < arcfuelType.Length; i++)
+            {
+                fuelTypeList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelTypeName[i], Value = System.Convert.ToString((int)arcfuelType.GetValue(i)) });
+            }
+            ViewBag.fuelTypeName = fuelTypeList;
+
+            #endregion
+            #region Vehicle Color
+            List<SelectListItem> vehicleColorList = new List<SelectListItem>();
+            Array arvehicleColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleColor));
+
+            for (int i = 0; i < arvehicleColor.Length; i++)
+            {
+                vehicleColorList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleColorName[i], Value = System.Convert.ToString((int)arvehicleColor.GetValue(i)) });
+            }
+            ViewBag.vehicleColorName = vehicleColorList;
+
+            #endregion
+            #region Licence Plate Color
+            List<SelectListItem> licencePlateColorList = new List<SelectListItem>();
+            Array arlicencePlateColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColor));
+
+            for (int i = 0; i < arlicencePlateColor.Length; i++)
+            {
+                licencePlateColorList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColorName[i], Value = System.Convert.ToString((int)arlicencePlateColor.GetValue(i)) });
+            }
+            ViewBag.licencePlateColorName = licencePlateColorList;
+
+            #endregion
             return View("CustomerVehicleAdd");
         }
 
@@ -1693,6 +1758,62 @@ namespace VaaaN.MLFF.WebApplication
                 {
                     return Redirect("SessionPage");
                 }
+                bool Value = false;
+                var imageTypes = new string[]{
+                    "image/gif",
+                    "image/jpeg",
+                    "image/pjpeg",
+                    "image/png" };
+                #region Save VehicleImages
+                if (customerVehicle.FrontImage != null)
+                {
+                    //Front Image
+                    customerVehicle.VehicleImageFront = HelperClass.ImageSave(customerVehicle.FrontImage, imageTypes, ref Value, customerVehicle.VehRegNo + "FrontImage");
+                    if (Value)
+                    {
+                        TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Front Image";
+                        return CustomerVehicleAdditions();
+                    }
+
+                    Value = false;
+                }
+                //Save Rear Image
+                if (customerVehicle.RearImage != null)
+                {
+
+                    customerVehicle.VehicleImageRear = HelperClass.ImageSave(customerVehicle.RearImage, imageTypes, ref Value, customerVehicle.VehRegNo + "RearImage");
+                    if (Value)
+                    {
+                        TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Rear Image";
+                        return CustomerVehicleAdditions();
+                    }
+
+                    Value = false;
+                }
+                //Save Right Side Image
+                if (customerVehicle.RightSideImage != null)
+                {
+
+                    customerVehicle.VehicleImageRightSide = HelperClass.ImageSave(customerVehicle.RightSideImage, imageTypes, ref Value, customerVehicle.VehRegNo + "RightSideImage");
+                    if (Value)
+                    {
+                        TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Right Side Image";
+                        return CustomerVehicleAdditions();
+                    }
+                    Value = false;
+                }
+                //Save Left Side Image
+                if (customerVehicle.LeftSideImage != null)
+                {
+                    customerVehicle.VehicleImageLeftSide = HelperClass.ImageSave(customerVehicle.LeftSideImage, imageTypes, ref Value, customerVehicle.VehRegNo + "LeftSideImage");
+                    if (Value)
+                    {
+                        TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Left Side Image";
+                        return CustomerVehicleAdditions();
+                    }
+                }
+
+                #endregion
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> customerVehicleDataList = new List<Libraries.CommonLibrary.CBE.CustomerVehicleCBE>();
                 customerVehicleDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsList();
 

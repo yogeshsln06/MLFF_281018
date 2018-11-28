@@ -777,46 +777,88 @@ AS
                                       CUR_OUT       OUT T_CURSOR);
 
    ----------TBL CUSTOMER ACCOUNT----------
-   PROCEDURE ACCOUNT_INSERT (P_TMS_ID                IN NUMBER,
-                             P_ACCOUNT_ID            IN NUMBER,
-                             P_FIRST_NAME            IN NVARCHAR2,
-                             P_LAST_NAME             IN NVARCHAR2,
-                             P_MOB_NUMBER            IN NVARCHAR2,
-                             P_EMAIL_ID              IN NVARCHAR2,
-                             P_DESCRIPTION           IN NVARCHAR2,
-                             P_ADDRESS               IN NVARCHAR2,
-                             P_ACCOUNT_BALANCE       IN NUMBER,
-                             P_CREATION_DATE         IN DATE,
-                             P_CUSTOMER_IMAGE_PATH   IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH     IN NVARCHAR2,
-                             P_IS_DOC_VERIFIED       IN NUMBER,
-                             P_ACCOUNT_STATUS        IN NUMBER,
-                             P_TRANSFER_STATUS       IN NUMBER);
+   PROCEDURE ACCOUNT_INSERT (P_TMS_ID                 IN NUMBER,
+                             P_ACCOUNT_ID             IN NUMBER,
+                             P_FIRST_NAME             IN NVARCHAR2,
+                             P_LAST_NAME              IN NVARCHAR2,
+                             P_MOB_NUMBER             IN NVARCHAR2,
+                             P_EMAIL_ID               IN NVARCHAR2,
+                             P_DESCRIPTION            IN NVARCHAR2,
+                             P_ADDRESS_LINE_1         IN NVARCHAR2,
+                             P_ACCOUNT_BALANCE        IN NUMBER,
+                             P_CREATION_DATE          IN DATE,
+                             P_CUSTOMER_IMAGE_PATH    IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH1     IN NVARCHAR2,
+                             P_IS_DOC_VERIFIED        IN NUMBER,
+                             P_ACCOUNT_STATUS         IN NUMBER,
+                             P_TRANSFER_STATUS        IN NUMBER,
+                             P_SCANNED_DOCS_PATH2     IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH3     IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH4     IN NVARCHAR2,
+                             P_RESIDENT_ID            IN NUMBER,
+                             P_BIRTH_PLACE            IN NVARCHAR2,
+                             P_BIRTH_DATE             IN DATE := NULL,
+                             P_GENDER                 IN NUMBER,
+                             P_ADDRESS_LINE_2         IN NVARCHAR2,
+                             P_ADDRESS_LINE_3         IN NVARCHAR2,
+                             P_DISTRICT_ID            IN NUMBER,
+                             P_SUB_DISTRICT_ID        IN NUMBER,
+                             P_CITY_ID                IN NUMBER,
+                             P_PROVINCE_ID            IN NUMBER,
+                             P_POSTAL_CODE            IN NUMBER,
+                             P_MARITAL_STATUS         IN NUMBER,
+                             P_OCCUPATION             IN NVARCHAR2,
+                             P_NATIONALITY            IN NUMBER,
+                             P_VALID_UNTIL            IN DATE := NULL,
+                             P_REGISTRATION_THROUGH   IN NUMBER,
+                             P_QUEUE_STATUS           IN NUMBER);
 
-   PROCEDURE ACCOUNT_UPDATE (P_TMS_ID                IN NUMBER,
-                             P_ACCOUNT_ID            IN NUMBER,
-                             P_FIRST_NAME            IN NVARCHAR2,
-                             P_LAST_NAME             IN NVARCHAR2,
-                             P_MOB_NUMBER            IN NVARCHAR2,
-                             P_EMAIL_ID              IN NVARCHAR2,
-                             P_DESCRIPTION           IN NVARCHAR2,
-                             P_ADDRESS               IN NVARCHAR2,
-                             P_ACCOUNT_BALANCE       IN NUMBER,
-                             P_MODIFIER_ID           IN NUMBER,
-                             P_CREATION_DATE         IN DATE,
-                             P_MODIFICATION_DATE     IN DATE,
-                             P_CUSTOMER_IMAGE_PATH   IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH     IN NVARCHAR2,
-                             P_IS_DOC_VERIFIED       IN NUMBER,
-                             P_ACCOUNT_STATUS        IN NUMBER,
-                             P_TRANSFER_STATUS       IN NUMBER);
+   PROCEDURE ACCOUNT_UPDATE (P_TMS_ID                 IN NUMBER,
+                             P_ACCOUNT_ID             IN NUMBER,
+                             P_FIRST_NAME             IN NVARCHAR2,
+                             P_LAST_NAME              IN NVARCHAR2,
+                             P_MOB_NUMBER             IN NVARCHAR2,
+                             P_EMAIL_ID               IN NVARCHAR2,
+                             P_DESCRIPTION            IN NVARCHAR2,
+                             P_ADDRESS_LINE_1         IN NVARCHAR2,
+                             P_ACCOUNT_BALANCE        IN NUMBER,
+                             P_MODIFIER_ID            IN NUMBER,
+                             P_CREATION_DATE          IN DATE,
+                             P_MODIFICATION_DATE      IN DATE,
+                             P_CUSTOMER_IMAGE_PATH    IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH1     IN NVARCHAR2,
+                             P_IS_DOC_VERIFIED        IN NUMBER,
+                             P_ACCOUNT_STATUS         IN NUMBER,
+                             P_TRANSFER_STATUS        IN NUMBER,
+                             P_SCANNED_DOCS_PATH2     IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH3     IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH4     IN NVARCHAR2,
+                             P_RESIDENT_ID            IN NUMBER,
+                             P_BIRTH_PLACE            IN NVARCHAR2,
+                             P_BIRTH_DATE             IN DATE := NULL,
+                             P_GENDER                 IN NUMBER,
+                             P_ADDRESS_LINE_2         IN NVARCHAR2,
+                             P_ADDRESS_LINE_3         IN NVARCHAR2,
+                             P_DISTRICT_ID            IN NUMBER,
+                             P_SUB_DISTRICT_ID        IN NUMBER,
+                             P_CITY_ID                IN NUMBER,
+                             P_PROVINCE_ID            IN NUMBER,
+                             P_POSTAL_CODE            IN NUMBER,
+                             P_MARITAL_STATUS         IN NUMBER,
+                             P_OCCUPATION             IN NVARCHAR2,
+                             P_NATIONALITY            IN NUMBER,
+                             P_VALID_UNTIL            IN DATE := NULL,
+                             P_REGISTRATION_THROUGH   IN NUMBER,
+                             P_QUEUE_STATUS           IN NUMBER);
 
    PROCEDURE ACCOUNT_GETBYMOBILENO (P_MOB_NUMBER   IN     NVARCHAR2,
                                     CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE ACCOUNT_GETALL (CUR_OUT OUT T_CURSOR);
 
-   PROCEDURE ACCOUNT_GETBYID (P_ACCOUNT_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
+   PROCEDURE ACCOUNT_GETBYID (P_TMS_ID       IN     NUMBER,
+                              P_ACCOUNT_ID   IN     NUMBER,
+                              CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE ACCOUNT_BALANCEUPDATE (P_TMS_ID       IN NUMBER,
                                     P_ACCOUNT_ID   IN NUMBER,
@@ -824,25 +866,67 @@ AS
 
    ----------TBL CUSTOMER VEHICLE------------
 
-   PROCEDURE CUSTOMER_VEHICLE_INSERT (P_TMS_ID             IN NUMBER,
-                                      P_ENTRY_ID           IN NUMBER,
-                                      P_ACCOUNT_ID         IN NUMBER,
-                                      P_VEH_REG_NO         IN NVARCHAR2,
-                                      P_TAG_ID             IN NVARCHAR2,
-                                      P_VEHICLE_CLASS_ID   IN NUMBER,
-                                      P_CREATION_DATE      IN DATE,
-                                      P_TRANSFER_STATUS    IN NUMBER);
+   PROCEDURE CUSTOMER_VEHICLE_INSERT (
+      P_TMS_ID                   IN NUMBER,
+      P_ENTRY_ID                 IN NUMBER,
+      P_ACCOUNT_ID               IN NUMBER,
+      P_VEH_REG_NO               IN NVARCHAR2,
+      P_TAG_ID                   IN NVARCHAR2,
+      P_VEHICLE_CLASS_ID         IN NUMBER,
+      P_CREATION_DATE            IN DATE,
+      P_TRANSFER_STATUS          IN NUMBER,
+      P_VEHICLE_REG_CERT_ID      IN NUMBER,
+      P_ADDRESS                  IN NVARCHAR2,
+      P_BRAND                    IN NUMBER,
+      P_VEHICLE_TYPE             IN NUMBER,
+      P_VEHICLE_CATEGORY         IN NUMBER,
+      P_MODEL_NO                 IN NVARCHAR2,
+      P_MANUFACTURING_YEAR       IN NUMBER,
+      P_CYCLINDER_CAPACITY       IN NVARCHAR2,
+      P_FRAME_NUMBER             IN NVARCHAR2,
+      P_ENGINE_NUMBER            IN NVARCHAR2,
+      P_VEHICLE_COLOR            IN NUMBER,
+      P_FUEL_TYPE                IN NUMBER,
+      P_LICENCE_PLATE_COLOR      IN NUMBER,
+      P_REGISTRATION_YEAR        IN NUMBER,
+      P_LOCATION_CODE            IN NVARCHAR2,
+      P_VEHICLEIMAGE_FRONT       IN NVARCHAR2,
+      P_VEHICLEIMAGE_REAR        IN NVARCHAR2,
+      P_VEHICLEIMAGE_RIGHTSIDE   IN NVARCHAR2,
+      P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
+      P_VALID_UNTIL              IN NUMBER);
 
-   PROCEDURE CUSTOMER_VEHICLE_UPDATE (P_TMS_ID              IN NUMBER,
-                                      P_ENTRY_ID            IN NUMBER,
-                                      P_ACCOUNT_ID          IN NUMBER,
-                                      P_VEH_REG_NO          IN NVARCHAR2,
-                                      P_TAG_ID              IN NVARCHAR2,
-                                      P_VEHICLE_CLASS_ID    IN NUMBER,
-                                      P_CREATION_DATE       IN DATE,
-                                      P_MODIFICATION_DATE   IN DATE,
-                                      P_MODIFIED_BY         IN NUMBER,
-                                      P_TRANSFER_STATUS     IN NUMBER);
+   PROCEDURE CUSTOMER_VEHICLE_UPDATE (
+      P_TMS_ID                   IN NUMBER,
+      P_ENTRY_ID                 IN NUMBER,
+      P_ACCOUNT_ID               IN NUMBER,
+      P_VEH_REG_NO               IN NVARCHAR2,
+      P_TAG_ID                   IN NVARCHAR2,
+      P_VEHICLE_CLASS_ID         IN NUMBER,
+      P_CREATION_DATE            IN DATE,
+      P_MODIFICATION_DATE        IN DATE,
+      P_MODIFIED_BY              IN NUMBER,
+      P_TRANSFER_STATUS          IN NUMBER,
+      P_VEHICLE_REG_CERT_ID      IN NUMBER,
+      P_ADDRESS                  IN NVARCHAR2,
+      P_BRAND                    IN NUMBER,
+      P_VEHICLE_TYPE             IN NUMBER,
+      P_VEHICLE_CATEGORY         IN NUMBER,
+      P_MODEL_NO                 IN NVARCHAR2,
+      P_MANUFACTURING_YEAR       IN NUMBER,
+      P_CYCLINDER_CAPACITY       IN NVARCHAR2,
+      P_FRAME_NUMBER             IN NVARCHAR2,
+      P_ENGINE_NUMBER            IN NVARCHAR2,
+      P_VEHICLE_COLOR            IN NUMBER,
+      P_FUEL_TYPE                IN NUMBER,
+      P_LICENCE_PLATE_COLOR      IN NUMBER,
+      P_REGISTRATION_YEAR        IN NUMBER,
+      P_LOCATION_CODE            IN NVARCHAR2,
+      P_VEHICLEIMAGE_FRONT       IN NVARCHAR2,
+      P_VEHICLEIMAGE_REAR        IN NVARCHAR2,
+      P_VEHICLEIMAGE_RIGHTSIDE   IN NVARCHAR2,
+      P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
+      P_VALID_UNTIL              IN NUMBER);
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYID (P_VEHICLE_CLASS_ID   IN     NUMBER,
                                        P_TMS_ID             IN     NUMBER,
@@ -866,7 +950,6 @@ AS
 
    PROCEDURE CUSTOMERVEHICLE_GETBYVEHREGNO (P_VEH_REG_NO   IN     NVARCHAR2,
                                             CUR_OUT           OUT T_CURSOR);
-
    ------------ACCOUNT HISTORY ----------
 
    PROCEDURE ACCOUNT_HISTORY_INSERT (
@@ -956,5 +1039,29 @@ AS
    PROCEDURE VEHICLECLASS_MAPPING_GETBYNAME (
       P_ANPR_VEHICLE_CLASS_NAME   IN     NVARCHAR2,
       CUR_OUT                        OUT T_CURSOR);
+
+   -----------Province ----------
+   PROCEDURE PROVINCE_GETALL (CUR_OUT OUT T_CURSOR);
+
+   -----------City ----------
+   PROCEDURE CITY_GETALL (CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE CITY_GETBYPROVINCEID (P_TMS_ID        IN     NUMBER,
+                                   P_PROVINCE_ID   IN     NUMBER,
+                                   CUR_OUT            OUT T_CURSOR);
+
+   -----------District ----------
+   PROCEDURE DISTRICT_GETALL (CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE DISTRICT_GETBYCITYID (P_TMS_ID    IN     NUMBER,
+                                   P_CITY_ID   IN     NUMBER,
+                                   CUR_OUT        OUT T_CURSOR);
+
+   -----------SUB DISTRICT ----------
+   PROCEDURE SUBDISTRICT_GETALL (CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE SUBDISTRICT_GETBYDISTRICTID (P_TMS_ID        IN     NUMBER,
+                                          P_DISTRICT_ID   IN     NUMBER,
+                                          CUR_OUT            OUT T_CURSOR);
 END MLFF_PACKAGE;
 /
