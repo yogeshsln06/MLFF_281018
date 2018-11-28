@@ -19,7 +19,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCollection lanes;
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection tollRates;
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCollection plazas;
-   
+
         // GET: MRM
         public ActionResult Index()
         {
@@ -254,27 +254,39 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             if (transaction.TransactionCategoryId == 0)
             {
                 strQuery += " AND NVL(IS_BALANCE_UPDATED,0) <> 1";
-                //strQuery += " AND ((NVL(T.CT_ENTRY_ID, 0) = 0 AND (NVL(T.NF_ENTRY_ID_FRONT, 0) > 0 OR NVL(T.NF_ENTRY_ID_REAR, 0) > 0)) OR (NVL(T.CT_ENTRY_ID, 0) > 0 AND(NVL(T.NF_ENTRY_ID_FRONT, 0) = 0 AND NVL(T.NF_ENTRY_ID_REAR, 0) = 0)))";
             }
-            else if (transaction.TransactionCategoryId == 1)
+            else if (transaction.TransactionCategoryId == 1)// Only IKE
             {
-                strQuery += " AND T.CT_ENTRY_ID IS NOT NULL ";
-                //strQuery += "AND NVL(T.CT_ENTRY_ID,0) > 0 AND (NVL(T.NF_ENTRY_ID_FRONT,0) = 0 OR NVL(T.NF_ENTRY_ID_REAR,0) = 0)";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1";
             }
-            else if (transaction.TransactionCategoryId == 2)
+            else if (transaction.TransactionCategoryId == 2)//IKE + FRONT ALPR
             {
-                strQuery += " AND T.NF_ENTRY_ID_FRONT IS NOT NULL ";
-                // strQuery += " AND NVL(T.CT_ENTRY_ID,0) = 0 AND (NVL(T.NF_ENTRY_ID_FRONT,0) > 0 OR NVL(T.NF_ENTRY_ID_REAR,0) > 0)";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'not detected' AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
-            else if (transaction.TransactionCategoryId == 3)
+            else if (transaction.TransactionCategoryId == 3)//IKE + REAR ALPR
             {
-                strQuery += " AND T.NF_ENTRY_ID_REAR IS NOT NULL ";
-                //strQuery += " AND (NVL(CV_CTP.VEHICLE_CLASS_ID,0) <> NVL(NFPF.VEHICLE_CLASS_ID,0) AND ((NVL(CV_CTP.VEHICLE_CLASS_ID,0) <> NVL(NFPR.VEHICLE_CLASS_ID,0))))";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
-
-            ////  string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery), Formatting.Indented);
-            //// return Det.Replace("\r", "").Replace("\n", "");
-            //// List<Libraries.CommonLibrary.CBE.TransactionCBE> transactionList = new List<Libraries.CommonLibrary.CBE.TransactionCBE>();
+            else if (transaction.TransactionCategoryId == 4)//FRONT ALPR
+            {
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'not detected' AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+            }
+            else if (transaction.TransactionCategoryId == 5)//REAR ALPR
+            {
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+            }
+            else if (transaction.TransactionCategoryId == 6)//FRONT ALPR + REAR ALPR
+            {
+                strQuery += "  AND NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'not detected' AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)='not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+            }
+            else if (transaction.TransactionCategoryId == 7)//UNIDENTIFIED FRONT ALPR
+            {
+                strQuery += " AND LOWER(NFPF.PLATE_NUMBER)='not detected'  AND LOWER(NFPR.PLATE_NUMBER)='not detected' AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+            }
+            else if (transaction.TransactionCategoryId == 8)//UNIDENTIFIED REAR ALPR
+            {
+                strQuery += " AND LOWER(NFPR.PLATE_NUMBER)='not detected' AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+            }
 
             DataTable dt = new DataTable();
             dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);
@@ -282,7 +294,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             return PartialView("_ManualTransactions", dt);
         }
 
-        public ActionResult AssociatedTransaction(string transactionId)
+        public ActionResult AssociatedTransaction(string transactionId, string TransactionCategoryId)
         {
             DateTime transactiondatetime = DateTime.Now;
             string strTransactionTime = string.Empty;
@@ -311,6 +323,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.NFFront = transactiondata.Rows[0]["FRONT_IMAGE"].ToString();
                 ViewBag.NFFrontVideo = transactiondata.Rows[0]["FRONT_VIDEO_URL"].ToString();
                 ViewBag.NFRearVideo = transactiondata.Rows[0]["REAR_VIDEO_URL"].ToString();
+                ViewBag.VehicleSpeed = transactiondata.Rows[0]["VEHICLESPEED"].ToString();
+
                 //check CT_Entry_ID exists if yes we will not fetch CT_entry_ID associated transaction
                 if (transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != null && transactiondata.Rows[0]["CT_ENTRY_ID"].ToString() != "")
                 {
@@ -344,41 +358,77 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             string strQuery = " WHERE 1=1 ";
             strQuery += " AND T.TRANSACTION_ID <> " + transactionId;
             strQuery += " AND  TRANSACTION_DATETIME BETWEEN TO_DATE('" + strTransactionTime + "','DD/MM/YYYY HH24:MI:SS') - INTERVAL '1' MINUTE AND  TO_DATE('" + strTransactionTime + "','DD/MM/YYYY HH24:MI:SS')  + INTERVAL '1' MINUTE";
-            //Case 1 Cross Talk entry Id Exists and Nodeflux Front Entry Id Exists and Nodeflux Rear Entry Id Exists
-            if (ctEntryId != 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+            if (Convert.ToInt32(TransactionCategoryId) == 0)
             {
-                //Return No Transaction
+                //Case 1 Cross Talk entry Id Exists and Nodeflux Front Entry Id Exists and Nodeflux Rear Entry Id Exists
+                if (ctEntryId != 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+                {
+                    //Return No Transaction
+                }
+                //Case 2 Cross Talk entry Id Exists and Nodeflux Front Entry Id Exists and Nodeflux Rear Entry Id not Exists
+                else if (ctEntryId != 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+                {
+                    strQuery += " AND T.NF_ENTRY_ID_REAR IS NOT NULL";
+                }
+                //Case 3 Cross Talk entry Id Exists and Nodeflux Front Entry Id Not Exists and Nodeflux Rear Entry Id Exists
+                else if (ctEntryId != 0 && nffrontEntryId == 0 && nfRearEntryId != 0)
+                {
+                    strQuery += " AND T.NF_ENTRY_ID_FRONT IS NOT NULL";
+                }
+                //Case 4 Cross Talk entry Id Exists and Nodeflux Front Entry Id Not Exists and Nodeflux Rear Entry Id NOT Exists
+                else if (ctEntryId != 0 && nffrontEntryId == 0 && nfRearEntryId == 0)
+                {
+                    strQuery += " AND (T.NF_ENTRY_ID_FRONT IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL)";
+                }
+                //Case 5 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id Exists
+                else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId != 0)
+                {
+                    strQuery += " AND T.CT_ENTRY_ID IS NOT NULL ";
+                }
+                //Case 6 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id NOT Exists
+                else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+                {
+                    strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL) ";
+                }
+                //Case 7 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Not Exists and Nodeflux Rear Entry Id Exists
+                else if (ctEntryId == 0 && nffrontEntryId == 0 && nfRearEntryId != 0)
+                {
+                    strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_FRONT IS NOT NULL) ";
+                }
             }
-            //Case 2 Cross Talk entry Id Exists and Nodeflux Front Entry Id Exists and Nodeflux Rear Entry Id not Exists
-            else if (ctEntryId != 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+            else if (Convert.ToInt32(TransactionCategoryId) == 1)
             {
-                strQuery += " AND T.NF_ENTRY_ID_REAR IS NOT NULL";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND ((NVL(T.NF_ENTRY_ID_FRONT, 0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected') OR (NVL(T.NF_ENTRY_ID_REAR, 0) > 0 AND LOWER(NFPR.PLATE_NUMBER) <> 'not detected')) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
-            //Case 3 Cross Talk entry Id Exists and Nodeflux Front Entry Id Not Exists and Nodeflux Rear Entry Id Exists
-            else if (ctEntryId != 0 && nffrontEntryId == 0 && nfRearEntryId != 0)
+            else if (Convert.ToInt32(TransactionCategoryId) == 2)
             {
-                strQuery += " AND T.NF_ENTRY_ID_FRONT IS NOT NULL";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND NVL(T.NF_ENTRY_ID_FRONT, 0)= 0 AND NVL(T.NF_ENTRY_ID_REAR,0)>0  AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
-            //Case 4 Cross Talk entry Id Exists and Nodeflux Front Entry Id Not Exists and Nodeflux Rear Entry Id NOT Exists
-            else if (ctEntryId != 0 && nffrontEntryId == 0 && nfRearEntryId == 0)
+            else if (Convert.ToInt32(TransactionCategoryId) == 3)
             {
-                strQuery += " AND (T.NF_ENTRY_ID_FRONT IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL)";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND NVL(T.NF_ENTRY_ID_FRONT,0)>0  AND LOWER(NFPF.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
-            //Case 5 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id Exists
-            else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId != 0)
+            else if (Convert.ToInt32(TransactionCategoryId) == 4)
             {
-                strQuery += " AND T.CT_ENTRY_ID IS NOT NULL ";
+                strQuery += " AND  NVL(T.NF_ENTRY_ID_FRONT,0)  = 0  AND (NVL(T.CT_ENTRY_ID,0)>0  OR (NVL(T.NF_ENTRY_ID_REAR,0)>0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected'))  AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
-            //Case 6 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Exists and Nodeflux Rear Entry Id NOT Exists
-            else if (ctEntryId == 0 && nffrontEntryId != 0 && nfRearEntryId == 0)
+            else if (Convert.ToInt32(TransactionCategoryId) == 5)
             {
-                strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_REAR IS NOT NULL) ";
+                strQuery += " AND  NVL(T.NF_ENTRY_ID_REAR,0)  = 0  AND (NVL(T.CT_ENTRY_ID,0)>0  OR (NVL(T.NF_ENTRY_ID_FRONT,0)>0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected')) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
-            //Case 7 Cross Talk entry Id Not Exists and Nodeflux Front Entry Id  Not Exists and Nodeflux Rear Entry Id Exists
-            else if (ctEntryId == 0 && nffrontEntryId == 0 && nfRearEntryId != 0)
+            else if (Convert.ToInt32(TransactionCategoryId) == 6)
             {
-                strQuery += " AND (T.CT_ENTRY_ID IS NOT NULL OR T.NF_ENTRY_ID_FRONT IS NOT NULL) ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0  AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
+            else if (Convert.ToInt32(TransactionCategoryId) == 7)
+            {
+                strQuery += " AND (LOWER(NFPR.PLATE_NUMBER)='not detected'  OR  NVL(T.CT_ENTRY_ID,0)  > 0 ) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+            }
+            else if (Convert.ToInt32(TransactionCategoryId) == 8)
+            {
+                strQuery += " AND (LOWER(NFPF.PLATE_NUMBER)='not detected'  OR  NVL(T.CT_ENTRY_ID,0)  > 0 ) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+            }
+
 
             DataTable dt = new DataTable();
             dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetDataTableFilteredRecords(strQuery);
@@ -394,7 +444,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             customerVehicle.VehRegNo = VehRegNo;
             //Check this VRN Exists in record
             customerVehicle = Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(customerVehicle);
-            if (customerVehicle!=null)//i.e customer exists
+            if (customerVehicle != null)//i.e customer exists
             {
                 result.Data = "VRN Exists";
                 return Json(result, JsonRequestBehavior.AllowGet);
@@ -425,7 +475,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             //get Parent Transaction Data
             transaction.TransactionId = Convert.ToInt32(TransactionId);
             DataTable parentTransaction = new DataTable();
-            parentTransaction= Libraries.CommonLibrary.BLL.TransactionBLL.Transaction_GetById(transaction);
+            parentTransaction = Libraries.CommonLibrary.BLL.TransactionBLL.Transaction_GetById(transaction);
 
             if (parentTransaction != null && parentTransaction.Rows != null && parentTransaction.Rows.Count > 0)
             {
@@ -445,7 +495,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     nfRearEntryId = Convert.ToInt32(parentTransaction.Rows[0]["NF_ENTRY_ID_REAR"].ToString());
                 }
                 //Check Balance Is Updated for this Transaction
-                if (parentTransaction.Rows[0]["IS_BALANCE_UPDATED"].ToString()=="1")
+                if (parentTransaction.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
                 {
                     isBalanceUpdated = 1;
                 }
@@ -470,7 +520,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             //Get TransactionTime from Transaction Id
             DataTable transactiondata = new DataTable();
             JsonResult result = new JsonResult();
-            if (AssociatedTransactionIds!=null)
+            if (AssociatedTransactionIds != null)
             {
                 for (int i = 0; i < AssociatedTransactionIds.Length; i++)
                 {
@@ -563,8 +613,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 //get customer account info from customer VRN
                 Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo = new Libraries.CommonLibrary.CBE.CustomerAccountCBE();
                 customerAccountInfo.AccountId = customerVehicleInfo.AccountId;
-                customerAccountInfo=Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetCustomerById(customerAccountInfo);
-                
+                customerAccountInfo = Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetCustomerById(customerAccountInfo);
+
                 //financial operation here
                 FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
                 //Update Is Blanace Updated =1
@@ -591,7 +641,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             Libraries.CommonLibrary.BLL.TransactionBLL.UpdateAuditSection(transaction);
             #endregion
             #region Join Transaction
-            
+
             Libraries.CommonLibrary.BLL.TransactionBLL.UpdateTransaction(transaction);
             #endregion
 
@@ -602,7 +652,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         [HttpPost]
         public JsonResult JoinTransactionsNew(string[] AssociatedTransactionIds, string TransactionId, string VehRegNo, string vehicleClassID)
         {
-            JsonResult result = new JsonResult();          
+            JsonResult result = new JsonResult();
             int vehicleClassId = Convert.ToInt32(vehicleClassID);//Get by Audited
             DateTime transactionDatetime = DateTime.Now;
             int isBalanceUpdated = 0;
@@ -628,7 +678,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             if (AssociatedTransactionIds != null)
             {
                 //Check Reviewer Selected One Child
-                if (AssociatedTransactionIds.Length>0)
+                if (AssociatedTransactionIds.Length > 0)
                 {
                     childOneTranasactionId = Convert.ToInt64(AssociatedTransactionIds[0]);
                 }
@@ -676,7 +726,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             //In this region i have to call new package
             #region Join and Audit Section of Transactions
             //Call Function UpdateAuditJoinTransaction Here
-             Libraries.CommonLibrary.BLL.TransactionBLL.JoinAuditTransaction(transaction.TransactionId, childOneTranasactionId, childTwoTranasactionId, VehRegNo, vehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()));
+            Libraries.CommonLibrary.BLL.TransactionBLL.JoinAuditTransaction(transaction.TransactionId, childOneTranasactionId, childTwoTranasactionId, VehRegNo, vehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()));
             #endregion
             returnMessage.Append("SucessFully Audited and Join Transaction");
             result.Data = returnMessage;
@@ -821,53 +871,64 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             try
             {
+                //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection currentTimeTollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
+
+                //DateTime currentStartDate = new DateTime();
+                //DateTime currentEndDate = new DateTime();
+                //DateTime actualEndDate = new DateTime(); //CJS
+                tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection currentTimeTollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
 
-                DateTime currentStartDate = new DateTime();
-                DateTime currentEndDate = new DateTime();
-                DateTime actualEndDate = new DateTime(); //CJS
-                tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
-                // Get toll rate as per transaction time
-                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in tollRates)
-                {
-                    DateTime currentDate = transactionTime;
-
-                    // Get Start hour and minute
-                    int startHour = Convert.ToInt32(tr.StartTime.Substring(0, 2));
-                    int startMinute = Convert.ToInt32(tr.StartTime.Substring(3, 2));
-
-                    int endHour = Convert.ToInt32(tr.EndTime.Substring(0, 2));
-                    int endMinute = Convert.ToInt32(tr.EndTime.Substring(3, 2));
-
-                    Console.WriteLine(startHour + ", " + startMinute + " -> " + endHour + ", " + endMinute);
-
-                    currentStartDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, startHour, startMinute, currentDate.Second);
-                    currentEndDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, endHour, endMinute, currentDate.Second);
-
-                    if (startHour > endHour)// Cross day
-                    {
-                        actualEndDate = currentEndDate.AddDays(1); //this value need to be assigned to another vehicle CJS
-                    }
-                    else
-                    {
-                        actualEndDate = currentEndDate; //CJS
-                    }
-
-                    if (currentDate > currentStartDate && currentDate < actualEndDate)
-                    {
-                        currentTimeTollRates.Add(tr);
-                    }
-                }
-
+                currentTimeTollRates = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GetTollRateCollection(transactionTime, tollRates);
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in currentTimeTollRates)
                 {
-                    
                     if (tr.PlazaId == plazaId && tr.LaneTypeId == laneType && tr.VehicleClassId == vehicleClass)
                     {
                         result = tr.Amount;
                         break;
                     }
                 }
+                // Get toll rate as per transaction time
+                //foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in tollRates)
+                //{
+                //    DateTime currentDate = transactionTime;
+
+                //    // Get Start hour and minute
+                //    int startHour = Convert.ToInt32(tr.StartTime.Substring(0, 2));
+                //    int startMinute = Convert.ToInt32(tr.StartTime.Substring(3, 2));
+
+                //    int endHour = Convert.ToInt32(tr.EndTime.Substring(0, 2));
+                //    int endMinute = Convert.ToInt32(tr.EndTime.Substring(3, 2));
+
+                //    Console.WriteLine(startHour + ", " + startMinute + " -> " + endHour + ", " + endMinute);
+
+                //    currentStartDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, startHour, startMinute, currentDate.Second);
+                //    currentEndDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, endHour, endMinute, currentDate.Second);
+
+                //    if (startHour > endHour)// Cross day
+                //    {
+                //        actualEndDate = currentEndDate.AddDays(1); //this value need to be assigned to another vehicle CJS
+                //    }
+                //    else
+                //    {
+                //        actualEndDate = currentEndDate; //CJS
+                //    }
+
+                //    if (currentDate > currentStartDate && currentDate < actualEndDate)
+                //    {
+                //        currentTimeTollRates.Add(tr);
+                //    }
+                //}
+
+                //foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in currentTimeTollRates)
+                //{
+
+                //    if (tr.PlazaId == plazaId && tr.LaneTypeId == laneType && tr.VehicleClassId == vehicleClass)
+                //    {
+                //        result = tr.Amount;
+                //        break;
+                //    }
+                //}
             }
             catch (Exception ex)
             {

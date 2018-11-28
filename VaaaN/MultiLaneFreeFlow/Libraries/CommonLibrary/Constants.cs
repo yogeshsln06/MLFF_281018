@@ -98,14 +98,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             [Display(Name = "--Must Review--")]
             AllTransaction = 0,
 
-            [Display(Name = "IKE Data")]
-            OnlyCrossTalk = 1,
+            [Display(Name = "IKE")]
+            IKE = 1,
 
-            [Display(Name = "ANPR Front")]
-            OnlyNFFront = 2,
+            [Display(Name = "IKE + FRONT ALPR")]
+            IKE_FALPR = 2,
 
-            [Display(Name = "ANPR Rear")]
-            OnlyNFRear = 3,
+            [Display(Name = "IKE + REAR ALPR")]
+            IKE_RALPR = 3,
+
+            [Display(Name = "FRONT ALPR")]
+            FALPR = 4,
+
+            [Display(Name = "REAR ALPR")]
+            RALPR = 5,
+
+            [Display(Name = "FRONT + REAR ALPR")]
+            FANPR_RALPR = 6,
+
+            [Display(Name = "UNIDENTIFIED FRONT ALPR")]
+            Undefined_FALPR = 7,
+
+            [Display(Name = "UNIDENTIFIED REAR ALPR")]
+            Undefined_RALPR = 8,
 
 
             //[Display(Name = "EVI & ANPR data missmatch")]
@@ -1370,6 +1385,68 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
                 return DateTime.Now.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
             }
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection GetTollRateCollection(DateTime transactionTime, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection tollRates)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection currentTimeTollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
+
+            try
+            {
+               
+
+                DateTime currentStartDate = new DateTime();
+                DateTime currentEndDate = new DateTime();
+                DateTime actualEndDate = new DateTime(); //CJS
+                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in tollRates)
+                {
+                    DateTime currentDate = transactionTime;
+
+                    // Get Start hour and minute
+                    int startHour = Convert.ToInt32(tr.StartTime.Substring(0, 2));
+                    int startMinute = Convert.ToInt32(tr.StartTime.Substring(3, 2));
+                    int transcationHours = Convert.ToInt32(currentDate.TimeOfDay.Hours);
+                    int transcationMinutes = Convert.ToInt32(currentDate.TimeOfDay.Minutes);
+                    int endHour = Convert.ToInt32(tr.EndTime.Substring(0, 2));
+                    int endMinute = Convert.ToInt32(tr.EndTime.Substring(3, 2));
+
+                    Console.WriteLine(startHour + ", " + startMinute + " -> " + endHour + ", " + endMinute);
+
+                    currentStartDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, startHour, startMinute, currentDate.Second);
+                    currentEndDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, endHour, endMinute, currentDate.Second);
+
+                    if (startHour > endHour)// Cross day
+                    {
+                        if (transcationHours >= 0 && transcationHours < 12)
+                        {
+                            actualEndDate = currentEndDate;
+                            currentStartDate = currentStartDate.AddDays(-1); //this value need to be assigned to another vehicle CJS
+                        }
+                        else {
+                            currentStartDate = currentEndDate.AddDays(-1); //this value need to be assigned to another vehicle CJS
+                            actualEndDate = currentEndDate.AddDays(1); //this value need to be assigned to another vehicle CJS
+                        }
+                    }
+                    else
+                    {
+                        actualEndDate = currentEndDate; //CJS
+                    }
+
+                    if (currentDate > currentStartDate && currentDate < actualEndDate)
+                    {
+                        currentTimeTollRates.Add(tr);
+                    }
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+                //LogMessage("Failed to get toll rate." + ex.Message);
+                //result = -1;
+            }
+
+            return currentTimeTollRates;
         }
 
         #endregion

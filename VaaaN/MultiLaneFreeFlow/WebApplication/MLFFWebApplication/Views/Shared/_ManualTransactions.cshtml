@@ -28,10 +28,10 @@
                                 @*<th style="width:60px">
                                         Lane Id
                                     </th>*@
-                                <th style="width:60px">
+                                <th style="width:40px">
                                     Gantry Id
                                 </th>
-                                <th style="width:120px">
+                                <th style="width:180px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
                                             IKE
@@ -44,7 +44,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th style="width:240px">
+                                <th style="width:300px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
                                             Front ANPR
@@ -63,7 +63,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th style="width:240px">
+                                <th style="width:300px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
                                             Rear ANPR
@@ -82,11 +82,10 @@
                                         </div>
                                     </div>
                                 </th>
-
                                 <th style="width:60px">
                                     Speed
                                 </th>
-                                <th style="width:60px">
+                                <th style="width:30px">
                                     Action
                                 </th>
                             </tr>
@@ -232,9 +231,32 @@
     function CheckAssociated(DataValue) {
         var dataid = $(DataValue).attr("data-id");
         $('#hdnTransactionId').val(dataid);
-        var route = '/MRM/AssociatedTransaction?transactionId=' + dataid;
-        $('#partialassociated').load(route);
-        $('#Associatedmodel').modal('show');
+        //var route = '/MRM/AssociatedTransaction?transactionId=' + dataid + '&TransactionCategoryId=' + $("#ddlTransactionCategory").val();
+        //$('#partialassociated').load(route);
+        //$('#Associatedmodel').modal('show');
+
+        $('#partialassociated').hide();
+        $('#Associatedmodel').modal('hide');
+        $('#loader').show();
+        $.ajax({
+            type: "POST",
+            url: "/MRM/AssociatedTransaction?transactionId=" + dataid +"&TransactionCategoryId=" + $("#ddlTransactionCategory").val(),
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (result) {
+                $('#loader').hide();
+                $('#partialassociated').html(result);
+                $('#partialassociated').show();
+                $('#Associatedmodel').modal('show');
+                
+            },
+            error: function (x, e) {
+                $('#loader').hide();
+                $('#Associatedmodel').modal('hide');
+            }
+
+        });
     }
     function HideModal() {
         $('#Associatedmodel').modal('hide');

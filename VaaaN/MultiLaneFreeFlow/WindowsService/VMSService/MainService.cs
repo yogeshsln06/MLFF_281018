@@ -103,25 +103,50 @@ namespace VMSService
 
         #region Helper Methods
 
-        DateTime previousStartDate = DateTime.MinValue;
+        string previousStartDate = "";
 
         private void SendVMSMessageThreadFunction()
         {
             VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
-
+          
             while (!stopThread)
             {
                 try
                 {
                     #region Get current applicable toll rates
                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection currentTimeTollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
+                    DateTime currentDate = DateTime.Now;
+                    currentTimeTollRates = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GetTollRateCollection(currentDate, tollRates);
+
+                    if (previousStartDate != currentTimeTollRates[0].StartTime)
+                    {
+                        if (currentTimeTollRates.Count > 0)
+                        {
+                            try
+                            {
+                                previousStartDate = currentTimeTollRates[0].StartTime;
+                                LogMessage("There is change in toll rate time slot so sending toll rate message to vms for current time slot.");
+                                vmsController.SendMessage(currentTimeTollRates);
+                                LogMessage("Data send successfully");
+                            }
+                            catch (Exception ex)
+                            {
+                                LogMessage("Failed to send vms message." + ex.Message);
+                            }
+                        }
+                        else
+                        {
+                            LogMessage("No toll rate found.");
+                        }
+                    }
+
 
                     DateTime currentStartDate = new DateTime();
                     DateTime currentEndDate = new DateTime();
 
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in tollRates)
                     {
-                        DateTime currentDate = DateTime.Now;
+
 
                         // Get Start hour and minute
                         int startHour = Convert.ToInt32(tr.StartTime.Substring(0, 2));
@@ -141,31 +166,14 @@ namespace VMSService
                         if (currentDate > currentStartDate && currentDate < currentEndDate)
                         {
                             currentTimeTollRates.Add(tr);
+
                         }
                     }
                     #endregion
 
-                    if (previousStartDate != currentStartDate)
-                    {
-                        if (currentTimeTollRates.Count > 0)
-                        {
-                            try
-                            {
-                                previousStartDate = currentStartDate;
-                                LogMessage("There is change in toll rate time slot so sending toll rate message to vms for current time slot.");
-                                vmsController.SendMessage(currentTimeTollRates);
-                                LogMessage("Data send successfully");
-                            }
-                            catch (Exception ex)
-                            {
-                                LogMessage("Failed to send vms message." + ex.Message);
-                            }
-                        }
-                        else
-                        {
-                            LogMessage("No toll rate found.");
-                        }
-                    }
+
+
+
                 }
                 catch (Exception ex)
                 {

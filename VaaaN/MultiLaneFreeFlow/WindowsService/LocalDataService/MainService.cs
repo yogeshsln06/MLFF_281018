@@ -1522,51 +1522,7 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection currentTimeTollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
 
-                DateTime currentStartDate = new DateTime();
-                DateTime currentEndDate = new DateTime();
-                DateTime actualEndDate = new DateTime(); //CJS
-                //TollRateFilteredList = FilterToolRate(plazaId, laneType, transactionTime, vehicleClass);
-                // Get toll rate as per transaction time
-                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in tollRates)
-                {
-                    DateTime currentDate = transactionTime;
-
-                    // Get Start hour and minute
-                    int startHour = Convert.ToInt32(tr.StartTime.Substring(0, 2));
-                    int startMinute = Convert.ToInt32(tr.StartTime.Substring(3, 2));
-                    int transcationHours = Convert.ToInt32(currentDate.TimeOfDay.Hours);
-                    int transcationMinutes = Convert.ToInt32(currentDate.TimeOfDay.Minutes);
-                    int endHour = Convert.ToInt32(tr.EndTime.Substring(0, 2));
-                    int endMinute = Convert.ToInt32(tr.EndTime.Substring(3, 2));
-
-                    Console.WriteLine(startHour + ", " + startMinute + " -> " + endHour + ", " + endMinute);
-
-                    currentStartDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, startHour, startMinute, currentDate.Second);
-                    currentEndDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, endHour, endMinute, currentDate.Second);
-
-                    if (startHour > endHour)// Cross day
-                    {
-                        if (transcationHours >= 0)
-                        {
-                            actualEndDate = currentEndDate;
-                            currentStartDate = currentStartDate.AddDays(-1); //this value need to be assigned to another vehicle CJS
-                        }
-                        else {
-                            currentStartDate = currentEndDate.AddDays(-1); //this value need to be assigned to another vehicle CJS
-                            currentStartDate = currentEndDate.AddDays(1); //this value need to be assigned to another vehicle CJS
-                        }
-                    }
-                    else
-                    {
-                        actualEndDate = currentEndDate; //CJS
-                    }
-
-                    if (currentDate > currentStartDate && currentDate < actualEndDate)
-                    {
-                        currentTimeTollRates.Add(tr);
-                    }
-                }
-
+                currentTimeTollRates = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GetTollRateCollection(transactionTime, tollRates);
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in currentTimeTollRates)
                 {
                     if (tr.PlazaId == plazaId && tr.LaneTypeId == laneType && tr.VehicleClassId == vehicleClass)

@@ -1,28 +1,29 @@
 ﻿@using System.Data
 @model DataTable
+<script src="~/js/jquery.freezeheader.js"></script>
+
 <div class="row">
     <div style="background:#fff">
         <div class="col-sm-12">
             <label class="col-sm-2">Transaction Id:</label>
-            <label class="col-sm-1">@ViewBag.TransactionId</label>
+            <label class="col-sm-2">@ViewBag.TransactionId</label>
             <label class="col-sm-2">Transaction Time:</label>
-            <label class="col-sm-3">@ViewBag.TransactionTime</label>
-            <label class="col-sm-2">CrossTalk VRN:</label>
-            <label class="col-sm-2">@ViewBag.CrossTalkVRN</label>
+            <label class="col-sm-2">@ViewBag.TransactionTime</label>
+            <label class="col-sm-2">Vehicle Speed:</label>
+            <label class="col-sm-2">@ViewBag.VehicleSpeed km/h</label>
             <input type="hidden" id="hdnTransactionId" value="@ViewBag.TransactionId" />
         </div>
         <div class="col-sm-12">
-            <label class="col-sm-1">IKE Class:</label>
-            <label class="col-sm-1">@ViewBag.Class</label>
-            <label class="col-sm-1">ANPR Front:</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2">IKE Class:</label>
+            <label class="col-sm-2">@ViewBag.Class</label>
+            <label class="col-sm-2">ANPR Front:</label>
+            <div class="col-sm-2">
                 <div class="col-sm-10">
                     @if (ViewBag.NFFront != "")
                     {
                         string path = ViewData["apiPath"] + ViewBag.NFFront;
                         string path1 = path.Replace('/', '^');
                         <span onclick="openimage(this);" path="@path1">
-                            @*<i class="fa fa-file-image-o" aria-hidden="true" style="font-size: 18px;"></i>*@
                             <img src="@path" height="40" width="100" />
                         </span>
                     }
@@ -35,10 +36,9 @@
                         <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
                     }
                 </div>
-
             </div>
-            <label class="col-sm-1">ANPR Rear:</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2">ANPR Rear:</label>
+            <div class="col-sm-2">
                 <div class="col-sm-10">
                     @if (ViewBag.NFRear != "")
                     {
@@ -70,28 +70,23 @@
     <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="margin:.1%">
         <div class="form-horizontal">
             <div class="form-group">
-                <div class="col-md-12 table-responsive">
-                    <table id="tableTransaction" class="table table-condensed table-striped table-hover">
-                        <thead>
+                <div class="panel-body table-responsive">
+                    <table id="tableCrossTalk" class="table table-condensed table-striped table-hover">
                         <thead>
                             <tr>
-                                <th style="width:60px">
-                                    Select
-                                    @*Transactions*@
-                                </th>
                                 <th style="width:40px">
+                                    Select
+                                </th>
+                                <th style="width:60px">
                                     Tran Id
                                 </th>
                                 <th style="width:120px">
                                     Tran Time
                                 </th>
-                                @*<th style="width:60px">
-                                        Lane Id
-                                    </th>*@
                                 <th style="width:60px">
                                     Gantry Id
                                 </th>
-                                <th style="width:120px">
+                                <th style="width:180px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
                                             IKE
@@ -104,7 +99,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th style="width:240px">
+                                <th style="width:300px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
                                             Front ANPR
@@ -123,7 +118,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th style="width:240px">
+                                <th style="width:300px">
                                     <div class="col-sm-12">
                                         <div style="text-align:center;">
                                             Rear ANPR
@@ -142,7 +137,6 @@
                                         </div>
                                     </div>
                                 </th>
-
                                 <th style="width:60px">
                                     Speed
                                 </th>
@@ -150,7 +144,6 @@
                                     Audited
                                 </th>
                             </tr>
-
                         </thead>
                         <tbody>
                             @foreach (DataRow item in Model.Rows)
@@ -253,24 +246,28 @@
                         </tbody>
                     </table>
                 </div>
+                @*<div class="col-sm-12">
+                        <label class="col-sm-2">VRN:</label>
+                        <input type="text" id="txtVrn" class="col-sm-2 input-sm" placeholder="Enter VRN" />
+                        <button id="btnSearch" onclick="SearchVRN();" class="btn btn-primary">Search</button>
+                    </div>*@
                 <div class="col-sm-12">
-                    <label class="col-sm-2">VRN:</label>
-                    <input type="text" id="txtVrn" class="col-sm-2 input-sm" placeholder="Enter VRN" />
-                    <button id="btnSearch" onclick="SearchVRN();" class="btn btn-primary">Search</button>
-                </div>
-                <div class="col-sm-12">
-                    <label class="col-sm-2">VRN:</label>
-                    <input type="text" id="txtfinalVrn" placeholder="Auditor VRN" class="col-sm-2 input-sm" />
+                    <label class="col-sm-1">VRN:</label>
+                    <input type="text" id="txtfinalVrn" placeholder="Auditor VRN" class="col-sm-3 input-sm" />
                     <label class="col-sm-2">Vehicle Class:</label>
-                    @Html.DropDownList("ddlAuditedVehicleClass", (IEnumerable<SelectListItem>)ViewBag.AuditorVehicleClass, new { @class = "col-sm-2 input-sm" })
-                    <button id="btnSearch" onclick="JoinCharge();" class="btn btn-primary">Join&Charge</button>
+                    @Html.DropDownList("ddlAuditedVehicleClass", (IEnumerable<SelectListItem>)ViewBag.AuditorVehicleClass, new { @class = "col-sm-3 input-sm" })
+                    <div class="col-sm-3">
+                        <button id="btnSearch" onclick="JoinCharge();" class="btn btn-primary">Complete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-
+    $(document).ready(function () {
+        $("#tableCrossTalk").freezeHeader({ 'height': '250px' });
+    });
     function SearchVRN() {
         $('#loader').show();
         var InputData = {
