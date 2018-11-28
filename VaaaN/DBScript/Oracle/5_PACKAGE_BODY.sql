@@ -3826,7 +3826,7 @@ ORDER BY TRANSACTION_ID DESC';
                   CA.MOB_NUMBER,
                   CA.EMAIL_ID,
                   CA.ACCOUNT_BALANCE,
-                  CA.ADDRESS,
+                  CA.ADDRESS_LINE_1,
                   CV.TAG_ID,
                   CV.VEH_REG_NO,
                   VC.VEHICLE_CLASS_NAME

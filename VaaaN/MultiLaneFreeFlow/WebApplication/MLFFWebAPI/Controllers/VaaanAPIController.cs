@@ -742,7 +742,7 @@ namespace MLFFWebAPI.Controllers
                                         smsOutgoing.MobileNumber = customerAccount.MobileNo;
                                         smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                                         //smsOutgoing.MessageBody = "Thanks for Top-Up with amount " + rechargeAmount + ". Your saldo is " + customerAccount.AccountBalance + ".";// Update message content TO DO
-                                        smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture) + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture) + ". Ref: ["+ entryId + "]";// Update message content TO DO
+                                        smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", "") + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ". Ref: ["+ entryId + "]";// Update message content TO DO
                                         smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                                         smsOutgoing.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
                                         smsOutgoing.MessageSendDateTime = DateTime.Now;
@@ -790,7 +790,7 @@ namespace MLFFWebAPI.Controllers
                                     sms.MobileNumber = customerAccount.MobileNo;
                                     sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                                     //sms.MessageBody = "Dear Customer Your Saldo is " + customerAccount.AccountBalance + ".";
-                                    sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture) + ".";
+                                    sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ".";
                                     sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                                     sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
                                     sms.MessageSendDateTime = DateTime.Now;
