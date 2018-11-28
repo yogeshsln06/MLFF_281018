@@ -1,0 +1,118 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>
+
+@{
+    ViewBag.Title = "Customer List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<script src="~/scripts/jquery.dataTables.min.js"></script>
+<script src="~/scripts/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tableCustomer').dataTable({
+            "paging": true,
+            "ordering": false,
+            "info": true,
+            "searching": true
+        });
+    });
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
+        <div class="panel-title new-title">
+            Customer List
+        </div>
+
+    </div>
+    <div style="height:5px"></div>
+    <table id="tableCustomer" class="table table-condensed table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    No.
+                </th>
+                <th>
+                    Name
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.MobileNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EmailId)
+                </th>
+                <th>
+                    Balance
+                </th>
+                <th>
+                    Status
+                </th>
+
+                <th>
+                    Edit
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName
+                   )
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MobileNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmailId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AccountBalance)
+                    </td>
+                    <td>
+                        @*<a href="@Url.Action("CustomerTagList", "POS", new { id = item.AccountId })" title="Edit">Tag</a>*@
+                    @Html.DisplayFor(modelItem => item.QueueStatus)
+                    </td>
+                    <td>
+                        <a class="edit" href="#"><i class="fa fa-pencil-square-o" title="Edit"></i></a>
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+    $(window).on('load',function () {
+        //$('#module_6').removeClass('list-group-item list-group-item-info collapsed');
+        //$('#module_6').addClass('list-group-item list-group-item-info');
+
+        //$('#POSsubMenu').removeClass('list-group-submenu collapse');
+        //$('#POSsubMenu').addClass('list-group-submenu in');
+
+        //$('#module_2').removeClass('list-group-item list-group-item-info');
+        //$('#module_2').addClass('list-group-item list-group-item-info collapsed');
+
+        //$('#AdminsubMenu').removeClass('list-group-submenu in');
+        //$('#AdminsubMenu').addClass('list-group-submenu collapse');
+
+
+        //$('#module_6').css({ "background-color": "#00B4CE" });
+        //$('#module_6').css({ "font-weight": "bold" });
+        //$('#submodule_12').css({ "background-color": "#00B2aa" });
+        //$('#submodule_12').css({ "font-weight": "bold" });
+    });
+    </script>
+</div>

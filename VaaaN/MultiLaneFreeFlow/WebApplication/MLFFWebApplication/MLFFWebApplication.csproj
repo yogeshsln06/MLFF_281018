@@ -439,6 +439,7 @@
     <Content Include="Views\POS\_CustomerRechargeHistory.cshtml" />
     <Content Include="Views\POS\_CustomerTranscationHistory.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\POS\CustomerQueueList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
