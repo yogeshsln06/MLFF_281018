@@ -21,6 +21,7 @@ using VaaaN.MLFF.Libraries.CommonLibrary;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using VaaaN.MLFF.Libraries.CommonLibrary.BLL;
+using System.Globalization;
 
 namespace MLFFWebAPI.Controllers
 {
@@ -524,6 +525,7 @@ namespace MLFFWebAPI.Controllers
         {
             try
             {
+                CultureInfo culture = new CultureInfo("id-ID");
                 LogInboundSMS("====================Inbound message (Start)=======");
 
                 #region Variables
@@ -701,7 +703,7 @@ namespace MLFFWebAPI.Controllers
                                     #endregion
 
                                     #region Update account history (POS transaction)
-
+                                    Int32 entryId = 0;
                                     try
                                     {
                                         LogInboundSMS("Updating account history table...");
@@ -718,7 +720,7 @@ namespace MLFFWebAPI.Controllers
                                         accountHistory.CreationDate = DateTime.Now;
                                         accountHistory.ModificationDate = DateTime.Now;
                                         accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
-                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                                        entryId=VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
                                         LogInboundSMS("Account history table updated successfully.");
                                     }
                                     catch (Exception ex)
@@ -740,7 +742,7 @@ namespace MLFFWebAPI.Controllers
                                         smsOutgoing.MobileNumber = customerAccount.MobileNo;
                                         smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                                         //smsOutgoing.MessageBody = "Thanks for Top-Up with amount " + rechargeAmount + ". Your saldo is " + customerAccount.AccountBalance + ".";// Update message content TO DO
-                                        smsOutgoing.MessageBody = "Terimakasih untuk TOP-UP dengan nominal Rp. " + rechargeAmount + ". Saldo anda saat ini Rp. " + customerAccount.AccountBalance + ".";// Update message content TO DO
+                                        smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture) + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture) + ". Ref: ["+ entryId + "]";// Update message content TO DO
                                         smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                                         smsOutgoing.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
                                         smsOutgoing.MessageSendDateTime = DateTime.Now;
@@ -788,7 +790,7 @@ namespace MLFFWebAPI.Controllers
                                     sms.MobileNumber = customerAccount.MobileNo;
                                     sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                                     //sms.MessageBody = "Dear Customer Your Saldo is " + customerAccount.AccountBalance + ".";
-                                    sms.MessageBody = "Pelanggan Yang terhormat, Saldo anda saat ini Rp. " + customerAccount.AccountBalance + ".";
+                                    sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture) + ".";
                                     sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                                     sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
                                     sms.MessageSendDateTime = DateTime.Now;

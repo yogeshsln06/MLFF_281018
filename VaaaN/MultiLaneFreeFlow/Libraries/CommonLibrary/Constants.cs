@@ -17,6 +17,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         #region Variable
         public static string DATETIME_FORMAT = "dd/MM/yyyy hh:mm:ss tt";
         public static string DATETIME_FORMAT_WITHOUT_SECONDS = "dd/MM/yyyy hh:mm tt";
+        public static string DATETIME_FORMAT_WITHOUT_SECONDSForSMS = "dd-MMM-yyyy HH:mm:ss";
         public static string dateTimeFormat24H = "yyyy-MM-dd HH:mm:ss.fff";
         public static string dateTimeFormat24HForFileName = "yyyy-MM-dd-HH-mm-ss-fff";
         public static string dateTimeFormat24HsqlServer = "yyyy-MM-dd HH:mm:ss.fff";

@@ -11,6 +11,7 @@ using System.Messaging;
 using System.Collections;
 using System.Threading;
 using System.IO;
+using System.Globalization;
 
 namespace VaaaN.MLFF.WindowsServices
 {
@@ -548,7 +549,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                         FinancialProcessing(associatedCVCT, associatedCACT, transaction);
 
                                                                         //notification operation here
-                                                                        NotificationProcessing(associatedCVCT, associatedCACT, transaction);
+                                                                        //NotificationProcessing(associatedCVCT, associatedCACT, transaction);
                                                                     }
                                                                     else
                                                                     {
@@ -970,8 +971,8 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 LogMessage("Financial processing has been done.");
 
                                                                 //notification operation here
-                                                                NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
-                                                                LogMessage("Notification processing has been done.");
+                                                                // NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+                                                                //LogMessage("Notification processing has been done.");
                                                             }
                                                             else
                                                             {
@@ -1270,59 +1271,73 @@ namespace VaaaN.MLFF.WindowsServices
 
             if (tollToDeduct > -1)
             {
-                #region Account History Section
-                try
+                Decimal CurrentAccountBalance = customerAccountInfo.AccountBalance;
+                Decimal AfterDeduction = CurrentAccountBalance - tollToDeduct;
+                if (AfterDeduction > 0)
                 {
-                    LogMessage("Trying to record in account history table...");
-                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCBE accountHistory = new Libraries.CommonLibrary.CBE.AccountHistoryCBE();
-                    accountHistory.TMSId = transaction.TMSId;
-                    //accountHistory.EntryId = 0;//this  is the auto incremented and primery key of table
-                    accountHistory.AccountId = customerAccountInfo.AccountId;
-                    accountHistory.CustomerVehicleEntryId = customerVehicleInfo.EntryId; //<============================= 
-                    accountHistory.TransactionTypeId = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransactionType.LaneDebit;
-                    accountHistory.TransactionId = transaction.TransactionId;
-                    accountHistory.Amount = tollToDeduct;
-                    accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
-                    accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent; ;//will be updated later on
-                                                                                                                            //accountHistory.ModifierId = 1;//will be updated later on
-                    accountHistory.CreationDate = DateTime.Now;
-                    accountHistory.ModificationDate = DateTime.Now;
-                    accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
-                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
-                    LogMessage("Recorded in account history table successfully.");
-                }
-                catch (Exception ex)
-                {
-                    LogMessage("Exception in recording in the Account History table. " + ex.ToString());
-                }
-                #endregion
 
-                #region Update Balance Section
-                try
-                {
-                    LogMessage("Trying to update balance in customer account table...");
-                    //should be by by trigger defined in TBL_ACCOUNT_HISTORY
-                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateBalance(customerAccountInfo, (-1 * tollToDeduct));
-                    LogMessage("Balance updated successfully in the customer account.");
-                }
-                catch (Exception ex)
-                {
-                    LogMessage("Exception in updating customer's account balance. " + ex.ToString());
-                }
-                #endregion
+                    #region Account History Section
+                    try
+                    {
 
-                #region Mark transaction as balance updated
-                try
-                {
-                    LogMessage("Trying to update isBalanceUpdated field in transaction table...");
-                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsBalanceUpdated(transaction);
-                    LogMessage("Transaction is marked as balance updated.");
+
+                        LogMessage("Trying to record in account history table...");
+                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCBE accountHistory = new Libraries.CommonLibrary.CBE.AccountHistoryCBE();
+                        accountHistory.TMSId = transaction.TMSId;
+                        //accountHistory.EntryId = 0;//this  is the auto incremented and primery key of table
+                        accountHistory.AccountId = customerAccountInfo.AccountId;
+                        accountHistory.CustomerVehicleEntryId = customerVehicleInfo.EntryId; //<============================= 
+                        accountHistory.TransactionTypeId = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransactionType.LaneDebit;
+                        accountHistory.TransactionId = transaction.TransactionId;
+                        accountHistory.Amount = tollToDeduct;
+                        accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
+                        accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent; ;//will be updated later on
+                                                                                                                                //accountHistory.ModifierId = 1;//will be updated later on
+                        accountHistory.CreationDate = DateTime.Now;
+                        accountHistory.ModificationDate = DateTime.Now;
+                        accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
+                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                        LogMessage("Recorded in account history table successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogMessage("Exception in recording in the Account History table. " + ex.ToString());
+                    }
+                    #endregion
+
+                    #region Update Balance Section
+                    try
+                    {
+                        LogMessage("Trying to update balance in customer account table...");
+                        //should be by by trigger defined in TBL_ACCOUNT_HISTORY
+                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateBalance(customerAccountInfo, (-1 * tollToDeduct));
+                        LogMessage("Balance updated successfully in the customer account.");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogMessage("Exception in updating customer's account balance. " + ex.ToString());
+                    }
+                    #endregion
+
+                    #region Mark transaction as balance updated
+                    try
+                    {
+                        LogMessage("Trying to update isBalanceUpdated field in transaction table...");
+                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsBalanceUpdated(transaction);
+                        NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, AfterDeduction);
+                        LogMessage("Transaction is marked as balance updated.");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogMessage("Exception in marking the transaction as balance updated. " + ex.ToString());
+                    }
+                    #endregion
+
                 }
-                catch (Exception ex)
-                {
-                    LogMessage("Exception in marking the transaction as balance updated. " + ex.ToString());
+                else {
+                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, AfterDeduction);
                 }
-                #endregion
+
             }
             else
             {
@@ -1330,7 +1345,7 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
 
-        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction)
+        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Decimal tollToDeduct, Decimal AfterDeduction)
         {
             try
             {
@@ -1339,9 +1354,17 @@ namespace VaaaN.MLFF.WindowsServices
                 Message smsMessage = new Message();
                 smsMessage.Formatter = new BinaryMessageFormatter();
                 VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail smsDetail = new Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail();
-                //smsDetail.SMSMessage = "Your account has been deducted for Vehicle " + customerVehicleInfo.VehRegNo + " at Location: " + transaction.PlazaId + " at Time: " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT);
-                //Akun anda telah dipotong untuk bertransaksi nomor kendaraan hr36k3032 anda di tempat gantry 1 pada 13 / 10 / 2018 5: 50: 30 pm.//DateTime.Now.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H)
-                smsDetail.SMSMessage = "Akun anda telah dipotong untuk bertransaksi nomor kendaraan " + customerVehicleInfo.VehRegNo + " anda di tempat " + GetPlazaNameById(transaction.PlazaId) + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24H) + ".";
+                //smsDetail.SMSMessage = "Akun anda telah dipotong untuk bertransaksi nomor kendaraan " + customerVehicleInfo.VehRegNo + " anda di tempat " + GetPlazaNameById(transaction.PlazaId) + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24H) + ".";
+                CultureInfo culture = new CultureInfo("id-ID");
+                string RechareDate = transaction.TransactionDateTime.AddDays(4).ToString("dd-MMM-yyyy") + " 23:59:59";
+                if (AfterDeduction > 0)
+                {
+                    smsDetail.SMSMessage = "Pelanggan Yth, telah dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture) + " terhadap saldo SJBE anda atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di tempat " + GetPlazaNameById(transaction.PlazaId) + ". Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture) + " Ref: [" + transaction.TransactionId.ToString() + "]";
+                }
+                else {
+                    smsDetail.SMSMessage = "Pelanggan Yth, Saldo SJBE anda saat ini tidak mencukupi untuk dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture) + " atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di Gantry - Medan Merdeka Barat 1. Silahkan melakukan pengisian ulang saldo SJBE anda sebelum " + RechareDate + ". Keterlambatan pengisian ulang saldo akan dikenakan denda sebesar Rp 1.000.000,00. Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse((AfterDeduction + tollToDeduct).ToString()).ToString("C", culture) + " Ref: [" + transaction.TransactionId.ToString() + "]";
+                }
+
                 LogMessage(smsDetail.SMSMessage);
                 smsDetail.AccountId = customerAccountInfo.AccountId;
                 smsDetail.CustomerName = customerAccountInfo.FirstName + " " + customerAccountInfo.LastName;
