@@ -35,15 +35,34 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_mob_number", DbType.String, account.MobileNo, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_email_id", DbType.String, account.EmailId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_description", DbType.String, account.Description, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address", DbType.String, account.Address, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address_line_1", DbType.String, account.AddressLine1, ParameterDirection.Input, 200));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_account_balance", DbType.Decimal, account.AccountBalance, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_creation_date", DbType.DateTime, account.CreationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_customer_image_path", DbType.String, account.CustomerImagePath, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path", DbType.String, account.ScannedDocsPath, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path1", DbType.String, account.ScannedDocsPath1, ParameterDirection.Input, 200));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_is_doc_verified", DbType.Int32, account.IsDocVerified, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_account_status", DbType.Int32, account.AccountStatus, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transfer_status", DbType.Int32, account.TransferStatus, ParameterDirection.Input));
-
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path2", DbType.String, account.ScannedDocsPath2, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path3", DbType.String, account.ScannedDocsPath3, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path4", DbType.String, account.ScannedDocsPath4, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_resident_id", DbType.Int32, account.ResidentId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_birth_place", DbType.String, account.BirthPlace, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_birth_date", DbType.DateTime, account.BirthDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_gender", DbType.Int32, account.Gender, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address_line_2", DbType.String, account.AddressLine2, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address_line_3", DbType.String, account.AddressLine3, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_district_id", DbType.Int32, account.DistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_sub_district_id", DbType.Int32, account.SubDistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_city_id", DbType.Int32, account.CityId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_province_id", DbType.Int32, account.ProvinceId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_postal_code", DbType.Int32, account.PostalCode, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_marital_status", DbType.Int32, account.MaritalStatus, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_occupation", DbType.String, account.Occupation, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_nationality", DbType.Int32, account.Nationality, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_valid_until", DbType.DateTime, account.ValidUntil, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_registration_through", DbType.Int32, account.RegistartionThrough, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_queue_status", DbType.Int32, account.QueueStatus, ParameterDirection.Input));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
             catch (Exception ex)
@@ -68,17 +87,36 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_mob_number", DbType.String, account.MobileNo, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_email_id", DbType.String, account.EmailId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_description", DbType.String, account.Description, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address", DbType.String, account.Address, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address_line_1", DbType.String, account.AddressLine1, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_account_balance", DbType.Decimal, account.AccountBalance, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modifier_id", DbType.Int32, account.ModifierId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_creation_date", DbType.DateTime, account.CreationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modification_date", DbType.DateTime, account.ModificationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_customer_image_path", DbType.String, account.CustomerImagePath, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path", DbType.String, account.ScannedDocsPath, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path1", DbType.String, account.ScannedDocsPath1, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_is_doc_verified", DbType.Int32, account.IsDocVerified, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_account_status", DbType.Int32, account.AccountStatus, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transfer_status", DbType.Int32, account.TransferStatus, ParameterDirection.Input));
-
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path2", DbType.String, account.ScannedDocsPath2, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path3", DbType.String, account.ScannedDocsPath3, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_scanned_docs_path4", DbType.String, account.ScannedDocsPath4, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_resident_id", DbType.Int32, account.ResidentId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_birth_place", DbType.String, account.BirthPlace, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_birth_date", DbType.DateTime, account.BirthDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_birth_gender", DbType.Int32, account.Gender, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address_line_2", DbType.String, account.AddressLine2, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address_line_3", DbType.String, account.AddressLine3, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_district_id", DbType.Int32, account.DistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_sub_district_id", DbType.Int32, account.SubDistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_city_id", DbType.Int32, account.CityId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_province_id", DbType.Int32, account.ProvinceId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_postal_code", DbType.Int32, account.PostalCode, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_marital_status", DbType.Int32, account.MaritalStatus, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_occupation", DbType.String, account.Occupation, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_nationality", DbType.Int32, account.Nationality, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_valid_until", DbType.DateTime, account.ValidUntil, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_registration_through", DbType.Int32, account.RegistartionThrough, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_queue_status", DbType.Int32, account.QueueStatus, ParameterDirection.Input));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
             catch (Exception ex)
@@ -213,6 +251,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                 string spName = Constants.oraclePackagePrefix + "ACCOUNT_GETBYID";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, customer.TmsId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ACCOUNT_ID", DbType.Int32, customer.AccountId, ParameterDirection.Input));
                 customers = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
                 return customers[0];
@@ -244,9 +283,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         //        throw ex;
         //    }
         //}
-
-
-        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 CustomerId)
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 CustomerId, Int32 tmsId)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection customerAccounts = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection();
             try
@@ -256,8 +293,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "ACCOUNT_GETBYID";
 
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ACCOUNT_ID", DbType.String, CustomerId, ParameterDirection.Input));
-
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ACCOUNT_ID", DbType.Int32, CustomerId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, tmsId, ParameterDirection.Input));
                 DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 DataTable dt = ds.Tables[tableName];
                 customerAccounts = ConvertDataTableToCollection(dt);
@@ -351,8 +388,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["DESCRIPTION"] != DBNull.Value)
                         account.Description = Convert.ToString(dt.Rows[i]["DESCRIPTION"]);
 
-                    if (dt.Rows[i]["ADDRESS"] != DBNull.Value)
-                        account.Address = Convert.ToString(dt.Rows[i]["ADDRESS"]);
+                    if (dt.Rows[i]["ADDRESS_LINE_1"] != DBNull.Value)
+                        account.AddressLine1 = Convert.ToString(dt.Rows[i]["ADDRESS_LINE_1"]);
 
                     if (dt.Rows[i]["ACCOUNT_BALANCE"] != DBNull.Value)
                         account.AccountBalance = Convert.ToDecimal(dt.Rows[i]["ACCOUNT_BALANCE"]);
@@ -369,8 +406,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["CUSTOMER_IMAGE_PATH"] != DBNull.Value)
                         account.CustomerImagePath = Convert.ToString(dt.Rows[i]["CUSTOMER_IMAGE_PATH"]);
 
-                    if (dt.Rows[i]["SCANNED_DOCS_PATH"] != DBNull.Value)
-                        account.ScannedDocsPath = Convert.ToString(dt.Rows[i]["SCANNED_DOCS_PATH"]);
+                    if (dt.Rows[i]["SCANNED_DOCS_PATH1"] != DBNull.Value)
+                        account.ScannedDocsPath1 = Convert.ToString(dt.Rows[i]["SCANNED_DOCS_PATH1"]);
 
                     if (dt.Rows[i]["IS_DOC_VERIFIED"] != DBNull.Value)
                         account.IsDocVerified = Convert.ToInt32(dt.Rows[i]["IS_DOC_VERIFIED"]);
@@ -381,6 +418,65 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["TRANSFER_STATUS"] != DBNull.Value)
                         account.TransferStatus = Convert.ToInt32(dt.Rows[i]["TRANSFER_STATUS"]);
 
+                    if (dt.Rows[i]["SCANNED_DOCS_PATH2"] != DBNull.Value)
+                        account.ScannedDocsPath2 = Convert.ToString(dt.Rows[i]["SCANNED_DOCS_PATH2"]);
+
+                    if (dt.Rows[i]["SCANNED_DOCS_PATH3"] != DBNull.Value)
+                        account.ScannedDocsPath3 = Convert.ToString(dt.Rows[i]["SCANNED_DOCS_PATH3"]);
+
+                    if (dt.Rows[i]["SCANNED_DOCS_PATH4"] != DBNull.Value)
+                        account.ScannedDocsPath4 = Convert.ToString(dt.Rows[i]["SCANNED_DOCS_PATH4"]);
+
+                    if (dt.Rows[i]["RESIDENT_ID"] != DBNull.Value)
+                        account.ResidentId = Convert.ToInt32(dt.Rows[i]["RESIDENT_ID"]);
+
+                    if (dt.Rows[i]["BIRTH_PLACE"] != DBNull.Value)
+                        account.BirthPlace = Convert.ToString(dt.Rows[i]["BIRTH_PLACE"]);
+
+                    if (dt.Rows[i]["BIRTH_DATE"] != DBNull.Value)
+                        account.BirthDate = Convert.ToDateTime(dt.Rows[i]["BIRTH_DATE"]);
+
+                    if (dt.Rows[i]["GENDER"] != DBNull.Value)
+                        account.Gender = Convert.ToInt32(dt.Rows[i]["GENDER"]);
+
+                    if (dt.Rows[i]["ADDRESS_LINE_2"] != DBNull.Value)
+                        account.AddressLine2 = Convert.ToString(dt.Rows[i]["ADDRESS_LINE_2"]);
+
+                    if (dt.Rows[i]["ADDRESS_LINE_3"] != DBNull.Value)
+                        account.AddressLine3 = Convert.ToString(dt.Rows[i]["ADDRESS_LINE_3"]);
+
+                    if (dt.Rows[i]["DISTRICT_ID"] != DBNull.Value)
+                        account.DistrictId = Convert.ToInt32(dt.Rows[i]["DISTRICT_ID"]);
+
+                    if (dt.Rows[i]["SUB_DISTRICT_ID"] != DBNull.Value)
+                        account.SubDistrictId = Convert.ToInt32(dt.Rows[i]["SUB_DISTRICT_ID"]);
+
+                    if (dt.Rows[i]["CITY_ID"] != DBNull.Value)
+                        account.CityId = Convert.ToInt32(dt.Rows[i]["CITY_ID"]);
+
+                    if (dt.Rows[i]["PROVINCE_ID"] != DBNull.Value)
+                        account.ProvinceId = Convert.ToInt32(dt.Rows[i]["PROVINCE_ID"]);
+
+                    if (dt.Rows[i]["POSTAL_CODE"] != DBNull.Value)
+                        account.PostalCode = Convert.ToInt32(dt.Rows[i]["POSTAL_CODE"]);
+
+                    if (dt.Rows[i]["MARITAL_STATUS"] != DBNull.Value)
+                        account.MaritalStatus = Convert.ToInt32(dt.Rows[i]["MARITAL_STATUS"]);
+
+                    if (dt.Rows[i]["OCCUPATION"] != DBNull.Value)
+                        account.Occupation = Convert.ToString(dt.Rows[i]["OCCUPATION"]);
+
+                    if (dt.Rows[i]["NATIONALITY"] != DBNull.Value)
+                        account.Nationality = Convert.ToInt32(dt.Rows[i]["NATIONALITY"]);
+
+                    if (dt.Rows[i]["VALID_UNTIL"] != DBNull.Value)
+                        account.ValidUntil = Convert.ToDateTime(dt.Rows[i]["VALID_UNTIL"]);
+
+                    if (dt.Rows[i]["REGISTRATION_THROUGH"] != DBNull.Value)
+                        account.RegistartionThrough = Convert.ToInt32(dt.Rows[i]["REGISTRATION_THROUGH"]);
+
+                    if (dt.Rows[i]["QUEUE_STATUS"] != DBNull.Value)
+                        account.QueueStatus = Convert.ToInt32(dt.Rows[i]["QUEUE_STATUS"]);
                     accounts.Add(account);
                 }
                 return accounts;

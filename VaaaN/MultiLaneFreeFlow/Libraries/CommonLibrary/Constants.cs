@@ -483,11 +483,126 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         }
         public enum CustomerQueueStatus
         {
-            Unknown = 0,
-            Open,
+            Open = 1,
             Arranged,
             Processed
         };
+        public static string[] CustomerQueueStatusName = new string[]
+      {
+            "Open",
+            "Arranged",
+            "Processed"
+      };
+        public enum Gender
+        {
+            Male = 1,
+            Female,
+
+        };
+        public static string[] GenderName = new string[]
+      {
+            "Male",
+            "Female",
+            "Processed"
+      };
+        public enum MaritalStatus
+        {
+            Single = 1,
+            Married,
+
+        };
+        public static string[] MaritalStatusName = new string[]
+      {
+            "Single",
+            "Married"
+      };
+        public enum Nationality
+        {
+            Indian = 1,
+            Indonesia,
+
+        };
+        public static string[] NationalityName = new string[]
+      {
+            "Single",
+            "Indonesia"
+      };
+        public enum VehicleBrand
+        {
+            Unknown = 0,
+            Toyota = 1,
+            Honda,
+
+        };
+        public static string[] VehicleBrandName = new string[]
+      {
+            "Unknown",
+            "Toyota",
+            "Honda"
+      };
+        public enum VehicleType
+        {
+            Unknown = 0,
+            SUV = 1,
+            Siddan,
+
+        };
+        public static string[] VehicleTypeName = new string[]
+      {
+            "Unknown",
+            "SUV",
+            "Siddan"
+      };
+        public enum VehicleCategory
+        {
+            Unknown = 0,
+            Category1 = 1,
+            Category2,
+
+        };
+        public static string[] VehicleCategoryName = new string[]
+      {
+            "Unknown",
+            "Category1",
+            "Category2"
+      };
+        public enum FuelType
+        {
+            Petrol = 1,
+            Diesel,
+
+        };
+        public static string[] FuelTypeName = new string[]
+      {
+            "Petrol",
+            "Diesel"
+      };
+        public enum VehicleColor
+        {
+            Unknown = 0,
+            White = 1,
+            Black,
+
+        };
+        public static string[] VehicleColorName = new string[]
+      {
+            "Unknown",
+            "White",
+            "Black"
+      };
+        public enum LicencePlateColor
+        {
+            Unknown = 0,
+            White = 1,
+            Black,
+
+        };
+        public static string[] LicencePlateColorName = new string[]
+      {
+            "Unknown",
+            "White",
+            "Black"
+      };
         public static string[] ECBStatusDescription = new string[]
         {
             "Idle",//0

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Text;
@@ -342,7 +343,62 @@ namespace VaaaN.MLFF.WebApplication.Models
 
             return displayAttribute[0].Name;
         }
+        public static string ImageSave(System.Web.HttpPostedFileBase file, string[] imageTypes, ref bool Value, string ImageName)
+        {
+            string ImagePath = string.Empty;
+            if (file != null && file.ContentLength > 0)
+            {
+                if (!imageTypes.Contains(file.ContentType))
+                {
+                    Value = true;
+                    return ImagePath;
+                }
 
+                if (file.ContentLength > 2097152) // about 2 MB
+                {
+                    Value = true;
+                    return ImagePath;
+                }
+            }
+            if (Value == false)
+            {
+                if (file != null && file.ContentLength > 0)
+                {
+                    string vehicleImageName = ImageName + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string extension = System.IO.Path.GetExtension(file.FileName).ToLower();
+
+                    String uploadFilePath = "\\Attachment\\";
+                    // create a folder for distinct user -
+                    string FolderName = "VehicleImage";
+                    string pathWithFolderName = HttpContext.Current.Server.MapPath(uploadFilePath + FolderName);
+
+                    bool folderExists = Directory.Exists(pathWithFolderName);
+                    if (!folderExists)
+                        Directory.CreateDirectory(pathWithFolderName);
+
+                    if (extension.ToLower() == ".pdf")
+                    {
+                        //string renamedFile = System.Guid.NewGuid().ToString("N");
+                        string filePath = String.Format(pathWithFolderName + "\\{0}{1}", vehicleImageName, extension);
+                        file.SaveAs(filePath);
+                    }
+                    else
+                    {
+                        using (var img = System.Drawing.Image.FromStream(file.InputStream))
+                        {
+                            string filePath = String.Format(pathWithFolderName + "\\{0}{1}", vehicleImageName, extension);
+
+                            // Save large size image, 600 x 600
+                            VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.SaveToFolder(img, extension, new System.Drawing.Size(600, 600), filePath);
+                        }
+                    }
+                    ImagePath = vehicleImageName + extension;
+                }
+
+            }
+
+            return ImagePath;
+        }
         public static string GetAPIUrl()
         {
             return System.Configuration.ConfigurationManager.AppSettings["apiPath"] + HttpContext.Current.Request.Url.Host + System.Configuration.ConfigurationManager.AppSettings["apiPort"];

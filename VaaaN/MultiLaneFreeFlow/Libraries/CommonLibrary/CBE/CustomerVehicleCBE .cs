@@ -23,7 +23,26 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private Int32 modifiedBy;
         private Int32 transferStatus;
         private Int32 amount;
-
+        private Int32 vehicleRegistrationCerticateId;
+        private string address;
+        private Int32 brand;
+        private Int32 vehicleType;
+        private Int32 vehicleCategory;
+        private String modelNo;
+        private Int32 manufacturingYear;
+        private String cyclinderCapacity;
+        private String frameNumber;
+        private String engineNumber;
+        private Int32 vehicleColor;
+        private Int32 fuelType;
+        private Int32 licencePlateColor;
+        private Int32 registrationYear;
+        private String locationCode;
+        private String vehicleImageFront;
+        private String vehicleImageRear;
+        private String vehicleImageRightSide;
+        private String vehicleImageLeftSide;
+        private Int32 validUntil;
         public CustomerVehicleCBE()
         {
             this.tmsId = 0;
@@ -39,6 +58,27 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.modifiedBy = 0;
             this.transferStatus = 0;
             this.amount = 0;
+            this.vehicleRegistrationCerticateId = 0;
+            this.address = string.Empty;
+            this.brand = 0;
+            this.vehicleType = 0;
+            this.vehicleCategory = 0;
+            this.modelNo = string.Empty;
+            this.manufacturingYear = 0;
+            this.cyclinderCapacity = string.Empty;
+            this.frameNumber = string.Empty;
+            this.engineNumber = string.Empty;
+            this.vehicleColor = 0;
+            this.fuelType = 0;
+            this.licencePlateColor = 0;
+            this.registrationYear = 0;
+            this.locationCode = string.Empty;
+            this.vehicleImageFront = string.Empty;
+            this.vehicleImageRear = string.Empty;
+            this.vehicleImageRightSide = string.Empty;
+            this.vehicleImageLeftSide = string.Empty;
+            this.validUntil = 0;
+
         }
 
         public Int32 TMSId
@@ -136,6 +176,274 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
+        public int VehicleRegistrationCerticateId
+        {
+            get
+            {
+                return this.vehicleRegistrationCerticateId;
+            }
+
+            set
+            {
+                this.vehicleRegistrationCerticateId = value;
+            }
+        }
+
+        public string Address
+        {
+            get
+            {
+                return this.address;
+            }
+
+            set
+            {
+                this.address = value;
+            }
+        }
+
+        public int Brand
+        {
+            get
+            {
+                return this.brand;
+            }
+
+            set
+            {
+                this.brand = value;
+            }
+        }
+
+        public int VehicleType
+        {
+            get
+            {
+                return this.vehicleType;
+            }
+
+            set
+            {
+                this.vehicleType = value;
+            }
+        }
+        
+        public int VehicleCategory
+        {
+            get
+            {
+                return this.vehicleCategory;
+            }
+
+            set
+            {
+                this.vehicleCategory = value;
+            }
+        }
+
+        public string ModelNo
+        {
+            get
+            {
+                return this.modelNo;
+            }
+
+            set
+            {
+                this.modelNo = value;
+            }
+        }
+
+        public int ManufacturingYear
+        {
+            get
+            {
+                return this.manufacturingYear;
+            }
+
+            set
+            {
+                this.manufacturingYear = value;
+            }
+        }
+
+        public string CyclinderCapacity
+        {
+            get
+            {
+                return this.cyclinderCapacity;
+            }
+
+            set
+            {
+                this.cyclinderCapacity = value;
+            }
+        }
+
+        public string FrameNumber
+        {
+            get
+            {
+                return this.frameNumber;
+            }
+
+            set
+            {
+                this.frameNumber = value;
+            }
+        }
+
+        public string EngineNumber
+        {
+            get
+            {
+                return this.engineNumber;
+            }
+
+            set
+            {
+                this.engineNumber = value;
+            }
+        }
+
+        public int VehicleColor
+        {
+            get
+            {
+                return this.vehicleColor;
+            }
+
+            set
+            {
+                this.vehicleColor = value;
+            }
+        }
+
+        public int FuelType
+        {
+            get
+            {
+                return this.fuelType;
+            }
+
+            set
+            {
+                this.fuelType = value;
+            }
+        }
+
+        public int LicencePlateColor
+        {
+            get
+            {
+                return this.licencePlateColor;
+            }
+
+            set
+            {
+                this.licencePlateColor = value;
+            }
+        }
+
+        public int RegistrationYear
+        {
+            get
+            {
+                return this.registrationYear;
+            }
+
+            set
+            {
+                this.registrationYear = value;
+            }
+        }
+
+        public string LocationCode
+        {
+            get
+            {
+                return this.locationCode;
+            }
+
+            set
+            {
+                this.locationCode = value;
+            }
+        }
+
+        public string VehicleImageFront
+        {
+            get
+            {
+                return this.vehicleImageFront;
+            }
+
+            set
+            {
+                this.vehicleImageFront = value;
+            }
+        }
+
+        [Display(Name = "Front Image")]
+        public System.Web.HttpPostedFileBase FrontImage { get; set; }
+
+        public string VehicleImageRear
+        {
+            get
+            {
+                return this.vehicleImageRear;
+            }
+
+            set
+            {
+                this.vehicleImageRear = value;
+            }
+        }
+        [Display(Name = "Rear Image")]
+        public System.Web.HttpPostedFileBase RearImage { get; set; }
+        public string VehicleImageRightSide
+        {
+            get
+            {
+                return this.vehicleImageRightSide;
+            }
+
+            set
+            {
+                this.vehicleImageRightSide = value;
+            }
+        }
+
+        [Display(Name = "Right Side Image")]
+        public System.Web.HttpPostedFileBase RightSideImage { get; set; }
+
+        public string VehicleImageLeftSide
+        {
+            get
+            {
+                return this.vehicleImageLeftSide;
+            }
+
+            set
+            {
+                this.vehicleImageLeftSide = value;
+            }
+        }
+        [Display(Name = "Left Side Image")]
+        public System.Web.HttpPostedFileBase LeftSideImage { get; set; }
+        public int ValidUntil
+        {
+            get
+            {
+                return this.validUntil;
+            }
+
+            set
+            {
+                this.validUntil = value;
+            }
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -150,7 +458,26 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("modificationDate = " + this.modificationDate + Environment.NewLine);
             sb.Append("modifiedBy = " + this.modifierId + Environment.NewLine);
             sb.Append("transferStatus = " + this.transferStatus + Environment.NewLine);
-
+            sb.Append("vehicleRegistrationCerticateId = " + this.vehicleRegistrationCerticateId + Environment.NewLine);
+            sb.Append("address = " + this.address + Environment.NewLine);
+            sb.Append("brand = " + this.brand + Environment.NewLine);
+            sb.Append("vehicleType = " + this.vehicleType + Environment.NewLine);
+            sb.Append("vehicleCategory = " + this.vehicleCategory + Environment.NewLine);
+            sb.Append("modelNo = " + this.modelNo + Environment.NewLine);
+            sb.Append("manufacturingYear = " + this.manufacturingYear + Environment.NewLine);
+            sb.Append("cyclinderCapacity = " + this.cyclinderCapacity + Environment.NewLine);
+            sb.Append("frameNumber = " + this.frameNumber + Environment.NewLine);
+            sb.Append("engineNumber = " + this.engineNumber + Environment.NewLine);
+            sb.Append("vehicleColor = " + this.vehicleColor + Environment.NewLine);
+            sb.Append("fuelType = " + this.fuelType + Environment.NewLine);
+            sb.Append("licencePlateColor = " + this.licencePlateColor + Environment.NewLine);
+            sb.Append("registrationYear = " + this.registrationYear + Environment.NewLine);
+            sb.Append("locationCode = " + this.locationCode + Environment.NewLine);
+            sb.Append("vehicleImageFront = " + this.vehicleImageFront + Environment.NewLine);
+            sb.Append("vehicleImageRear = " + this.vehicleImageRear + Environment.NewLine);
+            sb.Append("VehicleImageRightSide = " + this.VehicleImageRightSide + Environment.NewLine);
+            sb.Append("VehicleImageLeftSide = " + this.VehicleImageLeftSide + Environment.NewLine);
+            sb.Append("validUntil = " + this.validUntil + Environment.NewLine);
             return sb.ToString();
         }
     }

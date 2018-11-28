@@ -2996,21 +2996,41 @@ ORDER BY TRANSACTION_ID DESC';
 
    ----------TBL CUSTOMER ACCOUNT------------
 
-   PROCEDURE ACCOUNT_INSERT (P_TMS_ID                IN NUMBER,
-                             P_ACCOUNT_ID            IN NUMBER,
-                             P_FIRST_NAME            IN NVARCHAR2,
-                             P_LAST_NAME             IN NVARCHAR2,
-                             P_MOB_NUMBER            IN NVARCHAR2,
-                             P_EMAIL_ID              IN NVARCHAR2,
-                             P_DESCRIPTION           IN NVARCHAR2,
-                             P_ADDRESS               IN NVARCHAR2,
-                             P_ACCOUNT_BALANCE       IN NUMBER,
-                             P_CREATION_DATE         IN DATE,
-                             P_CUSTOMER_IMAGE_PATH   IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH     IN NVARCHAR2,
-                             P_IS_DOC_VERIFIED       IN NUMBER,
-                             P_ACCOUNT_STATUS        IN NUMBER,
-                             P_TRANSFER_STATUS       IN NUMBER)
+   PROCEDURE ACCOUNT_INSERT (P_TMS_ID                 IN NUMBER,
+                             P_ACCOUNT_ID             IN NUMBER,
+                             P_FIRST_NAME             IN NVARCHAR2,
+                             P_LAST_NAME              IN NVARCHAR2,
+                             P_MOB_NUMBER             IN NVARCHAR2,
+                             P_EMAIL_ID               IN NVARCHAR2,
+                             P_DESCRIPTION            IN NVARCHAR2,
+                             P_ADDRESS_LINE_1         IN NVARCHAR2,
+                             P_ACCOUNT_BALANCE        IN NUMBER,
+                             P_CREATION_DATE          IN DATE,
+                             P_CUSTOMER_IMAGE_PATH    IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH1     IN NVARCHAR2,
+                             P_IS_DOC_VERIFIED        IN NUMBER,
+                             P_ACCOUNT_STATUS         IN NUMBER,
+                             P_TRANSFER_STATUS        IN NUMBER,
+                             P_SCANNED_DOCS_PATH2     IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH3     IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH4     IN NVARCHAR2,
+                             P_RESIDENT_ID            IN NUMBER,
+                             P_BIRTH_PLACE            IN NVARCHAR2,
+                             P_BIRTH_DATE             IN DATE := NULL,
+                             P_GENDER                 IN NUMBER,
+                             P_ADDRESS_LINE_2         IN NVARCHAR2,
+                             P_ADDRESS_LINE_3         IN NVARCHAR2,
+                             P_DISTRICT_ID            IN NUMBER,
+                             P_SUB_DISTRICT_ID        IN NUMBER,
+                             P_CITY_ID                IN NUMBER,
+                             P_PROVINCE_ID            IN NUMBER,
+                             P_POSTAL_CODE            IN NUMBER,
+                             P_MARITAL_STATUS         IN NUMBER,
+                             P_OCCUPATION             IN NVARCHAR2,
+                             P_NATIONALITY            IN NUMBER,
+                             P_VALID_UNTIL            IN DATE := NULL,
+                             P_REGISTRATION_THROUGH   IN NUMBER,
+                             P_QUEUE_STATUS           IN NUMBER)
    AS
    BEGIN
       INSERT INTO TBL_CUSTOMER_ACCOUNT (TMS_ID,
@@ -3020,14 +3040,34 @@ ORDER BY TRANSACTION_ID DESC';
                                         MOB_NUMBER,
                                         EMAIL_ID,
                                         DESCRIPTION,
-                                        ADDRESS,
+                                        ADDRESS_LINE_1,
                                         ACCOUNT_BALANCE,
                                         CREATION_DATE,
                                         CUSTOMER_IMAGE_PATH,
-                                        SCANNED_DOCS_PATH,
+                                        SCANNED_DOCS_PATH1,
                                         IS_DOC_VERIFIED,
                                         ACCOUNT_STATUS,
-                                        TRANSFER_STATUS)
+                                        TRANSFER_STATUS,
+                                        SCANNED_DOCS_PATH2,
+                                        SCANNED_DOCS_PATH3,
+                                        SCANNED_DOCS_PATH4,
+                                        RESIDENT_ID,
+                                        BIRTH_PLACE,
+                                        BIRTH_DATE,
+                                        GENDER,
+                                        ADDRESS_LINE_2,
+                                        ADDRESS_LINE_3,
+                                        DISTRICT_ID,
+                                        SUB_DISTRICT_ID,
+                                        CITY_ID,
+                                        PROVINCE_ID,
+                                        POSTAL_CODE,
+                                        MARITAL_STATUS,
+                                        OCCUPATION,
+                                        NATIONALITY,
+                                        VALID_UNTIL,
+                                        REGISTRATION_THROUGH,
+                                        QUEUE_STATUS)
            VALUES (P_TMS_ID,
                    P_ACCOUNT_ID,
                    P_FIRST_NAME,
@@ -3035,33 +3075,73 @@ ORDER BY TRANSACTION_ID DESC';
                    P_MOB_NUMBER,
                    P_EMAIL_ID,
                    P_DESCRIPTION,
-                   P_ADDRESS,
+                   P_ADDRESS_LINE_1,
                    P_ACCOUNT_BALANCE,
                    P_CREATION_DATE,
                    P_CUSTOMER_IMAGE_PATH,
-                   P_SCANNED_DOCS_PATH,
+                   P_SCANNED_DOCS_PATH1,
                    P_IS_DOC_VERIFIED,
                    P_ACCOUNT_STATUS,
-                   P_TRANSFER_STATUS);
+                   P_TRANSFER_STATUS,
+                   P_SCANNED_DOCS_PATH2,
+                   P_SCANNED_DOCS_PATH3,
+                   P_SCANNED_DOCS_PATH4,
+                   P_RESIDENT_ID,
+                   P_BIRTH_PLACE,
+                   P_BIRTH_DATE,
+                   P_GENDER,
+                   P_ADDRESS_LINE_2,
+                   P_ADDRESS_LINE_3,
+                   P_DISTRICT_ID,
+                   P_SUB_DISTRICT_ID,
+                   P_CITY_ID,
+                   P_PROVINCE_ID,
+                   P_POSTAL_CODE,
+                   P_MARITAL_STATUS,
+                   P_OCCUPATION,
+                   P_NATIONALITY,
+                   P_VALID_UNTIL,
+                   P_REGISTRATION_THROUGH,
+                   P_QUEUE_STATUS);
    END ACCOUNT_INSERT;
 
-   PROCEDURE ACCOUNT_UPDATE (P_TMS_ID                IN NUMBER,
-                             P_ACCOUNT_ID            IN NUMBER,
-                             P_FIRST_NAME            IN NVARCHAR2,
-                             P_LAST_NAME             IN NVARCHAR2,
-                             P_MOB_NUMBER            IN NVARCHAR2,
-                             P_EMAIL_ID              IN NVARCHAR2,
-                             P_DESCRIPTION           IN NVARCHAR2,
-                             P_ADDRESS               IN NVARCHAR2,
-                             P_ACCOUNT_BALANCE       IN NUMBER,
-                             P_MODIFIER_ID           IN NUMBER,
-                             P_CREATION_DATE         IN DATE,
-                             P_MODIFICATION_DATE     IN DATE,
-                             P_CUSTOMER_IMAGE_PATH   IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH     IN NVARCHAR2,
-                             P_IS_DOC_VERIFIED       IN NUMBER,
-                             P_ACCOUNT_STATUS        IN NUMBER,
-                             P_TRANSFER_STATUS       IN NUMBER)
+   PROCEDURE ACCOUNT_UPDATE (P_TMS_ID                 IN NUMBER,
+                             P_ACCOUNT_ID             IN NUMBER,
+                             P_FIRST_NAME             IN NVARCHAR2,
+                             P_LAST_NAME              IN NVARCHAR2,
+                             P_MOB_NUMBER             IN NVARCHAR2,
+                             P_EMAIL_ID               IN NVARCHAR2,
+                             P_DESCRIPTION            IN NVARCHAR2,
+                             P_ADDRESS_LINE_1         IN NVARCHAR2,
+                             P_ACCOUNT_BALANCE        IN NUMBER,
+                             P_MODIFIER_ID            IN NUMBER,
+                             P_CREATION_DATE          IN DATE,
+                             P_MODIFICATION_DATE      IN DATE,
+                             P_CUSTOMER_IMAGE_PATH    IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH1     IN NVARCHAR2,
+                             P_IS_DOC_VERIFIED        IN NUMBER,
+                             P_ACCOUNT_STATUS         IN NUMBER,
+                             P_TRANSFER_STATUS        IN NUMBER,
+                             P_SCANNED_DOCS_PATH2     IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH3     IN NVARCHAR2,
+                             P_SCANNED_DOCS_PATH4     IN NVARCHAR2,
+                             P_RESIDENT_ID            IN NUMBER,
+                             P_BIRTH_PLACE            IN NVARCHAR2,
+                             P_BIRTH_DATE             IN DATE := NULL,
+                             P_GENDER                 IN NUMBER,
+                             P_ADDRESS_LINE_2         IN NVARCHAR2,
+                             P_ADDRESS_LINE_3         IN NVARCHAR2,
+                             P_DISTRICT_ID            IN NUMBER,
+                             P_SUB_DISTRICT_ID        IN NUMBER,
+                             P_CITY_ID                IN NUMBER,
+                             P_PROVINCE_ID            IN NUMBER,
+                             P_POSTAL_CODE            IN NUMBER,
+                             P_MARITAL_STATUS         IN NUMBER,
+                             P_OCCUPATION             IN NVARCHAR2,
+                             P_NATIONALITY            IN NUMBER,
+                             P_VALID_UNTIL            IN DATE := NULL,
+                             P_REGISTRATION_THROUGH   IN NUMBER,
+                             P_QUEUE_STATUS           IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_CUSTOMER_ACCOUNT
@@ -3072,16 +3152,35 @@ ORDER BY TRANSACTION_ID DESC';
              MOB_NUMBER = P_MOB_NUMBER,
              EMAIL_ID = P_EMAIL_ID,
              DESCRIPTION = P_DESCRIPTION,
-             ADDRESS = P_ADDRESS,
+             ADDRESS_LINE_1 = P_ADDRESS_LINE_1,
              ACCOUNT_BALANCE = P_ACCOUNT_BALANCE,
              MODIFIER_ID = P_MODIFIER_ID,
-             CREATION_DATE = P_CREATION_DATE,
              MODIFICATION_DATE = P_MODIFICATION_DATE,
              CUSTOMER_IMAGE_PATH = P_CUSTOMER_IMAGE_PATH,
-             SCANNED_DOCS_PATH = P_SCANNED_DOCS_PATH,
+             SCANNED_DOCS_PATH1 = P_SCANNED_DOCS_PATH1,
              IS_DOC_VERIFIED = P_IS_DOC_VERIFIED,
              ACCOUNT_STATUS = P_ACCOUNT_STATUS,
-             TRANSFER_STATUS = P_TRANSFER_STATUS
+             TRANSFER_STATUS = P_TRANSFER_STATUS,
+             SCANNED_DOCS_PATH2 = P_SCANNED_DOCS_PATH2,
+             SCANNED_DOCS_PATH3 = P_SCANNED_DOCS_PATH3,
+             SCANNED_DOCS_PATH4 = P_SCANNED_DOCS_PATH4,
+             RESIDENT_ID = P_RESIDENT_ID,
+             BIRTH_PLACE = P_BIRTH_PLACE,
+             BIRTH_DATE = P_BIRTH_DATE,
+             GENDER = P_GENDER,
+             ADDRESS_LINE_2 = P_ADDRESS_LINE_2,
+             ADDRESS_LINE_3 = P_ADDRESS_LINE_3,
+             DISTRICT_ID = P_DISTRICT_ID,
+             SUB_DISTRICT_ID = P_SUB_DISTRICT_ID,
+             CITY_ID = P_CITY_ID,
+             PROVINCE_ID = P_PROVINCE_ID,
+             POSTAL_CODE = P_POSTAL_CODE,
+             MARITAL_STATUS = P_MARITAL_STATUS,
+             OCCUPATION = P_OCCUPATION,
+             NATIONALITY = P_NATIONALITY,
+             VALID_UNTIL = P_VALID_UNTIL,
+             REGISTRATION_THROUGH = P_REGISTRATION_THROUGH,
+             QUEUE_STATUS = P_QUEUE_STATUS
        WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
    END ACCOUNT_UPDATE;
 
@@ -3104,32 +3203,15 @@ ORDER BY TRANSACTION_ID DESC';
          ORDER BY CA.ACCOUNT_ID;
    END ACCOUNT_GETALL;
 
-   PROCEDURE ACCOUNT_GETBYID (P_ACCOUNT_ID IN NUMBER, CUR_OUT OUT T_CURSOR)
+   PROCEDURE ACCOUNT_GETBYID (P_TMS_ID       IN     NUMBER,
+                              P_ACCOUNT_ID   IN     NUMBER,
+                              CUR_OUT           OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
-         SELECT CA.TMS_ID,
-                CA.ACCOUNT_ID,
-                CA.FIRST_NAME,
-                CA.LAST_NAME,
-                CA.MOB_NUMBER,
-                CA.EMAIL_ID,
-                CA.DESCRIPTION,
-                CA.ADDRESS,
-                CA.ACCOUNT_BALANCE,
-                CA.MODIFIER_ID,
-                CA.CREATION_DATE,
-                CA.MODIFICATION_DATE,
-                CA.CUSTOMER_IMAGE_PATH,
-                CA.SCANNED_DOCS_PATH,
-                CA.IS_DOC_VERIFIED,
-                CA.ACCOUNT_STATUS,
-                CA.TRANSFER_STATUS
-           FROM    TBL_CUSTOMER_ACCOUNT CA
-                LEFT OUTER JOIN
-                   TBL_ACCOUNT_HISTORY AH
-                ON AH.TMS_ID = CA.TMS_ID
-          WHERE CA.ACCOUNT_ID = P_ACCOUNT_ID;
+         SELECT *
+           FROM TBL_CUSTOMER_ACCOUNT
+          WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
    END ACCOUNT_GETBYID;
 
    PROCEDURE ACCOUNT_BALANCEUPDATE (P_TMS_ID       IN NUMBER,
@@ -3143,14 +3225,35 @@ ORDER BY TRANSACTION_ID DESC';
    END ACCOUNT_BALANCEUPDATE;
 
    ----------TBL CUSTOMER VEHICLE------------
-   PROCEDURE CUSTOMER_VEHICLE_INSERT (P_TMS_ID             IN NUMBER,
-                                      P_ENTRY_ID           IN NUMBER,
-                                      P_ACCOUNT_ID         IN NUMBER,
-                                      P_VEH_REG_NO         IN NVARCHAR2,
-                                      P_TAG_ID             IN NVARCHAR2,
-                                      P_VEHICLE_CLASS_ID   IN NUMBER,
-                                      P_CREATION_DATE      IN DATE,
-                                      P_TRANSFER_STATUS    IN NUMBER)
+   PROCEDURE CUSTOMER_VEHICLE_INSERT (
+      P_TMS_ID                   IN NUMBER,
+      P_ENTRY_ID                 IN NUMBER,
+      P_ACCOUNT_ID               IN NUMBER,
+      P_VEH_REG_NO               IN NVARCHAR2,
+      P_TAG_ID                   IN NVARCHAR2,
+      P_VEHICLE_CLASS_ID         IN NUMBER,
+      P_CREATION_DATE            IN DATE,
+      P_TRANSFER_STATUS          IN NUMBER,
+      P_VEHICLE_REG_CERT_ID      IN NUMBER,
+      P_ADDRESS                  IN NVARCHAR2,
+      P_BRAND                    IN NUMBER,
+      P_VEHICLE_TYPE             IN NUMBER,
+      P_VEHICLE_CATEGORY         IN NUMBER,
+      P_MODEL_NO                 IN NVARCHAR2,
+      P_MANUFACTURING_YEAR       IN NUMBER,
+      P_CYCLINDER_CAPACITY       IN NVARCHAR2,
+      P_FRAME_NUMBER             IN NVARCHAR2,
+      P_ENGINE_NUMBER            IN NVARCHAR2,
+      P_VEHICLE_COLOR            IN NUMBER,
+      P_FUEL_TYPE                IN NUMBER,
+      P_LICENCE_PLATE_COLOR      IN NUMBER,
+      P_REGISTRATION_YEAR        IN NUMBER,
+      P_LOCATION_CODE            IN NVARCHAR2,
+      P_VEHICLEIMAGE_FRONT       IN NVARCHAR2,
+      P_VEHICLEIMAGE_REAR        IN NVARCHAR2,
+      P_VEHICLEIMAGE_RIGHTSIDE   IN NVARCHAR2,
+      P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
+      P_VALID_UNTIL              IN NUMBER)
    AS
    BEGIN
       INSERT INTO TBL_CUSTOMER_VEHICLE (TMS_ID,
@@ -3160,7 +3263,27 @@ ORDER BY TRANSACTION_ID DESC';
                                         TAG_ID,
                                         VEHICLE_CLASS_ID,
                                         CREATION_DATE,
-                                        TRANSFER_STATUS)
+                                        TRANSFER_STATUS,
+                                        VEHICLE_REG_CERT_ID,
+                                        ADDRESS,
+                                        BRAND,
+                                        VEHICLE_TYPE,
+                                        VEHICLE_CATEGORY,
+                                        MODEL_NO,
+                                        MANUFACTURING_YEAR,
+                                        CYCLINDER_CAPACITY,
+                                        FRAME_NUMBER,
+                                        ENGINE_NUMBER,
+                                        VEHICLE_COLOR,
+                                        FUEL_TYPE,
+                                        LICENCE_PLATE_COLOR,
+                                        REGISTRATION_YEAR,
+                                        LOCATION_CODE,
+                                        VEHICLEIMAGE_FRONT,
+                                        VEHICLEIMAGE_REAR,
+                                        VEHICLEIMAGE_RIGHTSIDE,
+                                        VEHICLEIMAGE_LEFTSIDE,
+                                        VALID_UNTIL)
            VALUES (P_TMS_ID,
                    P_ENTRY_ID,
                    P_ACCOUNT_ID,
@@ -3168,19 +3291,61 @@ ORDER BY TRANSACTION_ID DESC';
                    P_TAG_ID,
                    P_VEHICLE_CLASS_ID,
                    P_CREATION_DATE,
-                   P_TRANSFER_STATUS);
+                   P_TRANSFER_STATUS,
+                   P_VEHICLE_REG_CERT_ID,
+                   P_ADDRESS,
+                   P_BRAND,
+                   P_VEHICLE_TYPE,
+                   P_VEHICLE_CATEGORY,
+                   P_MODEL_NO,
+                   P_MANUFACTURING_YEAR,
+                   P_CYCLINDER_CAPACITY,
+                   P_FRAME_NUMBER,
+                   P_ENGINE_NUMBER,
+                   P_VEHICLE_COLOR,
+                   P_FUEL_TYPE,
+                   P_LICENCE_PLATE_COLOR,
+                   P_REGISTRATION_YEAR,
+                   P_LOCATION_CODE,
+                   P_VEHICLEIMAGE_FRONT,
+                   P_VEHICLEIMAGE_REAR,
+                   P_VEHICLEIMAGE_RIGHTSIDE,
+                   P_VEHICLEIMAGE_LEFTSIDE,
+                   P_VALID_UNTIL);
    END CUSTOMER_VEHICLE_INSERT;
 
-   PROCEDURE CUSTOMER_VEHICLE_UPDATE (P_TMS_ID              IN NUMBER,
-                                      P_ENTRY_ID            IN NUMBER,
-                                      P_ACCOUNT_ID          IN NUMBER,
-                                      P_VEH_REG_NO          IN NVARCHAR2,
-                                      P_TAG_ID              IN NVARCHAR2,
-                                      P_VEHICLE_CLASS_ID    IN NUMBER,
-                                      P_CREATION_DATE       IN DATE,
-                                      P_MODIFICATION_DATE   IN DATE,
-                                      P_MODIFIED_BY         IN NUMBER,
-                                      P_TRANSFER_STATUS     IN NUMBER)
+
+   PROCEDURE CUSTOMER_VEHICLE_UPDATE (
+      P_TMS_ID                   IN NUMBER,
+      P_ENTRY_ID                 IN NUMBER,
+      P_ACCOUNT_ID               IN NUMBER,
+      P_VEH_REG_NO               IN NVARCHAR2,
+      P_TAG_ID                   IN NVARCHAR2,
+      P_VEHICLE_CLASS_ID         IN NUMBER,
+      P_CREATION_DATE            IN DATE,
+      P_MODIFICATION_DATE        IN DATE,
+      P_MODIFIED_BY              IN NUMBER,
+      P_TRANSFER_STATUS          IN NUMBER,
+      P_VEHICLE_REG_CERT_ID      IN NUMBER,
+      P_ADDRESS                  IN NVARCHAR2,
+      P_BRAND                    IN NUMBER,
+      P_VEHICLE_TYPE             IN NUMBER,
+      P_VEHICLE_CATEGORY         IN NUMBER,
+      P_MODEL_NO                 IN NVARCHAR2,
+      P_MANUFACTURING_YEAR       IN NUMBER,
+      P_CYCLINDER_CAPACITY       IN NVARCHAR2,
+      P_FRAME_NUMBER             IN NVARCHAR2,
+      P_ENGINE_NUMBER            IN NVARCHAR2,
+      P_VEHICLE_COLOR            IN NUMBER,
+      P_FUEL_TYPE                IN NUMBER,
+      P_LICENCE_PLATE_COLOR      IN NUMBER,
+      P_REGISTRATION_YEAR        IN NUMBER,
+      P_LOCATION_CODE            IN NVARCHAR2,
+      P_VEHICLEIMAGE_FRONT       IN NVARCHAR2,
+      P_VEHICLEIMAGE_REAR        IN NVARCHAR2,
+      P_VEHICLEIMAGE_RIGHTSIDE   IN NVARCHAR2,
+      P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
+      P_VALID_UNTIL              IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_CUSTOMER_VEHICLE
@@ -3190,10 +3355,29 @@ ORDER BY TRANSACTION_ID DESC';
              VEH_REG_NO = P_VEH_REG_NO,
              TAG_ID = P_TAG_ID,
              VEHICLE_CLASS_ID = P_VEHICLE_CLASS_ID,
-             CREATION_DATE = P_CREATION_DATE,
              MODIFICATION_DATE = P_MODIFICATION_DATE,
              MODIFIED_BY = P_MODIFIED_BY,
-             TRANSFER_STATUS = P_TRANSFER_STATUS
+             TRANSFER_STATUS = P_TRANSFER_STATUS,
+             VEHICLE_REG_CERT_ID = P_VEHICLE_REG_CERT_ID,
+             ADDRESS = P_ADDRESS,
+             BRAND = P_BRAND,
+             VEHICLE_TYPE = P_VEHICLE_TYPE,
+             VEHICLE_CATEGORY = P_VEHICLE_CATEGORY,
+             MODEL_NO = P_MODEL_NO,
+             MANUFACTURING_YEAR = P_MANUFACTURING_YEAR,
+             CYCLINDER_CAPACITY = P_CYCLINDER_CAPACITY,
+             FRAME_NUMBER = P_FRAME_NUMBER,
+             ENGINE_NUMBER = P_ENGINE_NUMBER,
+             VEHICLE_COLOR = P_VEHICLE_COLOR,
+             FUEL_TYPE = P_FUEL_TYPE,
+             LICENCE_PLATE_COLOR = P_LICENCE_PLATE_COLOR,
+             REGISTRATION_YEAR = P_REGISTRATION_YEAR,
+             LOCATION_CODE = P_LOCATION_CODE,
+             VEHICLEIMAGE_FRONT = P_VEHICLEIMAGE_FRONT,
+             VEHICLEIMAGE_REAR = P_VEHICLEIMAGE_REAR,
+             VEHICLEIMAGE_RIGHTSIDE = P_VEHICLEIMAGE_RIGHTSIDE,
+             VEHICLEIMAGE_LEFTSIDE = P_VEHICLEIMAGE_LEFTSIDE,
+             VALID_UNTIL = P_VALID_UNTIL
        WHERE     TMS_ID = P_TMS_ID
              AND ENTRY_ID = P_ENTRY_ID
              AND ACCOUNT_ID = P_ACCOUNT_ID;
@@ -3216,7 +3400,27 @@ ORDER BY TRANSACTION_ID DESC';
                 CV.MODIFICATION_DATE,
                 CV.MODIFIED_BY,
                 CV.TRANSFER_STATUS,
-                VC.VEHICLE_CLASS_NAME
+                VC.VEHICLE_CLASS_NAME,
+                CV.VEHICLE_REG_CERT_ID,
+                CV.ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                CV.LICENCE_PLATE_COLOR,
+                CV.REGISTRATION_YEAR,
+                CV.LOCATION_CODE,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_LEFTSIDE,
+                CV.VEHICLEIMAGE_RIGHTSIDE,
+                CV.VALID_UNTIL
            FROM    TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN
                    TBL_VEHICLE_CLASS VC
@@ -3240,7 +3444,27 @@ ORDER BY TRANSACTION_ID DESC';
                 CV.MODIFIED_BY,
                 CV.TRANSFER_STATUS,
                 VC.VEHICLE_CLASS_NAME,
-                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CV.VEHICLE_REG_CERT_ID,
+                CV.ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                CV.LICENCE_PLATE_COLOR,
+                CV.REGISTRATION_YEAR,
+                CV.LOCATION_CODE,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_LEFTSIDE,
+                CV.VEHICLEIMAGE_RIGHTSIDE,
+                CV.VALID_UNTIL
            FROM TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -3266,7 +3490,27 @@ ORDER BY TRANSACTION_ID DESC';
                 CV.CREATION_DATE,
                 CV.MODIFICATION_DATE,
                 CV.MODIFIED_BY,
-                CV.TRANSFER_STATUS
+                CV.TRANSFER_STATUS,
+                CV.VEHICLE_REG_CERT_ID,
+                CV.ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                CV.LICENCE_PLATE_COLOR,
+                CV.REGISTRATION_YEAR,
+                CV.LOCATION_CODE,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_RIGHTSIDE,
+                CV.VEHICLEIMAGE_LEFTSIDE,
+                CV.VALID_UNTIL
            FROM    TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN
                    TBL_VEHICLE_CLASS VC
@@ -3295,7 +3539,27 @@ ORDER BY TRANSACTION_ID DESC';
                 CV.MODIFIED_BY,
                 CV.TRANSFER_STATUS,
                 VC.VEHICLE_CLASS_NAME,
-                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CV.VEHICLE_REG_CERT_ID,
+                CV.ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                CV.LICENCE_PLATE_COLOR,
+                CV.REGISTRATION_YEAR,
+                CV.LOCATION_CODE,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_RIGHTSIDE,
+                CV.VEHICLEIMAGE_LEFTSIDE,
+                CV.VALID_UNTIL
            FROM TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -3319,7 +3583,27 @@ ORDER BY TRANSACTION_ID DESC';
                   CV.MODIFIED_BY,
                   CV.TRANSFER_STATUS,
                   VC.VEHICLE_CLASS_NAME,
-                  CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+                  CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                  CV.VEHICLE_REG_CERT_ID,
+                  CV.ADDRESS,
+                  CV.BRAND,
+                  CV.VEHICLE_TYPE,
+                  CV.VEHICLE_CATEGORY,
+                  CV.MODEL_NO,
+                  CV.MANUFACTURING_YEAR,
+                  CV.CYCLINDER_CAPACITY,
+                  CV.FRAME_NUMBER,
+                  CV.ENGINE_NUMBER,
+                  CV.VEHICLE_COLOR,
+                  CV.FUEL_TYPE,
+                  CV.LICENCE_PLATE_COLOR,
+                  CV.REGISTRATION_YEAR,
+                  CV.LOCATION_CODE,
+                  CV.VEHICLEIMAGE_FRONT,
+                  CV.VEHICLEIMAGE_REAR,
+                  CV.VEHICLEIMAGE_LEFTSIDE,
+                  CV.VEHICLEIMAGE_RIGHTSIDE,
+                  CV.VALID_UNTIL
              FROM TBL_CUSTOMER_VEHICLE CV
                   LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                      ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -3344,7 +3628,27 @@ ORDER BY TRANSACTION_ID DESC';
                 CV.MODIFIED_BY,
                 CV.TRANSFER_STATUS,
                 VC.VEHICLE_CLASS_NAME,
-                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CV.VEHICLE_REG_CERT_ID,
+                CV.ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                CV.LICENCE_PLATE_COLOR,
+                CV.REGISTRATION_YEAR,
+                CV.LOCATION_CODE,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_LEFTSIDE,
+                CV.VEHICLEIMAGE_RIGHTSIDE,
+                CV.VALID_UNTIL
            FROM TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -3369,7 +3673,27 @@ ORDER BY TRANSACTION_ID DESC';
                 CV.MODIFIED_BY,
                 CV.TRANSFER_STATUS,
                 VC.VEHICLE_CLASS_NAME,
-                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CV.VEHICLE_REG_CERT_ID,
+                CV.ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                CV.LICENCE_PLATE_COLOR,
+                CV.REGISTRATION_YEAR,
+                CV.LOCATION_CODE,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_LEFTSIDE,
+                CV.VEHICLEIMAGE_RIGHTSIDE,
+                CV.VALID_UNTIL
            FROM TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -3888,5 +4212,80 @@ ORDER BY TRANSACTION_ID DESC';
           WHERE LOWER (ANPR_VEHICLE_CLASS_NAME) =
                    LOWER (P_ANPR_VEHICLE_CLASS_NAME);
    END VEHICLECLASS_MAPPING_GETBYNAME;
+   -----------Province ----------
+   PROCEDURE PROVINCE_GETALL (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_PROVINCE P
+         ORDER BY P.PROVINCE_ID;
+   END PROVINCE_GETALL;
+
+   -----------City ----------
+   PROCEDURE CITY_GETALL (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_CITY
+         ORDER BY CITY_ID;
+   END CITY_GETALL;
+
+   PROCEDURE CITY_GETBYPROVINCEID (P_TMS_ID        IN     NUMBER,
+                                   P_PROVINCE_ID   IN     NUMBER,
+                                   CUR_OUT            OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_CITY
+            WHERE TMS_ID = P_TMS_ID AND PROVINCE_ID = P_PROVINCE_ID
+         ORDER BY CITY_ID;
+   END CITY_GETBYPROVINCEID;
+
+   -----------District ----------
+   PROCEDURE DISTRICT_GETALL (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_DISTRICT
+         ORDER BY DISTRICT_ID;
+   END DISTRICT_GETALL;
+
+   PROCEDURE DISTRICT_GETBYCITYID (P_TMS_ID    IN     NUMBER,
+                                   P_CITY_ID   IN     NUMBER,
+                                   CUR_OUT        OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_DISTRICT
+            WHERE TMS_ID = P_TMS_ID AND CITY_ID = P_CITY_ID
+         ORDER BY DISTRICT_ID;
+   END DISTRICT_GETBYCITYID;
+
+   -----------SUB DISTRICT ----------
+   PROCEDURE SUBDISTRICT_GETALL (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_SUB_DISTRICT
+         ORDER BY SUB_DISTRICT_ID;
+   END SUBDISTRICT_GETALL;
+
+   PROCEDURE SUBDISTRICT_GETBYDISTRICTID (P_TMS_ID        IN     NUMBER,
+                                          P_DISTRICT_ID   IN     NUMBER,
+                                          CUR_OUT            OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_SUB_DISTRICT
+            WHERE TMS_ID = P_TMS_ID AND DISTRICT_ID = P_DISTRICT_ID
+         ORDER BY SUB_DISTRICT_ID;
+   END SUBDISTRICT_GETBYDISTRICTID;
 END MLFF_PACKAGE;
 /

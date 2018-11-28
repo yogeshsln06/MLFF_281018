@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
 using VaaaN.MLFF.WebApplication.Models;
 
@@ -50,6 +51,64 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     return Redirect("SessionPage");
                 }
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+                #region Bind Province DropDowm
+                List<SelectListItem> provincelist = new List<SelectListItem>();
+                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE> province = VaaaN.MLFF.Libraries.CommonLibrary.BLL.ProvinceBLL.GetAll().Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE>().ToList();
+
+                provincelist.Add(new SelectListItem() { Text = "--Select Province--", Value = "0" });
+                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+                {
+                    provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+                }
+
+                ViewBag.Provinces = provincelist;
+
+                #endregion
+                #region Queue Status
+                List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
+                Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
+
+                for (int i = 0; i < arStatus.Length; i++)
+                {
+                    customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
+                }
+                ViewBag.queueStatus = customerQueueStatus;
+
+                #endregion
+                #region Gender
+                List<SelectListItem> genderList = new List<SelectListItem>();
+                Array argender = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Gender));
+
+                for (int i = 0; i < argender.Length; i++)
+                {
+                    genderList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GenderName[i], Value = System.Convert.ToString((int)argender.GetValue(i)) });
+                }
+                ViewBag.genderName = genderList;
+
+                #endregion
+                #region MaritalStatus
+                List<SelectListItem> maritalstatusList = new List<SelectListItem>();
+                Array armaritalstatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatus));
+
+                for (int i = 0; i < armaritalstatus.Length; i++)
+                {
+                    maritalstatusList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatusName[i], Value = System.Convert.ToString((int)armaritalstatus.GetValue(i)) });
+                }
+                ViewBag.maritalstatusName = maritalstatusList;
+
+                #endregion
+                #region Nationality
+                List<SelectListItem> nationalityList = new List<SelectListItem>();
+                Array arnationality = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Nationality));
+
+                for (int i = 0; i < arnationality.Length; i++)
+                {
+                    nationalityList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.NationalityName[i], Value = System.Convert.ToString((int)arnationality.GetValue(i)) });
+                }
+                ViewBag.nationalityName = nationalityList;
+
+                #endregion
+
             }
             catch (Exception ex)
             {
@@ -59,139 +118,219 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult RegisterCustomer(Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccount)
+        public ActionResult GetCityList(Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccount)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
+            Libraries.CommonLibrary.CBE.CityCBE city = new CityCBE();
+            city.TmsId = 1;
+            city.ProvinceId = customerAccount.ProvinceId;
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE> citys = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CityBLL.GetByProvinceId(city).Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE>().ToList();
+            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+            string result = javaScriptSerializer.Serialize(citys);
+            return Json(result, JsonRequestBehavior.AllowGet);
 
-                    var imageTypes = new string[]{
+        }
+
+        public ActionResult GetDistrictList(Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccount)
+        {
+            Libraries.CommonLibrary.CBE.DistrictCBE district = new DistrictCBE();
+            district.TmsId = 1;
+            district.CityId = customerAccount.CityId;
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE> districts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.DistrictBLL.GetByCityId(district).Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE>().ToList();
+            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+            string result = javaScriptSerializer.Serialize(districts);
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult GetSubDistrictList(Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccount)
+        {
+            Libraries.CommonLibrary.CBE.SubDistrictCBE subdistrict = new SubDistrictCBE();
+            subdistrict.TmsId = 1;
+            subdistrict.DistrictId = customerAccount.DistrictId;
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.SubDistrictCBE> subdistricts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SubDistrictBLL.GetByDistrictId(subdistrict).Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.SubDistrictCBE>().ToList();
+            JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+            string result = javaScriptSerializer.Serialize(subdistricts);
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        [HttpPost]
+        public ActionResult RegisterCustomer(Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccount, FormCollection form)
+        {
+
+            try
+            {
+
+                var imageTypes = new string[]{
                     "image/gif",
                     "image/jpeg",
                     "image/pjpeg",
                     "image/png"
 
                 };
-                    //-------------------Validating image-----------------------------
+                //-------------------Validating image-----------------------------
 
-                    if (customerAccount.CustomerImage != null && customerAccount.CustomerImage.ContentLength > 0)
-                    {
-                        if (!imageTypes.Contains(customerAccount.CustomerImage.ContentType))
-                        {
-                            TempData["lblerror"] = "Please choose either GIF, JPG or PNG  image.";
-                            return RedirectToAction("RegisterCustomer");
-                        }
-
-                        if (customerAccount.CustomerImage.ContentLength > 2097152) // about 2 MB
-                        {
-                            // Notify the user why their file was not uploaded.
-                            TempData["lblerror"] = "Attachment file can not uploaded because it exceeds the 2 MB size limit.";
-                            return RedirectToAction("RegisterCustomer");
-                        }
-                    }
-                    if (customerAccount.CustomerImage != null && customerAccount.CustomerImage.ContentLength > 0)
-                    {
-                        string customerImageName = customerAccount.FirstName.ToString() + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
-                        string extension = System.IO.Path.GetExtension(customerAccount.CustomerImage.FileName).ToLower();
-
-                        String uploadFilePath = "\\Attachment\\";
-                        // create a folder for distinct user -
-                        string FolderName = "Customer";
-                        string pathWithFolderName = Server.MapPath(uploadFilePath + FolderName);
-
-                        bool folderExists = Directory.Exists(pathWithFolderName);
-                        if (!folderExists)
-                            Directory.CreateDirectory(pathWithFolderName);
-
-                        if (extension.ToLower() == ".pdf")
-                        {
-                            //string renamedFile = System.Guid.NewGuid().ToString("N");
-                            string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
-                            customerAccount.CustomerImage.SaveAs(filePath);
-                        }
-                        else
-                        {
-                            using (var img = System.Drawing.Image.FromStream(customerAccount.CustomerImage.InputStream))
-                            {
-                                string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
-
-                                // Save large size image, 600 x 600
-                                VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.SaveToFolder(img, extension, new System.Drawing.Size(600, 600), filePath);
-                            }
-                        }
-                        customerAccount.CustomerImagePath = customerImageName + extension;
-                    }
-                    //-------------------Validating image-----------------------------
-
-                    if (customerAccount.ScannedDocument != null && customerAccount.ScannedDocument.ContentLength > 0)
-                    {
-                        if (!imageTypes.Contains(customerAccount.ScannedDocument.ContentType))
-                        {
-                            TempData["lblerror"] = "Please choose either GIF, JPG or PNG  image.";
-                            return RedirectToAction("RegisterCustomer");
-                        }
-
-                        if (customerAccount.ScannedDocument.ContentLength > 2097152) // about 2 MB
-                        {
-                            // Notify the user why their file was not uploaded.
-                            TempData["lblerror"] = "Attachment file can not uploaded because it exceeds the 2 MB size limit.";
-                            return RedirectToAction("RegisterCustomer");
-                        }
-                    }
-                    if (customerAccount.ScannedDocument != null && customerAccount.ScannedDocument.ContentLength > 0)
-                    {
-                        string customerImageName = customerAccount.FirstName.ToString() + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
-                        string extension = System.IO.Path.GetExtension(customerAccount.ScannedDocument.FileName).ToLower();
-
-                        String uploadFilePath = "\\Attachment\\";
-                        // create a folder for distinct user -
-                        string FolderName = "Customer";
-                        string pathWithFolderName = Server.MapPath(uploadFilePath + FolderName);
-
-                        bool folderExists = Directory.Exists(pathWithFolderName);
-                        if (!folderExists)
-                            Directory.CreateDirectory(pathWithFolderName);
-
-                        if (extension.ToLower() == ".pdf")
-                        {
-                            //string renamedFile = System.Guid.NewGuid().ToString("N");
-                            string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
-                            customerAccount.ScannedDocument.SaveAs(filePath);
-                        }
-                        else
-                        {
-                            using (var img = System.Drawing.Image.FromStream(customerAccount.ScannedDocument.InputStream))
-                            {
-                                string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
-
-                                // Save large size image, 600 x 600
-                                VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.SaveToFolder(img, extension, new System.Drawing.Size(600, 600), filePath);
-                            }
-                        }
-                        customerAccount.ScannedDocsPath = customerImageName + extension;
-                    }
-                    //Insert Detail In customer Account
-                    customerAccount.TmsId = tmsId;
-                    int customerEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.Insert(customerAccount);
-                    TempData["lblerror"] = "Sucessfully created Customer.";
-
-                }
-                catch (Exception ex)
+                if (customerAccount.CustomerImage != null && customerAccount.CustomerImage.ContentLength > 0)
                 {
+                    if (!imageTypes.Contains(customerAccount.CustomerImage.ContentType))
+                    {
+                        TempData["lblerror"] = "Please choose either GIF, JPG or PNG  image.";
+                        return RedirectToAction("RegisterCustomer");
+                    }
 
-                    HelperClass.LogMessage("Failed to Insert Customer Registration List in POS Controller" + ex);
+                    if (customerAccount.CustomerImage.ContentLength > 2097152) // about 2 MB
+                    {
+                        // Notify the user why their file was not uploaded.
+                        TempData["lblerror"] = "Attachment file can not uploaded because it exceeds the 2 MB size limit.";
+                        return RedirectToAction("RegisterCustomer");
+                    }
                 }
+                if (customerAccount.CustomerImage != null && customerAccount.CustomerImage.ContentLength > 0)
+                {
+                    string customerImageName = customerAccount.FirstName.ToString() + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string extension = System.IO.Path.GetExtension(customerAccount.CustomerImage.FileName).ToLower();
+
+                    String uploadFilePath = "\\Attachment\\";
+                    // create a folder for distinct user -
+                    string FolderName = "Customer";
+                    string pathWithFolderName = Server.MapPath(uploadFilePath + FolderName);
+
+                    bool folderExists = Directory.Exists(pathWithFolderName);
+                    if (!folderExists)
+                        Directory.CreateDirectory(pathWithFolderName);
+
+                    if (extension.ToLower() == ".pdf")
+                    {
+                        //string renamedFile = System.Guid.NewGuid().ToString("N");
+                        string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
+                        customerAccount.CustomerImage.SaveAs(filePath);
+                    }
+                    else
+                    {
+                        using (var img = System.Drawing.Image.FromStream(customerAccount.CustomerImage.InputStream))
+                        {
+                            string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
+
+                            // Save large size image, 600 x 600
+                            VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.SaveToFolder(img, extension, new System.Drawing.Size(600, 600), filePath);
+                        }
+                    }
+                    customerAccount.CustomerImagePath = customerImageName + extension;
+                }
+                //-------------------Validating image-----------------------------
+
+                if (customerAccount.ScannedDocument != null && customerAccount.ScannedDocument.ContentLength > 0)
+                {
+                    if (!imageTypes.Contains(customerAccount.ScannedDocument.ContentType))
+                    {
+                        TempData["lblerror"] = "Please choose either GIF, JPG or PNG  image.";
+                        return RedirectToAction("RegisterCustomer");
+                    }
+
+                    if (customerAccount.ScannedDocument.ContentLength > 2097152) // about 2 MB
+                    {
+                        // Notify the user why their file was not uploaded.
+                        TempData["lblerror"] = "Attachment file can not uploaded because it exceeds the 2 MB size limit.";
+                        return RedirectToAction("RegisterCustomer");
+                    }
+                }
+                if (customerAccount.ScannedDocument != null && customerAccount.ScannedDocument.ContentLength > 0)
+                {
+                    string customerImageName = customerAccount.FirstName.ToString() + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string extension = System.IO.Path.GetExtension(customerAccount.ScannedDocument.FileName).ToLower();
+
+                    String uploadFilePath = "\\Attachment\\";
+                    // create a folder for distinct user -
+                    string FolderName = "Customer";
+                    string pathWithFolderName = Server.MapPath(uploadFilePath + FolderName);
+
+                    bool folderExists = Directory.Exists(pathWithFolderName);
+                    if (!folderExists)
+                        Directory.CreateDirectory(pathWithFolderName);
+
+                    if (extension.ToLower() == ".pdf")
+                    {
+                        //string renamedFile = System.Guid.NewGuid().ToString("N");
+                        string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
+                        customerAccount.ScannedDocument.SaveAs(filePath);
+                    }
+                    else
+                    {
+                        using (var img = System.Drawing.Image.FromStream(customerAccount.ScannedDocument.InputStream))
+                        {
+                            string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
+
+                            // Save large size image, 600 x 600
+                            VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.SaveToFolder(img, extension, new System.Drawing.Size(600, 600), filePath);
+                        }
+                    }
+                    customerAccount.ScannedDocsPath1 = customerImageName + extension;
+                }
+                //Insert Detail In customer Account
+                customerAccount.TmsId = tmsId;
+                customerAccount.RegistartionThrough = Convert.ToInt32(Session["LoggedUserId"].ToString());
+                customerAccount.BirthDate = Convert.ToDateTime(form["BirthDate"].ToString());
+                customerAccount.ValidUntil = Convert.ToDateTime(form["ValidUntil"].ToString());
+                customerAccount.ProvinceId = Convert.ToInt32(form["ProvinceId"].ToString());
+                customerAccount.CityId = Convert.ToInt32(form["ddlCityId"].ToString());
+                customerAccount.DistrictId = Convert.ToInt32(form["DistrictId"].ToString());
+                customerAccount.SubDistrictId = Convert.ToInt32(form["SubDistrictId"].ToString());
+                int customerEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.Insert(customerAccount);
+                TempData["lblerror"] = "Sucessfully created Customer.";
+
             }
-            else
+            catch (Exception ex)
             {
-                TempData["lblerror"] = "Fill Mandatory Fields.";
+
+                HelperClass.LogMessage("Failed to Insert Customer Registration List in POS Controller" + ex);
             }
+
+            //else
+            //{
+            //    TempData["lblerror"] = "Fill Mandatory Fields.";
+            //}
             return RedirectToAction("RegisterCustomer");
         }
 
 
+        public ActionResult CustomerQueueList()
+        {
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    return Redirect("SessionPage");
+                }
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+
+                #region Queue Status
+                List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
+                Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
+
+                for (int i = 0; i < arStatus.Length; i++)
+                {
+                    customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
+                }
+                ViewBag.queueStatus = customerQueueStatus;
+
+                #endregion
+
+                //Call Bll To get all Plaza List
+                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList().Where(x => x.QueueStatus != 3).ToList();
+                //customerDataList =customerDataList.Select(x => x.QueueStatus != 3).Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>().ToList();
+                return View(customerDataList);
+
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed to load Customer Queue List in POS Controller" + ex);
+            }
+            return View();
+        }
         public ActionResult TagSaleList()
         {
 
@@ -367,7 +506,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
 
                 //Get Customer Detail By ID
-                customerAccountList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetById(id).Cast<Libraries.CommonLibrary.CBE.CustomerAccountCBE>().ToList();
+                customerAccountList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetById(id, Libraries.CommonLibrary.Constants.GetCurrentTMSId()).Cast<Libraries.CommonLibrary.CBE.CustomerAccountCBE>().ToList();
 
             }
             catch (Exception ex)

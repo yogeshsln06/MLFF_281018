@@ -92,12 +92,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\AccountHistoryBLL.cs" />
+    <Compile Include="BLL\CityBLL.cs" />
     <Compile Include="BLL\CustomerAccountBLL.cs" />
     <Compile Include="BLL\CrossTalkBLL.cs" />
     <Compile Include="BLL\CustomerQueueBLL.cs" />
     <Compile Include="BLL\CustomerVehicleBLL.cs" />
+    <Compile Include="BLL\DistrictBLL.cs" />
     <Compile Include="BLL\NodeFluxBLL.cs" />
     <Compile Include="BLL\PlazaBLL.cs" />
+    <Compile Include="BLL\ProvinceBLL.cs" />
+    <Compile Include="BLL\SubDistrictBLL.cs" />
     <Compile Include="BLL\TransactionBLL.cs" />
     <Compile Include="BLL\TollRateBLL.cs" />
     <Compile Include="BLL\HardwareBLL.cs" />
@@ -120,8 +124,12 @@
     <Compile Include="BLL\UserSubmoduleRightBLL.cs" />
     <Compile Include="BLL\VehicleClassMappingBLL.cs" />
     <Compile Include="BLL\VehicleClassBLL.cs" />
+    <Compile Include="CBE\CityCBE.cs" />
     <Compile Include="CBE\CrossTalkEvent.cs" />
     <Compile Include="CBE\CustomerQueueCBE.cs" />
+    <Compile Include="CBE\DistrictCBE.cs" />
+    <Compile Include="CBE\ProvinceCBE.cs" />
+    <Compile Include="CBE\SubDistrictCBE.cs" />
     <Compile Include="CBE\VehicleClassMappingCBE.cs" />
     <Compile Include="CBE\GantryLiveDataCBE.cs" />
     <Compile Include="CBE\LiveEventCBE.cs" />
@@ -172,7 +180,11 @@
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="DAL\AccountHistoryDAL.cs" />
+    <Compile Include="DAL\CityDAL.cs" />
     <Compile Include="DAL\CustomerQueueDAL.cs" />
+    <Compile Include="DAL\DistrictDAL.cs" />
+    <Compile Include="DAL\ProvinceDAL.cs" />
+    <Compile Include="DAL\SubDistrictDAL.cs" />
     <Compile Include="DAL\VehicleClassMappingDAL.cs" />
     <Compile Include="DAL\CustomerVehicleDAL.cs" />
     <Compile Include="DAL\LaneDAL.cs" />

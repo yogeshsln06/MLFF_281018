@@ -56,9 +56,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetByMobileNumber(mobilenumber);
         }
 
-        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 customerId)
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 customerId, Int32 tmsId)
         {
-            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetById(customerId);
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetById(customerId, tmsId);
         }
 
 
