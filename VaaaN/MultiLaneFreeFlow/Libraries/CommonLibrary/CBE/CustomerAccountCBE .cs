@@ -17,18 +17,37 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private String mobileNo;
         private String emailId;
         private String description;
-        private String address;
+        private String adressLine1;
         private Decimal accountBalance;
         private Int32 balance;//New Balance For Recharge Amount
         private Int32 modifierId;
         private DateTime creationDate;
         private DateTime modificationDate;
         private String customerImagePath;
-        private String scannedDocsPath;
+        private String scannedDocsPath1;
         private Int32 isDocVerified;
         private Int32 accountStatus;
         private Int32 transferStatus;
-
+        private String scannedDocsPath2;
+        private String scannedDocsPath3;
+        private String scannedDocsPath4;
+        private Int32 residentId;
+        private String birthPlace;
+        private Nullable<DateTime> birthDate;
+        private Int32 gender;
+        private String addressLine2;
+        private String addressLine3;
+        private Int32 districtId;
+        private Int32 subDistrictId;
+        private Int32 cityId;
+        private Int32 provinceId;
+        private Int32 postalCode;
+        private Int32 maritalStatus;
+        private String occupation;
+        private Int32 nationality;
+        private Nullable<DateTime> validUntil;
+        private Int32 registartionThrough;
+        private Int32 queueStatus; 
 
         public CustomerAccountCBE()
         {
@@ -39,17 +58,37 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.mobileNo = String.Empty;
             this.emailId = string.Empty;
             this.description = String.Empty;
-            this.address = String.Empty;
+            this.adressLine1 = String.Empty;
             this.accountBalance = 0;
             this.Balance = 0;
             this.modifierId = 0;
             this.creationDate = DateTime.Now;
             this.modificationDate = DateTime.Now;
             this.customerImagePath = String.Empty;
-            this.scannedDocsPath = String.Empty;
+            this.scannedDocsPath1 = String.Empty;
             this.isDocVerified = 0;
             this.accountStatus = 0;
             this.transferStatus = 0;
+            this.scannedDocsPath2 = string.Empty;
+            this.scannedDocsPath3 = string.Empty;
+            this.scannedDocsPath4 = string.Empty;
+            this.residentId = 0;
+            this.birthPlace = String.Empty;
+            this.birthDate = null;
+            this.gender = 0;
+            this.addressLine2 = string.Empty;
+            this.addressLine3 = string.Empty;
+            this.districtId = 0;
+            this.subDistrictId = 0;
+            this.cityId = 0;
+            this.provinceId = 0;
+            this.postalCode = 0;
+            this.maritalStatus = 0;
+            this.occupation = string.Empty;
+            this.nationality = 0;
+            this.validUntil = null;
+            this.registartionThrough = 0;
+            this.queueStatus = 0;
         }
 
         public Int32 TmsId
@@ -71,7 +110,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.firstName; }
             set { this.firstName = value; }
         }
-        [Required]
+      
         [Display(Name = "LastName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public String LastName
         {
@@ -100,12 +139,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
         [Display(Name = "Address", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [Required]
-        public String Address
+        public String AddressLine1
         {
-            get { return this.address; }
-            set { this.address = value; }
+            get { return this.adressLine1; }
+            set { this.adressLine1 = value; }
         }
-        [Required]
+       
         [Display(Name = "AccountBalance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public Decimal AccountBalance
         {
@@ -148,10 +187,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.customerImagePath = value; }
         }
         [Display(Name = "Scanned Document")]
-        public String ScannedDocsPath
+        public String ScannedDocsPath1
         {
-            get { return this.scannedDocsPath; }
-            set { this.scannedDocsPath = value; }
+            get { return this.scannedDocsPath1; }
+            set { this.scannedDocsPath1 = value; }
         }
 
         public Int32 IsDocVerified
@@ -175,8 +214,268 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         public System.Web.HttpPostedFileBase CustomerImage { get; set; }
         [Display(Name = "Scanned Document")]
         public System.Web.HttpPostedFileBase ScannedDocument { get; set; }
+        [Display(Name = "Document 2")]
+        public string ScannedDocsPath2
+        {
+            get
+            {
+                return this.scannedDocsPath2;
+            }
 
-       
+            set
+            {
+                this.scannedDocsPath2 = value;
+            }
+        }
+        [Display(Name = "Document 3")]
+        public string ScannedDocsPath3
+        {
+            get
+            {
+                return this.scannedDocsPath3;
+            }
+
+            set
+            {
+                this.scannedDocsPath3 = value;
+            }
+        }
+        [Display(Name = "Document 4")]
+        public string ScannedDocsPath4
+        {
+            get
+            {
+                return this.scannedDocsPath4;
+            }
+
+            set
+            {
+                this.scannedDocsPath4 = value;
+            }
+        }
+        [Display(Name = "Resident Id")]
+        public int ResidentId
+        {
+            get
+            {
+                return this.residentId;
+            }
+
+            set
+            {
+                this.residentId = value;
+            }
+        }
+        [Display(Name = "Birth Place")]
+        public string BirthPlace
+        {
+            get
+            {
+                return this.birthPlace;
+            }
+
+            set
+            {
+                this.birthPlace = value;
+            }
+        }
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Birth Date")]
+        public Nullable<DateTime> BirthDate
+        {
+            get
+            {
+                return this.birthDate;
+            }
+
+            set
+            {
+                this.birthDate = value;
+            }
+        }
+
+        public int Gender
+        {
+            get
+            {
+                return this.gender;
+            }
+
+            set
+            {
+                this.gender = value;
+            }
+        }
+        [Display(Name = "Address Line 2")]
+        public string AddressLine2
+        {
+            get
+            {
+                return this.addressLine2;
+            }
+
+            set
+            {
+                this.addressLine2 = value;
+            }
+        }
+        [Display(Name = "Address Line 3")]
+        public string AddressLine3
+        {
+            get
+            {
+                return this.addressLine3;
+            }
+
+            set
+            {
+                this.addressLine3 = value;
+            }
+        }
+        [Display(Name = "District")]
+        public int DistrictId
+        {
+            get
+            {
+                return this.districtId;
+            }
+
+            set
+            {
+                this.districtId = value;
+            }
+        }
+        [Display(Name = "Sub District")]
+        public int SubDistrictId
+        {
+            get
+            {
+                return this.subDistrictId;
+            }
+
+            set
+            {
+                this.subDistrictId = value;
+            }
+        }
+        [Display(Name = "City")]
+        public int CityId
+        {
+            get
+            {
+                return this.cityId;
+            }
+
+            set
+            {
+                this.cityId = value;
+            }
+        }
+        [Display(Name = "Province")]
+        public int ProvinceId
+        {
+            get
+            {
+                return this.provinceId;
+            }
+
+            set
+            {
+                this.provinceId = value;
+            }
+        }
+        [Display(Name = "Postal Code")]
+        public int PostalCode
+        {
+            get
+            {
+                return this.postalCode;
+            }
+
+            set
+            {
+                this.postalCode = value;
+            }
+        }
+        [Display(Name = "Marital Status")]
+        public int MaritalStatus
+        {
+            get
+            {
+                return this.maritalStatus;
+            }
+
+            set
+            {
+                this.maritalStatus = value;
+            }
+        }
+
+        public string Occupation
+        {
+            get
+            {
+                return this.occupation;
+            }
+
+            set
+            {
+                this.occupation = value;
+            }
+        }
+
+        public int Nationality
+        {
+            get
+            {
+                return this.nationality;
+            }
+
+            set
+            {
+                this.nationality = value;
+            }
+        }
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Valid Until")]
+        public Nullable<DateTime> ValidUntil
+        {
+            get
+            {
+                return this.validUntil;
+            }
+
+            set
+            {
+                this.validUntil = value;
+            }
+        }
+        [Display(Name = "Registartion Through")]
+        public int RegistartionThrough
+        {
+            get
+            {
+                return this.registartionThrough;
+            }
+
+            set
+            {
+                this.registartionThrough = value;
+            }
+        }
+        [Display(Name = "Queue Status")]
+        public int QueueStatus
+        {
+            get
+            {
+                return this.queueStatus;
+            }
+
+            set
+            {
+                this.queueStatus = value;
+            }
+        }
 
         public override string ToString()
         {
@@ -189,17 +488,36 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("mobileNo = " + this.mobileNo + Environment.NewLine);
             sb.Append("emailId = " + this.emailId + Environment.NewLine);
             sb.Append("description = " + this.description + Environment.NewLine);
-            sb.Append("address = " + this.address + Environment.NewLine);
+            sb.Append("addressLine1 = " + this.adressLine1 + Environment.NewLine);
             sb.Append("accountBalance = " + this.accountBalance + Environment.NewLine);
             sb.Append("ModifierId = " + this.modifierId + Environment.NewLine);
             sb.Append("creationDate = " + this.creationDate + Environment.NewLine);
             sb.Append("modificationDate = " + this.modificationDate + Environment.NewLine);
             sb.Append("customerImagePath = " + this.customerImagePath + Environment.NewLine);
-            sb.Append("scannedDocsPath = " + this.scannedDocsPath + Environment.NewLine);
+            sb.Append("scannedDocsPath1 = " + this.scannedDocsPath1 + Environment.NewLine);
             sb.Append("isDocVerified = " + this.isDocVerified + Environment.NewLine);
             sb.Append("accountStatus = " + this.accountStatus + Environment.NewLine);
             sb.Append("transferStatus = " + this.transferStatus + Environment.NewLine);
-
+            sb.Append("scannedDocsPath2 = " + this.scannedDocsPath2 + Environment.NewLine);
+            sb.Append("scannedDocsPath3 = " + this.scannedDocsPath3 + Environment.NewLine);
+            sb.Append("scannedDocsPath4 = " + this.scannedDocsPath4 + Environment.NewLine);
+            sb.Append("residentId = " + this.residentId + Environment.NewLine);
+            sb.Append("birthPlace = " + this.birthPlace + Environment.NewLine);
+            sb.Append("birthDate = " + this.birthDate + Environment.NewLine);
+            sb.Append("gender = " + this.gender + Environment.NewLine);
+            sb.Append("addressLine2 = " + this.addressLine2 + Environment.NewLine);
+            sb.Append("addressLine3 = " + this.addressLine3 + Environment.NewLine);
+            sb.Append("district = " + this.districtId + Environment.NewLine);
+            sb.Append("subDistrict = " + this.subDistrictId + Environment.NewLine);
+            sb.Append("city = " + this.cityId + Environment.NewLine);
+            sb.Append("province = " + this.provinceId + Environment.NewLine);
+            sb.Append("postalCode = " + this.postalCode + Environment.NewLine);
+            sb.Append("maritalStatus = " + this.maritalStatus + Environment.NewLine);
+            sb.Append("occupation = " + this.occupation + Environment.NewLine);
+            sb.Append("nationality = " + this.nationality + Environment.NewLine);
+            sb.Append("validUntil = " + this.validUntil + Environment.NewLine);
+            sb.Append("registartionThrough = " + this.registartionThrough + Environment.NewLine);
+            sb.Append("queueStatus = " + this.queueStatus + Environment.NewLine);
             return sb.ToString();
         }
     }

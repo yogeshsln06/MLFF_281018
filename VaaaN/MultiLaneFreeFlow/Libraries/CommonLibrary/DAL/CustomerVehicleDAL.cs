@@ -36,7 +36,26 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_class_id", DbType.Int32, vehicle.VehicleClassId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_creation_date", DbType.DateTime, vehicle.CreationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transfer_status", DbType.Int32, vehicle.TransferStatus, ParameterDirection.Input));
-
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_reg_cert_id", DbType.Int32, vehicle.VehicleRegistrationCerticateId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address", DbType.String, vehicle.Address, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_brand", DbType.Int32, vehicle.Brand, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_type", DbType.Int32, vehicle.VehicleType, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_category", DbType.Int32, vehicle.VehicleCategory, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_model_no", DbType.String, vehicle.ModelNo, ParameterDirection.Input, 50));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_manufacturing_year", DbType.Int32, vehicle.ManufacturingYear, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_cyclinder_capacity", DbType.String, vehicle.CyclinderCapacity, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_frame_number", DbType.String, vehicle.FrameNumber, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_engine_number", DbType.String, vehicle.EngineNumber, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_color", DbType.Int32, vehicle.VehicleColor, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_fuel_type", DbType.Int32, vehicle.FuelType, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_licence_plate_color", DbType.Int32, vehicle.LicencePlateColor, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_registration_year", DbType.Int32, vehicle.RegistrationYear, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_location_code", DbType.String, vehicle.LocationCode, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicleimage_front", DbType.String, vehicle.VehicleImageFront, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicleimage_rear", DbType.String, vehicle.VehicleImageRear, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicleimage_rightside", DbType.String, vehicle.VehicleImageRightSide, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicleimage_leftside", DbType.String, vehicle.VehicleImageLeftSide, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_valid_until", DbType.Int32, vehicle.ValidUntil, ParameterDirection.Input));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
             catch (Exception ex)
@@ -64,7 +83,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modification_date", DbType.DateTime, vehicle.ModificationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modified_by", DbType.Int32, vehicle.ModifiedBy, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transfer_status", DbType.Int32, vehicle.TransferStatus, ParameterDirection.Input));
-
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_reg_cert_id", DbType.Int32, vehicle.VehicleRegistrationCerticateId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_address", DbType.String, vehicle.Address, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_brand", DbType.Int32, vehicle.Brand, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_type", DbType.Int32, vehicle.VehicleType, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_model_no", DbType.String, vehicle.ModelNo, ParameterDirection.Input, 50));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_manufacturing_year", DbType.Int32, vehicle.ManufacturingYear, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_cyclinder_capacity", DbType.String, vehicle.CyclinderCapacity, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_frame_number", DbType.String, vehicle.FrameNumber, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_engine_number", DbType.String, vehicle.EngineNumber, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_color", DbType.Int32, vehicle.VehicleColor, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_fuel_type", DbType.Int32, vehicle.FuelType, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_licence_plate_color", DbType.Int32, vehicle.LicencePlateColor, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_registration_year", DbType.Int32, vehicle.RegistrationYear, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_location_code", DbType.String, vehicle.LocationCode, ParameterDirection.Input, 20));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicleimage_front", DbType.String, vehicle.VehicleImageFront, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicleimage_rear", DbType.String, vehicle.VehicleImageRear, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicleimage_rightside", DbType.String, vehicle.VehicleImageRightSide, ParameterDirection.Input, 200));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicleimage_leftside", DbType.String, vehicle.VehicleImageLeftSide, ParameterDirection.Input, 200));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
@@ -348,6 +384,66 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                     if (dt.Rows[i]["VEHICLE_CLASS_NAME"] != DBNull.Value)
                         vehicle.VehicleClassName = Convert.ToString(dt.Rows[i]["VEHICLE_CLASS_NAME"]);
+
+                    if (dt.Rows[i]["VEHICLE_REG_CERT_ID"] != DBNull.Value)
+                        vehicle.VehicleRegistrationCerticateId = Convert.ToInt32(dt.Rows[i]["VEHICLE_REG_CERT_ID"]);
+
+                    if (dt.Rows[i]["ADDRESS"] != DBNull.Value)
+                        vehicle.Address = Convert.ToString(dt.Rows[i]["ADDRESS"]);
+
+                    if (dt.Rows[i]["BRAND"] != DBNull.Value)
+                        vehicle.Brand = Convert.ToInt32(dt.Rows[i]["BRAND"]);
+
+                    if (dt.Rows[i]["VEHICLE_TYPE"] != DBNull.Value)
+                        vehicle.VehicleType = Convert.ToInt32(dt.Rows[i]["VEHICLE_TYPE"]);
+
+                    if (dt.Rows[i]["VEHICLE_CATEGORY"] != DBNull.Value)
+                        vehicle.VehicleCategory = Convert.ToInt32(dt.Rows[i]["VEHICLE_CATEGORY"]);
+
+                    if (dt.Rows[i]["MODEL_NO"] != DBNull.Value)
+                        vehicle.ModelNo = Convert.ToString(dt.Rows[i]["MODEL_NO"]);
+
+                    if (dt.Rows[i]["MANUFACTURING_YEAR"] != DBNull.Value)
+                        vehicle.ManufacturingYear = Convert.ToInt32(dt.Rows[i]["MANUFACTURING_YEAR"]);
+
+                    if (dt.Rows[i]["CYCLINDER_CAPACITY"] != DBNull.Value)
+                        vehicle.CyclinderCapacity = Convert.ToString(dt.Rows[i]["CYCLINDER_CAPACITY"]);
+
+                    if (dt.Rows[i]["FRAME_NUMBER"] != DBNull.Value)
+                        vehicle.FrameNumber = Convert.ToString(dt.Rows[i]["FRAME_NUMBER"]);
+
+                    if (dt.Rows[i]["ENGINE_NUMBER"] != DBNull.Value)
+                        vehicle.EngineNumber = Convert.ToString(dt.Rows[i]["ENGINE_NUMBER"]);
+
+                    if (dt.Rows[i]["VEHICLE_COLOR"] != DBNull.Value)
+                        vehicle.VehicleColor = Convert.ToInt32(dt.Rows[i]["VEHICLE_COLOR"]);
+
+                    if (dt.Rows[i]["FUEL_TYPE"] != DBNull.Value)
+                        vehicle.FuelType = Convert.ToInt32(dt.Rows[i]["FUEL_TYPE"]);
+
+                    if (dt.Rows[i]["LICENCE_PLATE_COLOR"] != DBNull.Value)
+                        vehicle.LicencePlateColor = Convert.ToInt32(dt.Rows[i]["LICENCE_PLATE_COLOR"]);
+
+                    if (dt.Rows[i]["REGISTRATION_YEAR"] != DBNull.Value)
+                        vehicle.RegistrationYear = Convert.ToInt32(dt.Rows[i]["REGISTRATION_YEAR"]);
+
+                    if (dt.Rows[i]["LOCATION_CODE"] != DBNull.Value)
+                        vehicle.LocationCode = Convert.ToString(dt.Rows[i]["LOCATION_CODE"]);
+
+                    if (dt.Rows[i]["VEHICLEIMAGE_FRONT"] != DBNull.Value)
+                        vehicle.VehicleImageFront = Convert.ToString(dt.Rows[i]["VEHICLEIMAGE_FRONT"]);
+
+                    if (dt.Rows[i]["VEHICLEIMAGE_REAR"] != DBNull.Value)
+                        vehicle.VehicleImageRear = Convert.ToString(dt.Rows[i]["VEHICLEIMAGE_REAR"]);
+
+                    if (dt.Rows[i]["VEHICLEIMAGE_LEFTSIDE"] != DBNull.Value)
+                        vehicle.VehicleImageLeftSide = Convert.ToString(dt.Rows[i]["VEHICLEIMAGE_LEFTSIDE"]);
+
+                    if (dt.Rows[i]["VEHICLEIMAGE_RIGHTSIDE"] != DBNull.Value)
+                        vehicle.VehicleImageRightSide = Convert.ToString(dt.Rows[i]["VEHICLEIMAGE_RIGHTSIDE"]);
+
+                    if (dt.Rows[i]["VALID_UNTIL"] != DBNull.Value)
+                        vehicle.ValidUntil = Convert.ToInt32(dt.Rows[i]["VALID_UNTIL"]);
 
                     vehicles.Add(vehicle);
                 }
