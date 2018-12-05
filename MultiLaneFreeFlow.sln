@@ -47,6 +47,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsApplication", "Windo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleFlowSimulator", "VaaaN\MultiLaneFreeFlow\WindowsApplication\VehicleFlowSimulator\VehicleFlowSimulator.csproj", "{3EFAA84F-3A9C-4200-BBFA-1ED2E7C46BD9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobileWebAPI", "VaaaN\MultiLaneFreeFlow\WebApplication\MobileWebAPI\MobileWebAPI.csproj", "{C3160B27-84DF-4261-A1F6-62B1CD396CC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -215,6 +217,22 @@ Global
 		{3EFAA84F-3A9C-4200-BBFA-1ED2E7C46BD9}.Release|x64.Build.0 = Release|Any CPU
 		{3EFAA84F-3A9C-4200-BBFA-1ED2E7C46BD9}.Release|x86.ActiveCfg = Release|x86
 		{3EFAA84F-3A9C-4200-BBFA-1ED2E7C46BD9}.Release|x86.Build.0 = Release|x86
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Debug|x64.Build.0 = Debug|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Debug|x86.Build.0 = Debug|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Release|x64.ActiveCfg = Release|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Release|x64.Build.0 = Release|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Release|x86.ActiveCfg = Release|Any CPU
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,5 +251,6 @@ Global
 		{2AAAACF8-D2E2-4A13-9C11-3B92EA8E672D} = {3DBB5413-3B46-40ED-A709-4EEF46DCD3C1}
 		{1F600A73-0A25-40BF-A8EA-C2307C9D10D4} = {2AAAACF8-D2E2-4A13-9C11-3B92EA8E672D}
 		{3EFAA84F-3A9C-4200-BBFA-1ED2E7C46BD9} = {28F09A5F-38B6-4851-ADF5-F8FAAE589342}
+		{C3160B27-84DF-4261-A1F6-62B1CD396CC3} = {DF497991-7FB4-4EC6-B208-953FC6FAB3D9}
 	EndGlobalSection
 EndGlobal
