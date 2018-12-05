@@ -1,4 +1,4 @@
-/* Formatted on 19/11/2018 2.44.48 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 04/12/2018 10:11:46 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -813,6 +813,21 @@ AS
                              P_REGISTRATION_THROUGH   IN NUMBER,
                              P_QUEUE_STATUS           IN NUMBER);
 
+   PROCEDURE ACCOUNT_INSERTBYMOBILE (P_TMS_ID                 IN NUMBER,
+                                     P_ACCOUNT_ID             IN NUMBER,
+                                     P_FIRST_NAME             IN NVARCHAR2,
+                                     P_LAST_NAME              IN NVARCHAR2,
+                                     P_MOB_NUMBER             IN NVARCHAR2,
+                                     P_EMAIL_ID               IN NVARCHAR2,
+                                     P_CREATION_DATE          IN DATE,
+                                     P_ACCOUNT_STATUS         IN NUMBER,
+                                     P_TRANSFER_STATUS        IN NUMBER,
+                                     P_RESIDENT_ID            IN NUMBER,
+                                     P_REGISTRATION_THROUGH   IN NUMBER,
+                                     P_QUEUE_STATUS           IN NUMBER,
+                                     P_USER_PASSWORD          IN NVARCHAR2);
+
+
    PROCEDURE ACCOUNT_UPDATE (P_TMS_ID                 IN NUMBER,
                              P_ACCOUNT_ID             IN NUMBER,
                              P_FIRST_NAME             IN NVARCHAR2,
@@ -823,7 +838,6 @@ AS
                              P_ADDRESS_LINE_1         IN NVARCHAR2,
                              P_ACCOUNT_BALANCE        IN NUMBER,
                              P_MODIFIER_ID            IN NUMBER,
-                             P_CREATION_DATE          IN DATE,
                              P_MODIFICATION_DATE      IN DATE,
                              P_CUSTOMER_IMAGE_PATH    IN NVARCHAR2,
                              P_SCANNED_DOCS_PATH1     IN NVARCHAR2,
@@ -864,6 +878,10 @@ AS
                                     P_ACCOUNT_ID   IN NUMBER,
                                     P_AMOUNT       IN NUMBER);
 
+   PROCEDURE ACCOUNT_QUEUESTATUSUPDATE (P_TMS_ID         IN NUMBER,
+                                        P_ACCOUNT_ID     IN NUMBER,
+                                        P_QUEUE_STATUS   IN NUMBER);
+
    ----------TBL CUSTOMER VEHICLE------------
 
    PROCEDURE CUSTOMER_VEHICLE_INSERT (
@@ -894,7 +912,11 @@ AS
       P_VEHICLEIMAGE_REAR        IN NVARCHAR2,
       P_VEHICLEIMAGE_RIGHTSIDE   IN NVARCHAR2,
       P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
-      P_VALID_UNTIL              IN NUMBER);
+      P_VALID_UNTIL              IN NUMBER,
+      P_ACCOUNT_BALANCE          IN NUMBER,
+      P_REGISTRATION_THROUGH     IN NUMBER,
+      P_QUEUE_STATUS             IN NUMBER,
+      P_IS_DOC_VERIFIED          IN NUMBER);
 
    PROCEDURE CUSTOMER_VEHICLE_UPDATE (
       P_TMS_ID                   IN NUMBER,
@@ -903,7 +925,6 @@ AS
       P_VEH_REG_NO               IN NVARCHAR2,
       P_TAG_ID                   IN NVARCHAR2,
       P_VEHICLE_CLASS_ID         IN NUMBER,
-      P_CREATION_DATE            IN DATE,
       P_MODIFICATION_DATE        IN DATE,
       P_MODIFIED_BY              IN NUMBER,
       P_TRANSFER_STATUS          IN NUMBER,
@@ -926,7 +947,11 @@ AS
       P_VEHICLEIMAGE_REAR        IN NVARCHAR2,
       P_VEHICLEIMAGE_RIGHTSIDE   IN NVARCHAR2,
       P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
-      P_VALID_UNTIL              IN NUMBER);
+      P_VALID_UNTIL              IN NUMBER,
+      P_ACCOUNT_BALANCE          IN NUMBER,
+      P_REGISTRATION_THROUGH     IN NUMBER,
+      P_QUEUE_STATUS             IN NUMBER,
+      P_IS_DOC_VERIFIED          IN NUMBER);
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYID (P_VEHICLE_CLASS_ID   IN     NUMBER,
                                        P_TMS_ID             IN     NUMBER,
@@ -950,6 +975,7 @@ AS
 
    PROCEDURE CUSTOMERVEHICLE_GETBYVEHREGNO (P_VEH_REG_NO   IN     NVARCHAR2,
                                             CUR_OUT           OUT T_CURSOR);
+
    ------------ACCOUNT HISTORY ----------
 
    PROCEDURE ACCOUNT_HISTORY_INSERT (
@@ -1063,5 +1089,49 @@ AS
    PROCEDURE SUBDISTRICT_GETBYDISTRICTID (P_TMS_ID        IN     NUMBER,
                                           P_DISTRICT_ID   IN     NUMBER,
                                           CUR_OUT            OUT T_CURSOR);
+
+   ----------TBL CUSTOMER APPOINTMENT------------
+
+   PROCEDURE CUSTOMER_APPOINTMENT_INSERT (
+      P_TMS_ID                    IN     NUMBER,
+      P_CUSTOMER_APPOINTMENT_ID      OUT NUMBER,
+      P_ACCOUNT_ID                IN     NUMBER,
+      P_APPOINTMENT_LOCATION      IN     NVARCHAR2,
+      P_APPOINTMENT_DATE          IN     DATE,
+      P_APPOINTED_BY              IN     NUMBER,
+      P_ATTENDED_BY               IN     NUMBER,
+      P_CREATION_DATE             IN     DATE,
+      P_TRANSFER_STATUS           IN     NUMBER);
+
+   PROCEDURE CUSTOMER_APPOINTMENT_UPDATE (
+      P_TMS_ID                    IN NUMBER,
+      P_CUSTOMER_APPOINTMENT_ID   IN NUMBER,
+      P_ACCOUNT_ID                IN NUMBER,
+      P_APPOINTMENT_LOCATION      IN NVARCHAR2,
+      P_APPOINTMENT_DATE          IN DATE,
+      P_APPOINTED_BY              IN NUMBER,
+      P_ATTENDED_BY               IN NUMBER,
+      P_MODIFIER_ID               IN NUMBER,
+      P_MODIFICATION_DATE         IN DATE,
+      P_TRANSFER_STATUS           IN NUMBER);
+
+
+
+   PROCEDURE CUSTOMER_APPOINTMENT_GETALL (CUR_OUT OUT T_CURSOR);
+
+
+   PROCEDURE CUSTOMER_APPOINTMENT_GETBYID (
+      P_TMS_ID                    IN     NUMBER,
+      P_CUSTOMER_APPOINTMENT_ID   IN     NUMBER,
+      CUR_OUT                        OUT T_CURSOR);
+
+
+   PROCEDURE CUSTAPPOINTMENT_GETACC_ID (P_TMS_ID       IN     NUMBER,
+                                        P_ACCOUNT_ID   IN     NUMBER,
+                                        CUR_OUT           OUT T_CURSOR);
+
+   PROCEDURE CUSTOMER_QUEUEUPDATE (P_TMS_ID         IN NUMBER,
+                                   P_ACCOUNT_ID     IN NUMBER,
+                                   P_QUEUE_STATUS   IN NUMBER);
 END MLFF_PACKAGE;
 /

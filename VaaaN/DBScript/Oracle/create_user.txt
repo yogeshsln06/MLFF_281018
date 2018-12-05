@@ -3,3 +3,6 @@ create user MLFF identified by vaarid789 account unlock;
 grant connect, resource, dba to MLFF;
 conn;
 
+conn /as sysdba
+ALTER USER MLFF IDENTIFIED BY new_password account unlock;
+

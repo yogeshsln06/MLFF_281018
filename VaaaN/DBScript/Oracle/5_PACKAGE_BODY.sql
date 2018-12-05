@@ -1,4 +1,4 @@
-/* Formatted on 11/23/2018 1:40:09 AM (QP5 v5.215.12089.38647) */
+/* Formatted on 30-11-2018 17:06:49 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -1623,7 +1623,7 @@ AS
                   NFP.MODIFIER_ID,
                   NFP.MODIFICATION_DATE
              FROM TBL_NODEFLUX_PACKET NFP
-            WHERE  TO_DATE (SUBSTR (NFP.TIMESTAMP, 0, 19),
+            WHERE     TO_DATE (SUBSTR (NFP.TIMESTAMP, 0, 19),
                                'YYYY-MM-DD HH24:MI:SS') >
                          (P_NF_TIME - INTERVAL '60' SECOND)
                   AND NFP.GANTRY_ID = P_PLAZA_ID
@@ -3104,6 +3104,50 @@ ORDER BY TRANSACTION_ID DESC';
                    P_REGISTRATION_THROUGH,
                    P_QUEUE_STATUS);
    END ACCOUNT_INSERT;
+   
+   PROCEDURE ACCOUNT_INSERTBYMOBILE (P_TMS_ID                 IN NUMBER,
+                             P_ACCOUNT_ID             IN NUMBER,
+                             P_FIRST_NAME             IN NVARCHAR2,
+                             P_LAST_NAME              IN NVARCHAR2,
+                             P_MOB_NUMBER             IN NVARCHAR2,
+                             P_EMAIL_ID               IN NVARCHAR2,
+                             P_CREATION_DATE          IN DATE,
+                             P_ACCOUNT_STATUS         IN NUMBER,
+                             P_TRANSFER_STATUS        IN NUMBER,
+                             P_RESIDENT_ID            IN NUMBER,
+                             P_REGISTRATION_THROUGH   IN NUMBER,
+                             P_QUEUE_STATUS           IN NUMBER,
+                             P_USER_PASSWORD              IN NVARCHAR2)
+   AS
+   BEGIN
+      INSERT INTO TBL_CUSTOMER_ACCOUNT (TMS_ID,
+                                        ACCOUNT_ID,
+                                        FIRST_NAME,
+                                        LAST_NAME,
+                                        MOB_NUMBER,
+                                        EMAIL_ID,
+                                        CREATION_DATE,
+                                        ACCOUNT_STATUS,
+                                        TRANSFER_STATUS,
+                                        RESIDENT_ID,
+                                        REGISTRATION_THROUGH,
+                                        QUEUE_STATUS,
+                                        USER_PASSWORD)
+           VALUES (P_TMS_ID,
+                   P_ACCOUNT_ID,
+                   P_FIRST_NAME,
+                   P_LAST_NAME,
+                   P_MOB_NUMBER,
+                   P_EMAIL_ID,
+                   P_CREATION_DATE,
+                   P_ACCOUNT_STATUS,
+                   P_TRANSFER_STATUS,
+                   P_RESIDENT_ID,
+                   P_REGISTRATION_THROUGH,
+                   P_QUEUE_STATUS,
+                   P_USER_PASSWORD);
+                   
+   END ACCOUNT_INSERTBYMOBILE;
 
    PROCEDURE ACCOUNT_UPDATE (P_TMS_ID                 IN NUMBER,
                              P_ACCOUNT_ID             IN NUMBER,
@@ -3115,7 +3159,6 @@ ORDER BY TRANSACTION_ID DESC';
                              P_ADDRESS_LINE_1         IN NVARCHAR2,
                              P_ACCOUNT_BALANCE        IN NUMBER,
                              P_MODIFIER_ID            IN NUMBER,
-                             P_CREATION_DATE          IN DATE,
                              P_MODIFICATION_DATE      IN DATE,
                              P_CUSTOMER_IMAGE_PATH    IN NVARCHAR2,
                              P_SCANNED_DOCS_PATH1     IN NVARCHAR2,
@@ -3224,6 +3267,16 @@ ORDER BY TRANSACTION_ID DESC';
        WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
    END ACCOUNT_BALANCEUPDATE;
 
+   PROCEDURE ACCOUNT_QUEUESTATUSUPDATE (P_TMS_ID         IN NUMBER,
+                                        P_ACCOUNT_ID     IN NUMBER,
+                                        P_QUEUE_STATUS   IN NUMBER)
+   AS
+   BEGIN
+      UPDATE TBL_CUSTOMER_ACCOUNT
+         SET QUEUE_STATUS = P_QUEUE_STATUS
+       WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
+   END ACCOUNT_QUEUESTATUSUPDATE;
+
    ----------TBL CUSTOMER VEHICLE------------
    PROCEDURE CUSTOMER_VEHICLE_INSERT (
       P_TMS_ID                   IN NUMBER,
@@ -3253,7 +3306,12 @@ ORDER BY TRANSACTION_ID DESC';
       P_VEHICLEIMAGE_REAR        IN NVARCHAR2,
       P_VEHICLEIMAGE_RIGHTSIDE   IN NVARCHAR2,
       P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
-      P_VALID_UNTIL              IN NUMBER)
+      P_VALID_UNTIL              IN NUMBER,
+      P_ACCOUNT_BALANCE          IN NUMBER,
+      P_REGISTRATION_THROUGH        IN NUMBER,
+      P_QUEUE_STATUS                IN NUMBER,
+      P_IS_DOC_VERIFIED             IN NUMBER
+      )
    AS
    BEGIN
       INSERT INTO TBL_CUSTOMER_VEHICLE (TMS_ID,
@@ -3283,7 +3341,11 @@ ORDER BY TRANSACTION_ID DESC';
                                         VEHICLEIMAGE_REAR,
                                         VEHICLEIMAGE_RIGHTSIDE,
                                         VEHICLEIMAGE_LEFTSIDE,
-                                        VALID_UNTIL)
+                                        VALID_UNTIL,
+                                        ACCOUNT_BALANCE,
+                                        REGISTRATION_THROUGH,
+                                        QUEUE_STATUS,
+                                        IS_DOC_VERIFIED)
            VALUES (P_TMS_ID,
                    P_ENTRY_ID,
                    P_ACCOUNT_ID,
@@ -3311,18 +3373,21 @@ ORDER BY TRANSACTION_ID DESC';
                    P_VEHICLEIMAGE_REAR,
                    P_VEHICLEIMAGE_RIGHTSIDE,
                    P_VEHICLEIMAGE_LEFTSIDE,
-                   P_VALID_UNTIL);
+                   P_VALID_UNTIL,
+                   P_ACCOUNT_BALANCE,
+                   P_REGISTRATION_THROUGH,
+                   P_QUEUE_STATUS,
+                   P_IS_DOC_VERIFIED);
    END CUSTOMER_VEHICLE_INSERT;
 
 
    PROCEDURE CUSTOMER_VEHICLE_UPDATE (
-      P_TMS_ID                   IN NUMBER,
+   P_TMS_ID                   IN NUMBER,
       P_ENTRY_ID                 IN NUMBER,
       P_ACCOUNT_ID               IN NUMBER,
       P_VEH_REG_NO               IN NVARCHAR2,
       P_TAG_ID                   IN NVARCHAR2,
       P_VEHICLE_CLASS_ID         IN NUMBER,
-      P_CREATION_DATE            IN DATE,
       P_MODIFICATION_DATE        IN DATE,
       P_MODIFIED_BY              IN NUMBER,
       P_TRANSFER_STATUS          IN NUMBER,
@@ -3345,7 +3410,12 @@ ORDER BY TRANSACTION_ID DESC';
       P_VEHICLEIMAGE_REAR        IN NVARCHAR2,
       P_VEHICLEIMAGE_RIGHTSIDE   IN NVARCHAR2,
       P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
-      P_VALID_UNTIL              IN NUMBER)
+      P_VALID_UNTIL              IN NUMBER,
+      P_ACCOUNT_BALANCE          IN NUMBER,
+      P_REGISTRATION_THROUGH        IN NUMBER,
+      P_QUEUE_STATUS                IN NUMBER,
+      P_IS_DOC_VERIFIED             IN NUMBER
+      )
    AS
    BEGIN
       UPDATE TBL_CUSTOMER_VEHICLE
@@ -3377,10 +3447,14 @@ ORDER BY TRANSACTION_ID DESC';
              VEHICLEIMAGE_REAR = P_VEHICLEIMAGE_REAR,
              VEHICLEIMAGE_RIGHTSIDE = P_VEHICLEIMAGE_RIGHTSIDE,
              VEHICLEIMAGE_LEFTSIDE = P_VEHICLEIMAGE_LEFTSIDE,
-             VALID_UNTIL = P_VALID_UNTIL
+             VALID_UNTIL = P_VALID_UNTIL,
+             ACCOUNT_BALANCE=P_ACCOUNT_BALANCE,
+             REGISTRATION_THROUGH=P_REGISTRATION_THROUGH,
+             QUEUE_STATUS=P_QUEUE_STATUS,
+             IS_DOC_VERIFIED=P_IS_DOC_VERIFIED
+             
        WHERE     TMS_ID = P_TMS_ID
-             AND ENTRY_ID = P_ENTRY_ID
-             AND ACCOUNT_ID = P_ACCOUNT_ID;
+             AND ENTRY_ID = P_ENTRY_ID;
    END CUSTOMER_VEHICLE_UPDATE;
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYID (P_VEHICLE_CLASS_ID   IN     NUMBER,
@@ -4008,8 +4082,8 @@ ORDER BY TRANSACTION_ID DESC';
                 AUDIT_DATE = SYSDATE,
                 AUDITED_VRN = P_AUDITED_VRN,
                 AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
-                WHERE TRANSACTION_ID = P_CHILD_1_TRANSACTION_ID;
-                
+          WHERE TRANSACTION_ID = P_CHILD_1_TRANSACTION_ID;
+
          SELECT NVL (TC.CT_ENTRY_ID, 0)
            INTO CT_ENTRYID
            FROM TBL_TRANSACTION TC
@@ -4035,8 +4109,8 @@ ORDER BY TRANSACTION_ID DESC';
                 AUDIT_DATE = SYSDATE,
                 AUDITED_VRN = P_AUDITED_VRN,
                 AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
-                WHERE TRANSACTION_ID = P_CHILD_2_TRANSACTION_ID;
-                
+          WHERE TRANSACTION_ID = P_CHILD_2_TRANSACTION_ID;
+
          IF (NVL (CT_ENTRYID, 0) = 0)
          THEN
             SELECT NVL (TC.CT_ENTRY_ID, 0)
@@ -4212,6 +4286,7 @@ ORDER BY TRANSACTION_ID DESC';
           WHERE LOWER (ANPR_VEHICLE_CLASS_NAME) =
                    LOWER (P_ANPR_VEHICLE_CLASS_NAME);
    END VEHICLECLASS_MAPPING_GETBYNAME;
+
    -----------Province ----------
    PROCEDURE PROVINCE_GETALL (CUR_OUT OUT T_CURSOR)
    IS
@@ -4287,5 +4362,114 @@ ORDER BY TRANSACTION_ID DESC';
             WHERE TMS_ID = P_TMS_ID AND DISTRICT_ID = P_DISTRICT_ID
          ORDER BY SUB_DISTRICT_ID;
    END SUBDISTRICT_GETBYDISTRICTID;
+
+   ----------TBL CUSTOMER APPOINTMENT------------
+
+   PROCEDURE CUSTOMER_APPOINTMENT_INSERT (
+      P_TMS_ID                    IN     NUMBER,
+      P_CUSTOMER_APPOINTMENT_ID      OUT NUMBER,
+      P_ACCOUNT_ID                IN     NUMBER,
+      P_APPOINTMENT_LOCATION      IN     NVARCHAR2,
+      P_APPOINTMENT_DATE          IN     DATE,
+      P_APPOINTED_BY              IN     NUMBER,
+      P_ATTENDED_BY               IN     NUMBER,
+      P_CREATION_DATE             IN     DATE,
+      P_TRANSFER_STATUS           IN     NUMBER)
+   AS
+   BEGIN
+      INSERT INTO TBL_CUSTOMER_APPOINTMENT (TMS_ID,
+                                            CUSTOMER_APPOINTMENT_ID,
+                                            ACCOUNT_ID,
+                                            APPOINTMENT_LOCATION,
+                                            APPOINTMENT_DATE,
+                                            APPOINTED_BY,
+                                            ATTENDED_BY,
+                                            CREATION_DATE,
+                                            TRANSFER_STATUS)
+           VALUES (P_TMS_ID,
+                   CUSTOMER_APPOINTMENT_SEQ.NEXTVAL,
+                   P_ACCOUNT_ID,
+                   P_APPOINTMENT_LOCATION,
+                   P_APPOINTMENT_DATE,
+                   P_APPOINTED_BY,
+                   P_ATTENDED_BY,
+                   P_CREATION_DATE,
+                   P_TRANSFER_STATUS);
+
+      P_CUSTOMER_APPOINTMENT_ID := CUSTOMER_APPOINTMENT_SEQ.CURRVAL;
+   END CUSTOMER_APPOINTMENT_INSERT;
+
+   PROCEDURE CUSTOMER_APPOINTMENT_UPDATE (
+      P_TMS_ID                    IN NUMBER,
+      P_CUSTOMER_APPOINTMENT_ID   IN NUMBER,
+      P_ACCOUNT_ID                IN NUMBER,
+      P_APPOINTMENT_LOCATION      IN NVARCHAR2,
+      P_APPOINTMENT_DATE          IN DATE,
+      P_APPOINTED_BY              IN NUMBER,
+      P_ATTENDED_BY               IN NUMBER,
+      P_MODIFIER_ID               IN NUMBER,
+      P_MODIFICATION_DATE         IN DATE,
+      P_TRANSFER_STATUS           IN NUMBER)
+   AS
+   BEGIN
+      UPDATE TBL_CUSTOMER_APPOINTMENT
+         SET TMS_ID = P_TMS_ID,
+             ACCOUNT_ID = P_ACCOUNT_ID,
+             APPOINTMENT_LOCATION = P_APPOINTMENT_LOCATION,
+             APPOINTMENT_DATE = P_APPOINTMENT_DATE,
+             APPOINTED_BY = P_APPOINTED_BY,
+             ATTENDED_BY = P_ATTENDED_BY,
+             MODIFIER_ID = P_MODIFIER_ID,
+             MODIFICATION_DATE = P_MODIFICATION_DATE,
+             TRANSFER_STATUS = P_TRANSFER_STATUS
+       WHERE     TMS_ID = P_TMS_ID
+             AND ACCOUNT_ID = P_ACCOUNT_ID
+             AND CUSTOMER_APPOINTMENT_ID = P_CUSTOMER_APPOINTMENT_ID;
+   END CUSTOMER_APPOINTMENT_UPDATE;
+
+
+
+   PROCEDURE CUSTOMER_APPOINTMENT_GETALL (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_CUSTOMER_APPOINTMENT CA
+         ORDER BY CA.ACCOUNT_ID;
+   END CUSTOMER_APPOINTMENT_GETALL;
+
+   PROCEDURE CUSTOMER_APPOINTMENT_GETBYID (
+      P_TMS_ID                    IN     NUMBER,
+      P_CUSTOMER_APPOINTMENT_ID   IN     NUMBER,
+      CUR_OUT                        OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT *
+           FROM TBL_CUSTOMER_APPOINTMENT
+          WHERE     TMS_ID = P_TMS_ID
+                AND CUSTOMER_APPOINTMENT_ID = P_CUSTOMER_APPOINTMENT_ID;
+   END CUSTOMER_APPOINTMENT_GETBYID;
+
+   PROCEDURE CUSTAPPOINTMENT_GETACC_ID (P_TMS_ID       IN     NUMBER,
+                                        P_ACCOUNT_ID   IN     NUMBER,
+                                        CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT *
+           FROM TBL_CUSTOMER_APPOINTMENT
+          WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
+   END CUSTAPPOINTMENT_GETACC_ID;
+
+   PROCEDURE CUSTOMER_QUEUEUPDATE (P_TMS_ID         IN NUMBER,
+                                   P_ACCOUNT_ID     IN NUMBER,
+                                   P_QUEUE_STATUS   IN NUMBER)
+   AS
+   BEGIN
+      UPDATE TBL_CUSTOMER_ACCOUNT
+         SET QUEUE_STATUS = P_QUEUE_STATUS
+       WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
+   END CUSTOMER_QUEUEUPDATE;
 END MLFF_PACKAGE;
 /
