@@ -39,7 +39,7 @@ namespace MLFFWebAPI.Controllers
         DataTable dt = new DataTable();
         XmlReader xmlFile;
         string anprName = string.Empty;
-
+        VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration smsFileConfig;
 
         #endregion
 
@@ -664,6 +664,7 @@ namespace MLFFWebAPI.Controllers
                     {
                         if (customerAccount != null)
                         {
+                            smsFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration.Deserialize();
                             // Top up
                             if (messageBody.ToUpper().Contains("TOP-UP"))
                             {
@@ -720,7 +721,7 @@ namespace MLFFWebAPI.Controllers
                                         accountHistory.CreationDate = DateTime.Now;
                                         accountHistory.ModificationDate = DateTime.Now;
                                         accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
-                                        entryId=VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                                        entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
                                         LogInboundSMS("Account history table updated successfully.");
                                     }
                                     catch (Exception ex)
@@ -742,7 +743,16 @@ namespace MLFFWebAPI.Controllers
                                         smsOutgoing.MobileNumber = customerAccount.MobileNo;
                                         smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                                         //smsOutgoing.MessageBody = "Thanks for Top-Up with amount " + rechargeAmount + ". Your saldo is " + customerAccount.AccountBalance + ".";// Update message content TO DO
-                                        smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", "") + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ". Ref: ["+ entryId + "]";// Update message content TO DO
+                                        string Topup = smsFileConfig.Topup;
+                                        Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                        Topup = Topup.Replace("[balance]", Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                        Topup = Topup.Replace("tid", entryId.ToString());
+                                        if (Topup.Length > 160)
+                                        {
+                                            Topup = Topup.Substring(0, 149);
+                                        }
+                                        smsOutgoing.MessageBody = Topup;
+                                        //smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", "") + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ". Ref: [" + entryId + "]";// Update message content TO DO
                                         smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                                         smsOutgoing.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
                                         smsOutgoing.MessageSendDateTime = DateTime.Now;
@@ -789,8 +799,14 @@ namespace MLFFWebAPI.Controllers
                                     sms.CustomerName = customerAccount.FirstName + " " + customerAccount.LastName;
                                     sms.MobileNumber = customerAccount.MobileNo;
                                     sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                                    //sms.MessageBody = "Dear Customer Your Saldo is " + customerAccount.AccountBalance + ".";
-                                    sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ".";
+                                    string SALDO = smsFileConfig.SALDO;
+                                    SALDO = SALDO.Replace("[balance]", Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                    if (SALDO.Length > 160)
+                                    {
+                                        SALDO = SALDO.Substring(0, 149);
+                                    }
+                                    sms.MessageBody = SALDO;
+                                    //sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ".";
                                     sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                                     sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
                                     sms.MessageSendDateTime = DateTime.Now;
