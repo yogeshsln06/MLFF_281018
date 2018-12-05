@@ -32,10 +32,13 @@ namespace VaaaN.MLFF.WindowsServices
 
         private MessageQueue failedQueueIKE;
         private MessageQueue failedQueueANPR;
+
         private MessageQueue inBoxQueueANPR;
         private MessageQueue inBoxQueueIKE;
+
         private MessageQueue smsMessageQueue;
         private MessageQueue eventQueue;
+
         int ctpEntryId = 0;
         int nfpEntryId = 0;
         int currentTMSId = -1;
@@ -54,11 +57,11 @@ namespace VaaaN.MLFF.WindowsServices
 
         VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration generalFileConfig;
 
-        Thread listUpdaterThread;
+        Thread collectionUpdaterThread;
 
         DateTime lastListUpdateTime = System.DateTime.MinValue;
 
-        volatile Boolean stopListUpdatingThread = false;
+        volatile Boolean stopCollectionUpdatingThread = false;
         #endregion
 
         #region Constructor
@@ -98,17 +101,18 @@ namespace VaaaN.MLFF.WindowsServices
 
             try
             {
-                LogMessage("Starting TDM service logger thread...");
+                LogMessage("Starting LDS logger thread...");
+
                 generalFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration.Deserialize();
                 loggerThread = new Thread(new ThreadStart(this.LoggerThreadFunction));
                 loggerThread.IsBackground = true;
                 loggerThread.Start();
 
-                LogMessage("The TDM Service logger has been started.");
+                LogMessage("The LDS logger has been started.");
             }
             catch (Exception ex)
             {
-                LogMessage("Error in starting TDM Service logger thread function. TDM Service cannot be started. " + ex.ToString());
+                LogMessage("Error in starting LDS logger thread function. LDS cannot be started. " + ex.ToString());
             }
 
             try
@@ -123,9 +127,6 @@ namespace VaaaN.MLFF.WindowsServices
                 vehicleClasses = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAllAsCollection();
                 tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
 
-                listUpdaterThread = new Thread(new ThreadStart(this.ListUpdatingThreadFunction));
-                listUpdaterThread.IsBackground = true;
-                listUpdaterThread.Start();
                 LogMessage("Required collections has been accessed.");
             }
             catch (Exception ex)
@@ -135,11 +136,30 @@ namespace VaaaN.MLFF.WindowsServices
 
             try
             {
-                LogMessage("Creating reference for SMS queue...");
+                LogMessage("Starting collection updater thread...");
+
+                collectionUpdaterThread = new Thread(new ThreadStart(this.CollectionUpdatingThreadFunction));
+                collectionUpdaterThread.IsBackground = true;
+                collectionUpdaterThread.Start();
+
+                LogMessage("Collection updater thread has been started.");
+
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Exception in starting collection updater thread. " + ex.ToString());
+            }
+
+            try
+            {
+                LogMessage("Creating reference for required MSMMQs...");
 
                 this.smsMessageQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.smsMessageQueue);
+                this.eventQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.eventQueue);
+                this.failedQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueNameIKE);
+                this.failedQueueANPR = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueNameANPR);
 
-                LogMessage("Reference for SMS queue has been created successfully.");
+                LogMessage("Reference for MSMQs has been created successfully.");
             }
             catch (Exception ex)
             {
@@ -148,53 +168,47 @@ namespace VaaaN.MLFF.WindowsServices
 
             try
             {
-                LogMessage("Creating reference for event queue queue...");
+                LogMessage("Trying to start LDS...");
 
-                this.eventQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.eventQueue);
-
-                LogMessage("Reference for event queue has been created successfully.");
-            }
-            catch (Exception ex)
-            {
-                LogMessage("Failed to create reference for event queue. " + ex.Message);
-            }
-
-            try
-            {
-                LogMessage("Trying to start LDS service...");
                 #region IKE Queue
                 try
                 {
+                    LogMessage("Attaching listener to inbox queue (IKE)...");
+
                     this.inBoxQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.inBoxQueueNameIKE);
                     inBoxQueueIKE.PeekCompleted += new PeekCompletedEventHandler(InBoxQueueIKE_PeekCompleted);
                     inBoxQueueIKE.BeginPeek();
-                    this.failedQueueIKE = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueNameIKE);
+
+                    LogMessage("Inbox queue listener (IKE) has been attached.");
                 }
                 catch (Exception)
                 {
-
                     throw;
                 }
                 #endregion
+
                 #region ANPR Queue
                 try
                 {
+                    LogMessage("Attaching listener to inbox queue (ANPR)...");
+
                     this.inBoxQueueANPR = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.inBoxQueueNameANPR);
                     inBoxQueueANPR.PeekCompleted += new PeekCompletedEventHandler(InBoxQueueANPR_PeekCompleted);
                     inBoxQueueANPR.BeginPeek();
-                    this.failedQueueANPR = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueNameANPR);
+
+                    LogMessage("Inbox queue listener (ANPR) has been attached.");
                 }
                 catch (Exception)
                 {
-
                     throw;
                 }
                 #endregion
+
                 LogMessage("LDS service started successfully.");
             }
             catch (Exception ex)
             {
-                LogMessage("Failed to start LDS service." + ex.Message);
+                LogMessage("Failed to start LDS. " + ex.Message);
             }
         }
 
@@ -205,23 +219,19 @@ namespace VaaaN.MLFF.WindowsServices
                 inBoxQueueIKE.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueueIKE_PeekCompleted);
                 inBoxQueueANPR.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueueANPR_PeekCompleted);
 
-                stopListUpdatingThread = true;
+                stopCollectionUpdatingThread = true;
                 Thread.Sleep(2000);
-                if (listUpdaterThread != null)
+                if (collectionUpdaterThread != null)
                 {
-                    if (listUpdaterThread.IsAlive == true)
+                    if (collectionUpdaterThread.IsAlive == true)
                     {
-                        listUpdaterThread.Abort();
+                        collectionUpdaterThread.Abort();
                     }
                 }
             }
             catch (Exception ex)
             {
-                LogMessage("Failed to process OnStop..." + ex.Message);
-            }
-            finally
-            {
-                base.OnStop();
+
             }
 
             try
@@ -240,28 +250,29 @@ namespace VaaaN.MLFF.WindowsServices
             {
 
             }
+
+            base.OnStop();
         }
 
         void InBoxQueueIKE_PeekCompleted(object sender, PeekCompletedEventArgs e)
         {
             bool receiveRecord = false;
-            Stopwatch sw = new Stopwatch();
             MessageQueue mq = (MessageQueue)sender;
 
             try
             {
-                sw.Start();
-
                 Message m = (Message)mq.EndPeek(e.AsyncResult);
                 m.Formatter = new BinaryMessageFormatter();
-                LogMessage("Processing InBoxQueue message.");
+
+                LogMessage("Going to process InBoxQueue(IKE) message...");
 
                 ProcessQueueMessageIKE(m);
+
                 receiveRecord = true;
             }
             catch (Exception ex)
             {
-                LogMessage("Error in peeking inbox queue. " + ex.ToString());
+                LogMessage("Error in peeking inbox(IKE) queue. " + ex.ToString());
                 receiveRecord = false;
             }
             finally
@@ -269,7 +280,6 @@ namespace VaaaN.MLFF.WindowsServices
                 //if (receiveRecord)
                 //{
                 mq.Receive();
-                sw.Stop();
                 //}
                 //else
                 //{
@@ -277,30 +287,28 @@ namespace VaaaN.MLFF.WindowsServices
                 //}
 
                 inBoxQueueIKE.BeginPeek();
-
             }
         }
 
         void InBoxQueueANPR_PeekCompleted(object sender, PeekCompletedEventArgs e)
         {
             bool receiveRecord = false;
-            Stopwatch sw = new Stopwatch();
             MessageQueue mq = (MessageQueue)sender;
 
             try
             {
-                sw.Start();
-
                 Message m = (Message)mq.EndPeek(e.AsyncResult);
                 m.Formatter = new BinaryMessageFormatter();
-                LogMessage("Processing InBoxQueue message.");
+
+                LogMessage("Going to process InBoxQueue(ANPR) message...");
 
                 ProcessQueueMessageANPR(m);
+
                 receiveRecord = true;
             }
             catch (Exception ex)
             {
-                LogMessage("Error in peeking inbox queue. " + ex.ToString());
+                LogMessage("Error in peeking inbox(ANPR) queue. " + ex.ToString());
                 receiveRecord = false;
             }
             finally
@@ -308,7 +316,6 @@ namespace VaaaN.MLFF.WindowsServices
                 //if (receiveRecord)
                 //{
                 mq.Receive();
-                sw.Stop();
                 //}
                 //else
                 //{
@@ -321,7 +328,6 @@ namespace VaaaN.MLFF.WindowsServices
         #endregion
 
         #region Helper Methods
-
         private void ProcessQueueMessageIKE(Message m)
         {
             if (m != null)
@@ -432,17 +438,19 @@ namespace VaaaN.MLFF.WindowsServices
 
                                         //does recent transactions contains this tag? it may be reported repetatively. 
                                         //check in tbl_crosstalk_packet's most recent transactions of the same plaza
+
                                         #region Check in recent crosstalk packets
-                                        LogMessage("Checking already inserted..." + ctp.PlazaId + ", " + ctp.ObjectId + ", " + ctp.TimeStamp);
+                                        LogMessage("Checking tag has been already inserted..." + ctp.PlazaId + ", " + ctp.ObjectId + ", " + ctp.TimeStamp);
                                         if (!DoesExistInRecentCrossTalkPackets(ctp.PlazaId, ctp.ObjectId, Convert.ToDateTime(ctp.TimeStamp)))
                                         {
-                                            #region Step 2: Send to local database
+                                            #region Send to local database
                                             try
                                             {
-
                                                 LogMessage("Sending crosstalk packet to local database. " + ctp.ObjectId);
+
                                                 ctpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.Insert(ctp);
                                                 ikeRecentDataList.Add(new IkePktData { PktId = ctpEntryId, PacketTimeStamp = Convert.ToDateTime(ctp.TimeStamp), VehicleClassId = associatedCVCT.VehicleClassId, ObjectId = ctp.ObjectId, PlazaId = ctp.PlazaId, currentDateTime = DateTime.Now });
+
                                                 LogMessage("Crosstalk packet inserted successfully.");
                                             }
                                             catch (Exception ex)
@@ -472,7 +480,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             DateTime ctpDateTime = Convert.ToDateTime(ctp.TimeStamp);
                                             LogMessage("Search criteria: " + ctp.TMSId + ", " + ctp.PlazaId + ", " + ctpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + ", " + associatedCVCT.VehRegNo);
                                             //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans1 = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(ctp.TMSId, ctp.PlazaId, ctpDateTime, associatedCVCT.VehRegNo);
-                                            TranscationDataFilterList = GetassociatedData(ctp.TMSId, ctp.PlazaId, ctpDateTime, associatedCVCT.VehRegNo, "ANPR");
+                                            TranscationDataFilterList = GetAssociatedData(ctp.TMSId, ctp.PlazaId, ctpDateTime, associatedCVCT.VehRegNo, "ANPR");
                                             if (TranscationDataFilterList.Count > 0)
                                             {
                                                 if (TranscationDataFilterList.Count == 1)
@@ -498,7 +506,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         LogMessage("IKE Transcation Updated successfully.");
                                                         #endregion
 
-                                                        #region Get vehicle class matced to VRN front and rear
+                                                        #region Get vehicle class matched to VRN front and rear
                                                         //VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfPacketFront;
                                                         //VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfPacketRear;
                                                         Int32 vehicleClassIdFront = -1;
@@ -626,7 +634,7 @@ namespace VaaaN.MLFF.WindowsServices
                     }
                     else
                     {
-                        LogMessage("Current object is not valid packet. " + m.Body.ToString());
+                        LogMessage("Current object is not valid crosstalk packet. " + m.Body.ToString());
                     }
                     #endregion
                 }
@@ -640,6 +648,7 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("Message is null.");
             }
         }
+
         private void ProcessQueueMessageANPR(Message m)
         {
             if (m != null)
@@ -680,7 +689,7 @@ namespace VaaaN.MLFF.WindowsServices
                                     {
                                         LogMessage("Trying to update TMSId, CreationDate etc. in nodeflux packet..");
                                         nfp.TMSId = currentTMSId;
-                                        //nfp.TimeStamp = ConversionDateTime(nfp.TimeStamp.ToString(), "nodeflux");
+                                        //nfp.TimeStamp = ConversionDateTime(nfp.TimeStamp.ToString(), "nodeflux"); //already updated in WebAPI
                                         LogMessage("Camera id is: " + nfp.CameraId);
 
                                         //in case of nodeflux not giving lane id and plaza id peek laneid and plazaid by hardwareid. 
@@ -779,8 +788,8 @@ namespace VaaaN.MLFF.WindowsServices
                                         #region Send to local nodeflux database
                                         try
                                         {
-
                                             LogMessage("VRN is blank. Sending to local nodeflux table...");
+
                                             nfpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.Insert(nfp);
 
                                             LogMessage("Nodeflux record with blank VRN inserted successfully.");
@@ -792,10 +801,12 @@ namespace VaaaN.MLFF.WindowsServices
 
                                             try
                                             {
-                                                LogMessage("Trying to send to failed queue...");
+                                                LogMessage("Trying to send nodeflux packet to failed queue...");
+
                                                 m.Recoverable = true;
                                                 failedQueueANPR.Send(m);
-                                                LogMessage("Message sent to failed queue.");
+
+                                                LogMessage("Message sent nodflux packet to failed queue.");
                                             }
                                             catch (Exception exc)
                                             {
@@ -834,7 +845,7 @@ namespace VaaaN.MLFF.WindowsServices
                                     else if (!DoesExistInRecentNodeFluxPackets(nfp.GantryId, nfp.PlateNumber, Convert.ToDateTime(nfp.TimeStamp), Convert.ToInt32(nfp.CameraPosition)))
                                     {
                                         #region ANPR Data Found 
-                                        LogMessage("Does not exist in local nodeflux table.");
+                                        LogMessage("Does not exist in local nodeflux list.");
 
                                         #region Send to local nodeflux database
                                         try
@@ -878,7 +889,7 @@ namespace VaaaN.MLFF.WindowsServices
 
                                             LogMessage("Search criteria: " + nfp.TMSId + ", " + nfp.GantryId + ", " + nfpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + " " + nfp.PlateNumber);
                                             //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedCrossTalkTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInCrossTalk(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
-                                            TranscationDataFilterList = GetassociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "IKE");
+                                            TranscationDataFilterList = GetAssociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "IKE");
                                             #endregion
 
                                             if (TranscationDataFilterList.Count > 0)
@@ -1010,7 +1021,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     LogMessage("VRN exists but no associated crosstalk transaction found in transaction table. Checking associated nodeflux transaction...");
 
                                                     //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
-                                                    TranscationDataFilterList = GetassociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
+                                                    TranscationDataFilterList = GetAssociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
                                                     if (TranscationDataFilterList.Count > 0)
                                                     {
                                                         #region Update Tran Table if ANPR found
@@ -1108,7 +1119,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 LogMessage("VRN not exists. Checking associated nodeflux transaction...");
 
                                                 //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
-                                                TranscationDataFilterList = GetassociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
+                                                TranscationDataFilterList = GetAssociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
                                                 if (TranscationDataFilterList.Count > 0)
                                                 {
                                                     #region Associate ANPR Found
@@ -1485,27 +1496,30 @@ namespace VaaaN.MLFF.WindowsServices
             bool result = false;
             try
             {
+                LogMessage("Checking in recent crosstalk list...");
 
+                //VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkPacketCollection ctPackets = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.GetRecent(plazaId, tagId, tagReportingTime);
+
+                //foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkPacketCBE ctp in ctPackets)
+                //{
+                //    if (ctp.ObjectId.ToLower() == tagId.ToLower())
+                //    {
+                //        result = true;
+                //        break;
+                //    }
+                //}
+
+                //the above code has been commented and the following code is used for efficiency
                 if (ikeRecentDataList.Any(e => (e.PlazaId == plazaId && e.ObjectId == tagId && e.PacketTimeStamp > tagReportingTime.AddMinutes(-1))))
                 {
                     result = true;
                 }
                 //ikeRecentDataList.Any(x => (x.PlazaId == plazaId && x.ObjectId = tagId));
-                // ikeRecentDataList.Select(x => x.ObjectId= tagId && x.PlazaId=plazaId);
-                //    VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkPacketCollection ctPackets = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.GetRecent(plazaId, tagId, tagReportingTime);
-
-                //    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkPacketCBE ctp in ctPackets)
-                //    {
-                //        if (ctp.ObjectId.ToLower() == tagId.ToLower())
-                //        {
-                //            result = true;
-                //            break;
-                //        }
-                //    }
+                //ikeRecentDataList.Select(x => x.ObjectId= tagId && x.PlazaId=plazaId);               
             }
             catch (Exception ex)
             {
-                LogMessage("Exception in finding recent crosstalk packets." + ex.Message);
+                LogMessage("Exception in finding recent crosstalk packets. " + ex.Message);
                 result = false;
             }
             return result;
@@ -1516,11 +1530,7 @@ namespace VaaaN.MLFF.WindowsServices
             bool result = false;
             try
             {
-
-                if (ANPRRecentDataList.Any(e => (e.PlazaId == plazaId && e.VRN == vrn && e.cameraPosition == cameraPosition && e.PacketTimeStamp > nodeFluxReportingTime.AddMinutes(-1))))
-                {
-                    result = true;
-                }
+                LogMessage("Checking in recent nodeflux list...");
                 //VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCollection nfPackets = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.GetRecent(plazaId, vrn, nodeFluxReportingTime, cameraPosition);
 
                 //foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfp in nfPackets)
@@ -1531,10 +1541,16 @@ namespace VaaaN.MLFF.WindowsServices
                 //        break;
                 //    }
                 //}
+
+                //the above code has been commented and the following code is used for efficiency
+                if (ANPRRecentDataList.Any(e => (e.PlazaId == plazaId && e.VRN == vrn && e.cameraPosition == cameraPosition && e.PacketTimeStamp > nodeFluxReportingTime.AddMinutes(-1))))
+                {
+                    result = true;
+                }
             }
             catch (Exception ex)
             {
-                LogMessage("Exception in finding recent nodeflux packets." + ex.Message);
+                LogMessage("Exception in finding recent nodeflux packets. " + ex.Message);
                 result = false;
             }
             return result;
@@ -1560,7 +1576,7 @@ namespace VaaaN.MLFF.WindowsServices
             }
             catch (Exception ex)
             {
-                LogMessage("Failed to get toll rate." + ex.Message);
+                LogMessage("Failed to get toll rate. " + ex.Message);
                 result = -1;
             }
 
@@ -1793,33 +1809,28 @@ namespace VaaaN.MLFF.WindowsServices
             return result;
         }
 
-
-        public List<TranscationData> GetassociatedData(Int32 tmsId, Int32 plazaId, DateTime timestamp, string Vrn, string pktType)
+        public List<TranscationData> GetAssociatedData(Int32 tmsId, Int32 plazaId, DateTime timestamp, string vrn, string pktType)
         {
             if (pktType.ToLower() == "ike")
             {
-                return TranscationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == Vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30)) && trans.IKEId > 0).ToList();
+                return TranscationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30)) && trans.IKEId > 0).ToList();
             }
             else if (pktType.ToLower() == "anpr")
             {
-                return TranscationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == Vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30)) && (trans.AnprFId > 0 || trans.AnprRId > 0)).ToList();
+                return TranscationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30)) && (trans.AnprFId > 0 || trans.AnprRId > 0)).ToList();
             }
-            else {
-                return TranscationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == Vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30))).ToList();
+            else
+            {
+                return TranscationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30))).ToList();
             }
         }
-
 
         public List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE> FilterToolRate(int plazaId, int laneType, DateTime transactionTime, int vehicleClass)
         {
             return tollRates.Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>().Where(trans => (trans.PlazaId == plazaId && trans.LaneTypeId == laneType && trans.VehicleClassId == vehicleClass)).ToList();
             //return tollRates.Cast<List>.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == Vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30))).ToList();
         }
-
-
-
         #endregion
-
 
         public Double CalculateSpeed(DateTime StartTime, DateTime EndTime)
         {
@@ -1844,6 +1855,40 @@ namespace VaaaN.MLFF.WindowsServices
             }
             return Math.Round(3.6 * Speed);
         }
+
+        private void CollectionUpdatingThreadFunction()
+        {
+            //for the time being we can ignore deleted records
+            while (!stopCollectionUpdatingThread)
+            {
+                try
+                {
+                    customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsCollection();
+                    customerVehicles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsCollection();
+                    hardwares = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetAll();
+                    tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
+                    //get customers and customer vehicles where modificationdate >  lastListUpdateTime (consider insert and delete both)
+                    //update customer collection (add if new record found in database, remove if deleted record found in database
+                    //update customer vehicle collection (add if new record found in database, remove if deleted record found in database
+                    ikeRecentDataList.RemoveAll(e => e.currentDateTime < DateTime.Now.AddMinutes(-3));
+                    ANPRRecentDataList.RemoveAll(e => e.currentDateTime < DateTime.Now.AddMinutes(-3));
+                    TranscationDataList.RemoveAll(e => e.CurrentDateTime < DateTime.Now.AddMinutes(-3));
+                }
+
+                catch (Exception ex)
+                {
+                    LogMessage("Exception in ListUpdatingThreadFunction(). " + ex.ToString());
+                }
+                finally
+                {
+                    lastListUpdateTime = System.DateTime.Now; //<==========================important
+                    Thread.Sleep(2000);
+                }
+
+            }
+
+        }
+
 
         #region Service Logger
         private void LogMessage(String message)
@@ -1883,39 +1928,6 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
         #endregion
-
-        private void ListUpdatingThreadFunction()
-        {
-            //for the time being we can ignore deleted records
-            while (!stopListUpdatingThread)
-            {
-                try
-                {
-                    customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsCollection();
-                    customerVehicles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsCollection();
-                    hardwares = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetAll();
-                    tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
-                    //get customers and customer vehicles where modificationdate >  lastListUpdateTime (consider insert and delete both)
-                    //update customer collection (add if new record found in database, remove if deleted record found in database
-                    //update customer vehicle collection (add if new record found in database, remove if deleted record found in database
-                    ikeRecentDataList.RemoveAll(e => e.currentDateTime < DateTime.Now.AddMinutes(-3));
-                    ANPRRecentDataList.RemoveAll(e => e.currentDateTime < DateTime.Now.AddMinutes(-3));
-                    TranscationDataList.RemoveAll(e => e.CurrentDateTime < DateTime.Now.AddMinutes(-3));
-                }
-
-                catch (Exception ex)
-                {
-                    LogMessage("Exception in ListUpdatingThreadFunction(). " + ex.ToString());
-                }
-                finally
-                {
-                    lastListUpdateTime = System.DateTime.Now; //ç==========================important
-                    Thread.Sleep(2000);
-                }
-
-            }
-
-        }
     }
 
     public class TagStructure
