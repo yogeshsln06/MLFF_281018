@@ -61,7 +61,7 @@
                 var token = "";
                 if (item.AccountId > 0)
                 {
-                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "CustomerVehicleEdit", Convert.ToString(item.EntryId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("POS", "CustomerVehicleEdit", Convert.ToString(item.EntryId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
                 }
                 <tr>
                     <td>
@@ -79,7 +79,7 @@
                         @Html.DisplayFor(modelItem => item.VehicleClassName)
                     </td>
                     <td>
-                        <a class="edit" href="@Url.Action("CustomerVehicleEdit", "Home", new { id = item.EntryId, urltoken = token })">
+                        <a class="edit" href="@Url.Action("CustomerVehicleEdit", "POS", new { id = item.EntryId, urltoken = token })">
                             <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
                         </a>
 
@@ -90,6 +90,6 @@
         </tbody>
     </table>
     <p style="padding-top:15px;">
-        <a href="~/Home/CustomerVehicleAdd" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Customer Vehicle</span></a>
+        <a href="~/POS/CustomerVehicleAdd" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Customer Vehicle</span></a>
     </p>
 </div>

@@ -153,6 +153,7 @@ position: relative;
     }
     table.table td a.edit {
         color:#F19F4D;
+        cursor:pointer;
        
     }
     table.table td a.delete {

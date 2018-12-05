@@ -3,13 +3,13 @@
     ViewBag.Title = "Add Customer Vehicle";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
 }
-<script src="~/js/CustomerVehicle.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
        
         $("#buttonUserBack").click(function () {
             // Back to User List
-            location.href = "@Url.Action("CustomerVehicleList", "Home")";
+            location.href = "@Url.Action("CustomerVehicleList", "POS")";
         });
     });
 
@@ -35,7 +35,7 @@
     }
     input.notFound{background:#d9534f;color:white;}
 </style>
-
+<script src="~/js/CustomerVehicle.js"></script>
 <div class="grid-container">
     <div class="panel panel-info">
         <div class="panel-heading" style="background-color:rgb(64, 178, 205);">
@@ -43,9 +43,12 @@
 
         </div>
         <div class="panel-body">
-            @using (Html.BeginForm("CustomerVehicleAdd", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("CustomerVehicleAdd", "POS", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-            
+                <input type="hidden" id="hfVehicleImageFront" value="" />
+                <input type="hidden" id="hfVehicleImageRear" value="" />
+                    <input type="hidden" id="hfVehicleImageLeftSide" value="" />
+                    <input type="hidden" id="hfVehicleImageRightSide" value="" />
                 <div class="row">
                     <form role="form">
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
@@ -64,12 +67,12 @@
                             <button type="button" class="form-control btn btn-primary btn-sm" onclick="btnSearchUser()" id="searchCust">Find Customer</button>
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleClassId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass</label>
-                            @Html.DropDownList("VehicleClassId", (IEnumerable<SelectListItem>)ViewBag.vehicleclassList, new { @class = "form-control" })
+                            <label for="VehRegNo" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo</label>
+                            @Html.EditorFor(model => model.VehRegNo, new { htmlAttributes = new { @maxlength = "9", @class = "form-control", placeholder = "Vehicle Reg No", onkeydown = "GetTagId();" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehRegNo" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo</label>
-                            @Html.EditorFor(model => model.VehRegNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Reg No" } })
+                            <label for="VehicleClassId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass</label>
+                            @Html.DropDownList("VehicleClassId", (IEnumerable<SelectListItem>)ViewBag.vehicleclassList, new { @class = "form-control", onchange = "GetTagId();" })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
                             <label for="TagId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.TagId</label>
@@ -142,22 +145,22 @@
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
                             <label for="VehicleImageFront" class="form-label required">Front Image</label>
-                            <input name="FrontImage" id="FrontImage" type="file" />
+                            <input name="FrontImage" id="FrontImage" type="file"  accept="image/x-png,image/gif,image/jpeg" />
                             @*@Html.EditorFor(model => model.VehicleImageFront, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Front Image" } })*@
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleImageRear" class="form-label required">Rear Image</label>
-                            <input name="RearImage" id="RearImage" type="file" />
+                            <label for="VehicleImageRear" class="form-label required" >Rear Image</label>
+                            <input name="RearImage" id="RearImage" type="file"  accept="image/x-png,image/gif,image/jpeg" />
                             @*@Html.EditorFor(model => model.VehicleImageRear, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Rear Image" } })*@
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
                             <label for="VehicleImageRightSide" class="form-label required">Right Side Image</label>
-                            <input name="RightSideImage" id="RightSideImage" type="file" />
+                            <input name="RightSideImage" id="RightSideImage" type="file" accept="image/x-png,image/gif,image/jpeg "/>
                             @*@Html.EditorFor(model => model.VehicleImageRightSide, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Right Side Image" } })*@
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
                             <label for="VehicleImageLeftSide" class="form-label required">Left Side Image</label>
-                            <input name="LeftSideImage" id="LeftSideImage" type="file" />
+                            <input name="LeftSideImage" id="LeftSideImage" type="file" accept="image/x-png,image/gif,image/jpeg" />
                              @*@Html.EditorFor(model => model.VehicleImageLeftSide, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Left Side Image" } })*@
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
@@ -213,6 +216,9 @@
                             </th>
                             <th style='text-align:left'>
                                 Last Name
+                            </th>
+                            <th>
+                                eKTP
                             </th>
                             <th>
                                 Mobile No.

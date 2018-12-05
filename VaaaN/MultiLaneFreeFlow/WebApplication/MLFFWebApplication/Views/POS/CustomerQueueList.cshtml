@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>
 
 @{
-    ViewBag.Title = "Customer List";
+    ViewBag.Title = "Customer Queue List";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
 }
 
 <script src="~/scripts/jquery.dataTables.min.js"></script>
 <script src="~/scripts/dataTables.bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
-
+<link rel="stylesheet" type="text/css" href="~/css/jquery.datetimepicker.css" />
+<script src="~/js/jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#tableCustomer').dataTable({
@@ -25,7 +26,7 @@
     <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
         @{ int rowNo = 0; }
         <div class="panel-title new-title">
-            Customer List
+            Customer Queue
         </div>
 
     </div>
@@ -47,20 +48,25 @@
                     @Html.DisplayNameFor(model => model.EmailId)
                 </th>
                 <th>
-                    Balance
+                    eKTP
                 </th>
                 <th>
                     Status
                 </th>
-
                 <th>
                     Edit
                 </th>
+
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
+                var token = "";
+                if (item.AccountId > 0)
+                {
+                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("POS", "RegisterCustomerEdit", Convert.ToString(item.AccountId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                }
                 <tr>
                     <td>
                         @(rowNo += 1)
@@ -70,7 +76,6 @@
                         @Html.DisplayFor(modelItem => item.FirstName
                    )
                     </td>
-
                     <td>
                         @Html.DisplayFor(modelItem => item.MobileNo)
                     </td>
@@ -78,41 +83,262 @@
                         @Html.DisplayFor(modelItem => item.EmailId)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.AccountBalance)
+                        @Html.DisplayFor(modelItem => item.ResidentId)
                     </td>
                     <td>
-                        @*<a href="@Url.Action("CustomerTagList", "POS", new { id = item.AccountId })" title="Edit">Tag</a>*@
-                    @Html.DisplayFor(modelItem => item.QueueStatus)
-                    </td>
-                    <td>
-                        <a class="edit" href="#"><i class="fa fa-pencil-square-o" title="Edit"></i></a>
+                        @if (@item.QueueStatus == 1)
+                        {
+                            <a onclick="ChnageStatus(this);" data-AccountId="@item.AccountId.ToString()" data-QueueStatus="@item.QueueStatus.ToString()" class="edit">Open</a>
+                        }
+                        else if (@item.QueueStatus == 2)
+                        {
+                            <p>
+                                <a onclick="GetData(this);" data-AccountId="@item.AccountId.ToString()" data-QueueStatus="@item.QueueStatus.ToString()" class="edit">Arranged</a>
+                            </p>
+                        }
+                        else if (@item.QueueStatus == 3)
+                        {
+                            <p>
+                                Processed
+                            </p>
+                        }
+                        else {
+                            @Html.DisplayFor(modelItem => item.QueueStatus)
 
+                        }
+                    </td>
+                    <td>
+                        <a class="edit" href="@Url.Action("RegisterCustomerEdit", "POS", new { id = item.AccountId, urltoken = token,RefPage= "customerqueuelist" })">
+                            <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
+                        </a>
                     </td>
                 </tr>
 
             }
         </tbody>
     </table>
-
+    <div class="modal fade" tabindex="-1" id="CustomerQueueStatus"
+         data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">Customer Queue Process</h4>
+                    
+                </div>
+                <div class="modal-body" style="padding:0px">
+                    <div id="openstatus" style="display:none;">
+                        <div class="row">
+                            <div style="background:#fff">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="padding:6%">
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <label for="txtPlace" class="form-label">Appointment Place</label>
+                                            <input class="form-control" id="txtPlace" placeholder="Address" autofocus />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="txtDate" class="form-label">Appointment Date</label>
+                                            <input class="form-control" id="txtDate" readonly placeholder="When" />
+                                        </div>
+                                        <div class="form-group" style="display:none;">
+                                            <label for="txtAttendedby" class="form-label">Appointment With</label>
+                                            <input class="form-control" id="txtAttendedby" placeholder="Name" />
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <button class="btn  btn-primary" name="btnArranged" id="btnArranged" onclick="return Arranged();">Arranged</button>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 text-left">
+                                                <span id="errormsg" style="color:red; font-weight:bold;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="liststatus" style="display:none;">
+                        <div class="panel-body table-responsive">
+                            <table id="tableNodeFluxRear" class="table table-condensed table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th >
+                                            Appointment Location
+                                        </th>
+                                        <th>
+                                            Appointment Date
+                                        </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
-    $(window).on('load',function () {
-        //$('#module_6').removeClass('list-group-item list-group-item-info collapsed');
-        //$('#module_6').addClass('list-group-item list-group-item-info');
+        var accountId = 0;
+        var CustomerAppointmentId = 0;
+        var queueStatus = 0;
 
-        //$('#POSsubMenu').removeClass('list-group-submenu collapse');
-        //$('#POSsubMenu').addClass('list-group-submenu in');
+        $(document).ready(function () {
+            $("#hfAPIPath").val(JSON.parse('@Html.Raw(Json.Encode(ViewData["apiPath"]))'));
+            jQuery('#txtDate').datetimepicker({
+                format: 'm/d/Y H:i',
+                showSeconds: true,
+                step: 15,
+                disabledHours: [0, 01, 2, 3, 4, 5, 6, 7, 8, 18, 19, 20, 21, 22, 23, 24],
+            });
+            var d = new Date();
+            dd = d.getDate();
+            dd = dd > 9 ? dd : '0' + dd;
+            mm = (d.getMonth() + 1);
+            mm = mm > 9 ? mm : '0' + mm;
+            yy = d.getFullYear();
+            $("#txtDate").val(mm + '/' + dd + '/' + yy + " 09:00");
 
-        //$('#module_2').removeClass('list-group-item list-group-item-info');
-        //$('#module_2').addClass('list-group-item list-group-item-info collapsed');
+        });
 
-        //$('#AdminsubMenu').removeClass('list-group-submenu in');
-        //$('#AdminsubMenu').addClass('list-group-submenu collapse');
+        function ChnageStatus(ctrl) {
+            accountId = $(ctrl).attr("data-AccountId") || accountId;
+            queueStatus = $(ctrl).attr("data-QueueStatus") || queueStatus;
+            $('#CustomerQueueStatus').modal('show');
+            $('#liststatus').hide();
+            $('#openstatus').show();
+            //if (queueStatus == 1 || queueStatus == 2) {
+            //    $('#openstatus').show();
+            //}
+        }
+
+        function Arranged() {
+            $("#errormsg").text('')
+            var now = new Date();
+            if (accountId == 0) {
+                $("#errormsg").text('Record not selected.')
+                return false;
+            }
+            else if ($("#txtPlace").val() == '') {
+                $("#errormsg").text('Appointment Place must be fill.')
+                return false;
+            }
+            else if (new Date($("#txtDate").val()) <= new Date(now)) {
+                $("#errormsg").text('Appointment date must be future.')
+                return false;
+            }
+            var URL = '';
+            if (CustomerAppointmentId == 0)
+                URL = 'CreateCustomerAppointment';
+            else
+                URL = 'UpdateCustomerAppointment';
+
+            UpdateDatabase(URL);
+        }
+
+        function UpdateDatabase(URL) {
+            $('#loader').show();
+            var InputData = {
+                CustomerAppointmentId: CustomerAppointmentId,
+                AccountId: accountId,
+                AppointmentLocation: $('#txtPlace').val(),
+                AppointmentDate: $('#txtDate').val(),
+                AttendedbyId: 1
+            }
+            $.ajax({
+                type: "POST",
+                url: URL,
+                dataType: "JSON",
+                async: true,
+                data: JSON.stringify(InputData),
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    $('#loader').hide();
+                    if (result.Data == "Sucess") {
+                        $("#errormsg").css("color", "green")
+                        $("#errormsg").text('Appointment successfully created. popup will be automatically closed after two second');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    }
+                    else {
+                        $("#errormsg").text('somthing went wrong when trying to update the appointment.');
+                    }
+                },
+                error: function (x, e) {
+                    $('#loader').hide();
+                }
+
+            });
+        }
+
+        function GetData(ctrl) {
+            accountId = $(ctrl).attr("data-AccountId");
+            queueStatus = $(ctrl).attr("data-QueueStatus");
+            var InputData = {
+                CustomerAppointmentId: CustomerAppointmentId,
+                AccountId: accountId,
+                AppointmentLocation: $('#txtPlace').val(),
+                AppointmentDate: $('#txtDate').val(),
+                AttendedbyId: 1
+            }
+            $.ajax({
+                type: "POST",
+                url: "GetCustomerAppointmentList",
+                dataType: "JSON",
+                async: true,
+                data: JSON.stringify(InputData),
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    $('#loader').hide();
+                    $('#CustomerQueueStatus').modal('show');
+                    $('#openstatus').hide();
+                    $('#liststatus').show();
+                    var data = result.Data;
+                    var TR;
+                    $("#tableNodeFluxRear tbody:last-child").find('tr').remove();
+                    if (data.length > 0) {
+                        TR = '';
+                        for (var i = 0; i < data.length; i++) {
+                            TR = "<tr style='cursor:pointer;'><td >" + data[i].AppointmentLocation + "</td><td >" + formatDate(data[i].AppointmentDate) + "</td>" +
+                           "<td><i class='fa fa-pencil-square-o' aria-hidden='true' title='Edit' onclick=UpdateArrange(this,'" + data[i].CustomerAppointmentId + "')></i></td></tr>"
+                            $("#tableNodeFluxRear tbody:last-child").append(TR);
+
+                        }
+                    }
+                },
+                error: function (x, e) {
+                    $('#loader').hide();
+                }
+            });
+        }
+
+        function UpdateArrange(ctrl, id) {
+            var tr = $(ctrl).parent().parent();
+            $('#txtPlace').val($(tr).find("td:nth-child(1)").text());
+            $('#txtDate').val($(tr).find("td:nth-child(2)").text());
+            CustomerAppointmentId = id;
+            ChnageStatus();
+        }
+
+        function formatDate(myDate) {
+            var d = new Date(myDate);
+            dd = d.getDate();
+            dd = dd > 9 ? dd : '0' + dd;
+            mm = (d.getMonth() + 1);
+            mm = mm > 9 ? mm : '0' + mm;
+            yy = d.getFullYear();
+
+            HH = d.getHours();
+            HH = HH > 9 ? HH : '0' + HH;
+            MIN = (d.getMinutes());
+            MIN = MIN > 9 ? MIN : '0' + MIN;
 
 
-        //$('#module_6').css({ "background-color": "#00B4CE" });
-        //$('#module_6').css({ "font-weight": "bold" });
-        //$('#submodule_12').css({ "background-color": "#00B2aa" });
-        //$('#submodule_12').css({ "font-weight": "bold" });
-    });
+            return mm + '/' + dd + '/' + yy + ' ' + HH + ':' + MIN;
+        }
     </script>
 </div>
