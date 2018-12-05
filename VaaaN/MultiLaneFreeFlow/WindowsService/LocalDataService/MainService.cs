@@ -59,6 +59,8 @@ namespace VaaaN.MLFF.WindowsServices
         DateTime lastListUpdateTime = System.DateTime.MinValue;
 
         volatile Boolean stopListUpdatingThread = false;
+
+        VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration smsFileConfig;
         #endregion
 
         #region Constructor
@@ -1352,6 +1354,7 @@ namespace VaaaN.MLFF.WindowsServices
         {
             try
             {
+                smsFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration.Deserialize();
                 LogMessage("Trying to push SMS to MSMQ...");
 
                 Message smsMessage = new Message();
@@ -1362,10 +1365,33 @@ namespace VaaaN.MLFF.WindowsServices
                 string RechareDate = transaction.TransactionDateTime.AddDays(4).ToString("dd-MMM-yyyy") + " 23:59:59";
                 if (AfterDeduction > 0)
                 {
-                    smsDetail.SMSMessage = "Pelanggan Yth, telah dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp","") + " terhadap saldo SJBE anda atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di tempat " + GetPlazaNameById(transaction.PlazaId) + ". Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture).Replace("Rp", "") + " Ref: [" + transaction.TransactionId.ToString() + "]";
+                    string AFTERDEDUCTION = smsFileConfig.AFTERDEDUCTION;
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[tolltodeduct]", Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", ""));
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[vehregno]", customerVehicleInfo.VehRegNo);
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[transactiondatetime]", transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS));
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[plazaid]", GetPlazaNameById(transaction.PlazaId));
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[balance]", Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture).Replace("Rp", ""));
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("tid", transaction.TransactionId.ToString());
+                    if (AFTERDEDUCTION.Length > 160)
+                    {
+                        AFTERDEDUCTION = AFTERDEDUCTION.Substring(0, 149);
+                    }
+                    smsDetail.SMSMessage = AFTERDEDUCTION;// "Pelanggan Yth, telah dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", "") + " terhadap saldo SJBE anda atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di tempat " + GetPlazaNameById(transaction.PlazaId) + ". Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture).Replace("Rp", "") + " Ref: [" + transaction.TransactionId.ToString() + "]";
                 }
                 else {
-                    smsDetail.SMSMessage = "Pelanggan Yth, Saldo SJBE anda saat ini tidak mencukupi untuk dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", "") + " atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di Gantry - Medan Merdeka Barat 1. Silahkan melakukan pengisian ulang saldo SJBE anda sebelum " + RechareDate + ". Keterlambatan pengisian ulang saldo akan dikenakan denda sebesar Rp 1.000.000,00. Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse((AfterDeduction + tollToDeduct).ToString()).ToString("C", culture).Replace("Rp", "") + " Ref: [" + transaction.TransactionId.ToString() + "]";
+                    string NOTIFICATION = smsFileConfig.NOTIFICATION;
+                    NOTIFICATION = NOTIFICATION.Replace("[tolltodeduct]", Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", ""));
+                    NOTIFICATION = NOTIFICATION.Replace("[vehregno]", customerVehicleInfo.VehRegNo);
+                    NOTIFICATION = NOTIFICATION.Replace("[transactiondatetime]", transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS));
+                    NOTIFICATION = NOTIFICATION.Replace("[plazaid]", GetPlazaNameById(transaction.PlazaId));
+                    NOTIFICATION = NOTIFICATION.Replace("[recharedate]", RechareDate);
+                    NOTIFICATION = NOTIFICATION.Replace("[balance]", Decimal.Parse((AfterDeduction + tollToDeduct).ToString()).ToString("C", culture).Replace("Rp", ""));
+                    NOTIFICATION = NOTIFICATION.Replace("tid", transaction.TransactionId.ToString());
+                    if (NOTIFICATION.Length > 160)
+                    {
+                        NOTIFICATION = NOTIFICATION.Substring(0, 149);
+                    }
+                    smsDetail.SMSMessage = NOTIFICATION;//"Pelanggan Yth, Saldo SJBE anda saat ini tidak mencukupi untuk dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", "") + " atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di Gantry - Medan Merdeka Barat 1. Silahkan melakukan pengisian ulang saldo SJBE anda sebelum " + RechareDate + ". Keterlambatan pengisian ulang saldo akan dikenakan denda sebesar Rp 1.000.000,00. Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse((AfterDeduction + tollToDeduct).ToString()).ToString("C", culture).Replace("Rp", "") + " Ref: [" + transaction.TransactionId.ToString() + "]";
                 }
 
                 LogMessage(smsDetail.SMSMessage);
