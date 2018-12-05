@@ -46,6 +46,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Logger
             Report,
             WebDashboard,
             WebAPI,
+            MobileWebAPI,
             InboundSMS,
             MLFFWeb,
             POSController,
@@ -133,6 +134,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Logger
                     case ErrorLogModule.WebAPI:
                         {
                             path = CreateDirectory("WebAPI//") + dt.ToString("yyyy-MM-dd") + ".log";
+                            break;
+                        }
+                    case ErrorLogModule.MobileWebAPI:
+                        {
+                            path = CreateDirectory("MobileWebAPI//") + dt.ToString("yyyy-MM-dd") + ".log";
                             break;
                         }
                     case ErrorLogModule.InboundSMS:

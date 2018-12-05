@@ -36,6 +36,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.Insert(account);
         }
 
+        public static int InsertByMobile(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE account)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.InsertByMobile(account);
+        }
+
         public static void Update(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE account)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.Update(account);
@@ -65,6 +70,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static void UpdateBalance(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE account, Decimal amount)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.UpdateBalance(account, amount);
+        }
+
+        public static void UpdateQueueStatus(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE account)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.UpdateQueueStatus(account);
         }
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE GetCustomerById(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customer)

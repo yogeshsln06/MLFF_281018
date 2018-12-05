@@ -25,6 +25,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         public static char hardwareStatusMessageSeparator = '≠';
         public static string driveLetter = "C";
         public static string atmsConfigDirectory = driveLetter + @":\MLFF\Config\";
+        public static string CutomerDocuments = driveLetter + @":\MLFF\cutomerdocuments\";
         public static string companyLogoPath = driveLetter + @":\Freeflow\images\company_logo.jpg";
         public static string companyLogoPath2 = driveLetter + @":\Freeflow\images\company_logo2.jpg";
 
@@ -84,14 +85,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
             [Display(Name = "Reviewed Transaction")]
             Audited = 4,
-
-            //[Display(Name = "EVI & ANPR data missmatch")]
-            //EVI_ANPRMissMatch = 3,
-            //[Display(Name = "OCR Missing")]
-            //OCRMissing = 5,
-            //[Display(Name = "Un- Transaction")]
-            //Unaudited = 7,
-
         }
 
         public enum ManualReviewTransactionCategory
@@ -123,14 +116,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             [Display(Name = "UNIDENTIFIED REAR ALPR")]
             Undefined_RALPR = 8,
 
-
-            //[Display(Name = "EVI & ANPR data missmatch")]
-            //EVI_ANPRMissMatch = 3,
-            //[Display(Name = "OCR Missing")]
-            //OCRMissing = 5,
-            //[Display(Name = "Un- Transaction")]
-            //Unaudited = 7,
-
         }
 
 
@@ -156,23 +141,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
         }
 
-        //public static string[] TransactionCategoryName = new string[]
-        //{
-        //    "Select Transaction Category",//0
-        //    "Both EVI & ANPR",
-        //    "Only EVI",
-        //    "Only ANPR",
-        //    "EVI & ANPR Miss Match",
-        //    "EVI & ANPR Class Miss Match",
-        //    "OCR Missing"
-        //};
-
         public enum TransferStatus
         {
             NotTransferred = 1,
             Transferred,
             FailedToTransfer,
         }
+
+        public enum RegistrationThrough
+        {
+            WebApp = 1,
+            MobileApp
+        }
+        public enum isDocVerified
+        {
+            Verified = 1,
+            NotVerified
+        }
+
 
         /// <summary>
         ///SubmoduleActivity
@@ -1309,6 +1295,35 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             "TransJakarta"
         };
 
+        public class TagStructure
+        {
+            int classId = -1;
+            string vrn = string.Empty;
+
+            public Int32 ClassId
+            {
+                get
+                {
+                    return this.classId;
+                }
+                set
+                {
+                    this.classId = value;
+                }
+            }
+
+            public String VRN
+            {
+                get
+                {
+                    return this.vrn;
+                }
+                set
+                {
+                    this.vrn = value;
+                }
+            }
+        }
         #endregion
 
         #region Methods
@@ -1509,7 +1524,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
             try
             {
-               
+
 
                 DateTime currentStartDate = new DateTime();
                 DateTime currentEndDate = new DateTime();
@@ -1554,7 +1569,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
                     }
                 }
 
-                
+
             }
             catch (Exception ex)
             {
@@ -1563,6 +1578,76 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             }
 
             return currentTimeTollRates;
+        }
+        public static string VRNToByte(int vehicleClass, string vehicleRegistrationNumber)
+        {
+            try
+            {
+                string[] result = new string[12];
+                int index = 0;
+                result[index] = vehicleClass.ToString().PadLeft(2, '0');
+                index = index + 1;
+                string vrn = vehicleRegistrationNumber.ToUpper();
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(vrn);
+                string[] values = BitConverter.ToString(bytes).Split(new char[] { '-' });
+                for (int i = 0; i < values.Length; i++)
+                {
+                    result[index] = values[i];
+                    index = index + 1;
+                }
+                result[index] = "FC";
+                index = index + 1;
+                for (int j = index; j < 12; j++)
+                {
+                    result[j] = "00";
+                }
+                string finalResult = string.Empty;
+                for (int k = 0; k < 12; k++)
+                {
+                    finalResult = finalResult + result[k];
+                }
+                return finalResult;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public static TagStructure ParseEPC(string epcInput)
+        {
+            string epc = epcInput.Trim();
+            TagStructure result = null;
+            try
+            {
+                int classId = Convert.ToInt32(epc.Substring(0, 2));
+                string vrnPart = epc.Substring(2);
+                string temp1 = string.Empty;
+                List<byte> bytes = new List<byte>();
+
+                for (Int32 i = 0; i < vrnPart.Length; i = i + 2)
+                {
+                    temp1 = vrnPart[i].ToString() + vrnPart[i + 1].ToString();
+                    if (temp1 == "FC")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        bytes.Add(Convert.ToByte(temp1, 16));
+                    }
+                }
+                string vrn = System.Text.Encoding.ASCII.GetString(bytes.ToArray());
+                result = new TagStructure();
+                result.ClassId = classId;
+                result.VRN = vrn;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
 
         #endregion

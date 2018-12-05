@@ -95,7 +95,7 @@
     <Compile Include="BLL\CityBLL.cs" />
     <Compile Include="BLL\CustomerAccountBLL.cs" />
     <Compile Include="BLL\CrossTalkBLL.cs" />
-    <Compile Include="BLL\CustomerQueueBLL.cs" />
+    <Compile Include="BLL\CustomerAppointmentBLL.cs" />
     <Compile Include="BLL\CustomerVehicleBLL.cs" />
     <Compile Include="BLL\DistrictBLL.cs" />
     <Compile Include="BLL\NodeFluxBLL.cs" />
@@ -126,7 +126,7 @@
     <Compile Include="BLL\VehicleClassBLL.cs" />
     <Compile Include="CBE\CityCBE.cs" />
     <Compile Include="CBE\CrossTalkEvent.cs" />
-    <Compile Include="CBE\CustomerQueueCBE.cs" />
+    <Compile Include="CBE\CustomerAppointmentCBE.cs" />
     <Compile Include="CBE\DistrictCBE.cs" />
     <Compile Include="CBE\ProvinceCBE.cs" />
     <Compile Include="CBE\SubDistrictCBE.cs" />
@@ -181,7 +181,7 @@
     </Compile>
     <Compile Include="DAL\AccountHistoryDAL.cs" />
     <Compile Include="DAL\CityDAL.cs" />
-    <Compile Include="DAL\CustomerQueueDAL.cs" />
+    <Compile Include="DAL\CustomerAppointmentDAL.cs" />
     <Compile Include="DAL\DistrictDAL.cs" />
     <Compile Include="DAL\ProvinceDAL.cs" />
     <Compile Include="DAL\SubDistrictDAL.cs" />
@@ -233,6 +233,7 @@
     <Compile Include="XMLConfigurationClasses\CCTVConfiguration.cs" />
     <Compile Include="XMLConfigurationClasses\ECBConfiguration.cs" />
     <Compile Include="XMLConfigurationClasses\CSVFileConfiguration.cs" />
+    <Compile Include="XMLConfigurationClasses\SMSFileConfiguration.cs" />
     <Compile Include="XMLConfigurationClasses\GeneralConfiguration.cs" />
     <Compile Include="XMLConfigurationClasses\METConfiguration.cs" />
     <Compile Include="XMLConfigurationClasses\VMSConfiguration.cs" />

@@ -18,7 +18,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private Int32 modifierId;
         private DateTime modificationDate;
         private Int32 transferStatus;
-
+        private Int32 zipCode;
+        
         public int TmsId
         {
             get
@@ -136,6 +137,19 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
+        public int ZipCode
+        {
+            get
+            {
+                return this.zipCode;
+            }
+
+            set
+            {
+                this.zipCode = value;
+            }
+        }
+
         public SubDistrictCBE()
         {
             this.tmsId = 0;
@@ -147,6 +161,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.modifierId = 0;
             this.modificationDate = DateTime.Now;
             this.transferStatus = 0;
+            this.zipCode = 00000;
         }
         public override string ToString()
         {
@@ -160,6 +175,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("creationDate = " + this.creationDate + Environment.NewLine);
             sb.Append("modifierId = " + this.modifierId + Environment.NewLine);
             sb.Append("modificationDate = " + this.modificationDate + Environment.NewLine);
+            sb.Append("zipCode = " + this.zipCode + Environment.NewLine);
 
             return sb.ToString();
         }

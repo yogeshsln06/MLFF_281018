@@ -24,6 +24,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
             string userName = "demouser";
             string password = "e10adc3949ba59abbe56e057f20f883e";
             string sender = "IMS";
+            string dr_url = "http://103.119.145.130:5555/VaaaN/IndonesiaMLFFApi/ResponseSMS";
             // Andrew Tan mobile number 082246492815 (Indonesia)
 
             #endregion
@@ -38,7 +39,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
   "<password>" + password + "</password>" +
   "<priority>high</priority>" +
   "<sender>" + sender + "</sender>" +
-  "<dr_url></dr_url>" +
+  "<dr_url>" + dr_url + "</dr_url>" +
   "<allowduplicate>1</allowduplicate>" +
   "<data_packet>" +
   "<packet>" +

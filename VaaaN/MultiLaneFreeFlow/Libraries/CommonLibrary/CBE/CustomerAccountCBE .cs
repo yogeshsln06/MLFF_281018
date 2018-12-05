@@ -47,7 +47,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private Int32 nationality;
         private Nullable<DateTime> validUntil;
         private Int32 registartionThrough;
-        private Int32 queueStatus; 
+        private Int32 queueStatus;
+        private String userPassword;
 
         public CustomerAccountCBE()
         {
@@ -89,6 +90,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.validUntil = null;
             this.registartionThrough = 0;
             this.queueStatus = 0;
+            this.userPassword = string.Empty;
         }
 
         public Int32 TmsId
@@ -145,7 +147,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.adressLine1 = value; }
         }
        
-        [Display(Name = "AccountBalance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Account Balance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public Decimal AccountBalance
         {
             get { return this.accountBalance; }
@@ -193,6 +195,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.scannedDocsPath1 = value; }
         }
 
+        [Display(Name = "Document Verified")]
         public Int32 IsDocVerified
         {
             get { return this.isDocVerified; }
@@ -253,7 +256,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.scannedDocsPath4 = value;
             }
         }
-        [Display(Name = "Resident Id")]
+        [Display(Name = "eKTP")]//Resident Identity Number
         public int ResidentId
         {
             get
@@ -477,6 +480,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
+        [Display(Name = "Password")]
+        public string UserPassword
+        {
+            get { return this.userPassword; }
+            set { this.userPassword = value; }
+        }
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -518,8 +527,31 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("validUntil = " + this.validUntil + Environment.NewLine);
             sb.Append("registartionThrough = " + this.registartionThrough + Environment.NewLine);
             sb.Append("queueStatus = " + this.queueStatus + Environment.NewLine);
+            sb.Append("userPassword = " + this.userPassword + Environment.NewLine);
             return sb.ToString();
         }
+
+        /*
+Birthplace
+Birthdate
+Address
+RT/RW
+Kelurahan/Desa
+Kecamatan
+Kabupaten/Kota
+Postal Code
+Province
+Nationality
+Gender
+Marital Status
+Occupation
+Photo
+Mobile Phone Number
+Email Address
+Valid Until
+
+        
+        */
     }
 
     public class CustomerAccountCollection : CollectionBase

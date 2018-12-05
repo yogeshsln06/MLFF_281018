@@ -43,6 +43,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private String vehicleImageRightSide;
         private String vehicleImageLeftSide;
         private Int32 validUntil;
+        private Decimal accountBalance;
+        private Int32 registartionThrough;
+        private Int32 isDocVerified;
+        private Int32 queueStatus;
+        private String frontTID;
+        private String rearTID;
+
+
         public CustomerVehicleCBE()
         {
             this.tmsId = 0;
@@ -78,7 +86,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.vehicleImageRightSide = string.Empty;
             this.vehicleImageLeftSide = string.Empty;
             this.validUntil = 0;
-
+            this.accountBalance = 0;
+            this.registartionThrough = 1;
+            this.isDocVerified = 0;
+            this.queueStatus = 1;
+            this.frontTID = string.Empty;
+            this.rearTID = string.Empty;
         }
 
         public Int32 TMSId
@@ -113,7 +126,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Required]
-        [Display(Name ="VehicleRegNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "VehicleRegNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public String VehRegNo
         {
             get { return this.vehRegNo; }
@@ -227,7 +240,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.vehicleType = value;
             }
         }
-        
+
         public int VehicleCategory
         {
             get
@@ -444,6 +457,75 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
+        [Display(Name = "AccountBalance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        public Decimal AccountBalance
+        {
+            get { return this.accountBalance; }
+            set { this.accountBalance = value; }
+        }
+
+        [Display(Name = "Document Verified")]
+        public Int32 IsDocVerified
+        {
+            get { return this.isDocVerified; }
+            set { this.isDocVerified = value; }
+        }
+
+        [Display(Name = "Registartion Through")]
+        public int RegistartionThrough
+        {
+            get
+            {
+                return this.registartionThrough;
+            }
+
+            set
+            {
+                this.registartionThrough = value;
+            }
+        }
+        [Display(Name = "Queue Status")]
+        public int QueueStatus
+        {
+            get
+            {
+                return this.queueStatus;
+            }
+
+            set
+            {
+                this.queueStatus = value;
+            }
+        }
+
+        [Display(Name = "Front TID")]
+        public string FrontTID
+        {
+            get
+            {
+                return this.frontTID;
+            }
+
+            set
+            {
+                this.frontTID = value;
+            }
+        }
+
+        [Display(Name = "Rear TID")]
+        public string RearTID
+        {
+            get
+            {
+                return this.rearTID;
+            }
+
+            set
+            {
+                this.rearTID = value;
+            }
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -478,6 +560,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("VehicleImageRightSide = " + this.VehicleImageRightSide + Environment.NewLine);
             sb.Append("VehicleImageLeftSide = " + this.VehicleImageLeftSide + Environment.NewLine);
             sb.Append("validUntil = " + this.validUntil + Environment.NewLine);
+            sb.Append("accountBalance = " + this.accountBalance + Environment.NewLine);
+            sb.Append("isDocVerified = " + this.isDocVerified + Environment.NewLine);
+            sb.Append("queueStatus = " + this.queueStatus + Environment.NewLine);
+            sb.Append("registartionThrough = " + this.registartionThrough + Environment.NewLine);
+            sb.Append("frontTID = " + this.frontTID + Environment.NewLine);
+            sb.Append("rearTID = " + this.rearTID + Environment.NewLine);
             return sb.ToString();
         }
     }

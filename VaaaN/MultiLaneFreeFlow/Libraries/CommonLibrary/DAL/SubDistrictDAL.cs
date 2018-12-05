@@ -99,6 +99,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["MODIFICATION_DATE"] != DBNull.Value)
                         subDistrict.ModificationDate = Convert.ToDateTime(dt.Rows[i]["MODIFICATION_DATE"]);
 
+                    if (dt.Rows[i]["ZIP_CODE"] != DBNull.Value)
+                        subDistrict.ZipCode = Convert.ToInt32(dt.Rows[i]["ZIP_CODE"]);
+
 
                     subdistricts.Add(subDistrict);
                 }
