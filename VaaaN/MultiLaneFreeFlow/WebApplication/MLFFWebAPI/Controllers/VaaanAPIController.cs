@@ -858,7 +858,86 @@ namespace MLFFWebAPI.Controllers
 
             return response;
         }
+
+
         #endregion
+        #region API for Response SMS Data
+        [Route("VaaaN/IndonesiaMLFFApi/ResponseSMS")]
+        [HttpPost]
+        public HttpResponseMessage ResponseSMS(HttpRequestMessage request)
+        {
+            try
+            {
+                LogInboundSMS("===========Responce SMS (Start)=======");
+
+                #region Variables
+                string mobileNumber = "";
+                string referenceid = "";
+                string statuscode = "";
+                string transactionid = "";
+                DateTime messageReceiveTime = DateTime.Now;
+
+                #endregion
+
+                #region Read Inbound SMS XML Data
+                var doc = new XmlDocument();
+                try
+                {
+                    LogInboundSMS("XML Raw data: " + request.Content.ReadAsStringAsync().Result);
+
+                    string data = WebUtility.UrlDecode(request.Content.ReadAsStringAsync().Result);
+                    data = data.Replace("data=", "");
+
+                    LogInboundSMS("XML response: " + data);
+                    doc.LoadXml(data);
+                }
+                catch (Exception ex)
+                {
+                    LogInboundSMS("Failed to load xml document. : " + ex.Message);
+                }
+                #endregion
+
+
+
+                #region Parse XML
+                //try
+                //{
+                //    LogInboundSMS("Parsing XML data.");
+
+                //    xmlFile = new XmlNodeReader(doc);
+                //    ds.ReadXml(xmlFile);
+                //    dt = ds.Tables["mo_data"];
+                //    if (dt.Rows.Count > 0)
+                //    {
+                //        mobileNumber = dt.Rows[0]["msisdn"].ToString();
+                //        referenceid = dt.Rows[0]["reference_id"].ToString();
+                //        statuscode = dt.Rows[0]["status_code"].ToString();
+                //        transactionid = dt.Rows[0]["transaction_id"].ToString();
+                //    }
+
+                //    LogInboundSMS("XML parsed successfully.");
+                //}
+                //catch (Exception ex)
+                //{
+                //    LogInboundSMS("Failed to parse xml. : " + ex.Message);
+                //}
+                #endregion
+
+                #region Update delivery ststaus
+
+                // TODO
+                #endregion
+
+                LogInboundSMS("=========Responce message (Stop)=========");
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogging.SendErrorToText(ex);
+                LogInboundSMS("Error in API ResponseSMS : " + ex);
+            }
+
+            return response;
+        }
 
         #region Save Log 
         public void Log(String ExceptionMsg)
