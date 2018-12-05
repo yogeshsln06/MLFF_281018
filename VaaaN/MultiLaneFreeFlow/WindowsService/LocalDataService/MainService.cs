@@ -42,6 +42,7 @@ namespace VaaaN.MLFF.WindowsServices
         int ctpEntryId = 0;
         int nfpEntryId = 0;
         int currentTMSId = -1;
+        Double TotalDistance = 30;
 
         DateTime countStartTime = DateTime.MinValue;
         int motorCycleCount = 0;
@@ -56,12 +57,13 @@ namespace VaaaN.MLFF.WindowsServices
         List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE> TollRateFilteredList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>();
 
         VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration generalFileConfig;
+        VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration smsFileConfig;
 
         Thread collectionUpdaterThread;
 
         DateTime lastListUpdateTime = System.DateTime.MinValue;
 
-        volatile Boolean stopListUpdatingThread = false;
+        volatile Boolean stopCollectionUpdatingThread = false;
         #endregion
 
         #region Constructor
@@ -70,7 +72,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
             //tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
             //DateTime dt = DateTime.ParseExact("13/10/2018 23:24:25.111", "dd/MM/yyyy HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
@@ -91,7 +93,17 @@ namespace VaaaN.MLFF.WindowsServices
         #region Events
         protected override void OnStart(string[] args)
         {
+            try
+            {
+                generalFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration.Deserialize();
+                TotalDistance = Convert.ToDouble(generalFileConfig.Distance);
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Unable to get distance from : " + ex);
+            }
             currentTMSId = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GetCurrentTMSId();
+
 
             countStartTime = System.DateTime.Now;
             motorCycleCount = 0;
@@ -103,7 +115,7 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Starting LDS logger thread...");
 
-                generalFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration.Deserialize();
+
                 loggerThread = new Thread(new ThreadStart(this.LoggerThreadFunction));
                 loggerThread.IsBackground = true;
                 loggerThread.Start();
@@ -1863,7 +1875,7 @@ namespace VaaaN.MLFF.WindowsServices
             LogMessage("Calculate Speed Start Date Time : " + StartTime.ToString() + " End Date Time : " + EndTime.ToString());
             try
             {
-                int Distance = generalFileConfig.Distance;
+                Double Distance = TotalDistance;
                 LogMessage("Check Distance : " + Distance.ToString());
 
                 time = Math.Abs(((EndTime - StartTime).TotalSeconds));
