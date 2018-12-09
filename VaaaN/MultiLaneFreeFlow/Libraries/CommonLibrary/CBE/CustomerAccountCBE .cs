@@ -17,38 +17,52 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private String mobileNo;
         private String emailId;
         private String description;
-        private String adressLine1;
+        private String address;
+        private String fullAddress;
         private Decimal accountBalance;
         private Int32 balance;//New Balance For Recharge Amount
         private Int32 modifierId;
         private DateTime creationDate;
         private DateTime modificationDate;
         private String customerImagePath;
-        private String scannedDocsPath1;
         private Int32 isDocVerified;
         private Int32 accountStatus;
         private Int32 transferStatus;
-        private String scannedDocsPath2;
-        private String scannedDocsPath3;
-        private String scannedDocsPath4;
-        private Int32 residentId;
+        private String residentId;
         private String birthPlace;
         private Nullable<DateTime> birthDate;
-        private Int32 gender;
-        private String addressLine2;
-        private String addressLine3;
-        private Int32 districtId;
-        private Int32 subDistrictId;
-        private Int32 cityId;
+        private String rt;
+        private String rw;
+        private String rt_rw;
         private Int32 provinceId;
+        private string provinceName;
+        private Int32 cityId;
+        private string cityName;
+        private Int32 districtId;
+        private string districtName;
+        private Int32 subDistrictId;
+        private string subDistrictName;
         private Int32 postalCode;
-        private Int32 maritalStatus;
-        private String occupation;
         private Int32 nationality;
+        private string nationalityName;
+        private Int32 gender;
+        private string genderName;
+        private Int32 maritalStatus;
+        private string maritalStatusName;
+        private String occupation;
+        private String residentidcardimagePath;
         private Nullable<DateTime> validUntil;
         private Int32 registartionThrough;
-        private Int32 queueStatus;
         private String userPassword;
+        //private String adressLine1;
+        //private String scannedDocsPath1;
+        //private String scannedDocsPath2;
+        //private String scannedDocsPath3;
+        //private String scannedDocsPath4;
+        //private String addressLine2;
+        //private String addressLine3;
+        //private Int32 queueStatus;
+
 
         public CustomerAccountCBE()
         {
@@ -59,37 +73,40 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.mobileNo = String.Empty;
             this.emailId = string.Empty;
             this.description = String.Empty;
-            this.adressLine1 = String.Empty;
+            this.address = String.Empty;
             this.accountBalance = 0;
             this.Balance = 0;
             this.modifierId = 0;
             this.creationDate = DateTime.Now;
             this.modificationDate = DateTime.Now;
             this.customerImagePath = String.Empty;
-            this.scannedDocsPath1 = String.Empty;
             this.isDocVerified = 0;
             this.accountStatus = 0;
             this.transferStatus = 0;
-            this.scannedDocsPath2 = string.Empty;
-            this.scannedDocsPath3 = string.Empty;
-            this.scannedDocsPath4 = string.Empty;
-            this.residentId = 0;
+            this.residentId = string.Empty;
             this.birthPlace = String.Empty;
             this.birthDate = null;
-            this.gender = 0;
-            this.addressLine2 = string.Empty;
-            this.addressLine3 = string.Empty;
-            this.districtId = 0;
-            this.subDistrictId = 0;
-            this.cityId = 0;
+            this.rt = String.Empty;
+            this.rw = String.Empty;
             this.provinceId = 0;
+            this.provinceName = String.Empty;
+            this.cityId = 0;
+            this.cityName = String.Empty;
+            this.districtId = 0;
+            this.districtName = String.Empty;
+            this.subDistrictId = 0;
+            this.subDistrictName = String.Empty;
             this.postalCode = 0;
-            this.maritalStatus = 0;
-            this.occupation = string.Empty;
             this.nationality = 0;
+            this.nationalityName = String.Empty;
+            this.gender = 0;
+            this.genderName = String.Empty;
+            this.maritalStatus = 0;
+            this.maritalStatusName = String.Empty;
+            this.occupation = string.Empty;
+            this.residentidcardimagePath = string.Empty;
             this.validUntil = null;
             this.registartionThrough = 0;
-            this.queueStatus = 0;
             this.userPassword = string.Empty;
         }
 
@@ -106,13 +123,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Required]
-        [Display(Name ="FirstName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Name", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public String FirstName
         {
             get { return this.firstName; }
             set { this.firstName = value; }
         }
-      
+
         [Display(Name = "LastName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public String LastName
         {
@@ -141,13 +158,19 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
         [Display(Name = "Address", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [Required]
-        public String AddressLine1
+        public String Address
         {
-            get { return this.adressLine1; }
-            set { this.adressLine1 = value; }
+            get { return this.address; }
+            set { this.address = value; }
         }
-       
-        [Display(Name = "Account Balance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+
+        public String FullAddress
+        {
+            get { return this.fullAddress; }
+            set { this.fullAddress = value; }
+        }
+
+        [Display(Name = "AccountBalance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public Decimal AccountBalance
         {
             get { return this.accountBalance; }
@@ -182,18 +205,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.modificationDate; }
             set { this.modificationDate = value; }
         }
-        [Display(Name = "Customer Image")]
+
         public String CustomerImagePath
         {
             get { return this.customerImagePath; }
             set { this.customerImagePath = value; }
         }
-        [Display(Name = "Scanned Document")]
-        public String ScannedDocsPath1
-        {
-            get { return this.scannedDocsPath1; }
-            set { this.scannedDocsPath1 = value; }
-        }
+
+        [Display(Name = "Profile Image")]
+        public System.Web.HttpPostedFileBase CustomerImage { get; set; }
 
         [Display(Name = "Document Verified")]
         public Int32 IsDocVerified
@@ -213,51 +233,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.transferStatus; }
             set { this.transferStatus = value; }
         }
-        [Display(Name = "Customer Image")]
-        public System.Web.HttpPostedFileBase CustomerImage { get; set; }
-        [Display(Name = "Scanned Document")]
-        public System.Web.HttpPostedFileBase ScannedDocument { get; set; }
-        [Display(Name = "Document 2")]
-        public string ScannedDocsPath2
-        {
-            get
-            {
-                return this.scannedDocsPath2;
-            }
 
-            set
-            {
-                this.scannedDocsPath2 = value;
-            }
-        }
-        [Display(Name = "Document 3")]
-        public string ScannedDocsPath3
-        {
-            get
-            {
-                return this.scannedDocsPath3;
-            }
 
-            set
-            {
-                this.scannedDocsPath3 = value;
-            }
-        }
-        [Display(Name = "Document 4")]
-        public string ScannedDocsPath4
-        {
-            get
-            {
-                return this.scannedDocsPath4;
-            }
-
-            set
-            {
-                this.scannedDocsPath4 = value;
-            }
-        }
         [Display(Name = "eKTP")]//Resident Identity Number
-        public int ResidentId
+        public string ResidentId
         {
             get
             {
@@ -269,6 +248,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.residentId = value;
             }
         }
+
         [Display(Name = "Birth Place")]
         public string BirthPlace
         {
@@ -282,6 +262,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.birthPlace = value;
             }
         }
+
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Birth Date")]
         public Nullable<DateTime> BirthDate
@@ -297,83 +278,49 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        public int Gender
+        [Display(Name = "RT")]
+        public string RT
         {
             get
             {
-                return this.gender;
+                return this.rt;
             }
 
             set
             {
-                this.gender = value;
+                this.rt = value;
             }
         }
-        [Display(Name = "Address Line 2")]
-        public string AddressLine2
+
+        [Display(Name = "RW")]
+        public string RW
         {
             get
             {
-                return this.addressLine2;
+                return this.rw;
             }
 
             set
             {
-                this.addressLine2 = value;
+                this.rw = value;
             }
         }
-        [Display(Name = "Address Line 3")]
-        public string AddressLine3
+
+        [Display(Name = "RT/RW")]
+        public string RT_RW
         {
             get
             {
-                return this.addressLine3;
+                return this.rt_rw;
             }
 
             set
             {
-                this.addressLine3 = value;
+                this.rt_rw = value;
             }
         }
-        [Display(Name = "District")]
-        public int DistrictId
-        {
-            get
-            {
-                return this.districtId;
-            }
 
-            set
-            {
-                this.districtId = value;
-            }
-        }
-        [Display(Name = "Sub District")]
-        public int SubDistrictId
-        {
-            get
-            {
-                return this.subDistrictId;
-            }
 
-            set
-            {
-                this.subDistrictId = value;
-            }
-        }
-        [Display(Name = "City")]
-        public int CityId
-        {
-            get
-            {
-                return this.cityId;
-            }
-
-            set
-            {
-                this.cityId = value;
-            }
-        }
         [Display(Name = "Province")]
         public int ProvinceId
         {
@@ -387,6 +334,101 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.provinceId = value;
             }
         }
+
+        public string ProvinceName
+        {
+            get
+            {
+                return this.provinceName;
+            }
+
+            set
+            {
+                this.provinceName = value;
+            }
+        }
+
+        [Display(Name = "Kabupaten/Kota")]
+        public int CityId
+        {
+            get
+            {
+                return this.cityId;
+            }
+
+            set
+            {
+                this.cityId = value;
+            }
+        }
+
+        public string CityName
+        {
+            get
+            {
+                return this.cityName;
+            }
+
+            set
+            {
+                this.cityName = value;
+            }
+        }
+
+        [Display(Name = "Kecamatan")]
+        public int DistrictId
+        {
+            get
+            {
+                return this.districtId;
+            }
+
+            set
+            {
+                this.districtId = value;
+            }
+        }
+
+        public string DistrictName
+        {
+            get
+            {
+                return this.districtName;
+            }
+
+            set
+            {
+                this.districtName = value;
+            }
+        }
+
+        [Display(Name = "Kelurahan/Desa")]
+        public int SubDistrictId
+        {
+            get
+            {
+                return this.subDistrictId;
+            }
+
+            set
+            {
+                this.subDistrictId = value;
+            }
+        }
+
+        public string SubDistrictName
+        {
+            get
+            {
+                return this.subDistrictName;
+            }
+
+            set
+            {
+                this.subDistrictName = value;
+            }
+        }
+
         [Display(Name = "Postal Code")]
         public int PostalCode
         {
@@ -398,32 +440,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.postalCode = value;
-            }
-        }
-        [Display(Name = "Marital Status")]
-        public int MaritalStatus
-        {
-            get
-            {
-                return this.maritalStatus;
-            }
-
-            set
-            {
-                this.maritalStatus = value;
-            }
-        }
-
-        public string Occupation
-        {
-            get
-            {
-                return this.occupation;
-            }
-
-            set
-            {
-                this.occupation = value;
             }
         }
 
@@ -439,6 +455,100 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.nationality = value;
             }
         }
+
+        public string NationalityName
+        {
+            get
+            {
+                return this.nationalityName;
+            }
+
+            set
+            {
+                this.nationalityName = value;
+            }
+        }
+
+        public int Gender
+        {
+            get
+            {
+                return this.gender;
+            }
+
+            set
+            {
+                this.gender = value;
+            }
+        }
+        public string GenderName
+        {
+            get
+            {
+                return this.genderName;
+            }
+
+            set
+            {
+                this.genderName = value;
+            }
+        }
+
+        [Display(Name = "Marital Status")]
+        public int MaritalStatus
+        {
+            get
+            {
+                return this.maritalStatus;
+            }
+
+            set
+            {
+                this.maritalStatus = value;
+            }
+        }
+
+        public string MaritalStatusName
+        {
+            get
+            {
+                return this.maritalStatusName;
+            }
+
+            set
+            {
+                this.maritalStatusName = value;
+            }
+        }
+        public string Occupation
+        {
+            get
+            {
+                return this.occupation;
+            }
+
+            set
+            {
+                this.occupation = value;
+            }
+        }
+
+        public string ResidentidcardImagePath
+        {
+            get
+            {
+                return this.residentidcardimagePath;
+            }
+
+            set
+            {
+                this.residentidcardimagePath = value;
+            }
+        }
+
+        [Display(Name = "Resident Id Card Image")]
+        public System.Web.HttpPostedFileBase ResidentidImage { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Valid Until")]
         public Nullable<DateTime> ValidUntil
@@ -453,7 +563,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.validUntil = value;
             }
         }
-        [Display(Name = "Registartion Through")]
+
         public int RegistartionThrough
         {
             get
@@ -464,19 +574,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.registartionThrough = value;
-            }
-        }
-        [Display(Name = "Queue Status")]
-        public int QueueStatus
-        {
-            get
-            {
-                return this.queueStatus;
-            }
-
-            set
-            {
-                this.queueStatus = value;
             }
         }
 
@@ -497,61 +594,36 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("mobileNo = " + this.mobileNo + Environment.NewLine);
             sb.Append("emailId = " + this.emailId + Environment.NewLine);
             sb.Append("description = " + this.description + Environment.NewLine);
-            sb.Append("addressLine1 = " + this.adressLine1 + Environment.NewLine);
+            sb.Append("address = " + this.address + Environment.NewLine);
             sb.Append("accountBalance = " + this.accountBalance + Environment.NewLine);
             sb.Append("ModifierId = " + this.modifierId + Environment.NewLine);
             sb.Append("creationDate = " + this.creationDate + Environment.NewLine);
             sb.Append("modificationDate = " + this.modificationDate + Environment.NewLine);
             sb.Append("customerImagePath = " + this.customerImagePath + Environment.NewLine);
-            sb.Append("scannedDocsPath1 = " + this.scannedDocsPath1 + Environment.NewLine);
             sb.Append("isDocVerified = " + this.isDocVerified + Environment.NewLine);
             sb.Append("accountStatus = " + this.accountStatus + Environment.NewLine);
             sb.Append("transferStatus = " + this.transferStatus + Environment.NewLine);
-            sb.Append("scannedDocsPath2 = " + this.scannedDocsPath2 + Environment.NewLine);
-            sb.Append("scannedDocsPath3 = " + this.scannedDocsPath3 + Environment.NewLine);
-            sb.Append("scannedDocsPath4 = " + this.scannedDocsPath4 + Environment.NewLine);
             sb.Append("residentId = " + this.residentId + Environment.NewLine);
             sb.Append("birthPlace = " + this.birthPlace + Environment.NewLine);
             sb.Append("birthDate = " + this.birthDate + Environment.NewLine);
-            sb.Append("gender = " + this.gender + Environment.NewLine);
-            sb.Append("addressLine2 = " + this.addressLine2 + Environment.NewLine);
-            sb.Append("addressLine3 = " + this.addressLine3 + Environment.NewLine);
+            sb.Append("rt = " + this.rt + Environment.NewLine);
+            sb.Append("rw = " + this.rw + Environment.NewLine);
+            sb.Append("province = " + this.provinceId + Environment.NewLine);
+            sb.Append("city = " + this.cityId + Environment.NewLine);
             sb.Append("district = " + this.districtId + Environment.NewLine);
             sb.Append("subDistrict = " + this.subDistrictId + Environment.NewLine);
-            sb.Append("city = " + this.cityId + Environment.NewLine);
-            sb.Append("province = " + this.provinceId + Environment.NewLine);
             sb.Append("postalCode = " + this.postalCode + Environment.NewLine);
+            sb.Append("nationality = " + this.nationality + Environment.NewLine);
+            sb.Append("gender = " + this.gender + Environment.NewLine);
             sb.Append("maritalStatus = " + this.maritalStatus + Environment.NewLine);
             sb.Append("occupation = " + this.occupation + Environment.NewLine);
-            sb.Append("nationality = " + this.nationality + Environment.NewLine);
+            sb.Append("residentidcardimagePath = " + this.residentidcardimagePath + Environment.NewLine);
             sb.Append("validUntil = " + this.validUntil + Environment.NewLine);
             sb.Append("registartionThrough = " + this.registartionThrough + Environment.NewLine);
-            sb.Append("queueStatus = " + this.queueStatus + Environment.NewLine);
             sb.Append("userPassword = " + this.userPassword + Environment.NewLine);
             return sb.ToString();
         }
 
-        /*
-Birthplace
-Birthdate
-Address
-RT/RW
-Kelurahan/Desa
-Kecamatan
-Kabupaten/Kota
-Postal Code
-Province
-Nationality
-Gender
-Marital Status
-Occupation
-Photo
-Mobile Phone Number
-Email Address
-Valid Until
-
-        
-        */
     }
 
     public class CustomerAccountCollection : CollectionBase

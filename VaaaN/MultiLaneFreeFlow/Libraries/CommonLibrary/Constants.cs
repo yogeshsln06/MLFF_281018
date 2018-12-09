@@ -483,13 +483,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         {
             Male = 1,
             Female,
+            Other
 
         };
         public static string[] GenderName = new string[]
       {
             "Male",
             "Female",
-            "Processed"
+            "Other"
       };
         public enum MaritalStatus
         {
@@ -504,13 +505,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
       };
         public enum Nationality
         {
-            Indian = 1,
-            Indonesia,
+            Indonesia = 1
 
         };
         public static string[] NationalityName = new string[]
       {
-            "Single",
             "Indonesia"
       };
         public enum VehicleBrand
@@ -1648,6 +1647,21 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
                 throw ex;
             }
             return result;
+        }
+
+        public static string MobileNoPrefix(string MobileNo)
+        {
+            string MobileNoinital = string.Empty;
+            MobileNoinital = MobileNo.Replace("+", "").Substring(0, 2);
+            if (MobileNoinital.StartsWith("0"))
+            {
+                MobileNo = "62" + MobileNo.Substring(1, MobileNo.Length - 1);
+            }
+            else if (MobileNoinital != "62")
+            {
+                MobileNo = "62" + MobileNo;
+            }
+            return MobileNo;
         }
 
         #endregion
