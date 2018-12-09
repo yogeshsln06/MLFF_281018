@@ -1429,16 +1429,7 @@ namespace VaaaN.MLFF.WebApplication
 
                 if (!string.IsNullOrEmpty(customer.MobileNo))
                 {
-                    string MobileNoinital = string.Empty;
-                    MobileNoinital = customer.MobileNo.Substring(0, 2);
-                    if (MobileNoinital.StartsWith("0"))
-                    {
-                        customer.MobileNo = "62" + customer.MobileNo.Substring(1, customer.MobileNo.Length - 1);
-                    }
-                    else if (MobileNoinital != "62")
-                    {
-                        customer.MobileNo = "62" + customer.MobileNo;
-                    }
+                    customer.MobileNo = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MobileNoPrefix(customer.MobileNo);
 
                 }
                 if (string.IsNullOrEmpty(customer.Description))
@@ -1449,9 +1440,9 @@ namespace VaaaN.MLFF.WebApplication
                 {
                     customer.LastName = string.Empty;
                 }
-                if (string.IsNullOrEmpty(customer.AddressLine1))
+                if (string.IsNullOrEmpty(customer.Address))
                 {
-                    customer.AddressLine1 = string.Empty;
+                    customer.Address = string.Empty;
                 }
 
                 customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
@@ -1522,16 +1513,7 @@ namespace VaaaN.MLFF.WebApplication
 
                 if (!string.IsNullOrEmpty(customer.MobileNo))
                 {
-                    string MobileNo = customer.MobileNo;
-                    MobileNo = MobileNo.Substring(0, 2);
-                    if (MobileNo.StartsWith("0"))
-                    {
-                        customer.MobileNo = "62" + customer.MobileNo.Substring(1, customer.MobileNo.Length - 1);
-                    }
-                    else if (MobileNo != "62")
-                    {
-                        customer.MobileNo = "62" + customer.MobileNo;
-                    }
+                    customer.MobileNo = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MobileNoPrefix(customer.MobileNo);
 
                 }
                 if (string.IsNullOrEmpty(customer.Description))
@@ -1542,9 +1524,9 @@ namespace VaaaN.MLFF.WebApplication
                 {
                     customer.LastName = string.Empty;
                 }
-                if (string.IsNullOrEmpty(customer.AddressLine1))
+                if (string.IsNullOrEmpty(customer.Address))
                 {
-                    customer.AddressLine1 = string.Empty;
+                    customer.Address = string.Empty;
                 }
 
                 customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();

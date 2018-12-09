@@ -1,0 +1,214 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>
+
+@{
+    ViewBag.Title = "Customer List";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tableCustomer').dataTable({
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "searching": true
+        });
+    });
+    function openimage(ctrl) {
+        $("#myimage").attr('src', $(ctrl).find('img').attr('src'));
+        $("#imagediv").show();
+        $('#ImageData').modal('show');
+    }
+    function findAndReplace(string, target, replacement) {
+        var i = 0, length = string.length;
+        for (i; i < length; i++) {
+            string = string.replace(target, replacement);
+        }
+        return string;
+
+    }
+</script>
+
+
+<div class="panel panel-info">
+    <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
+        @{ int rowNo = 0; }
+        <div class="panel-title new-title">
+            Customer List
+        </div>
+
+    </div>
+    <div class="col-md-12 table-responsive" style="background-color: #fff;">
+        <table id="tableCustomer" class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th style="width:20px">
+                        No.
+                    </th>
+                    <th style="width:60px;text-align:left;">
+                        Name
+                    </th>
+                    <th style="width:60px;text-align:left;">
+                        @Html.DisplayNameFor(model => model.MobileNo)
+                    </th>
+                    <th style="width:180px;text-align:left;">
+                        @Html.DisplayNameFor(model => model.EmailId)
+                    </th>
+                    <th style="width:60px;text-align:left;">
+                        @Html.DisplayNameFor(model => model.ResidentId)
+                    </th>
+                    <th style="width:60px;text-align:left;">
+                        @Html.DisplayNameFor(model => model.BirthPlace)
+                    </th>
+                    <th style="width:60px;">
+                        @Html.DisplayNameFor(model => model.BirthDate)
+                    </th>
+                    <th style="width:60px">
+                        @Html.DisplayNameFor(model => model.RT_RW)
+                    </th>
+                    <th style="width:240px;text-align:left;">
+                        @Html.DisplayNameFor(model => model.Address)
+                    </th>
+                    <th style="width:60px">
+                        @Html.DisplayNameFor(model => model.Nationality)
+                    </th>
+                    <th style="width:60px">
+                        @Html.DisplayNameFor(model => model.Gender)
+                    </th>
+                    <th style="width:60px">
+                        @Html.DisplayNameFor(model => model.MaritalStatus)
+                    </th>
+                    <th style="width:60px">
+                        @Html.DisplayNameFor(model => model.Occupation)
+                    </th>
+                    <th style="width:60px">
+                        @Html.DisplayNameFor(model => model.ValidUntil)
+                    </th>
+                    <th style="width:60px">
+                        @Html.DisplayNameFor(model => model.CustomerImage)
+                    </th>
+                    <th style="width:60px">
+                        @Html.DisplayNameFor(model => model.ResidentidImage)
+                    </th>
+                    <th>
+                        Tags
+                    </th>
+                    <th>
+                        Edit
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var token = "";
+                    if (item.AccountId > 0)
+                    {
+                        token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("POS", "RegisterCustomerEdit", Convert.ToString(item.AccountId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                    }
+
+                    <tr>
+                        <td>
+                            @(rowNo += 1)
+                        </td>
+                        <td style="width:60px;text-align:left;">
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+
+                        <td style="width:60px;text-align:left;">
+                            @Html.DisplayFor(modelItem => item.MobileNo)
+                        </td>
+                        <td style="width:180px;text-align:left;">
+                            @Html.DisplayFor(modelItem => item.EmailId)
+                        </td>
+                        <td style="width:60px;text-align:left;">
+                            @Html.DisplayFor(modelItem => item.ResidentId)
+                        </td>
+                        <td style="width:60px;text-align:left;">
+                            @Html.DisplayFor(modelItem => item.BirthPlace)
+                        </td>
+                        <td style="width:60px;">
+                            @Html.DisplayFor(modelItem => item.BirthDate)
+                        </td>
+                        <td style="width:60px;">
+                            @Html.DisplayFor(modelItem => item.RT_RW)
+                        </td>
+                        <td style="width:240px;text-align:left;">
+                            @Html.DisplayFor(modelItem => item.FullAddress)
+                        </td>
+                        <td style="width:60px;text-align:left;">
+                            @Html.DisplayFor(modelItem => item.NationalityName)
+                        </td>
+                        <td style="width:60px;">
+                            @Html.DisplayFor(modelItem => item.GenderName)
+                        </td>
+                        <td style="width:60px;">
+                            @Html.DisplayFor(modelItem => item.MaritalStatusName)
+                        </td>
+                        <td style="width:60px;text-align:left;">
+                            @Html.DisplayFor(modelItem => item.Occupation)
+                        </td>
+                        <td style="width:60px;">
+                            @Html.DisplayFor(modelItem => item.ValidUntil)
+                        </td>
+                        <td style="width:60px;">
+                            @if (item.ResidentidcardImagePath.ToString() != "")
+                            {
+                                string path = "/Attachment/Customer/" + item.CustomerImagePath;
+                                string path1 = path.Replace('/', '^');
+                                <span onclick="openimage(this);" path="@path1">
+                                    <img src="@path" height="40" width="60" />
+                                </span>
+
+                            }
+                        </td>
+                        <td style="width:60px;">
+                            @if (item.ResidentidcardImagePath.ToString() != "")
+                            {
+                                string path = "/Attachment/Customer/" + item.ResidentidcardImagePath;
+                                string path1 = path.Replace('/', '^');
+                                <span onclick="openimage(this);" path="@path1">
+                                    <img src="@path" height="40" width="60" />
+                                </span>
+
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("CustomerTagList", "POS", new { id = item.AccountId })" title="Edit">Tag</a>
+                        </td>
+                        <td>
+                            <a class="edit" href="@Url.Action("RegisterCustomerEdit", "POS", new { id = item.AccountId, urltoken = token })">
+                                <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" tabindex="-1" id="ImageData"
+         data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #fefefe;margin: 15% auto;padding: 20px; border: 1px solid #888;width: 500px; ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">Customer Images</h4>
+                </div>
+                <div class="modal-body" style="padding:0px">
+                    <div id="imagediv">
+                        <img src="" id="myimage" height="300" width="450" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="~/scripts/jquery.dataTables.min.js"></script>
+    <script src="~/scripts/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
+</div>

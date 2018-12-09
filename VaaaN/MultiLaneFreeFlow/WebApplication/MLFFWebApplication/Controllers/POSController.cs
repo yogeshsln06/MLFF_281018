@@ -42,6 +42,31 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         }
 
         #region Register Customer
+        public ActionResult RegisterCustomerList()
+        {
+
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    return RedirectToAction("SessionPage", "Home");
+                }
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+                //Call Bll To get all Plaza List
+                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
+
+                return View(customerDataList);
+
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load TagSaleList in POS Controller" + ex);
+            }
+            return View(customerDataList);
+        }
         //Get
         [HttpGet]
         public ActionResult RegisterCustomer()
@@ -66,17 +91,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.Provinces = provincelist;
 
                 #endregion
-                #region Queue Status
-                List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
-                Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
 
-                for (int i = 0; i < arStatus.Length; i++)
-                {
-                    customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
-                }
-                ViewBag.queueStatus = customerQueueStatus;
-
-                #endregion
                 #region Gender
                 List<SelectListItem> genderList = new List<SelectListItem>();
                 Array argender = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Gender));
@@ -144,17 +159,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.Provinces = provincelist;
 
                 #endregion
-                #region Queue Status
-                List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
-                Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
 
-                for (int i = 0; i < arStatus.Length; i++)
-                {
-                    customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
-                }
-                ViewBag.queueStatus = customerQueueStatus;
-
-                #endregion
                 #region Gender
                 List<SelectListItem> genderList = new List<SelectListItem>();
                 Array argender = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Gender));
@@ -166,6 +171,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.genderName = genderList;
 
                 #endregion
+
                 #region MaritalStatus
                 List<SelectListItem> maritalstatusList = new List<SelectListItem>();
                 Array armaritalstatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatus));
@@ -177,6 +183,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.maritalstatusName = maritalstatusList;
 
                 #endregion
+
                 #region Nationality
                 List<SelectListItem> nationalityList = new List<SelectListItem>();
                 Array arnationality = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Nationality));
@@ -188,9 +195,6 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.nationalityName = nationalityList;
 
                 #endregion
-
-
-
 
                 #region Image validate
                 var imageTypes = new string[]{
@@ -215,7 +219,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     }
 
                     #region ImageProcess
-                    string customerImageName = customerAccount.FirstName.ToString() + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string customerImageName = customerAccount.ResidentId.ToString() + "_Profile_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
                     string extension = System.IO.Path.GetExtension(customerAccount.CustomerImage.FileName).ToLower();
 
 
@@ -283,15 +287,15 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     "application/docx",
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 };
-                if (customerAccount.ScannedDocument != null && customerAccount.ScannedDocument.ContentLength > 0)
+                if (customerAccount.ResidentidImage != null && customerAccount.ResidentidImage.ContentLength > 0)
                 {
-                    if (!DocumentTypes.Contains(customerAccount.ScannedDocument.ContentType))
+                    if (!DocumentTypes.Contains(customerAccount.ResidentidImage.ContentType))
                     {
                         TempData["lblerror"] = "Please choose either GIF, JPG or PNG  image.";
                         return View("RegisterCustomer");
                     }
 
-                    if (customerAccount.ScannedDocument.ContentLength > 2097152) // about 2 MB
+                    if (customerAccount.ResidentidImage.ContentLength > 2097152) // about 2 MB
                     {
                         // Notify the user why their file was not uploaded.
                         TempData["lblerror"] = "Attachment file can not uploaded because it exceeds the 2 MB size limit.";
@@ -299,8 +303,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     }
 
                     #region Document Process
-                    string customerImageName = customerAccount.FirstName.ToString() + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
-                    string extension = System.IO.Path.GetExtension(customerAccount.ScannedDocument.FileName).ToLower();
+                    string customerImageName = customerAccount.ResidentId.ToString() + "_Document_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string extension = System.IO.Path.GetExtension(customerAccount.ResidentidImage.FileName).ToLower();
 
                     String uploadFilePath = "\\Attachment\\";
                     // create a folder for distinct user -
@@ -315,11 +319,11 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     {
                         //string renamedFile = System.Guid.NewGuid().ToString("N");
                         string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
-                        customerAccount.ScannedDocument.SaveAs(filePath);
+                        customerAccount.ResidentidImage.SaveAs(filePath);
                     }
                     else
                     {
-                        using (var img = System.Drawing.Image.FromStream(customerAccount.ScannedDocument.InputStream))
+                        using (var img = System.Drawing.Image.FromStream(customerAccount.ResidentidImage.InputStream))
                         {
                             string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
 
@@ -327,7 +331,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                             VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.SaveToFolder(img, extension, new System.Drawing.Size(600, 600), filePath);
                         }
                     }
-                    customerAccount.ScannedDocsPath1 = customerImageName + extension;
+                    customerAccount.ResidentidcardImagePath = customerImageName + extension;
                     #endregion
                 }
                 #endregion
@@ -336,16 +340,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
                 if (!string.IsNullOrEmpty(customerAccount.MobileNo))
                 {
-                    string MobileNoinital = string.Empty;
-                    MobileNoinital = customerAccount.MobileNo.Substring(0, 2);
-                    if (MobileNoinital.StartsWith("0"))
-                    {
-                        customerAccount.MobileNo = "62" + customerAccount.MobileNo.Substring(1, customerAccount.MobileNo.Length - 1);
-                    }
-                    else if (MobileNoinital != "62")
-                    {
-                        customerAccount.MobileNo = "62" + customerAccount.MobileNo;
-                    }
+                    customerAccount.MobileNo = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MobileNoPrefix(customerAccount.MobileNo.Trim());
 
                 }
                 customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
@@ -371,13 +366,24 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 #region Insert Into Customer Queue
                 customerAccount.CreationDate = DateTime.Now;
                 customerAccount.TmsId = tmsId;
-                customerAccount.RegistartionThrough = Convert.ToInt32(Session["LoggedUserId"].ToString());
+                customerAccount.RegistartionThrough = 1;
                 customerAccount.BirthDate = Convert.ToDateTime(form["BirthDate"].ToString());
                 customerAccount.ValidUntil = Convert.ToDateTime(form["ValidUntil"].ToString());
                 customerAccount.ProvinceId = Convert.ToInt32(form["ProvinceId"].ToString());
                 customerAccount.CityId = Convert.ToInt32(form["ddlCityId"].ToString());
                 customerAccount.DistrictId = Convert.ToInt32(form["DistrictId"].ToString());
                 customerAccount.SubDistrictId = Convert.ToInt32(form["SubDistrictId"].ToString());
+                customerAccount.EmailId = customerAccount.EmailId.Trim();
+                customerAccount.ResidentId = customerAccount.ResidentId.Trim();
+                customerAccount.BirthPlace = customerAccount.BirthPlace.Trim();
+                customerAccount.RT = customerAccount.RT.Trim();
+                customerAccount.RW = customerAccount.RW.Trim();
+                customerAccount.Address = customerAccount.Address.Trim();
+                customerAccount.AccountStatus = 1;
+                customerAccount.TransferStatus = 1;
+                customerAccount.IsDocVerified = 1;
+                customerAccount.RT_RW = customerAccount.RT + "/" + customerAccount.RW;
+
                 int customerEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.Insert(customerAccount);
                 if (customerEntryId > 0)
                     TempData["lblerror"] = "Sucessfully created Customer.";
@@ -417,17 +423,6 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.Provinces = provincelist;
 
             #endregion
-            #region Queue Status
-            List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
-            Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
-
-            for (int i = 0; i < arStatus.Length; i++)
-            {
-                customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
-            }
-            ViewBag.queueStatus = customerQueueStatus;
-
-            #endregion
             #region Gender
             List<SelectListItem> genderList = new List<SelectListItem>();
             Array argender = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Gender));
@@ -461,9 +456,6 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.nationalityName = nationalityList;
 
             #endregion
-
-
-
             string token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("POS", "RegisterCustomerEdit", Convert.ToString(id), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
             if (token == urltoken)
             {
@@ -479,10 +471,9 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 ViewBag.hfSubDistrictId = customer.SubDistrictId;
                 ViewBag.hfMaritalStatus = customer.MaritalStatus;
                 ViewBag.hfNationality = customer.Nationality;
-                ViewBag.hfQueueStatus = customer.QueueStatus;
                 ViewBag.PostalCode = customer.PostalCode;
                 ViewBag.CustomerImagePath = customer.CustomerImagePath;
-                ViewBag.CustomerDocumentPath = customer.ScannedDocsPath1;
+                ViewBag.CustomerDocumentPath = customer.ResidentidcardImagePath;
                 ViewBag.ReferencePage = RefPage;
                 #endregion
                 return View(customer);
@@ -527,18 +518,6 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
                 #endregion
 
-                #region Queue Status
-                List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
-                Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
-
-                for (int i = 0; i < arStatus.Length; i++)
-                {
-                    customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
-                }
-                ViewBag.queueStatus = customerQueueStatus;
-
-                #endregion
-
                 #region Gender
                 List<SelectListItem> genderList = new List<SelectListItem>();
                 Array argender = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Gender));
@@ -580,16 +559,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 #region Mobile No validate by using country code
                 if (!string.IsNullOrEmpty(customerAccount.MobileNo))
                 {
-                    string MobileNo = customerAccount.MobileNo;
-                    MobileNo = MobileNo.Substring(0, 2);
-                    if (MobileNo.StartsWith("0"))
-                    {
-                        customerAccount.MobileNo = "62" + customerAccount.MobileNo.Substring(1, customerAccount.MobileNo.Length - 1);
-                    }
-                    else if (MobileNo != "62")
-                    {
-                        customerAccount.MobileNo = "62" + customerAccount.MobileNo;
-                    }
+                    customerAccount.MobileNo = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MobileNoPrefix(customerAccount.MobileNo);
 
                 }
                 #endregion
@@ -644,7 +614,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     }
 
                     #region ImageProcess
-                    string customerImageName = customerAccount.FirstName.ToString() + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string customerImageName = customerAccount.FirstName.ToString() + "_Profile_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
                     string extension = System.IO.Path.GetExtension(customerAccount.CustomerImage.FileName).ToLower();
 
                     String uploadFilePath = "\\Attachment\\";
@@ -676,7 +646,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     #endregion
                 }
                 else {
-                    customerAccount.CustomerImagePath = customer.ScannedDocsPath1;
+                    customerAccount.CustomerImagePath = customer.CustomerImagePath;
                 }
                 #endregion
 
@@ -691,15 +661,15 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     "application/docx",
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 };
-                if (customerAccount.ScannedDocument != null && customerAccount.ScannedDocument.ContentLength > 0)
+                if (customerAccount.ResidentidImage != null && customerAccount.ResidentidImage.ContentLength > 0)
                 {
-                    if (!DocumentTypes.Contains(customerAccount.ScannedDocument.ContentType))
+                    if (!DocumentTypes.Contains(customerAccount.ResidentidImage.ContentType))
                     {
                         TempData["lblerror"] = "Please choose either GIF, JPG or PNG  image.";
                         return View("RegisterCustomer");
                     }
 
-                    if (customerAccount.ScannedDocument.ContentLength > 2097152) // about 2 MB
+                    if (customerAccount.ResidentidImage.ContentLength > 2097152) // about 2 MB
                     {
                         // Notify the user why their file was not uploaded.
                         TempData["lblerror"] = "Attachment file can not uploaded because it exceeds the 2 MB size limit.";
@@ -707,8 +677,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     }
 
                     #region Document Process
-                    string customerImageName = customerAccount.FirstName.ToString() + "_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
-                    string extension = System.IO.Path.GetExtension(customerAccount.ScannedDocument.FileName).ToLower();
+                    string customerImageName = customerAccount.FirstName.ToString() + "_Document_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string extension = System.IO.Path.GetExtension(customerAccount.ResidentidImage.FileName).ToLower();
 
                     String uploadFilePath = "\\Attachment\\";
                     // create a folder for distinct user -
@@ -723,11 +693,11 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     {
                         //string renamedFile = System.Guid.NewGuid().ToString("N");
                         string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
-                        customerAccount.ScannedDocument.SaveAs(filePath);
+                        customerAccount.ResidentidImage.SaveAs(filePath);
                     }
                     else
                     {
-                        using (var img = System.Drawing.Image.FromStream(customerAccount.ScannedDocument.InputStream))
+                        using (var img = System.Drawing.Image.FromStream(customerAccount.ResidentidImage.InputStream))
                         {
                             string filePath = String.Format(pathWithFolderName + "\\{0}{1}", customerImageName, extension);
 
@@ -735,32 +705,40 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                             VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.SaveToFolder(img, extension, new System.Drawing.Size(600, 600), filePath);
                         }
                     }
-                    customerAccount.ScannedDocsPath1 = customerImageName + extension;
+                    customerAccount.ResidentidcardImagePath = customerImageName + extension;
                     #endregion
                 }
                 else {
-                    customerAccount.ScannedDocsPath1 = customer.ScannedDocsPath1;
+                    customerAccount.ResidentidcardImagePath = customer.ResidentidcardImagePath;
                 }
                 #endregion
 
+                #region Customer Data Process
                 customerAccount.ModificationDate = DateTime.Now;
                 customerAccount.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
-                customerAccount.TmsId = customer.TmsId;
-                customerAccount.QueueStatus = customer.QueueStatus;
-                customerAccount.TransferStatus = customer.TransferStatus;
-                customerAccount.AccountBalance = customer.AccountBalance;
-                customerAccount.IsDocVerified = customer.IsDocVerified;
-                customerAccount.AccountStatus = customer.AccountStatus;
-                customerAccount.RegistartionThrough = customer.RegistartionThrough;
+                customerAccount.TmsId = tmsId;
                 customerAccount.BirthDate = Convert.ToDateTime(form["BirthDate"].ToString());
                 customerAccount.ValidUntil = Convert.ToDateTime(form["ValidUntil"].ToString());
                 customerAccount.ProvinceId = Convert.ToInt32(form["ProvinceId"].ToString());
                 customerAccount.CityId = Convert.ToInt32(form["ddlCityId"].ToString());
                 customerAccount.DistrictId = Convert.ToInt32(form["DistrictId"].ToString());
                 customerAccount.SubDistrictId = Convert.ToInt32(form["SubDistrictId"].ToString());
+                customerAccount.EmailId = customerAccount.EmailId.Trim();
+                customerAccount.ResidentId = customerAccount.ResidentId.Trim();
+                customerAccount.BirthPlace = customerAccount.BirthPlace.Trim();
+                customerAccount.RT = customerAccount.RT.Trim();
+                customerAccount.RW = customerAccount.RW.Trim();
+                customerAccount.Address = customerAccount.Address.Trim();
+                customerAccount.AccountStatus = 1;
+                customerAccount.TransferStatus = 1;
+                customerAccount.IsDocVerified = 1;
+                customerAccount.AccountBalance = customer.AccountBalance;
+                customerAccount.RT_RW = customerAccount.RT + "/" + customerAccount.RW;
+
                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.Update(customerAccount);
 
-                return Redirect("~/POS/" + RedirecttoPage);
+                return Redirect("~/POS/registercustomerlist");
+                #endregion
             }
             catch (Exception ex)
             {
@@ -814,39 +792,39 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         #region Customer Queue
         public ActionResult CustomerQueueList()
         {
-            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+            //List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
 
-            try
-            {
-                if (Session["LoggedUserId"] == null)
-                {
-                    return RedirectToAction("SessionPage", "Home");
-                }
-                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+            //try
+            //{
+            //    if (Session["LoggedUserId"] == null)
+            //    {
+            //        return RedirectToAction("SessionPage", "Home");
+            //    }
+            //    ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
 
-                #region Queue Status
-                List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
-                Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
+            //    #region Queue Status
+            //    List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
+            //    Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
 
-                for (int i = 0; i < arStatus.Length; i++)
-                {
-                    customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
-                }
-                ViewBag.queueStatus = customerQueueStatus;
+            //    for (int i = 0; i < arStatus.Length; i++)
+            //    {
+            //        customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
+            //    }
+            //    ViewBag.queueStatus = customerQueueStatus;
 
-                #endregion
+            //    #endregion
 
-                //Call Bll To get all Plaza List
-                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList().Where(x => x.QueueStatus != 3).ToList();
-                //customerDataList =customerDataList.Select(x => x.QueueStatus != 3).Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>().ToList();
-                return View(customerDataList);
+            //    //Call Bll To get all Plaza List
+            //    customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList().Where(x => x.QueueStatus != 3).ToList();
+            //    //customerDataList =customerDataList.Select(x => x.QueueStatus != 3).Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>().ToList();
+            //    return View(customerDataList);
 
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
 
-                HelperClass.LogMessage("Failed to load Customer Queue List in POS Controller" + ex);
-            }
+            //    HelperClass.LogMessage("Failed to load Customer Queue List in POS Controller" + ex);
+            //}
             return View();
         }
 
@@ -855,25 +833,25 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         {
             JsonResult result = new JsonResult();
             result.Data = "Failure";
-            try
-            {
-                objCustomerAppointmentCBE.AppointedById = Convert.ToInt32(Session["LoggedUserId"]);
-                Int32 entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAppointmentBLL.Insert(objCustomerAppointmentCBE);
-                if (entryId > 0)
-                {
-                    CustomerAccountCBE objCustomerAccountCBE = new CustomerAccountCBE();
-                    objCustomerAccountCBE.AccountId = objCustomerAppointmentCBE.AccountId;
-                    objCustomerAccountCBE.QueueStatus = 2;
-                    objCustomerAccountCBE.TmsId = 1;
-                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateQueueStatus(objCustomerAccountCBE);
-                    result.Data = "Sucess";
-                }
-            }
-            catch (Exception ex)
-            {
-                result.Data = "Failure";
-                HelperClass.LogMessage("Create Customer Appointment :" + ex);
-            }
+            //try
+            //{
+            //    objCustomerAppointmentCBE.AppointedById = Convert.ToInt32(Session["LoggedUserId"]);
+            //    Int32 entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAppointmentBLL.Insert(objCustomerAppointmentCBE);
+            //    if (entryId > 0)
+            //    {
+            //        CustomerAccountCBE objCustomerAccountCBE = new CustomerAccountCBE();
+            //        objCustomerAccountCBE.AccountId = objCustomerAppointmentCBE.AccountId;
+
+            //        objCustomerAccountCBE.TmsId = 1;
+            //        VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateQueueStatus(objCustomerAccountCBE);
+            //        result.Data = "Sucess";
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    result.Data = "Failure";
+            //    HelperClass.LogMessage("Create Customer Appointment :" + ex);
+            //}
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -1490,31 +1468,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         }
         #endregion
 
-        public ActionResult TagSaleList()
-        {
-
-            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
-
-            try
-            {
-                if (Session["LoggedUserId"] == null)
-                {
-                    return RedirectToAction("SessionPage", "Home");
-                }
-                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
-                //Call Bll To get all Plaza List
-                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
-
-                return View(customerDataList);
-
-            }
-            catch (Exception ex)
-            {
-
-                HelperClass.LogMessage("Failed To Load TagSaleList in POS Controller" + ex);
-            }
-            return View(customerDataList);
-        }
+      
 
         [HttpGet]
         public ActionResult CustomerTagList(int id)//here id is account id

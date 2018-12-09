@@ -156,6 +156,8 @@
   <ItemGroup>
     <Content Include="Attachment\CustomerImage\adarsh_20180924.jpg" />
     <Content Include="Attachment\CustomerImage\aditya_20180924.jpg" />
+    <Content Include="Attachment\Customer\1234567890_Profile_20181209.png" />
+    <Content Include="Attachment\Customer\Hemant_20181209.png" />
     <Content Include="Attachment\Customer\tapan1_20180924.jpg" />
     <Content Include="Attachment\Customer\tapan_20180924.jpg" />
     <Content Include="Bootstrap\css\bootstrap-datepicker.css" />
@@ -401,7 +403,7 @@
     <Content Include="Views\POS\AddCustomerRecharge.cshtml" />
     <Content Include="Views\POS\AddCustomerTag.cshtml" />
     <Content Include="Views\POS\CustomerTagList.cshtml" />
-    <Content Include="Views\POS\TagSaleList.cshtml" />
+    <Content Include="Views\POS\RegisterCustomerList.cshtml" />
     <Content Include="Views\MRM\TransactionList.cshtml" />
     <Content Include="Views\MRM\TransactionList2.cshtml" />
     <Content Include="Views\Shared\_LayoutReportPage.cshtml" />

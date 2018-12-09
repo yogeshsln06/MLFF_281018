@@ -328,6 +328,7 @@
             data: JSON.stringify(InputData),
             contentType: "application/json; charset=utf-8",
             success: function (JsonfilterData) {
+                debugger;
                 $('#loader').hide();
                 ResponceData = JsonfilterData;
                 alert(ResponceData.Data);

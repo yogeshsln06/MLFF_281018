@@ -457,7 +457,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-      
+
 
         [HttpPost]
         public JsonResult JoinTransactions(string[] AssociatedTransactionIds, string TransactionId, string VehRegNo, string vehicleClassID)
@@ -469,6 +469,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             long childOneTranasactionId = 0;
             long childTwoTranasactionId = 0;
             StringBuilder returnMessage = new StringBuilder();
+            String message = "";
 
             //get Parent Transaction Data
             Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
@@ -516,6 +517,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 //get customer account info from customer VRN
                 Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo = new Libraries.CommonLibrary.CBE.CustomerAccountCBE();
                 customerAccountInfo.AccountId = customerVehicleInfo.AccountId;
+                customerAccountInfo.TmsId = 1;
                 customerAccountInfo = Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetCustomerById(customerAccountInfo);
 
                 //financial operation here
@@ -525,12 +527,12 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                 HelperClass.LogMessage("Financial processing has been done.");
                 //notification operation here
                 //NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
-
+                message = "SucessFully Audited and Join Transaction";
             }
             else
             {
                 returnMessage.Append("Balance not Deducted as Balance already deducted for this Transaction");
-
+                message = "Balance not Deducted as Balance already deducted for this Transaction";
             }
             #endregion
             //In this region i have to call new package
@@ -538,8 +540,9 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             //Call Function UpdateAuditJoinTransaction Here
             Libraries.CommonLibrary.BLL.TransactionBLL.JoinAuditTransaction(transaction.TransactionId, childOneTranasactionId, childTwoTranasactionId, VehRegNo, vehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()));
             #endregion
-            returnMessage.Append("SucessFully Audited and Join Transaction");
-            result.Data = returnMessage;
+            //returnMessage.Append("SucessFully Audited and Join Transaction");
+            //result.Data = returnMessage;
+            result.Data = message;
             return Json(result);
         }
         #endregion
