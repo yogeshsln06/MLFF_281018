@@ -1,4 +1,4 @@
-/* Formatted on 30-11-2018 17:06:49 (QP5 v5.215.12089.38647) */
+/* Formatted on 09/12/2018 16:40:43 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -2995,42 +2995,37 @@ ORDER BY TRANSACTION_ID DESC';
    END SMS_HISTORY_GETFILTERED;
 
    ----------TBL CUSTOMER ACCOUNT------------
-
-   PROCEDURE ACCOUNT_INSERT (P_TMS_ID                 IN NUMBER,
-                             P_ACCOUNT_ID             IN NUMBER,
-                             P_FIRST_NAME             IN NVARCHAR2,
-                             P_LAST_NAME              IN NVARCHAR2,
-                             P_MOB_NUMBER             IN NVARCHAR2,
-                             P_EMAIL_ID               IN NVARCHAR2,
-                             P_DESCRIPTION            IN NVARCHAR2,
-                             P_ADDRESS_LINE_1         IN NVARCHAR2,
-                             P_ACCOUNT_BALANCE        IN NUMBER,
-                             P_CREATION_DATE          IN DATE,
-                             P_CUSTOMER_IMAGE_PATH    IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH1     IN NVARCHAR2,
-                             P_IS_DOC_VERIFIED        IN NUMBER,
-                             P_ACCOUNT_STATUS         IN NUMBER,
-                             P_TRANSFER_STATUS        IN NUMBER,
-                             P_SCANNED_DOCS_PATH2     IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH3     IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH4     IN NVARCHAR2,
-                             P_RESIDENT_ID            IN NUMBER,
-                             P_BIRTH_PLACE            IN NVARCHAR2,
-                             P_BIRTH_DATE             IN DATE := NULL,
-                             P_GENDER                 IN NUMBER,
-                             P_ADDRESS_LINE_2         IN NVARCHAR2,
-                             P_ADDRESS_LINE_3         IN NVARCHAR2,
-                             P_DISTRICT_ID            IN NUMBER,
-                             P_SUB_DISTRICT_ID        IN NUMBER,
-                             P_CITY_ID                IN NUMBER,
-                             P_PROVINCE_ID            IN NUMBER,
-                             P_POSTAL_CODE            IN NUMBER,
-                             P_MARITAL_STATUS         IN NUMBER,
-                             P_OCCUPATION             IN NVARCHAR2,
-                             P_NATIONALITY            IN NUMBER,
-                             P_VALID_UNTIL            IN DATE := NULL,
-                             P_REGISTRATION_THROUGH   IN NUMBER,
-                             P_QUEUE_STATUS           IN NUMBER)
+   PROCEDURE ACCOUNT_INSERT (p_tms_id                    IN NUMBER,
+                             p_account_id                IN NUMBER,
+                             p_first_name                IN NVARCHAR2,
+                             p_last_name                 IN NVARCHAR2,
+                             p_mob_number                IN NVARCHAR2,
+                             p_email_id                  IN NVARCHAR2,
+                             p_description               IN NVARCHAR2,
+                             p_address                   IN NVARCHAR2,
+                             p_account_balance           IN NUMBER,
+                             p_creation_date             IN DATE,
+                             p_customer_image_path       IN NVARCHAR2,
+                             p_is_doc_verified           IN NUMBER,
+                             p_account_status            IN NUMBER,
+                             p_transfer_status           IN NUMBER,
+                             p_resident_id               IN NUMBER,
+                             p_birth_place               IN NVARCHAR2,
+                             p_birth_date                IN DATE := NULL,
+                             p_rt_rw                     IN NVARCHAR2,
+                             p_province_id               IN NUMBER,
+                             p_city_id                   IN NUMBER,
+                             p_district_id               IN NUMBER,
+                             p_sub_district_id           IN NUMBER,
+                             p_postal_code               IN NUMBER,
+                             p_nationality               IN NUMBER,
+                             p_gender                    IN NUMBER,
+                             p_marital_status            IN NUMBER,
+                             p_occupation                IN NVARCHAR2,
+                             p_residentidcardimagepath   IN NVARCHAR2,
+                             p_valid_until               IN DATE := NULL,
+                             p_registration_through      IN NUMBER,
+                             p_userpassword              IN NVARCHAR2)
    AS
    BEGIN
       INSERT INTO TBL_CUSTOMER_ACCOUNT (TMS_ID,
@@ -3040,190 +3035,124 @@ ORDER BY TRANSACTION_ID DESC';
                                         MOB_NUMBER,
                                         EMAIL_ID,
                                         DESCRIPTION,
-                                        ADDRESS_LINE_1,
+                                        ADDRESS,
                                         ACCOUNT_BALANCE,
                                         CREATION_DATE,
                                         CUSTOMER_IMAGE_PATH,
-                                        SCANNED_DOCS_PATH1,
                                         IS_DOC_VERIFIED,
                                         ACCOUNT_STATUS,
                                         TRANSFER_STATUS,
-                                        SCANNED_DOCS_PATH2,
-                                        SCANNED_DOCS_PATH3,
-                                        SCANNED_DOCS_PATH4,
                                         RESIDENT_ID,
                                         BIRTH_PLACE,
                                         BIRTH_DATE,
-                                        GENDER,
-                                        ADDRESS_LINE_2,
-                                        ADDRESS_LINE_3,
+                                        RT_RW,
+                                        PROVINCE_ID,
+                                        CITY_ID,
                                         DISTRICT_ID,
                                         SUB_DISTRICT_ID,
-                                        CITY_ID,
-                                        PROVINCE_ID,
                                         POSTAL_CODE,
+                                        NATIONALITY,
+                                        GENDER,
                                         MARITAL_STATUS,
                                         OCCUPATION,
-                                        NATIONALITY,
+                                        RESIDENTIDCARDIMAGE,
                                         VALID_UNTIL,
                                         REGISTRATION_THROUGH,
-                                        QUEUE_STATUS)
-           VALUES (P_TMS_ID,
-                   P_ACCOUNT_ID,
-                   P_FIRST_NAME,
-                   P_LAST_NAME,
-                   P_MOB_NUMBER,
-                   P_EMAIL_ID,
-                   P_DESCRIPTION,
-                   P_ADDRESS_LINE_1,
-                   P_ACCOUNT_BALANCE,
-                   P_CREATION_DATE,
-                   P_CUSTOMER_IMAGE_PATH,
-                   P_SCANNED_DOCS_PATH1,
-                   P_IS_DOC_VERIFIED,
-                   P_ACCOUNT_STATUS,
-                   P_TRANSFER_STATUS,
-                   P_SCANNED_DOCS_PATH2,
-                   P_SCANNED_DOCS_PATH3,
-                   P_SCANNED_DOCS_PATH4,
-                   P_RESIDENT_ID,
-                   P_BIRTH_PLACE,
-                   P_BIRTH_DATE,
-                   P_GENDER,
-                   P_ADDRESS_LINE_2,
-                   P_ADDRESS_LINE_3,
-                   P_DISTRICT_ID,
-                   P_SUB_DISTRICT_ID,
-                   P_CITY_ID,
-                   P_PROVINCE_ID,
-                   P_POSTAL_CODE,
-                   P_MARITAL_STATUS,
-                   P_OCCUPATION,
-                   P_NATIONALITY,
-                   P_VALID_UNTIL,
-                   P_REGISTRATION_THROUGH,
-                   P_QUEUE_STATUS);
-   END ACCOUNT_INSERT;
-   
-   PROCEDURE ACCOUNT_INSERTBYMOBILE (P_TMS_ID                 IN NUMBER,
-                             P_ACCOUNT_ID             IN NUMBER,
-                             P_FIRST_NAME             IN NVARCHAR2,
-                             P_LAST_NAME              IN NVARCHAR2,
-                             P_MOB_NUMBER             IN NVARCHAR2,
-                             P_EMAIL_ID               IN NVARCHAR2,
-                             P_CREATION_DATE          IN DATE,
-                             P_ACCOUNT_STATUS         IN NUMBER,
-                             P_TRANSFER_STATUS        IN NUMBER,
-                             P_RESIDENT_ID            IN NUMBER,
-                             P_REGISTRATION_THROUGH   IN NUMBER,
-                             P_QUEUE_STATUS           IN NUMBER,
-                             P_USER_PASSWORD              IN NVARCHAR2)
-   AS
-   BEGIN
-      INSERT INTO TBL_CUSTOMER_ACCOUNT (TMS_ID,
-                                        ACCOUNT_ID,
-                                        FIRST_NAME,
-                                        LAST_NAME,
-                                        MOB_NUMBER,
-                                        EMAIL_ID,
-                                        CREATION_DATE,
-                                        ACCOUNT_STATUS,
-                                        TRANSFER_STATUS,
-                                        RESIDENT_ID,
-                                        REGISTRATION_THROUGH,
-                                        QUEUE_STATUS,
                                         USER_PASSWORD)
-           VALUES (P_TMS_ID,
-                   P_ACCOUNT_ID,
-                   P_FIRST_NAME,
-                   P_LAST_NAME,
-                   P_MOB_NUMBER,
-                   P_EMAIL_ID,
-                   P_CREATION_DATE,
-                   P_ACCOUNT_STATUS,
-                   P_TRANSFER_STATUS,
-                   P_RESIDENT_ID,
-                   P_REGISTRATION_THROUGH,
-                   P_QUEUE_STATUS,
-                   P_USER_PASSWORD);
-                   
-   END ACCOUNT_INSERTBYMOBILE;
+           VALUES (p_tms_id,
+                   p_account_id,
+                   p_first_name,
+                   p_last_name,
+                   p_mob_number,
+                   p_email_id,
+                   p_description,
+                   p_address,
+                   p_account_balance,
+                   p_creation_date,
+                   p_customer_image_path,
+                   p_is_doc_verified,
+                   p_account_status,
+                   p_transfer_status,
+                   p_resident_id,
+                   p_birth_place,
+                   p_birth_date,
+                   p_rt_rw,
+                   p_province_id,
+                   p_city_id,
+                   p_district_id,
+                   p_sub_district_id,
+                   p_postal_code,
+                   p_nationality,
+                   p_gender,
+                   p_marital_status,
+                   p_occupation,
+                   p_residentidcardimagepath,
+                   p_valid_until,
+                   p_registration_through,
+                   p_userpassword);
+   END ACCOUNT_INSERT;
 
-   PROCEDURE ACCOUNT_UPDATE (P_TMS_ID                 IN NUMBER,
-                             P_ACCOUNT_ID             IN NUMBER,
-                             P_FIRST_NAME             IN NVARCHAR2,
-                             P_LAST_NAME              IN NVARCHAR2,
-                             P_MOB_NUMBER             IN NVARCHAR2,
-                             P_EMAIL_ID               IN NVARCHAR2,
-                             P_DESCRIPTION            IN NVARCHAR2,
-                             P_ADDRESS_LINE_1         IN NVARCHAR2,
-                             P_ACCOUNT_BALANCE        IN NUMBER,
-                             P_MODIFIER_ID            IN NUMBER,
-                             P_MODIFICATION_DATE      IN DATE,
-                             P_CUSTOMER_IMAGE_PATH    IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH1     IN NVARCHAR2,
-                             P_IS_DOC_VERIFIED        IN NUMBER,
-                             P_ACCOUNT_STATUS         IN NUMBER,
-                             P_TRANSFER_STATUS        IN NUMBER,
-                             P_SCANNED_DOCS_PATH2     IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH3     IN NVARCHAR2,
-                             P_SCANNED_DOCS_PATH4     IN NVARCHAR2,
-                             P_RESIDENT_ID            IN NUMBER,
-                             P_BIRTH_PLACE            IN NVARCHAR2,
-                             P_BIRTH_DATE             IN DATE := NULL,
-                             P_GENDER                 IN NUMBER,
-                             P_ADDRESS_LINE_2         IN NVARCHAR2,
-                             P_ADDRESS_LINE_3         IN NVARCHAR2,
-                             P_DISTRICT_ID            IN NUMBER,
-                             P_SUB_DISTRICT_ID        IN NUMBER,
-                             P_CITY_ID                IN NUMBER,
-                             P_PROVINCE_ID            IN NUMBER,
-                             P_POSTAL_CODE            IN NUMBER,
-                             P_MARITAL_STATUS         IN NUMBER,
-                             P_OCCUPATION             IN NVARCHAR2,
-                             P_NATIONALITY            IN NUMBER,
-                             P_VALID_UNTIL            IN DATE := NULL,
-                             P_REGISTRATION_THROUGH   IN NUMBER,
-                             P_QUEUE_STATUS           IN NUMBER)
+   PROCEDURE ACCOUNT_UPDATE (p_tms_id                    IN NUMBER,
+                             p_account_id                IN NUMBER,
+                             p_first_name                IN NVARCHAR2,
+                             p_last_name                 IN NVARCHAR2,
+                             p_mob_number                IN NVARCHAR2,
+                             p_email_id                  IN NVARCHAR2,
+                             p_description               IN NVARCHAR2,
+                             p_address                   IN NVARCHAR2,
+                             p_account_balance           IN NUMBER,
+                             p_modifier_id               IN NUMBER,
+                             p_modification_date         IN DATE,
+                             p_customer_image_path       IN NVARCHAR2,
+                             p_is_doc_verified           IN NUMBER,
+                             p_account_status            IN NUMBER,
+                             p_transfer_status           IN NUMBER,
+                             p_resident_id               IN NUMBER,
+                             p_birth_place               IN NVARCHAR2,
+                             p_birth_date                IN DATE := NULL,
+                             p_rt_rw                     IN NVARCHAR2,
+                             p_province_id               IN NUMBER,
+                             p_city_id                   IN NUMBER,
+                             p_district_id               IN NUMBER,
+                             p_sub_district_id           IN NUMBER,
+                             p_postal_code               IN NUMBER,
+                             p_nationality               IN NUMBER,
+                             p_gender                    IN NUMBER,
+                             p_marital_status            IN NUMBER,
+                             p_occupation                IN NVARCHAR2,
+                             p_residentidcardimagepath   IN NVARCHAR2,
+                             p_valid_until               IN DATE := NULL)
    AS
    BEGIN
       UPDATE TBL_CUSTOMER_ACCOUNT
-         SET TMS_ID = P_TMS_ID,
-             ACCOUNT_ID = P_ACCOUNT_ID,
-             FIRST_NAME = P_FIRST_NAME,
-             LAST_NAME = P_LAST_NAME,
-             MOB_NUMBER = P_MOB_NUMBER,
-             EMAIL_ID = P_EMAIL_ID,
-             DESCRIPTION = P_DESCRIPTION,
-             ADDRESS_LINE_1 = P_ADDRESS_LINE_1,
-             ACCOUNT_BALANCE = P_ACCOUNT_BALANCE,
+         SET TMS_ID = p_tms_id,
+             FIRST_NAME = p_first_name,
+             LAST_NAME = p_last_name,
+             MOB_NUMBER = p_mob_number,
+             EMAIL_ID = p_email_id,
+             DESCRIPTION = p_description,
+             ADDRESS = p_address,
+             ACCOUNT_BALANCE = p_account_balance,
              MODIFIER_ID = P_MODIFIER_ID,
              MODIFICATION_DATE = P_MODIFICATION_DATE,
-             CUSTOMER_IMAGE_PATH = P_CUSTOMER_IMAGE_PATH,
-             SCANNED_DOCS_PATH1 = P_SCANNED_DOCS_PATH1,
-             IS_DOC_VERIFIED = P_IS_DOC_VERIFIED,
-             ACCOUNT_STATUS = P_ACCOUNT_STATUS,
-             TRANSFER_STATUS = P_TRANSFER_STATUS,
-             SCANNED_DOCS_PATH2 = P_SCANNED_DOCS_PATH2,
-             SCANNED_DOCS_PATH3 = P_SCANNED_DOCS_PATH3,
-             SCANNED_DOCS_PATH4 = P_SCANNED_DOCS_PATH4,
-             RESIDENT_ID = P_RESIDENT_ID,
-             BIRTH_PLACE = P_BIRTH_PLACE,
-             BIRTH_DATE = P_BIRTH_DATE,
-             GENDER = P_GENDER,
-             ADDRESS_LINE_2 = P_ADDRESS_LINE_2,
-             ADDRESS_LINE_3 = P_ADDRESS_LINE_3,
-             DISTRICT_ID = P_DISTRICT_ID,
-             SUB_DISTRICT_ID = P_SUB_DISTRICT_ID,
-             CITY_ID = P_CITY_ID,
-             PROVINCE_ID = P_PROVINCE_ID,
-             POSTAL_CODE = P_POSTAL_CODE,
-             MARITAL_STATUS = P_MARITAL_STATUS,
-             OCCUPATION = P_OCCUPATION,
-             NATIONALITY = P_NATIONALITY,
-             VALID_UNTIL = P_VALID_UNTIL,
-             REGISTRATION_THROUGH = P_REGISTRATION_THROUGH,
-             QUEUE_STATUS = P_QUEUE_STATUS
+             CUSTOMER_IMAGE_PATH = p_customer_image_path,
+             IS_DOC_VERIFIED = p_is_doc_verified,
+             ACCOUNT_STATUS = p_account_status,
+             TRANSFER_STATUS = p_transfer_status,
+             RESIDENT_ID = p_resident_id,
+             BIRTH_PLACE = p_birth_place,
+             BIRTH_DATE = p_birth_date,
+             RT_RW = p_rt_rw,
+             PROVINCE_ID = p_province_id,
+             CITY_ID = p_city_id,
+             DISTRICT_ID = p_district_id,
+             SUB_DISTRICT_ID = p_sub_district_id,
+             POSTAL_CODE = p_postal_code,
+             NATIONALITY = p_nationality,
+             MARITAL_STATUS = p_marital_status,
+             OCCUPATION = p_occupation,
+             RESIDENTIDCARDIMAGE = p_residentidcardimagepath,
+			 VALID_UNTIL = p_valid_until
        WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
    END ACCOUNT_UPDATE;
 
@@ -3241,8 +3170,53 @@ ORDER BY TRANSACTION_ID DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT *
+           SELECT CA.TMS_ID,
+                  CA.ACCOUNT_ID,
+                  CA.FIRST_NAME,
+                  CA.LAST_NAME,
+                  CA.MOB_NUMBER,
+                  CA.EMAIL_ID,
+                  CA.DESCRIPTION,
+                  CA.ADDRESS,
+                  CA.ACCOUNT_BALANCE,
+                  CA.CREATION_DATE,
+                  CA.CUSTOMER_IMAGE_PATH,
+                  CA.IS_DOC_VERIFIED,
+                  CA.ACCOUNT_STATUS,
+                  CA.TRANSFER_STATUS,
+                  CA.RESIDENT_ID,
+                  CA.BIRTH_PLACE,
+                  CA.BIRTH_DATE,
+                  CA.RT_RW,
+                  CA.PROVINCE_ID,
+                  P.PROVINCE_NAME,
+                  CA.CITY_ID,
+                  C.CITY_NAME,
+                  CA.DISTRICT_ID,
+                  D.DISTRICT_NAME,
+                  SD.SUB_DISTRICT_NAME,
+                  CA.SUB_DISTRICT_ID,
+                  CA.POSTAL_CODE,
+                  CA.NATIONALITY,
+                  CA.GENDER,
+                  CA.MARITAL_STATUS,
+                  CA.OCCUPATION,
+                  CA.RESIDENTIDCARDIMAGE,
+                  CA.VALID_UNTIL,
+                  CA.REGISTRATION_THROUGH,
+                  CA.USER_PASSWORD,
+                  CA.MODIFIER_ID,
+                  CA.CREATION_DATE,
+                  CA.MODIFICATION_DATE
              FROM TBL_CUSTOMER_ACCOUNT CA
+                  LEFT OUTER JOIN TBL_PROVINCE P
+                     ON CA.PROVINCE_ID = P.PROVINCE_ID
+                  LEFT OUTER JOIN TBL_CITY C
+                     ON CA.CITY_ID = C.CITY_ID
+                  LEFT OUTER JOIN TBL_DISTRICT D
+                     ON CA.DISTRICT_ID = D.DISTRICT_ID
+                  LEFT OUTER JOIN TBL_SUB_DISTRICT SD
+                     ON CA.SUB_DISTRICT_ID = SD.SUB_DISTRICT_ID
          ORDER BY CA.ACCOUNT_ID;
    END ACCOUNT_GETALL;
 
@@ -3252,10 +3226,66 @@ ORDER BY TRANSACTION_ID DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
+         SELECT CA.TMS_ID,
+                CA.ACCOUNT_ID,
+                CA.FIRST_NAME,
+                CA.LAST_NAME,
+                CA.MOB_NUMBER,
+                CA.EMAIL_ID,
+                CA.DESCRIPTION,
+                CA.ADDRESS,
+                CA.ACCOUNT_BALANCE,
+                CA.CREATION_DATE,
+                CA.CUSTOMER_IMAGE_PATH,
+                CA.IS_DOC_VERIFIED,
+                CA.ACCOUNT_STATUS,
+                CA.TRANSFER_STATUS,
+                CA.RESIDENT_ID,
+                CA.BIRTH_PLACE,
+                CA.BIRTH_DATE,
+                CA.RT_RW,
+                CA.PROVINCE_ID,
+                P.PROVINCE_NAME,
+                CA.CITY_ID,
+                C.CITY_NAME,
+                CA.DISTRICT_ID,
+                D.DISTRICT_NAME,
+                SD.SUB_DISTRICT_NAME,
+                CA.SUB_DISTRICT_ID,
+                CA.POSTAL_CODE,
+                CA.NATIONALITY,
+                CA.GENDER,
+                CA.MARITAL_STATUS,
+                CA.OCCUPATION,
+                CA.RESIDENTIDCARDIMAGE,
+                CA.VALID_UNTIL,
+                CA.REGISTRATION_THROUGH,
+                CA.USER_PASSWORD,
+                CA.MODIFIER_ID,
+                CA.CREATION_DATE,
+                CA.MODIFICATION_DATE
+           FROM TBL_CUSTOMER_ACCOUNT CA
+                LEFT OUTER JOIN TBL_PROVINCE P
+                   ON CA.PROVINCE_ID = P.PROVINCE_ID
+                LEFT OUTER JOIN TBL_CITY C
+                   ON CA.CITY_ID = C.CITY_ID
+                LEFT OUTER JOIN TBL_DISTRICT D
+                   ON CA.DISTRICT_ID = D.DISTRICT_ID
+                LEFT OUTER JOIN TBL_SUB_DISTRICT SD
+                   ON CA.SUB_DISTRICT_ID = SD.SUB_DISTRICT_ID
+          WHERE CA.TMS_ID = P_TMS_ID AND CA.ACCOUNT_ID = P_ACCOUNT_ID;
+   END ACCOUNT_GETBYID;
+
+   PROCEDURE ACCOUNT_GETBY_RESIDENTID (P_TMS_ID        IN     NUMBER,
+                                       P_RESIDENT_ID   IN     NUMBER,
+                                       CUR_OUT            OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
          SELECT *
            FROM TBL_CUSTOMER_ACCOUNT
-          WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
-   END ACCOUNT_GETBYID;
+          WHERE TMS_ID = P_TMS_ID AND RESIDENT_ID = P_RESIDENT_ID;
+   END ACCOUNT_GETBY_RESIDENTID;
 
    PROCEDURE ACCOUNT_BALANCEUPDATE (P_TMS_ID       IN NUMBER,
                                     P_ACCOUNT_ID   IN NUMBER,
@@ -3267,15 +3297,7 @@ ORDER BY TRANSACTION_ID DESC';
        WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
    END ACCOUNT_BALANCEUPDATE;
 
-   PROCEDURE ACCOUNT_QUEUESTATUSUPDATE (P_TMS_ID         IN NUMBER,
-                                        P_ACCOUNT_ID     IN NUMBER,
-                                        P_QUEUE_STATUS   IN NUMBER)
-   AS
-   BEGIN
-      UPDATE TBL_CUSTOMER_ACCOUNT
-         SET QUEUE_STATUS = P_QUEUE_STATUS
-       WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
-   END ACCOUNT_QUEUESTATUSUPDATE;
+
 
    ----------TBL CUSTOMER VEHICLE------------
    PROCEDURE CUSTOMER_VEHICLE_INSERT (
@@ -3308,10 +3330,9 @@ ORDER BY TRANSACTION_ID DESC';
       P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
       P_VALID_UNTIL              IN NUMBER,
       P_ACCOUNT_BALANCE          IN NUMBER,
-      P_REGISTRATION_THROUGH        IN NUMBER,
-      P_QUEUE_STATUS                IN NUMBER,
-      P_IS_DOC_VERIFIED             IN NUMBER
-      )
+      P_REGISTRATION_THROUGH     IN NUMBER,
+      P_QUEUE_STATUS             IN NUMBER,
+      P_IS_DOC_VERIFIED          IN NUMBER)
    AS
    BEGIN
       INSERT INTO TBL_CUSTOMER_VEHICLE (TMS_ID,
@@ -3382,7 +3403,7 @@ ORDER BY TRANSACTION_ID DESC';
 
 
    PROCEDURE CUSTOMER_VEHICLE_UPDATE (
-   P_TMS_ID                   IN NUMBER,
+      P_TMS_ID                   IN NUMBER,
       P_ENTRY_ID                 IN NUMBER,
       P_ACCOUNT_ID               IN NUMBER,
       P_VEH_REG_NO               IN NVARCHAR2,
@@ -3412,10 +3433,9 @@ ORDER BY TRANSACTION_ID DESC';
       P_VEHICLEIMAGE_LEFTSIDE    IN NVARCHAR2,
       P_VALID_UNTIL              IN NUMBER,
       P_ACCOUNT_BALANCE          IN NUMBER,
-      P_REGISTRATION_THROUGH        IN NUMBER,
-      P_QUEUE_STATUS                IN NUMBER,
-      P_IS_DOC_VERIFIED             IN NUMBER
-      )
+      P_REGISTRATION_THROUGH     IN NUMBER,
+      P_QUEUE_STATUS             IN NUMBER,
+      P_IS_DOC_VERIFIED          IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_CUSTOMER_VEHICLE
@@ -3448,13 +3468,11 @@ ORDER BY TRANSACTION_ID DESC';
              VEHICLEIMAGE_RIGHTSIDE = P_VEHICLEIMAGE_RIGHTSIDE,
              VEHICLEIMAGE_LEFTSIDE = P_VEHICLEIMAGE_LEFTSIDE,
              VALID_UNTIL = P_VALID_UNTIL,
-             ACCOUNT_BALANCE=P_ACCOUNT_BALANCE,
-             REGISTRATION_THROUGH=P_REGISTRATION_THROUGH,
-             QUEUE_STATUS=P_QUEUE_STATUS,
-             IS_DOC_VERIFIED=P_IS_DOC_VERIFIED
-             
-       WHERE     TMS_ID = P_TMS_ID
-             AND ENTRY_ID = P_ENTRY_ID;
+             ACCOUNT_BALANCE = P_ACCOUNT_BALANCE,
+             REGISTRATION_THROUGH = P_REGISTRATION_THROUGH,
+             QUEUE_STATUS = P_QUEUE_STATUS,
+             IS_DOC_VERIFIED = P_IS_DOC_VERIFIED
+       WHERE TMS_ID = P_TMS_ID AND ENTRY_ID = P_ENTRY_ID;
    END CUSTOMER_VEHICLE_UPDATE;
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYID (P_VEHICLE_CLASS_ID   IN     NUMBER,
@@ -3900,7 +3918,7 @@ ORDER BY TRANSACTION_ID DESC';
                   CA.MOB_NUMBER,
                   CA.EMAIL_ID,
                   CA.ACCOUNT_BALANCE,
-                  CA.ADDRESS_LINE_1,
+                  CA.ADDRESS,
                   CV.TAG_ID,
                   CV.VEH_REG_NO,
                   VC.VEHICLE_CLASS_NAME
@@ -4461,15 +4479,5 @@ ORDER BY TRANSACTION_ID DESC';
            FROM TBL_CUSTOMER_APPOINTMENT
           WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
    END CUSTAPPOINTMENT_GETACC_ID;
-
-   PROCEDURE CUSTOMER_QUEUEUPDATE (P_TMS_ID         IN NUMBER,
-                                   P_ACCOUNT_ID     IN NUMBER,
-                                   P_QUEUE_STATUS   IN NUMBER)
-   AS
-   BEGIN
-      UPDATE TBL_CUSTOMER_ACCOUNT
-         SET QUEUE_STATUS = P_QUEUE_STATUS
-       WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
-   END CUSTOMER_QUEUEUPDATE;
 END MLFF_PACKAGE;
 /
