@@ -218,7 +218,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Logger
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine(DateTime.Now.ToString("hh:mm:ss.FFFF tt") + ": " + message);
+            sb.AppendLine(DateTime.Now.ToString("hh:mm:ss.FFFF tt") + ": " + message); //time should not be here. this should be the time when the event happeded. CJS.
 
             return sb.ToString();
         }
