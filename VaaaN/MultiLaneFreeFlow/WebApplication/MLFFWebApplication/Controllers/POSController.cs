@@ -614,7 +614,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     }
 
                     #region ImageProcess
-                    string customerImageName = customerAccount.FirstName.ToString() + "_Profile_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string customerImageName = customerAccount.ResidentId.ToString() + "_Profile_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
                     string extension = System.IO.Path.GetExtension(customerAccount.CustomerImage.FileName).ToLower();
 
                     String uploadFilePath = "\\Attachment\\";
@@ -677,7 +677,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     }
 
                     #region Document Process
-                    string customerImageName = customerAccount.FirstName.ToString() + "_Document_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
+                    string customerImageName = customerAccount.ResidentId.ToString() + "_Document_" + String.Format("{0:yyyyMMdd}", DateTime.Now);
                     string extension = System.IO.Path.GetExtension(customerAccount.ResidentidImage.FileName).ToLower();
 
                     String uploadFilePath = "\\Attachment\\";
@@ -743,9 +743,8 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             catch (Exception ex)
             {
                 HelperClass.LogMessage("Failed to update user" + ex);
-                //return View(customerAccount);
                 TempData["lblerror"] = "Failed to update user" + ex.Message.ToString();
-                return View("RegisterCustomer");
+                return View("RegisterCustomerEdit");
             }
         }
         #endregion
@@ -941,6 +940,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         public ActionResult CustomerVehicleList()
         {
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerVehicleCBE>();
+            DataTable dt = new DataTable();
 
             try
             {
@@ -949,17 +949,15 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     return RedirectToAction("SessionPage", "Home");
                 }
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
-                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsList();
-
-                return View(customerDataList);
-
+                //customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsList();
+                dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllVehicleinDataTable();
             }
             catch (Exception ex)
             {
 
                 HelperClass.LogMessage("Failed To Load Customer Vehicle List " + ex.Message.ToString());
             }
-            return View(customerDataList);
+            return View(dt);
         }
 
         private ActionResult CustomerVehicleAdditions()
@@ -979,6 +977,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.vehicleclassList = vehicleclassList;
 
             #endregion
+
             #region Queue Status
             List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
             Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
@@ -990,6 +989,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.queueStatus = customerQueueStatus;
 
             #endregion
+
             #region Customer Data Dropdown
             List<SelectListItem> customerclassList = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
@@ -1001,17 +1001,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             }
             ViewBag.customerclassList = customerclassList;
             #endregion
-            #region Vehicle Brand
-            List<SelectListItem> brandList = new List<SelectListItem>();
-            Array arbrand = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleBrand));
 
-            for (int i = 0; i < arbrand.Length; i++)
-            {
-                brandList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleBrandName[i], Value = System.Convert.ToString((int)arbrand.GetValue(i)) });
-            }
-            ViewBag.brandName = brandList;
-
-            #endregion
             #region Vehicle Type
             List<SelectListItem> typeList = new List<SelectListItem>();
             Array artype = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleType));
@@ -1023,17 +1013,19 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.typeName = typeList;
 
             #endregion
-            #region Vehicle Category
-            List<SelectListItem> categoryList = new List<SelectListItem>();
-            Array arcategory = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleCategory));
 
-            for (int i = 0; i < arcategory.Length; i++)
+            #region Exception Flag
+            List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
+            Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
+
+            for (int i = 0; i < ExceptionFlagListart.Length; i++)
             {
-                categoryList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleCategoryName[i], Value = System.Convert.ToString((int)arcategory.GetValue(i)) });
+                ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
             }
-            ViewBag.categoryName = categoryList;
+            ViewBag.ExceptionFlagType = ExceptionFlagList;
 
             #endregion
+
             #region Fuel Type
             List<SelectListItem> fuelTypeList = new List<SelectListItem>();
             Array arcfuelType = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelType));
@@ -1045,17 +1037,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.fuelTypeName = fuelTypeList;
 
             #endregion
-            #region Vehicle Color
-            List<SelectListItem> vehicleColorList = new List<SelectListItem>();
-            Array arvehicleColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleColor));
 
-            for (int i = 0; i < arvehicleColor.Length; i++)
-            {
-                vehicleColorList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleColorName[i], Value = System.Convert.ToString((int)arvehicleColor.GetValue(i)) });
-            }
-            ViewBag.vehicleColorName = vehicleColorList;
-
-            #endregion
             #region Licence Plate Color
             List<SelectListItem> licencePlateColorList = new List<SelectListItem>();
             Array arlicencePlateColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColor));
@@ -1125,10 +1107,10 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     Value = false;
                 }
                 //Save Right Side Image
-                if (customerVehicle.RightSideImage != null)
+                if (customerVehicle.RightImage != null)
                 {
 
-                    customerVehicle.VehicleImageRightSide = HelperClass.ImageSave(customerVehicle.RightSideImage, imageTypes, ref Value, customerVehicle.VehRegNo + "RightSideImage");
+                    customerVehicle.VehicleImageRight = HelperClass.ImageSave(customerVehicle.RightImage, imageTypes, ref Value, customerVehicle.VehRegNo + "RightImage");
                     if (Value)
                     {
                         TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Right Side Image";
@@ -1137,9 +1119,18 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     Value = false;
                 }
                 //Save Left Side Image
-                if (customerVehicle.LeftSideImage != null)
+                if (customerVehicle.LeftImage != null)
                 {
-                    customerVehicle.VehicleImageLeftSide = HelperClass.ImageSave(customerVehicle.LeftSideImage, imageTypes, ref Value, customerVehicle.VehRegNo + "LeftSideImage");
+                    customerVehicle.VehicleImageLeft = HelperClass.ImageSave(customerVehicle.LeftImage, imageTypes, ref Value, customerVehicle.VehRegNo + "LeftImage");
+                    if (Value)
+                    {
+                        TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Left Side Image";
+                        return CustomerVehicleAdditions();
+                    }
+                }
+                if (customerVehicle.VehicleRCNumberImage != null)
+                {
+                    customerVehicle.VehicleRCNumberImagePath = HelperClass.ImageSave(customerVehicle.VehicleRCNumberImage, imageTypes, ref Value, customerVehicle.VehRegNo + "RCImage");
                     if (Value)
                     {
                         TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Left Side Image";
@@ -1195,17 +1186,16 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         private ActionResult CustomerVehicleEditions(CustomerVehicleCBE customerVehicle)
         {
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
-            #region Queue Status
-            List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
-            Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
 
-            for (int i = 0; i < arStatus.Length; i++)
-            {
-                customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
-            }
-            ViewBag.queueStatus = customerQueueStatus;
-
+            #region Customer Account Details
+            CustomerAccountCBE customerAccount = new CustomerAccountCBE();
+            customerAccount.AccountId = customerVehicle.AccountId;
+            customerAccount.TmsId = 1;
+            customerAccount = Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetCustomerById(customerAccount);
+            ViewBag.FirstName = customerAccount.FirstName;
+            ViewBag.ResidentId = customerAccount.ResidentId;
             #endregion
+
             #region Vehicle Class Dropdown
             List<SelectListItem> vehicleclassList = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE> vehicleclassDataList = new List<Libraries.CommonLibrary.CBE.VehicleClassCBE>();
@@ -1220,6 +1210,19 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.vehicleclassList = vehicleclassList;
 
             #endregion
+
+            #region Queue Status
+            List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
+            Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
+
+            for (int i = 0; i < arStatus.Length; i++)
+            {
+                customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
+            }
+            ViewBag.queueStatus = customerQueueStatus;
+
+            #endregion
+
             #region Customer Data Dropdown
             List<SelectListItem> customerclassList = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerDataList = new List<Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
@@ -1231,17 +1234,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             }
             ViewBag.customerclassList = customerclassList;
             #endregion
-            #region Vehicle Brand
-            List<SelectListItem> brandList = new List<SelectListItem>();
-            Array arbrand = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleBrand));
 
-            for (int i = 0; i < arbrand.Length; i++)
-            {
-                brandList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleBrandName[i], Value = System.Convert.ToString((int)arbrand.GetValue(i)) });
-            }
-            ViewBag.brandName = brandList;
-
-            #endregion
             #region Vehicle Type
             List<SelectListItem> typeList = new List<SelectListItem>();
             Array artype = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleType));
@@ -1253,17 +1246,19 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.typeName = typeList;
 
             #endregion
-            #region Vehicle Category
-            List<SelectListItem> categoryList = new List<SelectListItem>();
-            Array arcategory = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleCategory));
 
-            for (int i = 0; i < arcategory.Length; i++)
+            #region Exception Flag
+            List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
+            Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
+
+            for (int i = 0; i < ExceptionFlagListart.Length; i++)
             {
-                categoryList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleCategoryName[i], Value = System.Convert.ToString((int)arcategory.GetValue(i)) });
+                ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
             }
-            ViewBag.categoryName = categoryList;
+            ViewBag.ExceptionFlagType = ExceptionFlagList;
 
             #endregion
+
             #region Fuel Type
             List<SelectListItem> fuelTypeList = new List<SelectListItem>();
             Array arcfuelType = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelType));
@@ -1275,17 +1270,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             ViewBag.fuelTypeName = fuelTypeList;
 
             #endregion
-            #region Vehicle Color
-            List<SelectListItem> vehicleColorList = new List<SelectListItem>();
-            Array arvehicleColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleColor));
 
-            for (int i = 0; i < arvehicleColor.Length; i++)
-            {
-                vehicleColorList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.VehicleColorName[i], Value = System.Convert.ToString((int)arvehicleColor.GetValue(i)) });
-            }
-            ViewBag.vehicleColorName = vehicleColorList;
-
-            #endregion
             #region Licence Plate Color
             List<SelectListItem> licencePlateColorList = new List<SelectListItem>();
             Array arlicencePlateColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColor));
@@ -1316,15 +1301,18 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             if (token == urltoken)
             {
                 CustomerVehicleCBE customerDataList = new CustomerVehicleCBE();
-                VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customer = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE();
+
+
                 customerDataList.EntryId = id;
                 customerDataList = Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleById(customerDataList);
+
                 ViewBag.AccountId = customerDataList.AccountId;
                 ViewBag.VehicleClassId = customerDataList.VehicleClassId;
                 ViewBag.VehicleImageFront = customerDataList.VehicleImageFront;
                 ViewBag.VehicleImageRear = customerDataList.VehicleImageRear;
-                ViewBag.VehicleImageLeftSide = customerDataList.VehicleImageLeftSide;
-                ViewBag.VehicleImageRightSide = customerDataList.VehicleImageRightSide;
+                ViewBag.VehicleImageLeft = customerDataList.VehicleImageLeft;
+                ViewBag.VehicleImageRight = customerDataList.VehicleImageRight;
+                ViewBag.VehicleRCNumberImage = customerDataList.VehicleRCNumberImagePath;
                 return CustomerVehicleEditions(customerDataList);
             }
             else
@@ -1409,10 +1397,10 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     CustomerVehicleCBE.VehicleImageRear = CustomerVehicleList.VehicleImageRear;
                 }
                 //Save Right Side Image
-                if (CustomerVehicleCBE.RightSideImage != null)
+                if (CustomerVehicleCBE.RightImage != null)
                 {
 
-                    CustomerVehicleCBE.VehicleImageRightSide = HelperClass.ImageSave(CustomerVehicleCBE.RightSideImage, imageTypes, ref Value, CustomerVehicleCBE.VehRegNo + "RightSideImage");
+                    CustomerVehicleCBE.VehicleImageRight = HelperClass.ImageSave(CustomerVehicleCBE.RightImage, imageTypes, ref Value, CustomerVehicleCBE.VehRegNo + "RightImage");
                     if (Value)
                     {
                         TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Right Side Image";
@@ -1421,12 +1409,12 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     Value = false;
                 }
                 else {
-                    CustomerVehicleCBE.VehicleImageRightSide = CustomerVehicleList.VehicleImageRightSide;
+                    CustomerVehicleCBE.VehicleImageRight = CustomerVehicleList.VehicleImageRight;
                 }
                 //Save Left Side Image
-                if (CustomerVehicleCBE.LeftSideImage != null)
+                if (CustomerVehicleCBE.LeftImage != null)
                 {
-                    CustomerVehicleCBE.VehicleImageLeftSide = HelperClass.ImageSave(CustomerVehicleCBE.LeftSideImage, imageTypes, ref Value, CustomerVehicleCBE.VehRegNo + "LeftSideImage");
+                    CustomerVehicleCBE.VehicleImageLeft = HelperClass.ImageSave(CustomerVehicleCBE.LeftImage, imageTypes, ref Value, CustomerVehicleCBE.VehRegNo + "LeftImage");
                     if (Value)
                     {
                         TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Left Side Image";
@@ -1434,9 +1422,21 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     }
                 }
                 else {
-                    CustomerVehicleCBE.VehicleImageLeftSide = CustomerVehicleList.VehicleImageLeftSide;
+                    CustomerVehicleCBE.VehicleImageLeft = CustomerVehicleList.VehicleImageLeft;
                 }
 
+                if (CustomerVehicleCBE.VehicleRCNumberImage != null)
+                {
+                    CustomerVehicleCBE.VehicleRCNumberImagePath = HelperClass.ImageSave(CustomerVehicleCBE.VehicleRCNumberImage, imageTypes, ref Value, CustomerVehicleCBE.VehRegNo + "RCImage");
+                    if (Value)
+                    {
+                        TempData["Message"] = "Please choose either GIF, JPG or PNG  image Or Image less than 2mb size in Vehicle Left Side Image";
+                        return CustomerVehicleEditions(CustomerVehicleList);
+                    }
+                }
+                else {
+                    CustomerVehicleCBE.VehicleRCNumberImagePath = CustomerVehicleList.VehicleRCNumberImagePath;
+                }
                 #endregion
                 CustomerVehicleCBE.ModificationDate = DateTime.Now;
                 CustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
@@ -1468,7 +1468,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
         }
         #endregion
 
-      
+
 
         [HttpGet]
         public ActionResult CustomerTagList(int id)//here id is account id
@@ -1573,7 +1573,7 @@ namespace VaaaN.MLFF.WebApplication.Controllers
                     //Call Account_History Class
                     Libraries.CommonLibrary.CBE.AccountHistoryCBE accountHistory = new Libraries.CommonLibrary.CBE.AccountHistoryCBE();
                     accountHistory.TransactionId = 0;// Set 0 for Credit From POS Form
-                    accountHistory.Amount = customerVehicle.Amount;//From Form 
+                    accountHistory.Amount = customerVehicle.AccountBalance;//From Form 
                     accountHistory.TMSId = tmsId;
                     accountHistory.CustomerVehicleEntryId = customerVehicleId;
                     accountHistory.AccountId = id;//Set Plaza Id 1
