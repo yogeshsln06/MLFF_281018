@@ -470,13 +470,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         public enum CustomerQueueStatus
         {
             Open = 1,
-            Arranged,
+            Postponded,
             Processed
         };
         public static string[] CustomerQueueStatusName = new string[]
       {
             "Open",
-            "Arranged",
+            "Postponded",
             "Processed"
       };
         public enum Gender
@@ -551,16 +551,35 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             "Category1",
             "Category2"
       };
+        public enum ExceptionFlag
+        {
+            Charged = 1,
+            NotCharged,
+            Blacklist
+        };
+
+        public static string[] ExceptionFlagName = new string[]
+      {
+            "Charged",
+            "Not Charged",
+            "Blacklist",
+      };
         public enum FuelType
         {
-            Petrol = 1,
-            Diesel,
-
+            Diesel = 1,
+            Gasoline,
+            Petrol,
+            Electric,
+            Solor
         };
+
         public static string[] FuelTypeName = new string[]
       {
-            "Petrol",
-            "Diesel"
+          "Diesel",
+          "Gasoline",
+          "Petrol",
+          "Electric",
+          "Solor"
       };
         public enum VehicleColor
         {
@@ -577,16 +596,47 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
       };
         public enum LicencePlateColor
         {
-            Unknown = 0,
-            White = 1,
-            Black,
+
+            //Whiteonblack = 1,
+            //Redonwhite,
+            //Blackonyellow,
+            //Whiteonred,
+            //BlackonRed,
+            //BlackonWhite,
+            //WhiteonBlue,
+            //Blackongreen,
+            //Blueonwhite,
+            //Unknown
+            Black = 1,
+            White,
+            Yellow,
+            Red,
+            Blue,
+            Green,
+            Unknown
 
         };
         public static string[] LicencePlateColorName = new string[]
       {
-            "Unknown",
-            "White",
-            "Black"
+
+          "Black",
+          "White",
+          "Yellow",
+          "Red",
+          "Blue",
+          "Green",
+          "Unknown"
+
+            //"White on Black",
+            //"Red on White",
+            //"Black on Yellow",
+            //"White on Red",
+            //"Black on Red",
+            //"Black on White",
+            //"White on Blue",
+            //"Black on Green",
+            //"Blue on White",
+            //"Unknown"
       };
         public static string[] ECBStatusDescription = new string[]
         {

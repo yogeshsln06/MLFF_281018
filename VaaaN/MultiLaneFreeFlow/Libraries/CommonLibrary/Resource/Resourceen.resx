@@ -274,7 +274,7 @@
     <value>Search Customer</value>
   </data>
   <data name="TagId" xml:space="preserve">
-    <value>Tag Id</value>
+    <value>EPC No</value>
   </data>
   <data name="VehicleRegNo" xml:space="preserve">
     <value>Vehicle Reg No</value>
@@ -287,5 +287,8 @@
   </data>
   <data name="RegisteredCustomer" xml:space="preserve">
     <value>Registered Customer</value>
+  </data>
+  <data name="EPCNo" xml:space="preserve">
+    <value>EPC Number</value>
   </data>
 </root>

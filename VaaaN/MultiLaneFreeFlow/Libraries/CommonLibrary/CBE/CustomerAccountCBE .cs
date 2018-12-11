@@ -136,6 +136,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.lastName; }
             set { this.lastName = value; }
         }
+
         [Required]
         [Display(Name = "MobileNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public String MobileNo
@@ -143,6 +144,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.mobileNo; }
             set { this.mobileNo = value; }
         }
+
         [Required]
         [Display(Name = "EmailId", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public String EmailId
@@ -150,12 +152,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.emailId; }
             set { this.emailId = value; }
         }
-        [Required]
+        
         public String Description
         {
             get { return this.description; }
             set { this.description = value; }
         }
+
         [Display(Name = "Address", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [Required]
         public String Address
@@ -176,6 +179,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.accountBalance; }
             set { this.accountBalance = value; }
         }
+
         public int Balance
         {
             get
@@ -188,6 +192,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.balance = value;
             }
         }
+
         public Int32 ModifierId
         {
             get { return this.modifierId; }
@@ -236,6 +241,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 
 
         [Display(Name = "eKTP")]//Resident Identity Number
+        [Required]
         public string ResidentId
         {
             get

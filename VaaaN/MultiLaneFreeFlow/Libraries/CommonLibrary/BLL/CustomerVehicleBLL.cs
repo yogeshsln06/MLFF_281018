@@ -82,5 +82,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleByVehRegNo(customerVehicle);
         }
 
+        public static DataTable GetAllVehicleinDataTable()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetAllVehicleinDataTable();
+        }
+
     }
 }
