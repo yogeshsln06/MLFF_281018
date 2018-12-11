@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -1466,6 +1467,53 @@ namespace VaaaN.MLFF.WebApplication.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult RechargeAmount(CustomerVehicleCBE objCustomerVehicleCBE)
+        {
+            CultureInfo culture = new CultureInfo("id-ID");
+            JsonResult result = new JsonResult();
+            JsonResultClass objJsonResultClass = new JsonResultClass();
+            Decimal rechargeAmount = objCustomerVehicleCBE.AccountBalance;
+            DateTime transcationDateTime = DateTime.Now;
+            Int32 entryId = 0;
+            CustomerVehicleCBE customerAccount = Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(objCustomerVehicleCBE);
+            if (!string.IsNullOrEmpty(customerAccount.VehRegNo))
+            {
+                try
+                {
+                    AccountHistoryCBE accountHistory = new AccountHistoryCBE();
+                    accountHistory.TMSId = customerAccount.TMSId;
+                    //accountHistory.EntryId = 0;//this  is the auto incremented and primary key of table
+                    accountHistory.AccountId = customerAccount.AccountId;
+                    accountHistory.CustomerVehicleEntryId = customerAccount.EntryId;
+                    accountHistory.TransactionTypeId = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransactionType.Recharge;
+                    accountHistory.TransactionId = 0;// Transaction id will be used if amount is debited by lane transaction
+                    accountHistory.Amount = rechargeAmount;
+                    accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
+                    accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent; ;//will be updated later on
+                    accountHistory.CreationDate = transcationDateTime;
+                    accountHistory.ModificationDate = transcationDateTime;
+                    accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
+                    entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                    objCustomerVehicleCBE.AccountBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerAccount, rechargeAmount);
+
+                    objJsonResultClass.Meassage = "Success";
+                    objJsonResultClass.UpdateAmount = Decimal.Parse(objCustomerVehicleCBE.AccountBalance.ToString()).ToString("C", culture);
+                }
+                catch (Exception ex)
+                {
+                    HelperClass.LogMessage("Failed to rechnage customer vehicle account" + ex);
+                    objJsonResultClass.Meassage = "Unable to process the request.";
+                }
+            }
+            else {
+                objJsonResultClass.Meassage = "No customer account found to topup";
+            }
+
+            result.Data = objJsonResultClass;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
 
@@ -1904,6 +1952,12 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             JsonResult result = new JsonResult();
             result.Data = Libraries.CommonLibrary.Constants.VRNToByte(customerVehicle.VehicleClassId, customerVehicle.VehRegNo);
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public class JsonResultClass
+        {
+            public string Meassage { get; set; }
+            public string UpdateAmount { get; set; }
         }
     }
 }

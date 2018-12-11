@@ -333,3 +333,44 @@ function validTAGId(str) {
     var pattern = /^[0-9a-fA-F]+$/;
     return String(str).match(pattern);
 }
+var TR = null;
+function rechareData(ctrl) {
+    TR = $(ctrl).parent().parent();
+    $("#txtVrnNo").val($(TR).find('td:nth-child(3)').text().trim());
+    $("#txtMobileNo").val($(TR).find('td:nth-child(2)').text().trim());
+    $('#RechargeData').modal('show');
+}
+function RechargeAmount() {
+  
+    var InputData = {
+        VehRegNo: $(TR).find('td:nth-child(3)').text().trim(),
+        EntryId: 0,
+        AccountBalance: $('#txtAmount').val()
+    }
+    $('#loader').show();
+    $.ajax({
+        type: "POST",
+        url: "RechargeAmount",
+        dataType: "JSON",
+        async: true,
+        data: JSON.stringify(InputData),
+        contentType: "application/json; charset=utf-8",
+        success: function (JsonfilterData) {
+            $('#loader').hide();
+            ResponceData = JsonfilterData.Data;
+            if (ResponceData.Meassage == "Success") {
+                $(TR).find('td:nth-child(7)').text(ResponceData.UpdateAmount);
+                $("#closepopup").trigger("click");
+            }
+            else {
+                $("#lblErrors").text(ResponceData.Meassage);
+            }
+            
+        },
+        error: function (x, e) {
+            $("#lblErrors").text("somthing went wrong");
+            $('#loader').hide();
+        }
+
+    });
+}

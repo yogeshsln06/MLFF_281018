@@ -2338,8 +2338,8 @@ namespace VaaaN.MLFF.WindowsServices
                     {
                         LogMessage("Trying to update balance in customer account table...");
                         //should be by by trigger defined in TBL_ACCOUNT_HISTORY
-                        customerVehicleInfo.AccountBalance += -1 * tollToDeduct;
-                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerVehicleInfo);
+                        //customerVehicleInfo.AccountBalance += -1 * tollToDeduct;
+                        customerVehicleInfo.AccountBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerVehicleInfo, (-1 * tollToDeduct));
                         //VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateBalance(customerAccountInfo, (-1 * tollToDeduct));
 
                         LogMessage("Balance updated successfully in the customer account.");

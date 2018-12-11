@@ -9,7 +9,7 @@
 <script src="~/scripts/jquery.dataTables.min.js"></script>
 <script src="~/scripts/dataTables.bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
-
+<script src="~/js/CustomerVehicle.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#tableCustomerVehicle').dataTable({
@@ -98,15 +98,15 @@
                         }
                     </td>
                     <td style="text-align:right;">
-                        @Decimal.Parse(@item["ACCOUNT_BALANCE"].ToString()).ToString("C").Replace("$","Rp")
+                        @Decimal.Parse(@item["ACCOUNT_BALANCE"].ToString()).ToString("C").Replace("$","Rp").Replace(",", ".")
                     </td>
                     <td>
                         @item["QUEUE_STATUS_NAME"].ToString()
                     </td>
                     <td>
-                        <a class="edit" href="@Url.Action("CustomerVehicleEdit", "POS", new { id = @item["ENTRY_ID"], urltoken = token })">
+                        <span class="edit" onclick="rechareData(this)">
                             <i class="fa fa-money" style="@ViewBag.Visibility" aria-hidden="true" title="Top Up"></i>
-                        </a>
+                        </span>
 
                     </td>
                     <td>
@@ -123,4 +123,42 @@
     <p style="padding-top:15px;">
         <a href="~/POS/CustomerVehicleAdd" class="btn btn-primary"><i class="fa fa-plus-circle"></i><span> New Customer Vehicle</span></a>
     </p>
+</div>
+<div class="modal fade" tabindex="-1" id="RechargeData"
+     data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background-color: #fefefe;margin: 15% auto;padding: 20px; border: 1px solid #888;width: 450px; ">
+            <div class="modal-header" style="background-color:rgb(64, 178, 205);">
+                <button type="button" class="close" data-dismiss="modal" id="closepopup">
+                    ×
+                </button>
+                <h4 class="modal-title">TOP-UP</h4>
+            </div>
+            <div class="modal-body" style="padding:5px">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <label for="txtVrnNo" class="form-label">Vehicle Registration Number</label>
+                            <input class="form-control " value="" id="txtVrnNo" readonly/>
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <label for="txtMobileNo" class="form-label">Mobile No</label>
+                            <input class="form-control " value="" id="txtMobileNo" readonly/>
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <label for="txtAmount" class="form-label">Top UP Amount</label>
+                            <input class="form-control " value="100000" id="txtAmount" type="number"/>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <span id="lblErrors" style="color:red;float:right"></span>
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Submit" class="btn btn-primary" onclick="return RechargeAmount();" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

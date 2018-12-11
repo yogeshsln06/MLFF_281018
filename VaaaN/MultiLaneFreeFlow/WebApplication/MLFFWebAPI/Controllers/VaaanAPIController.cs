@@ -731,7 +731,7 @@ namespace MLFFWebAPI.Controllers
                                             customerAccount.ModificationDate = DateTime.Now;
 
                                             LogInboundSMS("Updating customer account.");
-                                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerVehicle);
+                                            customerVehicle.AccountBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerVehicle, rechargeAmount);
                                             LogInboundSMS("Customer account updated successfully.");
                                         }
                                         catch (Exception ex)
