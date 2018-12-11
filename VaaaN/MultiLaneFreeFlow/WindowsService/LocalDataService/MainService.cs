@@ -2301,7 +2301,7 @@ namespace VaaaN.MLFF.WindowsServices
 
             if (tollToDeduct > -1)
             {
-                Decimal CurrentAccountBalance = customerAccountInfo.AccountBalance;
+                Decimal CurrentAccountBalance = customerVehicleInfo.AccountBalance;
                 Decimal AfterDeduction = CurrentAccountBalance - tollToDeduct;
                 if (AfterDeduction > 0)
                 {
