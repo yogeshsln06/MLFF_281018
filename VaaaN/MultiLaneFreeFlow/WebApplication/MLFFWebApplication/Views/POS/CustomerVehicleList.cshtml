@@ -1,4 +1,5 @@
-﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE>
+﻿@using System.Data
+@model DataTable
 
 @{
     ViewBag.Title = "Customer Vehicle List";
@@ -17,10 +18,6 @@
             "info": true,
             "searching": true
         });
-        //$('#module_2').css({ "background-color": "#00B4CE" });
-        //$('#module_2').css({ "font-weight": "bold" });
-        //$('#submodule_9').css({ "background-color": "#00B2aa" });
-        //$('#submodule_9').css({ "font-weight": "bold" });
     });
 </script>
 
@@ -28,6 +25,7 @@
 <div class="panel panel-info">
     <div class="panel-heading " style="background-color:rgb(64, 178, 205);">
         @{ int rowNo = 0; }
+       
         <div class="panel-title new-title">
             Customer Vehicle List
         </div>
@@ -36,50 +34,83 @@
     <table id="tableCustomerVehicle" class="table table-condensed table-striped table-hover">
         <thead>
             <tr>
-                <th>
-                    No.
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.VehRegNo)
+                <th style="width:20px">
+                    S.No.
                 </th>
 
-                <th>
-                    @Html.DisplayNameFor(model => model.TagId)
+                <th style="width:60px">
+                    Mobile No
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.VehicleClassName)
+                <th style="width:40px">
+                    Plate No
                 </th>
-              
-                <th>
+                <th style="width:100px">
+                    EPC No
+                </th>
+                <th style="width:40px">
+                    Classification
+                </th>
+                <th style="width:40px">
+                    Valid Until
+                </th>
+                <th style="width:40px; text-align:left;">
+                    Balance
+                </th>
+                <th style="width:40px">
+                    Status
+                </th>
+                <th style="width:20px">
+                    Recharge
+                </th>
+                <th style="width:20px">
                     Edit
                 </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (DataRow item in Model.Rows)
             {
                 var token = "";
-                if (item.AccountId > 0)
+                if (Convert.ToInt32(@item["ACCOUNT_ID"].ToString()) > 0)
                 {
-                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("POS", "CustomerVehicleEdit", Convert.ToString(item.EntryId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("POS", "CustomerVehicleEdit", Convert.ToString(@item["ENTRY_ID"]), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
                 }
                 <tr>
                     <td>
                         @(rowNo += 1)
+                    </td>
+                    <td>
+                        @item["MOB_NUMBER"].ToString()
+                    </td>
+                    <td>
+                        @item["VEH_REG_NO"].ToString()
+                    </td>
+                    <td>
+                        @item["TAG_ID"].ToString()
+                    </td>
+                    <td>
+                        @item["VEHICLE_CLASS_NAME"].ToString()
+                    </td>
+                    <td>
+                        @if (@item["VALID_UNTIL"].ToString() != "")
+                        {
+                            @Convert.ToDateTime(@item["VALID_UNTIL"]).ToString("dd-MMM-yyyy")
+                        }
+                    </td>
+                    <td style="text-align:right;">
+                        @Decimal.Parse(@item["ACCOUNT_BALANCE"].ToString()).ToString("C").Replace("$","Rp")
+                    </td>
+                    <td>
+                        @item["QUEUE_STATUS_NAME"].ToString()
+                    </td>
+                    <td>
+                        <a class="edit" href="@Url.Action("CustomerVehicleEdit", "POS", new { id = @item["ENTRY_ID"], urltoken = token })">
+                            <i class="fa fa-money" style="@ViewBag.Visibility" aria-hidden="true" title="Top Up"></i>
+                        </a>
 
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.VehRegNo)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TagId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VehicleClassName)
-                    </td>
-                    <td>
-                        <a class="edit" href="@Url.Action("CustomerVehicleEdit", "POS", new { id = item.EntryId, urltoken = token })">
+                        <a class="edit" href="@Url.Action("CustomerVehicleEdit", "POS", new { id = @item["ENTRY_ID"], urltoken = token })">
                             <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
                         </a>
 

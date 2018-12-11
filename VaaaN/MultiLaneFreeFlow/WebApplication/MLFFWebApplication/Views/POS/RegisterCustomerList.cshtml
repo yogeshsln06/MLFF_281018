@@ -59,7 +59,7 @@
                     <th style="width:60px;text-align:left;">
                         @Html.DisplayNameFor(model => model.ResidentId)
                     </th>
-                    <th style="width:60px;text-align:left;">
+                    @*<th style="width:60px;text-align:left;">
                         @Html.DisplayNameFor(model => model.BirthPlace)
                     </th>
                     <th style="width:60px;">
@@ -82,7 +82,7 @@
                     </th>
                     <th style="width:60px">
                         @Html.DisplayNameFor(model => model.Occupation)
-                    </th>
+                    </th>*@
                     <th style="width:60px">
                         @Html.DisplayNameFor(model => model.ValidUntil)
                     </th>
@@ -92,9 +92,9 @@
                     <th style="width:60px">
                         @Html.DisplayNameFor(model => model.ResidentidImage)
                     </th>
-                    <th>
+                    @*<th>
                         Tags
-                    </th>
+                    </th>*@
                     <th>
                         Edit
                     </th>
@@ -126,7 +126,7 @@
                         <td style="width:60px;text-align:left;">
                             @Html.DisplayFor(modelItem => item.ResidentId)
                         </td>
-                        <td style="width:60px;text-align:left;">
+                        @*<td style="width:60px;text-align:left;">
                             @Html.DisplayFor(modelItem => item.BirthPlace)
                         </td>
                         <td style="width:60px;">
@@ -149,9 +149,13 @@
                         </td>
                         <td style="width:60px;text-align:left;">
                             @Html.DisplayFor(modelItem => item.Occupation)
-                        </td>
+                        </td>*@
                         <td style="width:60px;">
-                            @Html.DisplayFor(modelItem => item.ValidUntil)
+                            @if (item.ValidUntil.ToString() != "")
+                            {
+                                @Convert.ToDateTime(item.ValidUntil).ToString("dd-MMM-yyyy")
+                            }
+                           
                         </td>
                         <td style="width:60px;">
                             @if (item.ResidentidcardImagePath.ToString() != "")
@@ -175,9 +179,9 @@
 
                             }
                         </td>
-                        <td>
+                        @*<td>
                             <a href="@Url.Action("CustomerTagList", "POS", new { id = item.AccountId })" title="Edit">Tag</a>
-                        </td>
+                        </td>*@
                         <td>
                             <a class="edit" href="@Url.Action("RegisterCustomerEdit", "POS", new { id = item.AccountId, urltoken = token })">
                                 <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>

@@ -6,9 +6,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-       
+
         $("#buttonUserBack").click(function () {
-            // Back to User List
             location.href = "@Url.Action("CustomerVehicleList", "POS")";
         });
     });
@@ -33,7 +32,11 @@
         margin-top: 25px;
         color: red;
     }
-    input.notFound{background:#d9534f;color:white;}
+
+    input.notFound {
+        background: #d9534f;
+        color: white;
+    }
 </style>
 <script src="~/js/CustomerVehicle.js"></script>
 <div class="grid-container">
@@ -47,19 +50,20 @@
             {
                 <input type="hidden" id="hfVehicleImageFront" value="" />
                 <input type="hidden" id="hfVehicleImageRear" value="" />
-                    <input type="hidden" id="hfVehicleImageLeftSide" value="" />
-                    <input type="hidden" id="hfVehicleImageRightSide" value="" />
+                <input type="hidden" id="hfVehicleImageLeft" value="" />
+                <input type="hidden" id="hfVehicleImageRight" value="" />
+                <input type="hidden" id="hfVehicleRCNumberImage" value="" />
                 <div class="row">
                     <form role="form">
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="FirstName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.FirstName</label>
+                            <label for="FirstName" class="form-label required">Name</label>
                             @Html.DropDownList("AccountId", (IEnumerable<SelectListItem>)ViewBag.customerclassList, new { @class = "form-control" })
-                            @Html.Editor("FirstName", new { htmlAttributes = new { @class = "form-control", placeholder = "First Name" } })
+                            @Html.Editor("FirstName", new { htmlAttributes = new { @class = "form-control", placeholder = "Name" } })
                             <span class="form-control-feedback glyphicon glyphicon-remove" id="spnTick"></span>
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="LastName" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.LastName</label>
-                            @Html.Editor("LastName", new { htmlAttributes = new { @class = "form-control", placeholder = "Last Name", @readonly = true } })
+                            <label for="Residentid" class="form-label">eKTP</label>
+                            @Html.Editor("Residentid", new { htmlAttributes = new { @class = "form-control", placeholder = "eKTP", @readonly = true } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
                             <label for="AccountId" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.SearchCustomer</label>
@@ -67,106 +71,161 @@
                             <button type="button" class="form-control btn btn-primary btn-sm" onclick="btnSearchUser()" id="searchCust">Find Customer</button>
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehRegNo" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo</label>
+                            @Html.LabelFor(model => model.VehicleRCNumber, htmlAttributes: new { @class = "form-label required" })
+                            @Html.EditorFor(model => model.VehicleRCNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Registration Certificate Number" } })
+                            @Html.ValidationMessageFor(model => model.VehicleRCNumber, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.VehRegNo, htmlAttributes: new { @class = "form-label required" })
                             @Html.EditorFor(model => model.VehRegNo, new { htmlAttributes = new { @maxlength = "9", @class = "form-control", placeholder = "Vehicle Reg No", onkeydown = "GetTagId();" } })
+                            @Html.ValidationMessageFor(model => model.VehRegNo, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleClassId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass</label>
-                            @Html.DropDownList("VehicleClassId", (IEnumerable<SelectListItem>)ViewBag.vehicleclassList, new { @class = "form-control", onchange = "GetTagId();" })
+                            @Html.LabelFor(model => model.OwnerName, htmlAttributes: new { @class = "form-label required" })
+                            @Html.EditorFor(model => model.OwnerName, new { htmlAttributes = new { @class = "form-control", placeholder = "Owner Name" } })
+                            @Html.ValidationMessageFor(model => model.OwnerName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.OwnerAddress, htmlAttributes: new { @class = "form-label required" })
+                            @Html.EditorFor(model => model.OwnerAddress, new { htmlAttributes = new { @class = "form-control", placeholder = "Owner Address" } })
+                            @Html.ValidationMessageFor(model => model.OwnerAddress, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="TagId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.TagId</label>
-                            @Html.EditorFor(model => model.TagId, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Tag Id" } })
+                            @Html.LabelFor(model => model.Brand, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Brand, new { htmlAttributes = new { @class = "form-control", placeholder = "Brand" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleRegistrationCerticateId" class="form-label required">Vehicle Certificate Id</label>
-                            @Html.EditorFor(model => model.VehicleRegistrationCerticateId, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Registration Certification Id" } })
+                            @Html.LabelFor(model => model.VehicleType, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.VehicleType, new { htmlAttributes = new { @class = "form-control", placeholder = "Type" } })
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.VehicleCategory, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.VehicleCategory, new { htmlAttributes = new { @class = "form-control", placeholder = "Category" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="Address" class="form-label required">Address</label>
-                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Address" } })
+                            @Html.LabelFor(model => model.Model, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Model, new { htmlAttributes = new { @class = "form-control", placeholder = "Model" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="brand" class="form-label required">Brand</label>
-                            @Html.DropDownList("Brand", (IEnumerable<SelectListItem>)ViewBag.brandName, new { @class = "form-control", placeholder = "Brand" })
-                                              </div>
-                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleType" class="form-label required">Vehicle Type</label>
-                            @Html.DropDownList("VehicleType", (IEnumerable<SelectListItem>)ViewBag.typeName, new { @class = "form-control", placeholder = "Vehicle Type" })
-                           
-                        </div>
-                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleCategory" class="form-label required">Vehicle Category</label>
-                            @Html.DropDownList("VehicleCategory", (IEnumerable<SelectListItem>)ViewBag.categoryName, new { @class = "form-control", placeholder = "Vehicle Category" })
-                         
-                        </div>
-                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="FuelType" class="form-label required">Fuel Type</label>
-                            @Html.DropDownList("FuelType", (IEnumerable<SelectListItem>)ViewBag.fuelTypeName, new { @class = "form-control", placeholder = "Fuel Type" })
-                          
-                        </div>
-                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="ModelNo" class="form-label required">Model No</label>
-                            @Html.EditorFor(model => model.ModelNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Model No" } })
-                        </div>
-                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="ManufacturingYear" class="form-label required">Manufacturing Year</label>
+                            @Html.LabelFor(model => model.ManufacturingYear, htmlAttributes: new { @class = "form-label" })
                             @Html.EditorFor(model => model.ManufacturingYear, new { htmlAttributes = new { @class = "form-control", placeholder = "Manufacturing Year" } })
                         </div>
+                        <div class="clearfix"></div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="CyclinderCapacity" class="form-label required">Cyclinder Capacity</label>
+                            @Html.LabelFor(model => model.CyclinderCapacity, htmlAttributes: new { @class = "form-label" })
                             @Html.EditorFor(model => model.CyclinderCapacity, new { htmlAttributes = new { @class = "form-control", placeholder = "Cyclinder Capacity" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="FrameNumber" class="form-label required">Frame Number</label>
+                            @Html.LabelFor(model => model.FrameNumber, htmlAttributes: new { @class = "form-label" })
                             @Html.EditorFor(model => model.FrameNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Frame Number" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="EngineNumber" class="form-label required">Engine Number</label>
+                            @Html.LabelFor(model => model.EngineNumber, htmlAttributes: new { @class = "form-label" })
                             @Html.EditorFor(model => model.EngineNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Engine Number" } })
                         </div>
+                        <div class="clearfix"></div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleColor" class="form-label required">Vehicle Color</label>
-                            @Html.DropDownList("VehicleColor", (IEnumerable<SelectListItem>)ViewBag.vehicleColorName, new { @class = "form-control", placeholder = "Vehicle Color" })
-                         
+                            @Html.LabelFor(model => model.VehicleColor, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.VehicleColor, new { htmlAttributes = new { @class = "form-control", placeholder = "Color" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="LicencePlateColor" class="form-label required">Licence Plate Color</label>
+                            @Html.LabelFor(model => model.FuelType, htmlAttributes: new { @class = "form-label" })
+                            @Html.DropDownList("FuelType", (IEnumerable<SelectListItem>)ViewBag.fuelTypeName, new { @class = "form-control", placeholder = "Fuel Type" })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.LicencePlateColor, htmlAttributes: new { @class = "form-label" })
                             @Html.DropDownList("LicencePlateColor", (IEnumerable<SelectListItem>)ViewBag.licencePlateColorName, new { @class = "form-control", placeholder = "Licence Plate Color" })
-                           
                         </div>
+                        <div class="clearfix"></div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="RegistrationYear" class="form-label required">Registration Year</label>
+                            @Html.LabelFor(model => model.RegistrationYear, htmlAttributes: new { @class = "form-label" })
                             @Html.EditorFor(model => model.RegistrationYear, new { htmlAttributes = new { @class = "form-control", placeholder = "Registration Year" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="LocationCode" class="form-label required">Location Code</label>
+                            @Html.LabelFor(model => model.VehicleOwnershipDocumentNumber, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.VehicleOwnershipDocumentNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Ownership Document Number" } })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.LocationCode, htmlAttributes: new { @class = "form-label" })
                             @Html.EditorFor(model => model.LocationCode, new { htmlAttributes = new { @class = "form-control", placeholder = "LocationCode" } })
                         </div>
+                        <div class="clearfix"></div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleImageFront" class="form-label required">Front Image</label>
-                            <input name="FrontImage" id="FrontImage" type="file"  accept="image/x-png,image/gif,image/jpeg" />
-                            @*@Html.EditorFor(model => model.VehicleImageFront, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Front Image" } })*@
+                            @Html.LabelFor(model => model.RegistrationQueueNumber, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.RegistrationQueueNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Registration Queue Number" } })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleImageRear" class="form-label required" >Rear Image</label>
-                            <input name="RearImage" id="RearImage" type="file"  accept="image/x-png,image/gif,image/jpeg" />
-                            @*@Html.EditorFor(model => model.VehicleImageRear, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Rear Image" } })*@
+                            @Html.LabelFor(model => model.ExceptionFlag, htmlAttributes: new { @class = "form-label required" })
+                            @Html.DropDownList("ExceptionFlag", (IEnumerable<SelectListItem>)ViewBag.ExceptionFlagType, new { @class = "form-control", placeholder = "Exception Flag" })
+                            @Html.ValidationMessageFor(model => model.ExceptionFlag, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleImageRightSide" class="form-label required">Right Side Image</label>
-                            <input name="RightSideImage" id="RightSideImage" type="file" accept="image/x-png,image/gif,image/jpeg "/>
-                            @*@Html.EditorFor(model => model.VehicleImageRightSide, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Right Side Image" } })*@
+                            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "form-label required" })
+                            @Html.DropDownList("Status", (IEnumerable<SelectListItem>)ViewBag.queueStatus, new { @class = "form-control", placeholder = "Status" })
+                            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.ValidUntil, htmlAttributes: new { @class = "form-label required" })
+                            @Html.EditorFor(model => model.ValidUntil, new { htmlAttributes = new { @class = "form-control", placeholder = "Valid Until", @readonly = true } })
+                            @Html.ValidationMessageFor(model => model.ValidUntil, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="VehicleImageLeftSide" class="form-label required">Left Side Image</label>
-                            <input name="LeftSideImage" id="LeftSideImage" type="file" accept="image/x-png,image/gif,image/jpeg" />
-                             @*@Html.EditorFor(model => model.VehicleImageLeftSide, new { htmlAttributes = new { @class = "form-control", placeholder = "Vehicle Left Side Image" } })*@
+                            @Html.LabelFor(model => model.TidFront, htmlAttributes: new { @class = "form-label required" })
+                            @Html.EditorFor(model => model.TidFront, new { htmlAttributes = new { @class = "form-control", placeholder = "Tid Front" } })
+                            @Html.ValidationMessageFor(model => model.TidFront, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <label for="ValidUntil" class="form-label required">Valid Until</label>
-                            @Html.EditorFor(model => model.ValidUntil, new { htmlAttributes = new { @class = "form-control", placeholder = "Valid Until" } })
+                            @Html.LabelFor(model => model.TidRear, htmlAttributes: new { @class = "form-label required" })
+                            @Html.EditorFor(model => model.TidRear, new { htmlAttributes = new { @class = "form-control", placeholder = "Tid Rear" } })
+                            @Html.ValidationMessageFor(model => model.TidRear, "", new { @class = "text-danger" })
                         </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.VehicleClassId, htmlAttributes: new { @class = "form-label required" })
+                            @Html.DropDownList("VehicleClassId", (IEnumerable<SelectListItem>)ViewBag.vehicleclassList, new { @class = "form-control", onchange = "GetTagId();" })
+                            @Html.ValidationMessageFor(model => model.VehicleClassId, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.TagId, htmlAttributes: new { @class = "form-label required" })
+                            @Html.EditorFor(model => model.TagId, new { htmlAttributes = new { @class = "form-control", placeholder = "EPC NO" } })
+                            @Html.ValidationMessageFor(model => model.TagId, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.AccountBalance, htmlAttributes: new { @class = "form-label required" })
+                            @Html.EditorFor(model => model.AccountBalance, new { htmlAttributes = new { @class = "form-control", placeholder = "0.00" } })
+                            @Html.ValidationMessageFor(model => model.AccountBalance, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.FrontImage, htmlAttributes: new { @class = "form-label required" })
+                            <input name="FrontImage" id="FrontImage" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                            @Html.ValidationMessageFor(model => model.FrontImage, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.RearImage, htmlAttributes: new { @class = "form-label required" })
+                            <input name="RearImage" id="RearImage" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                            @Html.ValidationMessageFor(model => model.RearImage, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.RightImage, htmlAttributes: new { @class = "form-label required" })
+                            <input name="RightImage" id="RightImage" type="file" accept="image/x-png,image/gif,image/jpeg " />
+                            @Html.ValidationMessageFor(model => model.RightImage, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.LeftImage, htmlAttributes: new { @class = "form-label required" })
+                            <input name="LeftImage" id="LeftImage" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                            @Html.ValidationMessageFor(model => model.LeftImage, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(model => model.VehicleRCNumberImage, htmlAttributes: new { @class = "form-label required" })
+                            <input name="VehicleRCNumberImage" id="VehicleRCNumberImage" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                            @Html.ValidationMessageFor(model => model.VehicleRCNumberImage, "", new { @class = "text-danger" })
+                        </div>
+
                         <div class="clearfix"></div>
                         <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4" style="float:right">
                             <span id="lblErrors" style="color:red;"></span>
@@ -179,7 +238,7 @@
                         </div>
                         <div class="clearfix"></div>
                         <div class="col-xs-10 col-sm-4 col-md-4 col-lg-4">
-                            <button type="submit" class="btn btn-primary" onclick="return Validation();">Submit</button>&nbsp;&nbsp;<button id="buttonUserBack" type="button" class="btn btn-primary">Back</button>
+                            <button type="submit" class="btn btn-primary" onclick="return validateCustomerVehicle();">Submit</button>&nbsp;&nbsp;<button id="buttonUserBack" type="button" class="btn btn-primary">Back</button>
                         </div>
                     </form>
                     <div class="clearfix"></div>
@@ -204,7 +263,7 @@
                 <input type="text" class="form-control" id="inputToSearch" placeholder="Search..." />
             </div>
             <div class="modal-body" style="padding:0px">
-               
+
                 <table id="tableCustomerList" class="table table-condensed table-striped table-hover">
                     <thead>
                         <tr>
@@ -212,11 +271,11 @@
                                 No.
                             </th>
                             <th style='text-align:left'>
-                                First Name
+                                Name
                             </th>
-                            <th style='text-align:left'>
-                                Last Name
-                            </th>
+                            @*<th style='text-align:left'>
+                                    Last Name
+                                </th>*@
                             <th>
                                 eKTP
                             </th>

@@ -13,8 +13,27 @@
         -webkit-appearance: none;
         margin: 0;
     }
-</style>
 
+    #dvPreview {
+        filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);
+        display: none;
+        float: left;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: 1000;
+        background-color: #204d74;
+        padding: 2px;
+        color: #FFFFFF;
+        font-weight: bold;
+    }
+
+    #dvPreview img {
+            height: 120px;
+            width: 300px;
+        }
+</style>
+<script src="~/js/CustomerAccount.js"></script>
 @using (Html.BeginForm("RegisterCustomer", "POS", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
@@ -24,6 +43,8 @@
         </div>
         <div class="panel-body">
             @{
+                <input type="hidden" id="hfCustomerImagePath" value="" />
+                <input type="hidden" id="hfCustomerDocumentPath" value="" />
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
@@ -37,8 +58,8 @@
                             @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control ", autofocus = "true" } })
                             @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
                         </div>
-
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label col-md-2 required" })
                         <div class="col-md-4">
@@ -51,100 +72,106 @@
                             @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.BirthPlace, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.BirthPlace, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.EditorFor(model => model.BirthPlace, new { htmlAttributes = new { @class = "form-control " } })
-                            @Html.ValidationMessageFor(model => model.BirthPlace, "", new { @class = "text-danger" })
                         </div>
-                        @Html.Label("Birth Date", htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.Label("Birth Date", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control " } })
-                            @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.RT, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.RT, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.EditorFor(model => model.RT, new { htmlAttributes = new { @class = "form-control " } })
                             @Html.ValidationMessageFor(model => model.RT, "", new { @class = "text-danger" })
                         </div>
-                        @Html.LabelFor(model => model.RW, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.RW, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.EditorFor(model => model.RW, new { htmlAttributes = new { @class = "form-control " } })
                             @Html.ValidationMessageFor(model => model.RW, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2 required" })
                         <div class="col-md-4">
                             @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control " } })
                             @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                         </div>
-                        @Html.LabelFor(model => model.ProvinceId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.ProvinceId, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.DropDownList("ProvinceId", (IEnumerable<SelectListItem>)ViewBag.Provinces, new { @class = "form-control", onchange = "GetCityList();" })
                             @Html.ValidationMessageFor(model => model.ProvinceId, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             <select id="ddlCityId" name="ddlCityId" class="form-control" onchange="GetDistrictList();"></select>
                             @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
                         </div>
-                        @Html.LabelFor(model => model.DistrictId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.DistrictId, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             <select id="DistrictId" name="DistrictId" class="form-control" onchange="GetSubDistrictList();"></select>
                             @Html.ValidationMessageFor(model => model.DistrictId, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.SubDistrictId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.SubDistrictId, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
 
                             <select id="SubDistrictId" name="SubDistrictId" class="form-control" onchange="GetZip(this);"></select>
                             @Html.ValidationMessageFor(model => model.SubDistrictId, "", new { @class = "text-danger" })
                         </div>
-                        @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @class = "form-control " } })
                             @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Nationality, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.Nationality, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.DropDownList("Nationality", (IEnumerable<SelectListItem>)ViewBag.nationalityName, new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.Nationality, "", new { @class = "text-danger" })
                         </div>
-                        @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.DropDownList("Gender", (IEnumerable<SelectListItem>)ViewBag.genderName, new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.MaritalStatus, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.MaritalStatus, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.DropDownList("MaritalStatus", (IEnumerable<SelectListItem>)ViewBag.maritalstatusName, new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.MaritalStatus, "", new { @class = "text-danger" })
                         </div>
-                        @Html.LabelFor(model => model.Occupation, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                        @Html.LabelFor(model => model.Occupation, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-4">
                             @Html.EditorFor(model => model.Occupation, new { htmlAttributes = new { @class = "form-control " } })
                             @Html.ValidationMessageFor(model => model.Occupation, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
-                      
                         @Html.Label("Valid Until", htmlAttributes: new { @class = "control-label col-md-2 required" })
                         <div class="col-md-4">
                             @Html.EditorFor(model => model.ValidUntil, new { htmlAttributes = new { @class = "form-control " } })
                             @Html.ValidationMessageFor(model => model.ValidUntil, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                 
+                    <div class="clearfix"></div>
+
                     <div class="form-group">
                         @Html.LabelFor(model => model.CustomerImage, htmlAttributes: new { @class = "control-label col-md-2 required" })
                         <div class="col-md-4">
@@ -156,173 +183,25 @@
                             <input name="ResidentidImage" id="ResidentidImage" type="file" />
                             @Html.ValidationMessageFor(model => model.ResidentidImage, "", new { @class = "text-danger" })
                         </div>
-                        
+
                     </div>
+                    <div class="clearfix"></div>
                     <div class="form-group">
                         <div class="col-md-4" style="position: relative;">
                             <div id="dvPreview">
                             </div>
                         </div>
                     </div>
-
+                    <div class="clearfix"></div>
                     <div class="form-group">
                         <span id="lblErrors" style="color:red;float:right">@TempData["lblerror"]</span>
                         <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Submit" class="btn btn-primary" onclick="return Validation();" />
-                            &nbsp;&nbsp;@Html.ActionLink("Customer List", "TagSaleList", "POS", new { @class = "btn btn-primary" })
+                            <input type="submit" value="Submit" class="btn btn-primary" onclick="return validateCustomerAccount();" />
+                            &nbsp;&nbsp;@Html.ActionLink("Customer List", "registercustomerlist", "POS", new { @class = "btn btn-primary" })
                         </div>
                     </div>
                 </div>
             }
         </div>
     </div>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#BirthDate").datepicker({
-                format: 'mm/dd/yyyy',
-                autoclose: true,
-                endDate: '-18y'
-            });
-            $("#ValidUntil").datepicker({
-                format: 'mm/dd/yyyy',
-                autoclose: true,
-            });
-
-
-        });
-
-        function GetCityList() {
-
-            var ProvinceId = $("#ProvinceId").val();
-            $.ajax
-            ({
-                url: '/POS/GetCityList',
-                type: 'POST',
-                datatype: 'application/json',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    ProvinceId: +ProvinceId
-                }),
-                success: function (result) {
-                    $("#SubDistrictId").html("");
-                    $("#DistrictId").html("");
-                    $("#ddlCityId").html("");
-                    $('#PostalCode').val('');
-                    $("#ddlCityId").append
-                       ($('<option></option>').val(0).html('--Select City--'))
-                    $.each($.parseJSON(result), function (i, city) {
-                        $("#ddlCityId").append
-                        ($('<option></option>').val(city.CityId).html(city.CityName))
-                    })
-                },
-                error: function () {
-                    alert("Whooaaa! Something went wrong..")
-                },
-            });
-        }
-
-        function GetDistrictList() {
-            var CityId = $("#ddlCityId").val();
-            $.ajax
-            ({
-                url: '/POS/GetDistrictList',
-                type: 'POST',
-                datatype: 'application/json',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    CityId: +CityId
-                }),
-                success: function (result) {
-                    $("#SubDistrictId").html("");
-                    $("#DistrictId").html("");
-                    $('#PostalCode').val('');
-                    $("#DistrictId").append
-                    ($('<option></option>').val(0).html('--Select District--'));
-                    $.each($.parseJSON(result), function (i, district) {
-                        $("#DistrictId").append
-                        ($('<option></option>').val(district.DistrictId).html(district.DistrictName))
-                    })
-                },
-                error: function () {
-                    alert("Whooaaa! Something went wrong..")
-                },
-            });
-        }
-
-        function GetSubDistrictList() {
-            var DistrictId = $("#DistrictId").val();
-            $.ajax
-            ({
-                url: '/POS/GetSubDistrictList',
-                type: 'POST',
-                datatype: 'application/json',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    DistrictId: +DistrictId
-                }),
-                success: function (result) {
-                    $("#SubDistrictId").html("");
-                    $('#PostalCode').val('');
-                    $("#SubDistrictId").append
-                    ($('<option zipcode=""></option>').val(0).html('--Select Sub District--'));
-                    $.each($.parseJSON(result), function (i, subdistrict) {
-                        $("#SubDistrictId").append
-                        ($('<option zipcode="' + subdistrict.ZipCode + '"></option>').val(subdistrict.SubDistrictId).html(subdistrict.SubDistrictName))
-                    })
-                },
-                error: function () {
-                    alert("Whooaaa! Something went wrong..")
-                },
-            });
-        }
-
-        function GetZip(ctrl) {
-            var option = $('option:selected', ctrl).attr('zipcode');
-            $('#PostalCode').val(option || '');
-        }
-
-        function Preview(ctrl) {
-            $("#dvPreview").html("");
-            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-            if (regex.test($(ctrl).val().toLowerCase())) {
-                if (typeof (FileReader) != "undefined") {
-                   // $("#dvPreview").show();
-                    $("#dvPreview").append("<img />");
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $("#dvPreview img").attr("src", e.target.result);
-                    }
-                    reader.readAsDataURL($(ctrl)[0].files[0]);
-                }
-                else {
-                    alert("This browser does not support FileReader.");
-                }
-
-            } else {
-                alert("Please upload a valid image file.");
-            }
-        }
-    </script>
-    <style type="text/css">
-        #dvPreview {
-            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);
-            /*max-height: 400px;
-            max-width: 400px;*/
-            display: none;
-            float: left;
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            z-index: 1000;
-            background-color: #204d74;
-            padding: 2px;
-            color: #FFFFFF;
-            font-weight: bold;
-        }
-
-            #dvPreview img {
-                height: 120px;
-                width: 300px;
-            }
-    </style>
                 }
