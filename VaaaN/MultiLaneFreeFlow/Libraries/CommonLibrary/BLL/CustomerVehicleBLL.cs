@@ -42,9 +42,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.Update(vehicle);
         }
 
-        public static void UpdateVehiclebalance(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle)
+        public static Decimal UpdateVehiclebalance(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle,Decimal Amount)
         {
-            VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.UpdateVehiclebalance(vehicle);
+           return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.UpdateVehiclebalance(vehicle, Amount);
         }
        
 
