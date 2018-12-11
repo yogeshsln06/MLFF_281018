@@ -1,18 +1,21 @@
 ﻿var ResponceData = [];
 
 $(document).ready(function () {
-    $('.prev i').removeClass();
-    $('.prev i').addClass("fa fa-chevron-left");
+    //$('.prev i').removeClass();
+    //$('.prev i').addClass("fa fa-chevron-left");
 
-    $('.next i').removeClass();
+    //$('.next i').removeClass();
 
-    $('.next i').addClass("fa fa-chevron-right");
-    $('#module_2').css({ "background-color": "#00B4CE" });
-    $('#module_2').css({ "font-weight": "bold" });
-    $('#submodule_9').css({ "background-color": "#00B2aa" });
-    $('#submodule_9').css({ "font-weight": "bold" });
+    //$('.next i').addClass("fa fa-chevron-right");
+    //$('#module_2').css({ "background-color": "#00B4CE" });
+    //$('#module_2').css({ "font-weight": "bold" });
+    //$('#submodule_9').css({ "background-color": "#00B2aa" });
+    //$('#submodule_9').css({ "font-weight": "bold" });
 
-
+    $("#ValidUntil").datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true,
+    });
     $("#AccountId").hide();
     var typingTimer;                //timer identifier
     var doneTypingInterval = 500;   //time in ms, 5 second for example
@@ -75,7 +78,6 @@ $(document).ready(function () {
 });
 
 function Validation() {
-    debugger;
     if (!validateCustomerVehicle()) {
         return false;
     }
@@ -137,7 +139,7 @@ function BindUserList(data) {
     var TR;
     if (data.length > 0) {
         for (var i = 0; i < data.length; i++) {
-            TR = TR + "<tr style='cursor:pointer;' onclick=selectUser(" + data[i].AccountId + ",this)><td >" + (i + 1) + "</td><td style='text-align:left'>" + data[i].FirstName + "</td><td style='text-align:left'>" + replacenull(data[i].LastName) + "</td><td>" + replacenull(data[i].ResidentId) + "</td><td>" + replacenull(data[i].MobileNo) + "</td>" +
+            TR = TR + "<tr style='cursor:pointer;' onclick=selectUser(" + data[i].AccountId + ",this)><td >" + (i + 1) + "</td><td style='text-align:left'>" + data[i].FirstName + "</td><td>" + replacenull(data[i].ResidentId) + "</td><td>" + replacenull(data[i].MobileNo) + "</td>" +
           "<td style='text-align:left'>" + replacenull(data[i].EmailId) + "</td></tr>"
         }
     }
@@ -157,7 +159,7 @@ function replacenull(str) {
 function selectUser(AccountId, TR) {
     $("#AccountId").val(AccountId);
     $("#FirstName").val($(TR).find('td:nth-child(2)').text());
-    $("#LastName").val($(TR).find('td:nth-child(3)').text());
+    $("#Residentid").val($(TR).find('td:nth-child(3)').text());
     $("#spnTick").removeClass('glyphicon-remove').addClass('glyphicon-ok');
     HideModel();
 }
@@ -173,122 +175,123 @@ function FilterJson(SearchText) {
 }
 
 function validateCustomerVehicle() {
+    var valid = true;
     if ($("#AccountId").val() == 0) {
-        showError('Customer must be validate');
-        return false;
+        showError($("#AccountId"), 'Customer must be validate');
+        valid = false;
+    }
+
+    if ($("#VehicleRCNumber").val() == '') {
+        showError($("#VehicleRCNumber"), 'Registration Certificate Number Required');
+        valid = false;
+    }
+    else {
+        showError($("#VehicleRCNumber"), '');
+    }
+    if ($("#VehRegNo").val() == '') {
+        showError($("#VehRegNo"), 'Vehicle Registration Number Required');
+        valid = false;
+    }
+    else {
+        showError($("#VehRegNo"), '');
+    }
+    if ($("#OwnerName").val() == '') {
+        showError($("#OwnerName"), 'Owner Name Required');
+        valid = false;
+    }
+    else {
+        showError($("#OwnerName"), '');
+    }
+    if ($("#OwnerAddress").val() == '') {
+        showError($("#OwnerAddress"), 'Owner Address Required');
+        valid = false;
+    }
+    else {
+        showError($("#OwnerAddress"), '');
+    }
+    if ($("#ValidUntil").val() == '') {
+        showError($("#ValidUntil"), 'Valid Until Required');
+        valid = false;
+    }
+    if ($("#TidFront").val() == '') {
+        showError($("#TidFront"), 'Front TID Required');
+        valid = false;
+    }
+    else {
+        showError($("#TidFront"), '');
+    }
+    if ($("#TidRear").val() == '') {
+        showError($("#TidRear"), 'Rear TID Required');
+        valid = false;
+    }
+    else {
+        showError($("#TidRear"), '');
     }
     if ($("#VehicleClassId").val() == 0) {
-        showError('Select Vehicle Class');
-        return false;
+        showError($("#VehicleClassId"), 'Vehicle Class Required');
+        valid = false;
     }
-
-    if ($("#VehRegNo").val() == '') {
-        showError('Enter Vehicle Registration No');
-        return false;
+    else {
+        showError($("#VehicleClassId"), '');
     }
-
     if ($("#TagId").val() == '') {
-        showError('Enter Tag Id');
-        return false;
+        showError($("#TagId"), 'Valid EPC Required');
+        valid = false;
     }
     else if ($("#TagId").val().length != 24) {
-        showError('Enter valid TAG Id');
-        return false;
+        showError($("#TagId"), 'Valid EPC Required');
+        valid = false;
     }
     else if (!validTAGId($("#TagId").val())) {
-        showError('Enter valid TAG Id');
-        return false;
+        showError($("#TagId"), 'Valid EPC Required');
+        valid = false;
     }
-
-    else if ($("#VehicleRegistrationCerticateId").val() == '') {
-        showError('Enter Vehicle Certificate Id');
-        return false;
+    else {
+        showError($("#TagId"), '');
     }
-    else if ($("#VehicleRegistrationCerticateId").val() == '') {
-        showError('Enter Vehicle Certificate Id');
-        return false;
+    if ($("#AccountBalance").val().length = '') {
+        showError($("#AccountBalance"), 'Account Balance Required');
+        valid = false;
     }
-    else if ($("#Address").val() == '') {
-        showError('Address must be entered');
-        return false;
+    else {
+        showError($("#AccountBalance"), '');
     }
-    else if ($("#Brand").val() == 0) {
-        showError('Brand must be selected');
-        return false;
+    if ($('#FrontImage')[0].files.length === 0 && $('#hfVehicleImageFront').val() == "") {
+        showError($("#FrontImage"), "Front Image Required");
+        valid = false;
     }
-    else if ($("#VehicleType").val() == 0) {
-        showError('Vehicle Type must be selected');
-        return false;
+    else {
+        showError($("#FrontImage"), '');
     }
-    else if ($("#VehicleCategory").val() == 0) {
-        showError('Vehicle Category must be selected');
-        return false;
+    if ($('#RearImage')[0].files.length === 0 && $('#hfVehicleImageRear').val() == "") {
+        showError($('#RearImage'), "Rear Image Required");
+        valid = false;
     }
-    else if ($("#FuelType").val() == 0) {
-        showError('Fuel Type must be selected');
-        return false;
+    else {
+        showError($("#RearImage"), '');
     }
-    else if ($("#ModelNo").val() == '') {
-        showError('Model Number must be entered');
-        return false;
+    if ($('#RightImage')[0].files.length === 0 && $('#hfVehicleImageRight').val() == "") {
+        showError($('#RightImage'), "Right Image Required");
+        valid = false;
     }
-    else if ($("#ManufacturingYear").val() == '') {
-        showError('Manufacturing Year must be entered');
-        return false;
+    else {
+        showError($("#RightImage"), '');
     }
-    else if ($("#CyclinderCapacity").val() == '') {
-        showError('Cyclinder Capacity must be entered');
-        return false;
+    if ($('#LeftImage')[0].files.length === 0 && $('#hfVehicleImageLeft').val() == "") {
+        showError($('#LeftImage'), "Left side Image Required");
+        valid = false;
     }
-    else if ($("#FrameNumber").val() == '') {
-        showError('Frame Number must be entered');
-        return false;
+    else {
+        showError($("#LeftImage"), '');
     }
-    else if ($("#EngineNumber").val() == '') {
-        showError('Engine Number must be entered');
-        return false;
+    if ($('#VehicleRCNumberImage')[0].files.length === 0 && $('#hfVehicleRCNumberImage').val() == "") {
+        showError($('#VehicleRCNumberImage'), "Registration Certificate Image Required");
+        valid = false;
     }
-    else if ($("#VehicleColor").val() == 0) {
-        showError('Vehicle Color must be selected');
-        return false;
+    else {
+        showError($("#VehicleRCNumberImage"), '');
     }
-    else if ($("#LicencePlateColor").val() == 0) {
-        showError('Licence Plate Color must be selected');
-        return false;
-    }
-    else if ($("#RegistrationYear").val() == '') {
-        showError('Registration Year must be entered');
-        return false;
-    }
-    else if ($("#LocationCode").val() == '') {
-        showError('Location Code must be entered');
-        return false;
-    }
-    else if ($("#ValidUntil").val() == '') {
-        showError('Valid Until must be entered');
-        return false;
-    }
-    else if ($('#FrontImage')[0].files.length === 0 && hfVehicleImageFront.val() == "") {
-        alert("Front Image Required");
-        $('#FrontImage').focus();
-        return false;
-    }
-    else if ($('#RearImage')[0].files.length === 0 && hfVehicleImageRear.val() == "") {
-        alert("Rear Image Required");
-        $('#RearImage').focus();
-        return false;
-    }
-    else if ($('#RightSideImage')[0].files.length === 0 && hfVehicleImageRightSide.val() == "") {
-        alert("Right side Image Required");
-        $('#RightSideImage').focus();
-        return false;
-    }
-    else if ($('#LeftSideImage')[0].files.length === 0 && hfVehicleImageLeftSide.val() == "") {
-        alert("Left side Image Required");
-        $('#LeftSideImage').focus();
-        return false;
-    }
-    return true;
+    return valid;
 }
 
 
@@ -317,12 +320,16 @@ function GetTagId() {
             $("#TagId").val(data.Data);
         },
         error: function (ex) {
-            
+
         }
     });
 }
 
-function showError(errorMsg) {
-    $("#lblErrors").text('');
-    $("#lblErrors").text(errorMsg);
+function showError(ctrlid, errorMsg) {
+    $(ctrlid).next().text(errorMsg);
+}
+
+function validTAGId(str) {
+    var pattern = /^[0-9a-fA-F]+$/;
+    return String(str).match(pattern);
 }

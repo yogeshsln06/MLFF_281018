@@ -242,6 +242,7 @@
     <Content Include="Images\spinner-circle.svg" />
     <Content Include="Images\vaaan.png" />
     <Content Include="js\custom.js" />
+    <Content Include="js\CustomerAccount.js" />
     <Content Include="js\CustomerVehicle.js" />
     <Content Include="js\dashboard-atcc.js" />
     <Content Include="js\dashboard-cctv.js" />

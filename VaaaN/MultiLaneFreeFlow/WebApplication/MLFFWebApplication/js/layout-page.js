@@ -48,7 +48,6 @@
             }
         });
     });
-    console.log(window.location.pathname);
     var menuUrl = window.location.pathname.toLowerCase();
     if ($('#MainMenu [href^="' + menuUrl + '"]').length == 0) {
         menuUrl = document.referrer.replace(window.location.origin, '').trim().toLowerCase();
