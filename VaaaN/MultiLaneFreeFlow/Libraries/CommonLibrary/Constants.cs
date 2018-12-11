@@ -28,6 +28,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         public static string CutomerDocuments = driveLetter + @":\MLFF\cutomerdocuments\";
         public static string companyLogoPath = driveLetter + @":\Freeflow\images\company_logo.jpg";
         public static string companyLogoPath2 = driveLetter + @":\Freeflow\images\company_logo2.jpg";
+        public static string EventPath = driveLetter + @":\inetpub\wwwroot\MLFF_Publish\events\" + DateTime.Now.ToString("dd-MMM-yyyy") + "\\";
 
         public static string atmsECBCallHistoryBackupProcessedFolder = driveLetter + @":\ATMS\Backup\ECB\Processed\";
         public static string atmsECBCallHistoryBackupUnProcessedFolder = driveLetter + @":\ATMS\Backup\ECB\UnProcessed\";

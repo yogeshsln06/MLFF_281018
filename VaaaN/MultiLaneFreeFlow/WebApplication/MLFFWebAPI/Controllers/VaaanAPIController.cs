@@ -292,6 +292,7 @@ namespace MLFFWebAPI.Controllers
                     nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
 
                     #region Convert 64 bit String into PNG Image
+                    //filepath = Constants.EventPath + @"Thumbnail\Plates\";
                     filepath = rootpath + @"Thumbnail\Plates\";
                     if (!Directory.Exists(filepath))
                     {
@@ -302,8 +303,10 @@ namespace MLFFWebAPI.Controllers
                     FileName = "VRN_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
                     imgfilepath = filepath + FileName;
                     nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
+
                     imgfilepath = string.Empty;
                     FileName = string.Empty;
+                    //filepath = Constants.EventPath + @"Thumbnail\Vehicle\";
                     filepath = rootpath + @"Thumbnail\Vehicle\";
                     if (!Directory.Exists(filepath))
                     {
