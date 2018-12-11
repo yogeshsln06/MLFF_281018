@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VaaaN.MLFF.VehicleFlowSimulator"
         mc:Ignorable="d"
-        Title="MLFF Vehicle Flow Simulator" Height="400" Width="525" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="MLFF Vehicle Flow Simulator" Height="400" Width="624" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Canvas>
         <Label x:Name="labelWebAPIAddress" Content="API Add." Canvas.Left="20" Canvas.Top="2"/>
         <TextBox x:Name="textBoxAPIAddress" Height="23" Canvas.Left="80" TextWrapping="Wrap" Text="http://192.168.1.63:5555" Canvas.Top="5" Width="415"/>
-        
+
         <Label x:Name="label1" Content="Vehicle" Canvas.Left="20" Canvas.Top="41" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         <ComboBox x:Name="comboBoxVehicle" Canvas.Left="80" Canvas.Top="44" Width="415" SelectionChanged="comboBoxVehicle_SelectionChanged"/>
 
@@ -18,20 +18,19 @@
         <Label x:Name="labelDateFormat" Content="(dd/mm/yyyy HH:mm:ss.fff)" Canvas.Left="321" Canvas.Top="83" Width="159"/>
 
         <Label x:Name="labelFront" Content="Front" Canvas.Left="160" Canvas.Top="124"/>
-        <Label x:Name="labelCrossTalk" Content="CrossTalk" Canvas.Left="280" Canvas.Top="124"/>
-        <Label x:Name="labelRear" Content="Rear" Canvas.Left="400" Canvas.Top="124"/>
+        <Label x:Name="labelCrossTalk1" Content="CrossTalkF" Canvas.Left="280" Canvas.Top="124"/>
+        <Label x:Name="labelRear" Content="Rear" Canvas.Left="400" Canvas.Top="124" RenderTransformOrigin="0.455,0.423"/>
+        <Label x:Name="labelCrossTal2" Content="CrossTalkR" Canvas.Left="497" Canvas.Top="124"/>
 
         <Label x:Name="labelAttachment" Content="Attachment" Canvas.Left="20" Canvas.Top="158" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <Label x:Name="labelMatchedUnmatched" Content="Matched/ Unmatched" Canvas.Left="20" Canvas.Top="198" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
         <CheckBox x:Name="checkBoxFrontAttachement" Content="" Canvas.Left="160" Canvas.Top="164" IsChecked="True"/>
-        <CheckBox x:Name="checkBoxFrontMatchedUnmatched" Content="" Canvas.Left="160" Canvas.Top="204" IsChecked="True"/>
 
-        <CheckBox x:Name="checkBoxCrossTalkAttachment" Content="" Canvas.Left="280" Canvas.Top="164" IsChecked="True"/>
-        <CheckBox x:Name="checkBoxCrosstalkMatchedUnmatched" Content="" Canvas.Left="280" Canvas.Top="204" IsChecked="True"/>
+        <CheckBox x:Name="checkBoxCrossTalkAttachmentFront" Content="" Canvas.Left="280" Canvas.Top="164" IsChecked="True"/>
 
-        <CheckBox x:Name="checkBoxRearAttachement" Content="" Canvas.Left="400" Canvas.Top="164" IsChecked="True"/>
-        <CheckBox x:Name="checkBoxRearMatchedUnmatched" Content="" Canvas.Left="400" Canvas.Top="204" IsChecked="True"/>
+        <CheckBox x:Name="checkBoxRearAttachementFront" Content="" Canvas.Left="400" Canvas.Top="164" IsChecked="True"/>
+
+        <CheckBox x:Name="checkBoxCrossTalkAttachmentRear" Content="" Canvas.Left="503" Canvas.Top="164" IsChecked="True"/>
 
         <Button x:Name="buttonSimulate" Content="Simulate" Canvas.Left="240" Canvas.Top="244" Width="100" Click="buttonSimulate_Click"/>
 
@@ -39,13 +38,16 @@
         <TextBox x:Name="textBoxCustomer" Height="23" Canvas.Left="80" TextWrapping="Wrap" Text="" Canvas.Top="284" Width="415"/>
 
         <TextBox x:Name="textBoxFrontOrder" Height="23" Canvas.Left="205" TextWrapping="Wrap" Text="1" Canvas.Top="126" Width="20"/>
-        <TextBox x:Name="textBoxCrossTalkOrder" Height="23" Canvas.Left="345" TextWrapping="Wrap" Text="2" Canvas.Top="126" Width="20"/>
+        <TextBox x:Name="textBoxCrossTalkOrderFront" Height="23" Canvas.Left="349" TextWrapping="Wrap" Text="2" Canvas.Top="126" Width="20"/>
         <TextBox x:Name="textBoxRearOrder" Height="23" Canvas.Left="440" TextWrapping="Wrap" Text="3" Canvas.Top="126" Width="20"/>
-        
+        <TextBox x:Name="textBoxCrossTalkOrderRear" Height="23" Canvas.Left="566" TextWrapping="Wrap" Text="4" Canvas.Top="125" Width="20"/>
+
+
         <Label x:Name="labelVehicle" Content="Vehicle" Canvas.Left="20" Canvas.Top="317"/>
         <TextBox x:Name="textBoxVehicle" Height="23" Canvas.Left="80" TextWrapping="Wrap" Text="" Canvas.Top="320" Width="415"/>
-        
-        <Button x:Name="buttonGenerateNFHTML" Content="Generate" Canvas.Left="400" Canvas.Top="240" Width="75" Click="buttonGenerateNFHTML_Click"/>
+
+        <Button x:Name="buttonGenerateNFHTML" Content="Generate" Canvas.Left="511" Canvas.Top="240" Width="75" Click="buttonGenerateNFHTML_Click"/>
+
 
 
     </Canvas>

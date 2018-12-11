@@ -1384,6 +1384,7 @@ namespace VaaaN.MLFF.WindowsServices
                                 string eviVRN = "";
                                 if (ts != null)
                                 {
+                                    //these two parsed out things are not used anywhere else - CJS
                                     eviClass = ts.ClassId;
                                     eviVRN = ts.VRN;
 
@@ -1471,7 +1472,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             //(same tag but separate location id hoga toh local database main bhejega)
                                             try
                                             {
-                                                LogMessage("Sending crosstalk packet to local database. " + ctp.ObjectId);
+                                                LogMessage("Sending crosstalk packet to local database. EPC: " + ctp.ObjectId + " Location: " + ctp.LocationId);
 
                                                 ctpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.Insert(ctp);
                                                 rfidRecentDataList.Add(new IkePktData { LocationId = ctp.LocationId, PktId = ctpEntryId, PacketTimeStamp = Convert.ToDateTime(ctp.TimeStamp), VehicleClassId = associatedCVCT.VehicleClassId, ObjectId = ctp.ObjectId, PlazaId = ctp.PlazaId, currentDateTime = DateTime.Now });
@@ -1500,6 +1501,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             }
                                             #endregion
 
+                                            LogMessage("Checking this tag is recently transacted... (may come from front and rear antenna both)");
                                             //if transaction is done for this tag recently no need to do following things. Check...
                                             var objRecentTag = recentlyProcessedTagsList.FirstOrDefault(x => x.TagId == ctp.ObjectId);
 
