@@ -58,7 +58,7 @@ namespace VaaaN.MLFF.WindowsServices
         List<IkePktData> rfidRecentDataList = new List<IkePktData>();
         List<ANPRPktData> anprRecentDataList = new List<ANPRPktData>();
         List<TranscationData> transcationDataList = new List<TranscationData>();
-        List<TagData> recentlyProcessedTagsList = new List<TagData>(); 
+        List<TagData> recentlyProcessedTagsList = new List<TagData>();
 
         List<TranscationData> TranscationDataFilterList = new List<TranscationData>();
         List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE> TollRateFilteredList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>();
@@ -1404,7 +1404,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             LogMessage("Trying to update TMSId, Creation Date etc. in the CBE...");
                                             ctp.TMSId = currentTMSId;
                                             //ctp.TimeStamp = ConversionDateTime(ctp.TimeStamp, "crosstalk"); //this is handled in the API itself
-                                            
+
                                             //in case of crosstalk not giving lane id and plaza id peek laneid and plazaid by hardwareid. 
                                             //hardwareid is assigned to specific lane of specific plaza.
                                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE lane = GetLaneDetailByHardwareId(Convert.ToInt32(ctp.LocationId)); //locationid is hardwareid? (satya said)
@@ -2338,7 +2338,10 @@ namespace VaaaN.MLFF.WindowsServices
                     {
                         LogMessage("Trying to update balance in customer account table...");
                         //should be by by trigger defined in TBL_ACCOUNT_HISTORY
-                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateBalance(customerAccountInfo, (-1 * tollToDeduct));
+                        customerVehicleInfo.AccountBalance += -1 * tollToDeduct;
+                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerVehicleInfo);
+                        //VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateBalance(customerAccountInfo, (-1 * tollToDeduct));
+
                         LogMessage("Balance updated successfully in the customer account.");
                     }
                     catch (Exception ex)
@@ -2916,8 +2919,6 @@ namespace VaaaN.MLFF.WindowsServices
             return Math.Round(3.6 * Speed);
         }
 
-        
-        
         private void CollectionUpdatingThreadFunction()
         {
             int counter = 0;
