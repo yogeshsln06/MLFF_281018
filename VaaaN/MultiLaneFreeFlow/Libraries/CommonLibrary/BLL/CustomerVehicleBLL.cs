@@ -42,6 +42,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.Update(vehicle);
         }
 
+        public static void UpdateVehiclebalance(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.UpdateVehiclebalance(vehicle);
+        }
+       
+
         public static List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> GetAllAsList()
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetAllAsList();
@@ -67,7 +73,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetUserByAccountId(customerVehicle);
         }
 
-        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE GetByTansactionCrosstalkEntryId (int tranCrosstalkENtryId)
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE GetByTansactionCrosstalkEntryId(int tranCrosstalkENtryId)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetByTansactionCrosstalkEntryId(tranCrosstalkENtryId);
         }
@@ -82,10 +88,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleByVehRegNo(customerVehicle);
         }
 
+       
+
         public static DataTable GetAllVehicleinDataTable()
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetAllVehicleinDataTable();
         }
+
+
 
     }
 }

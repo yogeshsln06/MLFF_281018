@@ -135,6 +135,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static void UpdateVehiclebalance(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle)
+        {
+            try
+            {
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "VEHICLE_BALANCE_UPDATE";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_entry_id", DbType.Int32, vehicle.EntryId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_veh_reg_no", DbType.String, vehicle.VehRegNo, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_account_balance", DbType.Decimal, vehicle.AccountBalance, ParameterDirection.Input));
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         #endregion
 
         #region Get Methods

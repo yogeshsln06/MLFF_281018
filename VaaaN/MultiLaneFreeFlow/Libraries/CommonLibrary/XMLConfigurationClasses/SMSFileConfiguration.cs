@@ -12,6 +12,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses
         string saldo;
         string afterdeduction;
         string notification;
+        string nocustomerfound;
+        string invalid;
         #endregion
 
         #region Constructor
@@ -21,11 +23,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses
             this.saldo = String.Empty;
             this.afterdeduction = String.Empty;
             this.notification = String.Empty;
+            this.nocustomerfound = String.Empty;
+            this.invalid = String.Empty;
         }
         #endregion
 
         #region Property
-        public String Topup
+        public String TOPUP
         {
             get { return this.topup; }
             set { this.topup = value; }
@@ -45,7 +49,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses
             get { return this.notification; }
             set { this.notification = value; }
         }
-        
+        public String NOCUSTOMERFOUND
+        {
+            get { return this.nocustomerfound; }
+            set { this.nocustomerfound = value; }
+        }
+        public String INVALID
+        {
+            get { return this.invalid; }
+            set { this.invalid = value; }
+        }
+
         #endregion
 
         #region Helper

@@ -11,6 +11,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private Int32 entryId;
         private Int32 tmsId;
         private Int32 customerAccountId;
+        private Int32 customerVehicleId;
         private String customerName;
         private String mobileNumber;
         private Int32 messageDirection;//INCOMING=1,OUTGOING=2
@@ -30,6 +31,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.entryId = 0;
             this.tmsId = 0;
             this.customerAccountId = 0;
+            this.customerVehicleId = 0;
             this.customerName = String.Empty;
             this.mobileNumber = String.Empty;
             this.messageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Incoming;//INCOMING=1,OUTGOING=2
@@ -60,6 +62,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         {
             get { return this.customerAccountId; }
             set { this.customerAccountId = value; }
+        }
+        public Int32 CustomerVehicleId
+        {
+            get { return this.customerVehicleId; }
+            set { this.customerVehicleId = value; }
         }
         public String CustomerName
         {

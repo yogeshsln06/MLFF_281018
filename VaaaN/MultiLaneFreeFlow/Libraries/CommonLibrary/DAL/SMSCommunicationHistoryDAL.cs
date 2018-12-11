@@ -27,6 +27,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_entry_id", DbType.Int32, sms.EntryId, ParameterDirection.Output));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_tms_id", DbType.Int32, sms.TmsId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_customer_account_id", DbType.Int32, sms.CustomerAccountId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_customer_vechile_id", DbType.Int32, sms.CustomerVehicleId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_customer_name", DbType.String, sms.CustomerName, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_mobile_number", DbType.String, sms.MobileNumber, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_message_direction", DbType.Int32, sms.MessageDirection, ParameterDirection.Input));

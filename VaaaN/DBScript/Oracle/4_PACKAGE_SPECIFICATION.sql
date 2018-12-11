@@ -1,4 +1,4 @@
-/* Formatted on 10/12/2018 16:42:23 (QP5 v5.215.12089.38647) */
+/* Formatted on 11/12/2018 14:31:47 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -742,6 +742,7 @@ AS
    PROCEDURE SMS_HISTORY_INSERT (P_ENTRY_ID                     OUT NUMBER,
                                  P_TMS_ID                    IN     NUMBER,
                                  P_CUSTOMER_ACCOUNT_ID       IN     NUMBER,
+                                 P_CUSTOMER_VECHILE_ID       IN     NUMBER,
                                  P_CUSTOMER_NAME             IN     NVARCHAR2,
                                  P_MOBILE_NUMBER             IN     NVARCHAR2,
                                  P_MESSAGE_DIRECTION         IN     NUMBER,
@@ -945,6 +946,10 @@ AS
                                       P_ACCOUNT_BALANCE        IN NUMBER,
                                       P_IS_DOC_VERIFIED        IN NUMBER,
                                       P_QUEUE_STATUS           IN NUMBER);
+
+   PROCEDURE VEHICLE_BALANCE_UPDATE (P_ENTRY_ID          IN NUMBER,
+                                     P_VEH_REG_NO        IN NVARCHAR2,
+                                     P_ACCOUNT_BALANCE   IN NUMBER);
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYID (P_VEHICLE_CLASS_ID   IN     NUMBER,
                                        P_TMS_ID             IN     NUMBER,

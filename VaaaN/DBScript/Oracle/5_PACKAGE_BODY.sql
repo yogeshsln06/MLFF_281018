@@ -1,4 +1,4 @@
-/* Formatted on 10/12/2018 17:32:36 (QP5 v5.215.12089.38647) */
+/* Formatted on 11/12/2018 14:32:35 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -2863,6 +2863,7 @@ ORDER BY TRANSACTION_ID DESC';
    PROCEDURE SMS_HISTORY_INSERT (P_ENTRY_ID                     OUT NUMBER,
                                  P_TMS_ID                    IN     NUMBER,
                                  P_CUSTOMER_ACCOUNT_ID       IN     NUMBER,
+                                 P_CUSTOMER_VECHILE_ID       IN     NUMBER,
                                  P_CUSTOMER_NAME             IN     NVARCHAR2,
                                  P_MOBILE_NUMBER             IN     NVARCHAR2,
                                  P_MESSAGE_DIRECTION         IN     NUMBER,
@@ -2885,6 +2886,7 @@ ORDER BY TRANSACTION_ID DESC';
         INTO C_COUNT_HISTORY
         FROM TBL_SMS_COMM_HISTORY
        WHERE     CUSTOMER_ACCOUNT_ID = P_CUSTOMER_ACCOUNT_ID
+             AND CUSTOMER_VECHILE_ID = P_CUSTOMER_VECHILE_ID
              AND CUSTOMER_NAME = P_CUSTOMER_NAME
              AND MESSAGE_BODY = P_MESSAGE_BODY;
 
@@ -2893,6 +2895,7 @@ ORDER BY TRANSACTION_ID DESC';
          INSERT INTO TBL_SMS_COMM_HISTORY (ENTRY_ID,
                                            TMS_ID,
                                            CUSTOMER_ACCOUNT_ID,
+                                           CUSTOMER_VECHILE_ID,
                                            CUSTOMER_NAME,
                                            MOBILE_NUMBER,
                                            MESSAGE_DIRECTION,
@@ -2909,6 +2912,7 @@ ORDER BY TRANSACTION_ID DESC';
               VALUES (SMS_COMM_HISTORY_SEQ.NEXTVAL,
                       P_TMS_ID,
                       P_CUSTOMER_ACCOUNT_ID,
+                      P_CUSTOMER_VECHILE_ID,
                       P_CUSTOMER_NAME,
                       P_MOBILE_NUMBER,
                       P_MESSAGE_DIRECTION,
@@ -3516,6 +3520,17 @@ ORDER BY TRANSACTION_ID DESC';
        WHERE TMS_ID = P_TMS_ID AND ENTRY_ID = P_ENTRY_ID;
    END CUSTOMER_VEHICLE_UPDATE;
 
+
+   PROCEDURE VEHICLE_BALANCE_UPDATE (P_ENTRY_ID          IN NUMBER,
+                                     P_VEH_REG_NO        IN NVARCHAR2,
+                                     P_ACCOUNT_BALANCE   IN NUMBER)
+   AS
+   BEGIN
+      UPDATE TBL_CUSTOMER_VEHICLE
+         SET ACCOUNT_BALANCE = P_ACCOUNT_BALANCE
+       WHERE ENTRY_ID = P_ENTRY_ID AND VEH_REG_NO = P_VEH_REG_NO;
+   END VEHICLE_BALANCE_UPDATE;
+
    PROCEDURE CUSTOMER_VEHICLE_GETBYID (P_VEHICLE_CLASS_ID   IN     NUMBER,
                                        P_TMS_ID             IN     NUMBER,
                                        P_ACCOUNT_ID         IN     NUMBER,
@@ -3904,8 +3919,7 @@ ORDER BY TRANSACTION_ID DESC';
                   CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
                   CA.RESIDENT_ID,
                   CA.EMAIL_ID,
-                  CA.MOB_NUMBER,
-				  CV.ACCOUNT_BALANCE
+                  CA.MOB_NUMBER
              FROM TBL_CUSTOMER_VEHICLE CV
                   LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                      ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
