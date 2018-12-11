@@ -2321,8 +2321,7 @@ namespace VaaaN.MLFF.WindowsServices
                         accountHistory.TransactionId = transaction.TransactionId;
                         accountHistory.Amount = tollToDeduct;
                         accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
-                        accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent; ;//will be updated later on
-                                                                                                                                //accountHistory.ModifierId = 1;//will be updated later on
+                        accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent;//will be updated later on//accountHistory.ModifierId = 1;//will be updated later on
                         accountHistory.CreationDate = DateTime.Now;
                         accountHistory.ModificationDate = DateTime.Now;
                         accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
