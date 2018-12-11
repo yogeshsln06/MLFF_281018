@@ -1,0 +1,16 @@
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\VMSService.exe.config
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\VMSService.exe
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\VMSService.pdb
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\VaaaN.MLFF.CommonLibrary.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\Newtonsoft.Json.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\VaaaN.MLFF.CommonLibrary.pdb
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\Newtonsoft.Json.xml
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\en\VaaaN.MLFF.CommonLibrary.resources.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\bin\Debug\id\VaaaN.MLFF.CommonLibrary.resources.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\obj\Debug\VMSService.csprojResolveAssemblyReference.cache
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\obj\Debug\VMSService.ProjectInstaller.resources
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\obj\Debug\VMSService.csproj.GenerateResource.Cache
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\obj\Debug\VMSService.exe
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\VMSService\obj\Debug\VMSService.pdb

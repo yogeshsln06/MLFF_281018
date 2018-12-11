@@ -1,0 +1,16 @@
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\DTSService.exe.config
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\DTSService.exe
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\DTSService.pdb
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\VaaaN.MLFF.CommonLibrary.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\Microsoft.Practices.EnterpriseLibrary.Data.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\Newtonsoft.Json.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\VaaaN.MLFF.CommonLibrary.pdb
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\Newtonsoft.Json.xml
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\en\VaaaN.MLFF.CommonLibrary.resources.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Release\id\VaaaN.MLFF.CommonLibrary.resources.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Release\DTSService.csprojResolveAssemblyReference.cache
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Release\DTSService.ProjectInstaller.resources
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Release\DTSService.csproj.GenerateResource.Cache
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Release\DTSService.exe
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Release\DTSService.pdb

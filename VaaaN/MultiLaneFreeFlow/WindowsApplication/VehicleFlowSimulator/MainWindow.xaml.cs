@@ -15,8 +15,9 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
     public partial class MainWindow : Window
     {
         string frontPacket = string.Empty;
-        string crossTalkPacket = string.Empty;
+        string crossTalkPacketFront = string.Empty;
         string rearPacket = string.Empty;
+        string crossTalkPacketRear = string.Empty;
 
         List<TextBox> orderTextBoxes = new List<TextBox>();
         List<String> orderedList = new List<string>();
@@ -52,13 +53,15 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 accounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsCollection();
 
                 orderTextBoxes.Add(this.textBoxFrontOrder);
-                orderTextBoxes.Add(this.textBoxCrossTalkOrder);
+                orderTextBoxes.Add(this.textBoxCrossTalkOrderFront);
                 orderTextBoxes.Add(this.textBoxRearOrder);
+                orderTextBoxes.Add(this.textBoxCrossTalkOrderRear);
 
                 //load transaction time
                 textBoxDateTime.Text = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.fff");
 
-                //ordered list initialization (3 items)
+                //ordered list initialization (4 items)
+                orderedList.Add("");
                 orderedList.Add("");
                 orderedList.Add("");
                 orderedList.Add("");
@@ -123,23 +126,28 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
             //myTimeSTamp = DateTimeToUnixTimestamp(transactionTime).ToString();
 
             frontPacket = string.Empty;
-            crossTalkPacket = string.Empty;
+            crossTalkPacketFront = string.Empty;
             rearPacket = string.Empty;
+            crossTalkPacketRear = string.Empty;
 
             if (checkBoxFrontAttachement.IsChecked == true)
             {
                 frontPacket = CreateFrontPacket(transactionTime, currentVehicleRegNum);
             }
-            if (checkBoxCrossTalkAttachment.IsChecked == true)
+            if (checkBoxCrossTalkAttachmentFront.IsChecked == true)
             {
-                crossTalkPacket = CreateCrossTalkPacket(currentTagId, transactionTime);
+                crossTalkPacketFront = CreateCrossTalkPacketFront(currentTagId, transactionTime);
             }
-            if (checkBoxRearAttachement.IsChecked == true)
+            if (checkBoxRearAttachementFront.IsChecked == true)
             {
                 rearPacket = CreateRearPacket(transactionTime, currentVehicleRegNum);
             }
+            if (checkBoxCrossTalkAttachmentRear.IsChecked == true)
+            {
+                crossTalkPacketRear = CreateCrossTalkPacketRear(currentTagId, transactionTime);
+            }
 
-            SendPacketsInOrder(frontPacket, crossTalkPacket, rearPacket);
+            SendPacketsInOrder(frontPacket, crossTalkPacketFront, rearPacket, crossTalkPacketRear);
 
             MessageBox.Show("Finished.");
         }
@@ -214,12 +222,12 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
             return result;
         }
 
-        private string CreateCrossTalkPacket(string tagId, DateTime transactionTime)
+        private string CreateCrossTalkPacketFront(string tagId, DateTime transactionTime)
         {
             string result = string.Empty;
             try
             {
-                //timestamp part is added with three extra zeros for millisecond part
+                //timestamp part is added with three extra zeros for millisecond part locationid should be proper
                 result =
                     "<events> " +
                       "<event objectId=\"" + tagId + "\" parentUUID=\"2BB5CAD0-1F66-710D-8682-547811838B92\" locationId=\"" + 1 + "\" uuid=\"5DB5ED55-4EB6-C47A-2E32-AD8E262A840D\" timestamp=\"" + DateTimeToUnixTimestamp(transactionTime) + "000" + "\" type=\"com:nofilis:crosstalk:event:tag-observation\"> " +
@@ -249,7 +257,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 20, " +
+                                "\"Id\": 18, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Alam Sutra\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +
@@ -264,6 +272,29 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                                             "\"Video_URL\": null " +
                                           "} " +
                         "}";
+            }
+            catch (Exception ex)
+            {
+                result = string.Empty;
+            }
+            return result;
+        }
+
+        private string CreateCrossTalkPacketRear(string tagId, DateTime transactionTime)
+        {
+            string result = string.Empty;
+            try
+            {
+                //timestamp part is added with three extra zeros for millisecond part   locationid should be proper
+                result =
+                    "<events> " +
+                      "<event objectId=\"" + tagId + "\" parentUUID=\"2BB5CAD0-1F66-710D-8682-547811838B92\" locationId=\"" + 2 + "\" uuid=\"5DB5ED55-4EB6-C47A-2E32-AD8E262A840D\" timestamp=\"" + DateTimeToUnixTimestamp(transactionTime) + "000" + "\" type=\"com:nofilis:crosstalk:event:tag-observation\"> " +
+                        "<property value=\"1325565648758\" id=\"first-read\"/> " +
+                        "<property value=\"1325565648758\" id=\"last-read\"/> " +
+                        "<property value=\"BD63426A-D8DE-F008-DD76-87E94B5D8B36\" id=\"observationUUID\"/>" +
+                        "<property value=\"1\" id=\"reads\"/> " +
+                      "</event> " +
+                    "</events>";
             }
             catch (Exception ex)
             {
@@ -295,29 +326,40 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
         }
 
 
-        private void SendPacketsInOrder(string frontPacket, string crossTalkPacket, string rearPacket)
+        private void SendPacketsInOrder(string frontPacket, string crossTalkPacketFront, string rearPacket, string crossTalkPacketRear)
         {
             foreach (TextBox tb in orderTextBoxes)
             {
                 if (tb.Text == "1")
                 {
                     if (tb.Name.ToLower() == "textboxfrontorder") orderedList[0] = frontPacket + "~front";
-                    else if (tb.Name.ToLower() == "textboxcrosstalkorder") orderedList[0] = crossTalkPacket + "~crosstalk";
+                    else if (tb.Name.ToLower() == "textboxcrosstalkorderfront") orderedList[0] = crossTalkPacketFront + "~crosstalkfront";
                     else if (tb.Name.ToLower() == "textboxrearorder") orderedList[0] = rearPacket + "~rear";
+                    else if (tb.Name.ToLower() == "textboxcrosstalkorderrear") orderedList[0] = crossTalkPacketRear + "~crosstalkrear";
                     else MessageBox.Show("Invalid order textbox name.");
                 }
                 else if (tb.Text == "2")
                 {
                     if (tb.Name.ToLower() == "textboxfrontorder") orderedList[1] = frontPacket + "~front";
-                    else if (tb.Name.ToLower() == "textboxcrosstalkorder") orderedList[1] = crossTalkPacket + "~crosstalk";
+                    else if (tb.Name.ToLower() == "textboxcrosstalkorderfront") orderedList[1] = crossTalkPacketFront + "~crosstalkfront";
                     else if (tb.Name.ToLower() == "textboxrearorder") orderedList[1] = rearPacket + "~rear";
+                    else if (tb.Name.ToLower() == "textboxcrosstalkorderrear") orderedList[1] = crossTalkPacketRear + "~crosstalkrear";
                     else MessageBox.Show("Invalid order textbox name.");
                 }
                 else if (tb.Text == "3")
                 {
                     if (tb.Name.ToLower() == "textboxfrontorder") orderedList[2] = frontPacket + "~front";
-                    else if (tb.Name.ToLower() == "textboxcrosstalkorder") orderedList[2] = crossTalkPacket + "~crosstalk";
+                    else if (tb.Name.ToLower() == "textboxcrosstalkorderfront") orderedList[2] = crossTalkPacketFront + "~crosstalkfront";
                     else if (tb.Name.ToLower() == "textboxrearorder") orderedList[2] = rearPacket + "~rear";
+                    else if (tb.Name.ToLower() == "textboxcrosstalkorderrear") orderedList[2] = crossTalkPacketRear + "~crosstalkrear";
+                    else MessageBox.Show("Invalid order textbox name.");
+                }
+                else if (tb.Text == "4")
+                {
+                    if (tb.Name.ToLower() == "textboxfrontorder") orderedList[3] = frontPacket + "~front";
+                    else if (tb.Name.ToLower() == "textboxcrosstalkorderfront") orderedList[3] = crossTalkPacketFront + "~crosstalkfront";
+                    else if (tb.Name.ToLower() == "textboxrearorder") orderedList[3] = rearPacket + "~rear";
+                    else if (tb.Name.ToLower() == "textboxcrosstalkorderrear") orderedList[3] = crossTalkPacketRear + "~crosstalkrear";
                     else MessageBox.Show("Invalid order textbox name.");
                 }
                 else
@@ -348,7 +390,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
 
             if (!string.IsNullOrEmpty(packet))
             {
-                if (type.ToLower() == "crosstalk")
+                if ((type.ToLower() == "crosstalkfront") || (type.ToLower() == "crosstalkrear")) //front front and rear crosstalk integrated
                 {
                     if (!string.IsNullOrEmpty(packet))
                     {
