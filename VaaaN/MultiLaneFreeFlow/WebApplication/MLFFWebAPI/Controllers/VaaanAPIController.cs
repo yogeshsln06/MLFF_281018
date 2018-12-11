@@ -33,6 +33,7 @@ namespace MLFFWebAPI.Controllers
         HttpResponseMessage response = null;
         static System.Messaging.MessageQueue inBoxQueueIKE;
         static System.Messaging.MessageQueue inBoxQueueANPR;
+        static System.Messaging.MessageQueue inBoxQueue;
         string filepath = "";
         string rootpath = HttpContext.Current.Server.MapPath("~/events/" + DateTime.Now.ToString("dd-MMM-yyyy") + "/");
         DataSet ds = new DataSet();
@@ -172,8 +173,8 @@ namespace MLFFWebAPI.Controllers
                             m.Formatter = new BinaryMessageFormatter();
                             m.Body = ctp;
                             m.Recoverable = true;
-                            inBoxQueueIKE = Queue.Create(Queue.inBoxQueueNameIKE);
-                            inBoxQueueIKE.Send(m);
+                            inBoxQueue = Queue.Create(Queue.inBoxQueueName);
+                            inBoxQueue.Send(m);
                         }
                         catch (Exception ex)
                         {
@@ -333,8 +334,8 @@ namespace MLFFWebAPI.Controllers
                     m.Formatter = new BinaryMessageFormatter();
                     m.Body = nfp;
                     m.Recoverable = true;
-                    inBoxQueueANPR = Queue.Create(Queue.inBoxQueueNameANPR);
-                    inBoxQueueANPR.Send(m);
+                    inBoxQueue = Queue.Create(Queue.inBoxQueueName);
+                    inBoxQueue.Send(m);
                     #endregion
                 }
                 catch (Exception ex)
@@ -351,7 +352,6 @@ namespace MLFFWebAPI.Controllers
         #region Open ALPR
         [Route("VaaaN/IndonesiaMLFFApi/OpenAlpr")]
         [HttpPost]
-
         public async Task<HttpResponseMessage> ReciveDatafromOpenAlpr(OpenALPRPacketJSON objOpenALPRPacketJSON)
         {
             if (ANPRName().ToLower() == "openalpr")
@@ -468,7 +468,7 @@ namespace MLFFWebAPI.Controllers
                     m.Formatter = new BinaryMessageFormatter();
                     m.Body = nfp;
                     m.Recoverable = true;
-                    inBoxQueueANPR = Queue.Create(Queue.inBoxQueueNameANPR);
+                    inBoxQueueANPR = Queue.Create(Queue.inBoxQueueName);
                     inBoxQueueANPR.Send(m);
                     #endregion
                 }
@@ -858,9 +858,8 @@ namespace MLFFWebAPI.Controllers
 
             return response;
         }
-
-
         #endregion
+       
         #region API for Response SMS Data
         [Route("VaaaN/IndonesiaMLFFApi/ResponseSMS")]
         [HttpPost]
