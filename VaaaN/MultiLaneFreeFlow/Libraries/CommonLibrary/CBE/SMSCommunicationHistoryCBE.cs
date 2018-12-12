@@ -153,6 +153,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("entryId: " + this.entryId + Environment.NewLine);
             sb.Append("tmsId: " + this.tmsId + Environment.NewLine);
             sb.Append("customerAccountId: " + this.customerAccountId + Environment.NewLine);
+            sb.Append("customerVehicleId: " + this.customerVehicleId + Environment.NewLine);
             sb.Append("customerName: " + this.customerName + Environment.NewLine);
             sb.Append("mobileNumber: " + this.mobileNumber + Environment.NewLine);
             sb.Append("messageDirection: " + this.messageDirection + Environment.NewLine);

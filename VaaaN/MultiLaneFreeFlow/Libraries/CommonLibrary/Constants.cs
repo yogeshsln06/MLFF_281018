@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using System.ServiceProcess;
 using System.Net;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 
 namespace VaaaN.MLFF.Libraries.CommonLibrary
 {
@@ -29,6 +30,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         public static string companyLogoPath = driveLetter + @":\Freeflow\images\company_logo.jpg";
         public static string companyLogoPath2 = driveLetter + @":\Freeflow\images\company_logo2.jpg";
         public static string EventPath = driveLetter + @":\inetpub\wwwroot\MLFF_Publish\events\" + DateTime.Now.ToString("dd-MMM-yyyy") + "\\";
+        public static string CustomerImagePath = driveLetter + @":\inetpub\wwwroot\MLFF_Publish\Attachment\";
+        public static string CustomerVehicleImagePath = driveLetter + @":\inetpub\wwwroot\MLFF_Publish\Attachment\VehicleImage\";
 
         public static string atmsECBCallHistoryBackupProcessedFolder = driveLetter + @":\ATMS\Backup\ECB\Processed\";
         public static string atmsECBCallHistoryBackupUnProcessedFolder = driveLetter + @":\ATMS\Backup\ECB\UnProcessed\";
@@ -1713,6 +1716,31 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
                 MobileNo = "62" + MobileNo;
             }
             return MobileNo;
+        }
+
+
+        public static string SaveByteArrayAsImage(string fullOutputPath, string bytesString, string FileName)
+        {
+            try
+            {
+
+                if (!string.IsNullOrEmpty(bytesString))
+                {
+                    string base64String = bytesString.Replace("\n", "");
+                    byte[] imageBytes = Convert.FromBase64String(base64String);
+                    Image x = (Bitmap)((new ImageConverter()).ConvertFrom(imageBytes));
+                    x.Save(fullOutputPath);
+                }
+                else
+                {
+                    FileName = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return FileName;
         }
 
         #endregion

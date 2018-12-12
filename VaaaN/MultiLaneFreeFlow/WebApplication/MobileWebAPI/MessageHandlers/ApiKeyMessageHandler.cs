@@ -11,12 +11,12 @@ namespace MobileWebAPI.MessageHandlers
 {
     public class ApiKeyMessageHandler : DelegatingHandler
     {
-        private const string APIKeyToCheck = "VaaaNMobileApi";
+        private const string APIKeyToCheck = "VmFhYU5Nb2JpbGVBcGk=";
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage, CancellationToken cancellationToken)
         {
             bool validkey = false;
             IEnumerable<string> requesrHeaders;
-            var CheckApiKeyExits = httpRequestMessage.Headers.TryGetValues("APIKey", out requesrHeaders);
+            var CheckApiKeyExits = httpRequestMessage.Headers.TryGetValues("authorizationKey", out requesrHeaders);
             if (CheckApiKeyExits)
             {
                 if (requesrHeaders.FirstOrDefault().Equals(APIKeyToCheck))

@@ -497,7 +497,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.exceptionFlagName = value; }
         }
 
-        [Required]
         public Int16 Status
         {
             get { return this.status; }
@@ -658,9 +657,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.customerQueueStatusName = value;
             }
         }
-
-
-
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

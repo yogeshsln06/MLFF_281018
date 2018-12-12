@@ -9,6 +9,7 @@ namespace MobileWebAPI
     {
         public static void Register(HttpConfiguration config)
         {
+            config.Filters.Add(new Models.Filters.ValidateModelAttribute());
             // Web API configuration and services
             config.EnableCors();
             // Web API routes
