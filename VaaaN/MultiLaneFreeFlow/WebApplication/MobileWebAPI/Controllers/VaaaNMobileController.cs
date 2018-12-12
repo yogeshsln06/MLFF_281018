@@ -522,7 +522,7 @@ namespace MobileWebAPI.Controllers
         }
         #endregion
 
-        #region API for Customer Vehicle Recharge
+        #region API for Customer Vehicle Details
         [Route("VaaaN/IndonesiaMLFFMobileApi/InquiryCustomerVehicleDetail")]
         [HttpPost]
         [Filters.ValidateModel]
@@ -565,12 +565,12 @@ namespace MobileWebAPI.Controllers
                             objCustomerVehicleDetails.TIDRear = dt.Rows[0]["TID_REAR"].ToString();
                             objCustomerVehicleDetails.Type = dt.Rows[0]["VEHICLE_TYPE"].ToString();
                             objCustomerVehicleDetails.ValidUntil = dt.Rows[0]["VALID_UNTIL"].ToString();
-                            objCustomerVehicleDetails.VehicleImageFront = dt.Rows[0]["VEHICLEIMAGE_FRONT"].ToString();
-                            objCustomerVehicleDetails.VehicleImageLeft = dt.Rows[0]["VEHICLEIMAGE_LEFT"].ToString();
-                            objCustomerVehicleDetails.VehicleImageRear = dt.Rows[0]["VEHICLEIMAGE_REAR"].ToString();
-                            objCustomerVehicleDetails.VehicleImageRight = dt.Rows[0]["VEHICLEIMAGE_RIGHT"].ToString();
+                            objCustomerVehicleDetails.VehicleImageFront = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_FRONT"].ToString();
+                            objCustomerVehicleDetails.VehicleImageLeft = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_LEFT"].ToString();
+                            objCustomerVehicleDetails.VehicleImageRear = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_REAR"].ToString();
+                            objCustomerVehicleDetails.VehicleImageRight = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_RIGHT"].ToString();
                             objCustomerVehicleDetails.VehicleOwnershipDocumentNumber = dt.Rows[0]["VEHICLE_OWNERSHIP_NO"].ToString();
-                            objCustomerVehicleDetails.VehicleRegistrationCertificateImage = dt.Rows[0]["VEHICLE_RC_NO_PATH"].ToString();
+                            objCustomerVehicleDetails.VehicleRegistrationCertificateImage = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLE_RC_NO_PATH"].ToString();
                             objCustomerVehicleDetails.VehicleRegistrationCertificateNumber = dt.Rows[0]["VEHICLE_RC_NO"].ToString();
                             objCustomerVehicleDetails.VehicleRegistrationNumber = dt.Rows[0]["VEH_REG_NO"].ToString();
                             sJSONResponse = JsonConvert.SerializeObject(objCustomerVehicleDetails);
