@@ -529,6 +529,7 @@ namespace MLFFWebAPI.Controllers
             try
             {
                 CultureInfo culture = new CultureInfo("id-ID");
+                smsFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration.Deserialize();
                 LogInboundSMS("====================Inbound message (Start)=======");
 
                 #region Variables
@@ -616,15 +617,15 @@ namespace MLFFWebAPI.Controllers
                         LogInboundSMS("Failed to parse xml. : " + ex.Message);
                     }
                     #endregion
-                    string[] messageBodyFormat = messageBody.Split('_');
-                    if (messageBodyFormat.Length == 2)
+                    string[] messageBodyFormat = messageBody.Split(' ');
+                    if (messageBodyFormat.Length == 3)
                     {
                         #region Save Incoming message in database
                         try
                         {
                             // Search account id by mobile number
                             LogInboundSMS("Searching account number by mobile number. Mobile nbr.:" + mobileNumber);
-                            VRN = messageBodyFormat[1].ToString();
+                            VRN = messageBodyFormat[2].ToString();
                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetByMobileNumber(mobileNumber);
                             CustomerVehicleCBE objCustomerVehicle = new CustomerVehicleCBE();
                             objCustomerVehicle.VehRegNo = VRN;
@@ -645,7 +646,7 @@ namespace MLFFWebAPI.Controllers
                                 smsIncoming.TmsId = 1;
                                 smsIncoming.CustomerAccountId = customerAccount.AccountId;
                                 smsIncoming.CustomerVehicleId = customerVehicle.EntryId;
-                                smsIncoming.CustomerName = customerAccount.FirstName + " " + customerAccount.FirstName;
+                                smsIncoming.CustomerName = customerAccount.FirstName;
                                 smsIncoming.MobileNumber = mobileNumber;
                                 smsIncoming.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Incoming;
                                 smsIncoming.MessageBody = messageBody;
@@ -658,6 +659,7 @@ namespace MLFFWebAPI.Controllers
                                 smsIncoming.CreationDate = DateTime.Now;
                                 smsIncoming.ModificationDate = DateTime.Now;
                                 smsIncoming.ModifiedBy = 0;
+                                LogInboundSMS(smsIncoming.ToString());
                                 LogInboundSMS("Inserting incoming message in database.");
                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(smsIncoming);
                                 LogInboundSMS("Incoming message inserted successfully in database.");
@@ -703,7 +705,7 @@ namespace MLFFWebAPI.Controllers
                         {
                             if (customerAccount != null)
                             {
-                                smsFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration.Deserialize();
+                                
                                 // Top up
                                 if (messageBody.ToUpper().Contains("TOP-UP"))
                                 {
