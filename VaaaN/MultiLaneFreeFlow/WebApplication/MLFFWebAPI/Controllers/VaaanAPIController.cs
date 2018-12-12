@@ -705,7 +705,7 @@ namespace MLFFWebAPI.Controllers
                         {
                             if (customerAccount != null)
                             {
-                                
+
                                 // Top up
                                 if (messageBody.ToUpper().Contains("TOP-UP"))
                                 {
@@ -760,7 +760,7 @@ namespace MLFFWebAPI.Controllers
                                             accountHistory.TransactionId = 0;// Transaction id will be used if amount is debited by lane transaction
                                             accountHistory.Amount = rechargeAmount;
                                             accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
-                                            accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent; ;//will be updated later on
+                                            accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent;//will be updated later on
                                             accountHistory.CreationDate = transcationDateTime;
                                             accountHistory.ModificationDate = transcationDateTime;
                                             accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
