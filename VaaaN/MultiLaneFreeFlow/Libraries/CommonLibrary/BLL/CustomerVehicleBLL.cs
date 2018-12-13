@@ -42,11 +42,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.Update(vehicle);
         }
 
-        public static Decimal UpdateVehiclebalance(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle,Decimal Amount)
+        public static Decimal UpdateVehiclebalance(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle, Decimal Amount)
         {
-           return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.UpdateVehiclebalance(vehicle, Amount);
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.UpdateVehiclebalance(vehicle, Amount);
         }
-       
+
 
         public static List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> GetAllAsList()
         {
@@ -88,13 +88,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleByVehRegNo(customerVehicle);
         }
 
-       
+
 
         public static DataTable GetAllVehicleinDataTable()
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetAllVehicleinDataTable();
         }
 
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection GetLatestCustomerVehicles(DateTime lastCollectionUpdateTime)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetLatestCustomerVehicles(lastCollectionUpdateTime);
+        }
 
 
     }

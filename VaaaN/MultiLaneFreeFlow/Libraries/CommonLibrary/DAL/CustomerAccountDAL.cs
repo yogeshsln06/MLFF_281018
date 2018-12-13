@@ -134,9 +134,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 throw ex;
             }
         }
-
-
-
         #endregion
 
         #region Get Methods
@@ -248,7 +245,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
-
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 CustomerId, Int32 tmsId)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection customerAccounts = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection();
@@ -319,7 +315,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return accounts;
         }
 
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetLatestCustomerAccounts(DateTime lastCollectionUpdateTime)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection accounts = new CBE.CustomerAccountCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "ACCOUNT_LATEST_GETALL";
 
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LAST_UPDATE_TIME", DbType.DateTime, lastCollectionUpdateTime, ParameterDirection.Input));
+
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt = ds.Tables[tableName];
+                accounts = ConvertDataTableToCollection(dt);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return accounts;
+        }
         #endregion
 
         #region Helper Methods

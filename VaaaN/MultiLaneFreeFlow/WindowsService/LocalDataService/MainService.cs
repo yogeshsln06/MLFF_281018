@@ -2930,13 +2930,16 @@ namespace VaaaN.MLFF.WindowsServices
                 {
                     counter = counter + 1;
 
-                    if (counter > 60) // 1 minute
+                    if (counter > 60) // will update in every 1 minute
                     {
+                        LogMessage("Going to check for any update in collections...");
+
                         #region Updating latest customer accounts
-                        //VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection tempCA = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetLatestCustomerAccounts(lastCollectionUpdateTime);
+                        //access records whose creation time is greater than the lastCollectionUpdateTime
+                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection tempCA = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetLatestCustomerAccounts(lastCollectionUpdateTime);
                         //if(tempCA.Count > 0)
                         //{
-                        //    LogMessage(tempCA.Count + " new customer account records found.");
+                        //    LogMessage(tempCA.Count + " new customer account record(s) found.");
                         //    lock (customerAccounts)
                         //    {
                         //        for(int i = 0; i < tempCA.Count; i++)
@@ -2944,6 +2947,7 @@ namespace VaaaN.MLFF.WindowsServices
                         //            customerAccounts.Add(tempCA[i]);
                         //        }
                         //    }
+                        //    LogMessage("Customer account collection has been updated.");
                         //}
                         lock (customerAccounts)
                         {
@@ -2952,6 +2956,20 @@ namespace VaaaN.MLFF.WindowsServices
                         #endregion
 
                         #region Updating latest customer vehicles
+                        //access records whose creation time is greater than the lastCollectionUpdateTime
+                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection tempCV = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetLatestCustomerVehicles(lastCollectionUpdateTime);
+                        //if(tempCV.Count > 0)
+                        //{
+                        //    LogMessage(tempCV.Count + " new customer vehicle record(s) found.");
+                        //    lock (customerVehicles)
+                        //    {
+                        //        for(int i = 0; i < tempCV.Count; i++)
+                        //        {
+                        //            customerVehicles.Add(tempCV[i]);
+                        //        }
+                        //    }
+                        //    LogMessage("Customer vehicle collection has been updated.");
+                        //}
                         lock (customerVehicles)
                         {
                             customerVehicles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetAllAsCollection();
@@ -2959,6 +2977,20 @@ namespace VaaaN.MLFF.WindowsServices
                         #endregion
 
                         #region Updating latest hardwares
+                        //access records whose creation time is greater than the lastCollectionUpdateTime
+                        //VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCollection tempHardware = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetLatestHardwares(lastCollectionUpdateTime);
+                        //if(tempHardware.Count > 0)
+                        //{
+                        //    LogMessage(tempHardware.Count + " new hardware record(s) found.");
+                        //    lock (hardwares)
+                        //    {
+                        //        for(int i = 0; i < tempHardware.Count; i++)
+                        //        {
+                        //            hardwares.Add(tempHardware[i]);
+                        //        }
+                        //    }
+                        //    LogMessage("Hardware collection has been updated.");
+                        //}
                         lock (hardwares)
                         {
                             hardwares = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetAll();
@@ -2966,13 +2998,27 @@ namespace VaaaN.MLFF.WindowsServices
                         #endregion
 
                         #region Updating latest tollRates
+                        //access records whose creation time is greater than the lastCollectionUpdateTime
+                        //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection tempTollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetLatestTollRates(lastCollectionUpdateTime);
+                        //if (tempTollRates.Count > 0)
+                        //{
+                        //    LogMessage(tempTollRates.Count + " new toll rate record(s) found.");
+                        //    lock (tollRates)
+                        //    {
+                        //        for (int i = 0; i < tollRates.Count; i++)
+                        //        {
+                        //            tollRates.Add(tempTollRates[i]);
+                        //        }
+                        //    }
+                        //    LogMessage("Toll rates collection has been updated.");
+                        //}
                         lock (tollRates)
                         {
                             tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
                         }
                         #endregion
 
-                        lastCollectionUpdateTime = DateTime.Now;
+                        lastCollectionUpdateTime = DateTime.Now; //<===================================== important
 
                         counter = 0;
                     }
@@ -2985,7 +3031,8 @@ namespace VaaaN.MLFF.WindowsServices
                 finally
                 {
                     lastListUpdateTime = System.DateTime.Now; //<==========================important
-                    Thread.Sleep(1000); //should not use long Time sleep like 1 minute, 1 hour etc
+
+                    Thread.Sleep(1000); //should not use long time sleep like 1 minute, 1 hour etc
                 }
             }
 

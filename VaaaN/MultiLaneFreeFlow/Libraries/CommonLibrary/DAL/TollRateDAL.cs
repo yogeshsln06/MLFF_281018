@@ -177,6 +177,27 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return nextValue;
         }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection GetLatestTollRates(DateTime lastCollectionUpdateTime)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection tollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TOLLRATE_LATEST_GETALL";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LAST_UPDATE_TIME", DbType.DateTime, lastCollectionUpdateTime, ParameterDirection.Input));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt = ds.Tables[tableName];
+                tollRates = ConvertDataTableToCollection(dt);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return tollRates;
+        }
         #endregion
 
         #region Helper Methods

@@ -42,7 +42,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.HardwareDAL.Update(hardware);
         }
 
-
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCollection GetAll()
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.HardwareDAL.GetAll();
@@ -56,6 +55,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCBE GetHardwareByType(CBE.HardwareCBE hardware)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.HardwareDAL.GetHardwareByType(hardware);
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCollection GetLatestHardwares(DateTime lastCollectionUpdateTime)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.HardwareDAL.GetLatestHardwares(lastCollectionUpdateTime);
         }
 
     }

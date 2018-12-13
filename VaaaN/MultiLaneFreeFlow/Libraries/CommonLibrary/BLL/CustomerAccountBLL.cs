@@ -36,8 +36,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.Insert(account);
         }
 
-        
-
         public static void Update(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE account)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.Update(account);
@@ -63,13 +61,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetById(customerId, tmsId);
         }
 
-
         public static void UpdateBalance(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE account, Decimal amount)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.UpdateBalance(account, amount);
         }
-
-       
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE GetCustomerById(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customer)
         {
@@ -79,6 +74,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE GetCustomerByResidentId(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customer)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetCustomerByResidentId(customer);
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetLatestCustomerAccounts(DateTime lastCollectionUpdateTime)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetLatestCustomerAccounts(lastCollectionUpdateTime);
         }
     }
 }
