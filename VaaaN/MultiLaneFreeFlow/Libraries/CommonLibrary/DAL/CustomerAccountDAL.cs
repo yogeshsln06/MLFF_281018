@@ -245,6 +245,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static List<CBE.CustomerAccountCBE> ValidateCustomerAccount(CBE.CustomerAccountCBE customer)
+        {
+            try
+            {
 
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> accounts = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
                 string spName = Constants.oraclePackagePrefix + "CUSTOMER_ACCOUNT_VALIDATE";
@@ -261,6 +265,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 throw ex;
             }
         }
+
 
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 CustomerId, Int32 tmsId)
