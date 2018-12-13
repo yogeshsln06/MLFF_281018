@@ -98,6 +98,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetAllVehicleinDataTable();
         }
 
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection GetLatestCustomerVehicles(DateTime lastCollectionUpdateTime)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetLatestCustomerVehicles(lastCollectionUpdateTime);
+        }
 
 
     }

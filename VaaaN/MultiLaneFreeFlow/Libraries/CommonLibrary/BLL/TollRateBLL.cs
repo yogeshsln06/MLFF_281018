@@ -53,6 +53,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TollRateDAL.GetSpecificTollRate(TMSId, PlazaId, LaneId, VehicleClassId, TransactionTime);
         }
 
-
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection GetLatestTollRates(DateTime lastCollectionUpdateTime)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TollRateDAL.GetLatestTollRates(lastCollectionUpdateTime);
+        }
     }
 }

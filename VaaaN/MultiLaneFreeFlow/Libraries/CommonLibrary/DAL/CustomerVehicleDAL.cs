@@ -374,6 +374,25 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
             return result;
         }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection GetLatestCustomerVehicles(DateTime lastCollectionUpdateTime)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection vehicles = new CBE.CustomerVehicleCollection();
+
+            try
+            {
+                string spName = Constants.oraclePackagePrefix + "VEHICLE_LATEST_GETALL";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LAST_UPDATE_TIME", DbType.DateTime, lastCollectionUpdateTime, ParameterDirection.Input));
+                vehicles = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return vehicles;
+        }
         #endregion
 
         #region Helper Methods
