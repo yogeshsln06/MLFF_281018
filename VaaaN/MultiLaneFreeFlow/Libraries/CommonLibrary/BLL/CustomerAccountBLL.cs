@@ -75,5 +75,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetCustomerByResidentId(customer);
         }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetLatestCustomerAccounts(DateTime lastCollectionUpdateTime)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetLatestCustomerAccounts(lastCollectionUpdateTime);
+        }
+
+        public static List<CBE.CustomerAccountCBE> ValidateCustomerAccount(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customer)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.ValidateCustomerAccount(customer);
+        }
     }
 }
