@@ -1,4 +1,4 @@
-/* Formatted on 11/12/2018 16:10:36 (QP5 v5.215.12089.38647) */
+/* Formatted on 13/12/2018 01:48:15 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -792,7 +792,7 @@ AS
                              P_IS_DOC_VERIFIED           IN     NUMBER,
                              P_ACCOUNT_STATUS            IN     NUMBER,
                              P_TRANSFER_STATUS           IN     NUMBER,
-                             P_RESIDENT_ID               IN     NUMBER,
+                             P_RESIDENT_ID               IN     NVARCHAR2,
                              P_BIRTH_PLACE               IN     NVARCHAR2,
                              P_BIRTH_DATE                IN     DATE := NULL,
                              P_RT_RW                     IN     NVARCHAR2,
@@ -827,7 +827,7 @@ AS
                              P_IS_DOC_VERIFIED           IN NUMBER,
                              P_ACCOUNT_STATUS            IN NUMBER,
                              P_TRANSFER_STATUS           IN NUMBER,
-                             P_RESIDENT_ID               IN NUMBER,
+                             P_RESIDENT_ID               IN NVARCHAR2,
                              P_BIRTH_PLACE               IN NVARCHAR2,
                              P_BIRTH_DATE                IN DATE := NULL,
                              P_RT_RW                     IN NVARCHAR2,
@@ -853,8 +853,13 @@ AS
                               CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE ACCOUNT_GETBY_RESIDENTID (P_TMS_ID        IN     NUMBER,
-                                       P_RESIDENT_ID   IN     NUMBER,
+                                       P_RESIDENT_ID   IN     NVARCHAR2,
                                        CUR_OUT            OUT T_CURSOR);
+
+   PROCEDURE CUSTOMER_ACCOUNT_VALIDATE (P_MOB_NUMBER    IN     NVARCHAR2,
+                                        P_RESIDENT_ID   IN     NVARCHAR2,
+                                        P_EMAIL_ID      IN     NVARCHAR2,
+                                        CUR_OUT            OUT T_CURSOR);
 
    PROCEDURE ACCOUNT_BALANCEUPDATE (P_TMS_ID       IN NUMBER,
                                     P_ACCOUNT_ID   IN NUMBER,
@@ -974,6 +979,11 @@ AS
 
    PROCEDURE CUSTOMERVEHICLE_GETBYVEHREGNO (P_VEH_REG_NO   IN     NVARCHAR2,
                                             CUR_OUT           OUT T_CURSOR);
+
+   PROCEDURE VALIDATE_VEHICLE_DETAILS (P_VEH_REG_NO      IN     NVARCHAR2,
+                                       P_RESIDENT_ID     IN     NVARCHAR2,
+                                       P_VEHICLE_RC_NO   IN     NVARCHAR2,
+                                       CUR_OUT              OUT T_CURSOR);
 
    ------------ACCOUNT HISTORY ----------
 

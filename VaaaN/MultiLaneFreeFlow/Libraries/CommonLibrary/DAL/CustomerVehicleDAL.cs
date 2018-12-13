@@ -244,6 +244,22 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static DataTable ValidateCustomerVehicleDetails(CBE.CustomerVehicleCBE vehicle, string ResidentId)
+        {
+            try
+            {
+                string spName = Constants.oraclePackagePrefix + "VALIDATE_VEHICLE_DETAILS";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEH_REG_NO", DbType.String, vehicle.VehRegNo, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RESIDENT_ID", DbType.String, ResidentId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_RC_NO", DbType.String, vehicle.VehicleRCNumber, ParameterDirection.Input));
+                return VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public static DataTable GetAllVehicleinDataTable()
         {

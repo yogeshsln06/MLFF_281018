@@ -88,6 +88,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.birthDate = null;
             this.rt = String.Empty;
             this.rw = String.Empty;
+            this.rt_rw = String.Empty;
             this.provinceId = 0;
             this.provinceName = String.Empty;
             this.cityId = 0;

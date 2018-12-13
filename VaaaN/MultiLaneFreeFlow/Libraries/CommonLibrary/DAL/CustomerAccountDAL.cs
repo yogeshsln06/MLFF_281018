@@ -234,7 +234,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 string spName = Constants.oraclePackagePrefix + "ACCOUNT_GETBY_RESIDENTID";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, customer.TmsId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RESIDENT_ID", DbType.Int32, customer.ResidentId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RESIDENT_ID", DbType.String, customer.ResidentId, ParameterDirection.Input));
                 DataTable dt = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
                 customers = ConvertDataTableToCollection(dt);
                 return customers[0];
@@ -244,6 +244,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 throw ex;
             }
         }
+
+
+                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> accounts = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+                string spName = Constants.oraclePackagePrefix + "CUSTOMER_ACCOUNT_VALIDATE";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MOB_NUMBER", DbType.String, customer.MobileNo, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RESIDENT_ID", DbType.String, customer.ResidentId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_EMAIL_ID", DbType.String, customer.EmailId, ParameterDirection.Input));
+                DataTable dt = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+                accounts = ConvertDataTableToList(dt);
+                return accounts;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 CustomerId, Int32 tmsId)
         {
@@ -391,7 +409,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                         account.ModificationDate = Convert.ToDateTime(dt.Rows[i]["MODIFICATION_DATE"]);
 
                     if (dt.Rows[i]["CUSTOMER_IMAGE_PATH"] != DBNull.Value)
-                        account.CustomerImagePath =  Convert.ToString(dt.Rows[i]["CUSTOMER_IMAGE_PATH"]);
+                        account.CustomerImagePath = Convert.ToString(dt.Rows[i]["CUSTOMER_IMAGE_PATH"]);
 
                     if (dt.Rows[i]["IS_DOC_VERIFIED"] != DBNull.Value)
                         account.IsDocVerified = Convert.ToInt32(dt.Rows[i]["IS_DOC_VERIFIED"]);
@@ -497,7 +515,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                         account.Occupation = Convert.ToString(dt.Rows[i]["OCCUPATION"]);
 
                     if (dt.Rows[i]["RESIDENTIDCARDIMAGE"] != DBNull.Value)
-                        account.ResidentidcardImagePath =  Convert.ToString(dt.Rows[i]["RESIDENTIDCARDIMAGE"]);
+                        account.ResidentidcardImagePath = Convert.ToString(dt.Rows[i]["RESIDENTIDCARDIMAGE"]);
 
                     if (dt.Rows[i]["VALID_UNTIL"] != DBNull.Value)
                         account.ValidUntil = Convert.ToDateTime(dt.Rows[i]["VALID_UNTIL"]);

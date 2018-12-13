@@ -1,4 +1,4 @@
-/* Formatted on 11/12/2018 16:12:27 (QP5 v5.215.12089.38647) */
+/* Formatted on 13/12/2018 01:48:36 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -2881,6 +2881,7 @@ ORDER BY TRANSACTION_ID DESC';
       C_COUNT_HISTORY   NUMBER;
    BEGIN
       C_COUNT_HISTORY := 0;
+      P_ENTRY_ID := 0;
 
       SELECT COUNT (*)
         INTO C_COUNT_HISTORY
@@ -3013,7 +3014,7 @@ ORDER BY TRANSACTION_ID DESC';
                              P_IS_DOC_VERIFIED           IN     NUMBER,
                              P_ACCOUNT_STATUS            IN     NUMBER,
                              P_TRANSFER_STATUS           IN     NUMBER,
-                             P_RESIDENT_ID               IN     NUMBER,
+                             P_RESIDENT_ID               IN     NVARCHAR2,
                              P_BIRTH_PLACE               IN     NVARCHAR2,
                              P_BIRTH_DATE                IN     DATE := NULL,
                              P_RT_RW                     IN     NVARCHAR2,
@@ -3113,7 +3114,7 @@ ORDER BY TRANSACTION_ID DESC';
                              P_IS_DOC_VERIFIED           IN NUMBER,
                              P_ACCOUNT_STATUS            IN NUMBER,
                              P_TRANSFER_STATUS           IN NUMBER,
-                             P_RESIDENT_ID               IN NUMBER,
+                             P_RESIDENT_ID               IN NVARCHAR2,
                              P_BIRTH_PLACE               IN NVARCHAR2,
                              P_BIRTH_DATE                IN DATE := NULL,
                              P_RT_RW                     IN NVARCHAR2,
@@ -3167,9 +3168,54 @@ ORDER BY TRANSACTION_ID DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-         SELECT *
-           FROM TBL_CUSTOMER_ACCOUNT
-          WHERE MOB_NUMBER = P_MOB_NUMBER;
+         SELECT CA.TMS_ID,
+                CA.ACCOUNT_ID,
+                CA.FIRST_NAME,
+                CA.LAST_NAME,
+                CA.MOB_NUMBER,
+                CA.EMAIL_ID,
+                CA.DESCRIPTION,
+                CA.ADDRESS,
+                CA.ACCOUNT_BALANCE,
+                CA.CREATION_DATE,
+                CA.CUSTOMER_IMAGE_PATH,
+                CA.IS_DOC_VERIFIED,
+                CA.ACCOUNT_STATUS,
+                CA.TRANSFER_STATUS,
+                CA.RESIDENT_ID,
+                CA.BIRTH_PLACE,
+                CA.BIRTH_DATE,
+                CA.RT_RW,
+                CA.PROVINCE_ID,
+                P.PROVINCE_NAME,
+                CA.CITY_ID,
+                C.CITY_NAME,
+                CA.DISTRICT_ID,
+                D.DISTRICT_NAME,
+                SD.SUB_DISTRICT_NAME,
+                CA.SUB_DISTRICT_ID,
+                CA.POSTAL_CODE,
+                CA.NATIONALITY,
+                CA.GENDER,
+                CA.MARITAL_STATUS,
+                CA.OCCUPATION,
+                CA.RESIDENTIDCARDIMAGE,
+                CA.VALID_UNTIL,
+                CA.REGISTRATION_THROUGH,
+                CA.USER_PASSWORD,
+                CA.MODIFIER_ID,
+                CA.CREATION_DATE,
+                CA.MODIFICATION_DATE
+           FROM TBL_CUSTOMER_ACCOUNT CA
+                LEFT OUTER JOIN TBL_PROVINCE P
+                   ON CA.PROVINCE_ID = P.PROVINCE_ID
+                LEFT OUTER JOIN TBL_CITY C
+                   ON CA.CITY_ID = C.CITY_ID
+                LEFT OUTER JOIN TBL_DISTRICT D
+                   ON CA.DISTRICT_ID = D.DISTRICT_ID
+                LEFT OUTER JOIN TBL_SUB_DISTRICT SD
+                   ON CA.SUB_DISTRICT_ID = SD.SUB_DISTRICT_ID
+          WHERE CA.MOB_NUMBER = P_MOB_NUMBER;
    END ACCOUNT_GETBYMOBILENO;
 
    PROCEDURE ACCOUNT_GETALL (CUR_OUT OUT T_CURSOR)
@@ -3283,15 +3329,119 @@ ORDER BY TRANSACTION_ID DESC';
    END ACCOUNT_GETBYID;
 
    PROCEDURE ACCOUNT_GETBY_RESIDENTID (P_TMS_ID        IN     NUMBER,
-                                       P_RESIDENT_ID   IN     NUMBER,
+                                       P_RESIDENT_ID   IN     NVARCHAR2,
                                        CUR_OUT            OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
-         SELECT *
-           FROM TBL_CUSTOMER_ACCOUNT
-          WHERE TMS_ID = P_TMS_ID AND RESIDENT_ID = P_RESIDENT_ID;
+         SELECT CA.TMS_ID,
+                CA.ACCOUNT_ID,
+                CA.FIRST_NAME,
+                CA.LAST_NAME,
+                CA.MOB_NUMBER,
+                CA.EMAIL_ID,
+                CA.DESCRIPTION,
+                CA.ADDRESS,
+                CA.ACCOUNT_BALANCE,
+                CA.CREATION_DATE,
+                CA.CUSTOMER_IMAGE_PATH,
+                CA.IS_DOC_VERIFIED,
+                CA.ACCOUNT_STATUS,
+                CA.TRANSFER_STATUS,
+                CA.RESIDENT_ID,
+                CA.BIRTH_PLACE,
+                CA.BIRTH_DATE,
+                CA.RT_RW,
+                CA.PROVINCE_ID,
+                P.PROVINCE_NAME,
+                CA.CITY_ID,
+                C.CITY_NAME,
+                CA.DISTRICT_ID,
+                D.DISTRICT_NAME,
+                SD.SUB_DISTRICT_NAME,
+                CA.SUB_DISTRICT_ID,
+                CA.POSTAL_CODE,
+                CA.NATIONALITY,
+                CA.GENDER,
+                CA.MARITAL_STATUS,
+                CA.OCCUPATION,
+                CA.RESIDENTIDCARDIMAGE,
+                CA.VALID_UNTIL,
+                CA.REGISTRATION_THROUGH,
+                CA.USER_PASSWORD,
+                CA.MODIFIER_ID,
+                CA.CREATION_DATE,
+                CA.MODIFICATION_DATE
+           FROM TBL_CUSTOMER_ACCOUNT CA
+                LEFT OUTER JOIN TBL_PROVINCE P
+                   ON CA.PROVINCE_ID = P.PROVINCE_ID
+                LEFT OUTER JOIN TBL_CITY C
+                   ON CA.CITY_ID = C.CITY_ID
+                LEFT OUTER JOIN TBL_DISTRICT D
+                   ON CA.DISTRICT_ID = D.DISTRICT_ID
+                LEFT OUTER JOIN TBL_SUB_DISTRICT SD
+                   ON CA.SUB_DISTRICT_ID = SD.SUB_DISTRICT_ID
+          WHERE CA.TMS_ID = P_TMS_ID AND CA.RESIDENT_ID = P_RESIDENT_ID;
    END ACCOUNT_GETBY_RESIDENTID;
+
+   PROCEDURE CUSTOMER_ACCOUNT_VALIDATE (P_MOB_NUMBER    IN     NVARCHAR2,
+                                        P_RESIDENT_ID   IN     NVARCHAR2,
+                                        P_EMAIL_ID      IN     NVARCHAR2,
+                                        CUR_OUT            OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT CA.TMS_ID,
+                CA.ACCOUNT_ID,
+                CA.FIRST_NAME,
+                CA.LAST_NAME,
+                CA.MOB_NUMBER,
+                CA.EMAIL_ID,
+                CA.DESCRIPTION,
+                CA.ADDRESS,
+                CA.ACCOUNT_BALANCE,
+                CA.CREATION_DATE,
+                CA.CUSTOMER_IMAGE_PATH,
+                CA.IS_DOC_VERIFIED,
+                CA.ACCOUNT_STATUS,
+                CA.TRANSFER_STATUS,
+                CA.RESIDENT_ID,
+                CA.BIRTH_PLACE,
+                CA.BIRTH_DATE,
+                CA.RT_RW,
+                CA.PROVINCE_ID,
+                P.PROVINCE_NAME,
+                CA.CITY_ID,
+                C.CITY_NAME,
+                CA.DISTRICT_ID,
+                D.DISTRICT_NAME,
+                SD.SUB_DISTRICT_NAME,
+                CA.SUB_DISTRICT_ID,
+                CA.POSTAL_CODE,
+                CA.NATIONALITY,
+                CA.GENDER,
+                CA.MARITAL_STATUS,
+                CA.OCCUPATION,
+                CA.RESIDENTIDCARDIMAGE,
+                CA.VALID_UNTIL,
+                CA.REGISTRATION_THROUGH,
+                CA.USER_PASSWORD,
+                CA.MODIFIER_ID,
+                CA.CREATION_DATE,
+                CA.MODIFICATION_DATE
+           FROM TBL_CUSTOMER_ACCOUNT CA
+                LEFT OUTER JOIN TBL_PROVINCE P
+                   ON CA.PROVINCE_ID = P.PROVINCE_ID
+                LEFT OUTER JOIN TBL_CITY C
+                   ON CA.CITY_ID = C.CITY_ID
+                LEFT OUTER JOIN TBL_DISTRICT D
+                   ON CA.DISTRICT_ID = D.DISTRICT_ID
+                LEFT OUTER JOIN TBL_SUB_DISTRICT SD
+                   ON CA.SUB_DISTRICT_ID = SD.SUB_DISTRICT_ID
+          WHERE     MOB_NUMBER = P_MOB_NUMBER
+                AND RESIDENT_ID = P_RESIDENT_ID
+                AND EMAIL_ID = P_EMAIL_ID;
+   END CUSTOMER_ACCOUNT_VALIDATE;
 
    PROCEDURE ACCOUNT_BALANCEUPDATE (P_TMS_ID       IN NUMBER,
                                     P_ACCOUNT_ID   IN NUMBER,
@@ -4121,6 +4271,103 @@ ORDER BY TRANSACTION_ID DESC';
                    ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
           WHERE CV.VEH_REG_NO = P_VEH_REG_NO;
    END CUSTOMERVEHICLE_GETBYVEHREGNO;
+
+   PROCEDURE VALIDATE_VEHICLE_DETAILS (P_VEH_REG_NO      IN     NVARCHAR2,
+                                       P_RESIDENT_ID     IN     NVARCHAR2,
+                                       P_VEHICLE_RC_NO   IN     NVARCHAR2,
+                                       CUR_OUT              OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                VC.VEHICLE_CLASS_NAME,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                CV.VEHICLE_RC_NO,
+                CV.OWNER_NAME,
+                CV.OWNER_ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                (CASE CV.FUEL_TYPE
+                    WHEN 1 THEN 'Diesel'
+                    WHEN 2 THEN 'Gasoline'
+                    WHEN 3 THEN 'Petrol'
+                    WHEN 4 THEN 'Electric'
+                    WHEN 5 THEN 'Solor'
+                    ELSE 'Unknown'
+                 END)
+                   FUEL_TYPE_NAME,
+                CV.LICENCE_PLATE_COLOR,
+                (CASE CV.LICENCE_PLATE_COLOR
+                    WHEN 1 THEN 'Black'
+                    WHEN 2 THEN 'White'
+                    WHEN 3 THEN 'Yellow'
+                    WHEN 4 THEN 'Red'
+                    WHEN 5 THEN 'Blue'
+                    WHEN 6 THEN 'Green'
+                    ELSE 'Unknown'
+                 END)
+                   LICENCE_PLATE_COLOR_NAME,
+                CV.REGISTRATION_YEAR,
+                CV.VEHICLE_OWNERSHIP_NO,
+                CV.LOCATION_CODE,
+                CV.REG_QUEUE_NO,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_RIGHT,
+                CV.VEHICLEIMAGE_LEFT,
+                CV.VEHICLE_RC_NO_PATH,
+                CV.EXCEPTION_FLAG,
+                (CASE CV.EXCEPTION_FLAG
+                    WHEN 1 THEN 'Charged'
+                    WHEN 2 THEN 'Not Charged'
+                    WHEN 3 THEN 'Blacklist'
+                    ELSE 'Unknown'
+                 END)
+                   EXCEPTION_FLAG_NAME,
+                CV.STATUS,
+                CV.VALID_UNTIL,
+                CV.TID_FRONT,
+                CV.TID_REAR,
+                CV.ACCOUNT_BALANCE,
+                CV.REGISTRATION_THROUGH,
+                CV.IS_DOC_VERIFIED,
+                CV.QUEUE_STATUS,
+                (CASE CV.QUEUE_STATUS
+                    WHEN 1 THEN 'Open'
+                    WHEN 2 THEN 'Postponded'
+                    WHEN 3 THEN 'Processed'
+                    ELSE 'Unknown'
+                 END)
+                   QUEUE_STATUS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CA.RESIDENT_ID,
+                CA.EMAIL_ID,
+                CA.MOB_NUMBER
+           FROM TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                   ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                   ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+          WHERE     CV.VEH_REG_NO = P_VEH_REG_NO
+                AND CV.VEHICLE_RC_NO = P_VEHICLE_RC_NO
+                AND CA.RESIDENT_ID = P_RESIDENT_ID;
+   END VALIDATE_VEHICLE_DETAILS;
 
    ------------ACCOUNT HISTORY ----------
 
