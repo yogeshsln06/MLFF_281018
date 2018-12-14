@@ -19,6 +19,7 @@ namespace VaaaN.MLFF.WindowsServices
 
         DateTime lastCollectionUpdateTime = DateTime.MinValue;
 
+        //convert these collections into hastables in future for performance - CJS
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCollection lanes;
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCollection hardwares;
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCollection plazas;
@@ -1377,6 +1378,12 @@ namespace VaaaN.MLFF.WindowsServices
 
                                 #region parsing tagid
                                 ctp.ObjectId = ctp.ObjectId.Trim(); //otherwise trailing and leading spaces create problems
+
+                                ////////if (IsValidTag(ctp.ObjectId))
+                                ////////{
+                                ////////    filter out unnecessary tags
+                                ////////}
+
                                 TagStructure ts = ParseEPC(ctp.ObjectId); //this function also should validate the tag so that we need not go further processing-CJS
 
                                 int eviClass = -1;
@@ -2768,7 +2775,7 @@ namespace VaaaN.MLFF.WindowsServices
                             result = ca;
                             break;
                         }
-                    }
+                    }                  
                 }
             }
             catch (Exception ex)
@@ -2824,6 +2831,44 @@ namespace VaaaN.MLFF.WindowsServices
                 result = string.Empty;
             }
 
+            return result;
+        }
+
+        private bool IsValidTag(string epcInput)
+        {
+            bool result = false;
+            try
+            {
+                LogMessage("Checking the validity of the tag: " + epcInput + "...");
+                string epc = epcInput.Trim();
+                if (epc.Length > 2)
+                {
+                    string ftc = epc.Substring(0, 2); //ftc = First Two Characters
+                    if ((ftc == "01") || (ftc == "02") || (ftc == "03") || (ftc == "04"))
+                    {
+                        int indexOfFC = epc.IndexOf("FC");
+                        if (indexOfFC == -1)
+                        {
+                            //invalid tag
+                            result = false;
+                        }
+                        else
+                        {
+                            result = true; //length of the vrn should be checked here
+                        }
+                    }
+                    else
+                    {
+                        //invalid tag
+                        result = false;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                LogMessage("Exception in checking validity of the tag. " + ex.ToString());
+                result = false;
+            }
             return result;
         }
 
