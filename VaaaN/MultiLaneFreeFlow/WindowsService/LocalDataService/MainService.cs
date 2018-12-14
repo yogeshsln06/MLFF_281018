@@ -1377,7 +1377,7 @@ namespace VaaaN.MLFF.WindowsServices
 
                                 #region parsing tagid
                                 ctp.ObjectId = ctp.ObjectId.Trim(); //otherwise trailing and leading spaces create problems
-                                TagStructure ts = ParseEPC(ctp.ObjectId);
+                                TagStructure ts = ParseEPC(ctp.ObjectId); //this function also should validate the tag so that we need not go further processing-CJS
 
                                 int eviClass = -1;
                                 string eviVRN = "";
@@ -1387,7 +1387,7 @@ namespace VaaaN.MLFF.WindowsServices
                                     eviClass = ts.ClassId;
                                     eviVRN = ts.VRN;
 
-                                    LogMessage("Checking the tag exists in the system or not. " + ctp.ObjectId);
+                                    LogMessage("Checking the tag exists in the system or not. " + ctp.ObjectId); //it should not check existance, but isregistered or not with status "processed"
                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE associatedCVCT = DoesTagExist(ctp.ObjectId);
                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE associatedCACT = null;
                                     if (associatedCVCT != null)
@@ -1462,7 +1462,6 @@ namespace VaaaN.MLFF.WindowsServices
 
                                         //does recent transactions contains this tag? it may be reported repetatively. 
                                         //check in tbl_crosstalk_packet's most recent transactions of the same plaza
-
                                         #region Check in recent crosstalk packets
                                         LogMessage("Checking tag has been already inserted..." + ctp.PlazaId + ", " + ctp.ObjectId + ", " + ctp.TimeStamp + ", " + ctp.LocationId);
                                         if (!DoesExistInRecentCrossTalkPackets(ctp.PlazaId, ctp.ObjectId, Convert.ToDateTime(ctp.TimeStamp), ctp.LocationId))
@@ -2528,7 +2527,7 @@ namespace VaaaN.MLFF.WindowsServices
                 {
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE cvc in customerVehicles)
                     {
-                        if (cvc.TagId.ToLower() == tagId.ToLower())
+                        if (cvc.TagId.ToLower() == tagId.ToLower()) 
                         {
                             result = cvc;
                             break;
@@ -2563,12 +2562,11 @@ namespace VaaaN.MLFF.WindowsServices
                 //}
 
                 //the above code has been commented and the following code is used for efficiency
+                //the conditions also include the locationId, because we need to consider the tag read by rear antenna though the same tag is reported by front antenna
                 if (rfidRecentDataList.Any(e => (e.PlazaId == plazaId && e.ObjectId == tagId && e.PacketTimeStamp > tagReportingTime.AddMinutes(-1) && e.LocationId == locationId)))//locatinid is newly added
                 {
                     result = true;
                 }
-                //ikeRecentDataList.Any(x => (x.PlazaId == plazaId && x.ObjectId = tagId));
-                //ikeRecentDataList.Select(x => x.ObjectId= tagId && x.PlazaId=plazaId);               
             }
             catch (Exception ex)
             {
@@ -2933,7 +2931,7 @@ namespace VaaaN.MLFF.WindowsServices
                         LogMessage("Going to check for any update in collections...");
 
                         #region Updating latest customer accounts
-                        //access records whose creation time is greater than the lastCollectionUpdateTime
+                        //access records whose creation time is greater than the lastCollectionUpdateTime and status is equal to processed
                         //VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection tempCA = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetLatestCustomerAccounts(lastCollectionUpdateTime);
                         //if(tempCA.Count > 0)
                         //{
@@ -2954,7 +2952,7 @@ namespace VaaaN.MLFF.WindowsServices
                         #endregion
 
                         #region Updating latest customer vehicles
-                        //access records whose creation time is greater than the lastCollectionUpdateTime
+                        //access records whose creation time is greater than the lastCollectionUpdateTime and status is equal to processed
                         //VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection tempCV = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetLatestCustomerVehicles(lastCollectionUpdateTime);
                         //if(tempCV.Count > 0)
                         //{

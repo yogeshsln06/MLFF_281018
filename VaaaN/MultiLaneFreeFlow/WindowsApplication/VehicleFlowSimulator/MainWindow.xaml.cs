@@ -417,7 +417,8 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                     if (!string.IsNullOrEmpty(packet))
                     {
                         HttpClient client = new HttpClient();
-                        string url = textBoxAPIAddress.Text.Trim() + "/VaaaN/IndonesiaMLFFApi/SendNodefluxEvent"; // "http://192.168.1.63:5555/VaaaN/IndonesiaMLFFApi/SendNodefluxEvent";
+                        // "http://192.168.1.63:5555/VaaaN/IndonesiaMLFFApi/SendNodefluxEvent"; <======== sample url
+                        string url = textBoxAPIAddress.Text.Trim() + "/VaaaN/IndonesiaMLFFApi/SendNodefluxEvent"; 
                         client.BaseAddress = new Uri(url);
 
                         client.PostAsync(
