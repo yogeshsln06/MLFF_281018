@@ -101,7 +101,7 @@ namespace MobileWebAPI.Models
         public Int32 CustomerVehicleId { get; set; }
     }
 
-    public class CustomerVehicleInformationforTopup: CustomerVehicleInformation
+    public class CustomerVehicleInformationforTopup : CustomerVehicleInformation
     {
         [Display(Name = "Top-Up Amount")]
         [Required(ErrorMessage = "Top-Up Amount is required")]
@@ -125,6 +125,18 @@ namespace MobileWebAPI.Models
         public String VehicleRegistrationNumber { get; set; }
     }
 
+    public class VehicleTransactionHistorySummary
+    {
+        public string ResidentIdentityNumber { get; set; }
+        public string VehicleRegistrationCertificateNumber { get; set; }
+        public string VehicleRegistrationNumber { get; set; }
+        public Int32 TransactionID { get; set; }
+        public string TransactionType { get; set; }
+        public DateTime TransactionTimestamp { get; set; }
+        public string GantryName { get; set; }
+        public string LaneNumber { get; set; }
+        public Decimal TransactionAmount { get; set; }
+    }
     public class CustomerVehicleDetails
     {
         public string ResidentIdentityNumber { get; set; }

@@ -1,4 +1,4 @@
-/* Formatted on 13/12/2018 01:48:15 (QP5 v5.215.12089.38647) */
+/* Formatted on 13/12/2018 16:59:35 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -1138,5 +1138,10 @@ AS
    PROCEDURE CUSTAPPOINTMENT_GETACC_ID (P_TMS_ID       IN     NUMBER,
                                         P_ACCOUNT_ID   IN     NUMBER,
                                         CUR_OUT           OUT T_CURSOR);
+
+   PROCEDURE TRANSCATION_HISTORY_DETAILS (P_VEH_REG_NO      IN     NVARCHAR2,
+                                          P_RESIDENT_ID     IN     NVARCHAR2,
+                                          P_VEHICLE_RC_NO   IN     NVARCHAR2,
+                                          CUR_OUT              OUT T_CURSOR);
 END MLFF_PACKAGE;
 /

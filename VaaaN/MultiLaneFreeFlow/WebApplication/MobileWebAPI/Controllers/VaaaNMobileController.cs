@@ -604,6 +604,63 @@ namespace MobileWebAPI.Controllers
         }
         #endregion
 
+        #region API for Customer Vehicle Details
+        [Route("VaaaN/IndonesiaMLFFMobileApi/InquiryCustomerVehicleTransactionHistorySummary")]
+        [HttpPost]
+        [Filters.ValidateModel]
+        public HttpResponseMessage TransactionHistorySummary(CustomerVehicleInformation objCustomerVehicleInformation)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+
+                    dt = AccountHistoryBLL.AccountHistoryByVehicle(objCustomerVehicleInformation.ResidentIdentityNumber, objCustomerVehicleInformation.VehicleRegistrationCertificateNumber, objCustomerVehicleInformation.VehicleRegistrationNumber);
+                    if (dt.Rows.Count > 0)
+                    {
+                        try
+                        {
+                            VehicleTransactionHistorySummary objVehicleTransactionHistorySummary = new VehicleTransactionHistorySummary();
+                            objVehicleTransactionHistorySummary.ResidentIdentityNumber = Convert.ToString(dt.Rows[0]["RESIDENT_ID"].ToString());
+                            objVehicleTransactionHistorySummary.VehicleRegistrationCertificateNumber = dt.Rows[0]["VEHICLE_RC_NO"].ToString();
+                            objVehicleTransactionHistorySummary.VehicleRegistrationNumber = dt.Rows[0]["VEH_REG_NO"].ToString();
+                            objVehicleTransactionHistorySummary.TransactionID = Convert.ToInt32(dt.Rows[0]["TRANSACTION_ID"].ToString());
+                            objVehicleTransactionHistorySummary.TransactionType = dt.Rows[0]["TRANSACTION_TYPE_NAME"].ToString();
+                            objVehicleTransactionHistorySummary.TransactionTimestamp = Convert.ToDateTime(dt.Rows[0]["CREATION_DATE"].ToString());
+                            objVehicleTransactionHistorySummary.GantryName = dt.Rows[0]["PLAZA_NAME"].ToString();
+                            objVehicleTransactionHistorySummary.LaneNumber = dt.Rows[0]["LANE_NAME"].ToString();
+                            objVehicleTransactionHistorySummary.TransactionAmount = Convert.ToDecimal(dt.Rows[0]["AMOUNT"].ToString());
+                            sJSONResponse = JsonConvert.SerializeObject(objVehicleTransactionHistorySummary);
+                            return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log("Exception in Transaction History Summary. : " + ex.ToString());
+                            respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
+                            sJSONResponse = JsonConvert.SerializeObject(respmsg);
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                        }
+                    }
+                    else {
+                        respmsg.Add(new ResponseMessage { ErrorMessage = "No account found" });
+                        sJSONResponse = JsonConvert.SerializeObject(respmsg);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    }
+                }
+                catch (Exception)
+                {
+                    respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
+                    sJSONResponse = JsonConvert.SerializeObject(respmsg);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                }
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+        }
+        #endregion
+
         #region Helper Method
 
 

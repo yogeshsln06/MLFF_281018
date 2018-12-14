@@ -36,5 +36,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryBYAccountId(AccountId, TranactionType);
         }
+
+        public static DataTable AccountHistoryByVehicle(string ResidentIdentityNumber, string VehicleRegistrationCertificateNumber, string VehicleRegistrationNumber)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryByVehicle(ResidentIdentityNumber, VehicleRegistrationCertificateNumber, VehicleRegistrationNumber);
+        }
     }
 }

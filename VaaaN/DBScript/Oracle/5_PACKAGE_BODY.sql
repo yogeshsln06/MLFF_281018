@@ -1,4 +1,4 @@
-/* Formatted on 13/12/2018 01:48:36 (QP5 v5.215.12089.38647) */
+/* Formatted on 13/12/2018 16:59:59 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /* "USER" */
@@ -2328,6 +2328,8 @@ ORDER BY TRANSACTION_ID DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_GETFILTERED;
+
+
 
    --------------------PLAZA-------------------------------
 
@@ -5054,5 +5056,45 @@ ORDER BY TRANSACTION_ID DESC';
            FROM TBL_CUSTOMER_APPOINTMENT
           WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
    END CUSTAPPOINTMENT_GETACC_ID;
+
+   PROCEDURE TRANSCATION_HISTORY_DETAILS (P_VEH_REG_NO      IN     NVARCHAR2,
+                                          P_RESIDENT_ID     IN     NVARCHAR2,
+                                          P_VEHICLE_RC_NO   IN     NVARCHAR2,
+                                          CUR_OUT              OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT AH.ENTRY_ID,
+                CA.RESIDENT_ID,
+                CV.VEHICLE_RC_NO,
+                AH.TRANSACTION_ID,
+                AH.TRANSACTION_TYPE,
+                (CASE AH.TRANSACTION_TYPE
+                    WHEN 1 THEN 'Sale'
+                    WHEN 2 THEN 'Recharge'
+                    WHEN 3 THEN 'Refund'
+                    WHEN 4 THEN 'Lane Debit'
+                    ELSE 'Unknown'
+                 END)
+                   TRANSACTION_TYPE_NAME,
+                AH.CREATION_DATE,
+                AH.AMOUNT,
+                L.LANE_NAME,
+                P.PLAZA_NAME
+           FROM TBL_ACCOUNT_HISTORY AH
+                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                   ON AH.ACCOUNT_ID = CA.ACCOUNT_ID
+                LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
+                   ON AH.CUSTOMER_VEHICLE_ENTRY_ID = CV.ENTRY_ID
+                LEFT OUTER JOIN TBL_TRANSACTION T
+                   ON AH.TRANSACTION_ID = T.TRANSACTION_ID
+                LEFT OUTER JOIN TBL_LANE L
+                   ON T.LANE_ID = L.LANE_ID
+                LEFT OUTER JOIN TBL_PLAZA P
+                   ON T.PLAZA_ID = P.PLAZA_ID
+          WHERE     CV.VEH_REG_NO = P_VEH_REG_NO
+                AND CV.VEHICLE_RC_NO = P_VEHICLE_RC_NO
+                AND CA.RESIDENT_ID = P_RESIDENT_ID;
+   END TRANSCATION_HISTORY_DETAILS;
 END MLFF_PACKAGE;
 /

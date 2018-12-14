@@ -194,7 +194,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         {
             "Sale",//0
             "Recharge",
-            "Refund"
+            "Refund",
+            "Lane Debit"
         };
 
         /// <summary>
