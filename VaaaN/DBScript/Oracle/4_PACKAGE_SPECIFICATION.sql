@@ -4,7 +4,7 @@ AS
    TYPE T_CURSOR IS REF CURSOR;
 
 
-   /* User */
+   /*USER*/
    PROCEDURE USER_INSERT (P_USER_ID             IN NUMBER,
                           P_LOGIN_NAME          IN NVARCHAR2,
                           P_FIRST_NAME          IN NVARCHAR2,
@@ -102,8 +102,7 @@ AS
 
 
 
-   /* Role */
-
+   /*ROLE*/
    PROCEDURE ROLE_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE ROLE_INSERT (P_ROLE_NAME           IN     NVARCHAR2,
@@ -140,8 +139,7 @@ AS
                                P_TOTAL_ROWS           OUT NUMBER);
 
 
-   /* Role Module Right */
-
+   /*ROLE MODULE RIGHT*/
    PROCEDURE ROLEMODRIGHT_INSERT (P_ROLE_ID         IN NUMBER,
                                   P_ENTRY_ID        IN NUMBER,
                                   P_MODULE_ID       IN NUMBER,
@@ -172,7 +170,7 @@ AS
 
 
 
-   /*USER MODULE RIGHTS*/
+   /*USER MODULE RIGHT*/
    PROCEDURE USERMODRIGHT_INSERT (P_USER_ID IN NUMBER, P_ENTRY_ID IN NUMBER);
 
 
@@ -203,8 +201,7 @@ AS
                                     P_SUB_MODULE_EDIT     IN NUMBER,
                                     P_SUB_MODULE_DELETE   IN NUMBER);
 
-   /* Module Activity */
-
+   /*MODULE ACTIVITY*/
    PROCEDURE MODULE_ACTIVITY_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE MODULE_ACTIVITY_INSERT (P_MODULE_ID     IN NUMBER,
@@ -220,7 +217,7 @@ AS
    PROCEDURE USERMOD_ACT_GETBYENTRYID (P_ENTRY_ID   IN     NUMBER,
                                        CUR_OUT         OUT T_CURSOR);
 
-   /*USER SUBMODULE RIGHTS*/
+   /*USER SUBMODULE RIGHT*/
    PROCEDURE USERSUBMODRIGHT_INSERT (P_USER_ID    IN NUMBER,
                                      P_ENTRY_ID   IN NUMBER);
 
@@ -248,8 +245,7 @@ AS
    PROCEDURE USERSUBMOD_ACT_GETBYENTRYID (P_ENTRY_ID   IN     NUMBER,
                                           CUR_OUT         OUT T_CURSOR);
 
-   /*ROLE SUBMODULE RIGHTS*/
-
+   /*ROLE SUBMODULE RIGHT*/
    PROCEDURE ROLESUBMODRIGHT_INSERT (P_ROLE_ID             IN NUMBER,
                                      P_ENTRY_ID            IN NUMBER,
                                      P_SUBMODULE_ID        IN NUMBER,
@@ -284,7 +280,7 @@ AS
                                         CUR_OUT          OUT T_CURSOR);
 
 
-   /*SUBMODULE ACTIVITY */
+   /*SUBMODULE ACTIVITY*/
    PROCEDURE SUBMODULEACTIVITY_INSERT (P_ENTRY_ID       IN NUMBER,
                                        P_SUBMODULE_ID   IN NUMBER,
                                        P_ACTIVITY_ID    IN NUMBER);
@@ -299,7 +295,7 @@ AS
 
 
 
-   /* Submodule*/
+   /*SUBMODULE*/
    PROCEDURE SUBMODULE_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE SUBMODULE_GETBYUSER (P_USER_ID     IN     NUMBER,
@@ -328,7 +324,7 @@ AS
    PROCEDURE SUBMODULE_GETBYID (P_SUBMODULE_ID   IN     NUMBER,
                                 CUR_OUT             OUT T_CURSOR);
 
-   /*MODULE */
+   /*MODULE*/
    PROCEDURE MODULE_GETALL (CUR_OUT OUT T_CURSOR);
 
 
@@ -358,7 +354,7 @@ AS
    PROCEDURE MODULEACTIVITY_BYROLEID (CUR_OUT        OUT T_CURSOR,
                                       P_ROLE_ID   IN     NUMBER);
 
-   /*CrossTalk Event*/
+   /*CROSSTALK EVENT*/
    PROCEDURE CT_PACKET_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE CT_PACKET_GETRECENT (P_PLAZA_ID   IN     NUMBER,
@@ -403,7 +399,7 @@ AS
                                P_PLAZA_ID   IN NUMBER,
                                P_ENTRY_ID   IN NUMBER);
 
-   /*NodeFlux Event*/
+   /*NODEFLUX EVENT*/
    PROCEDURE NF_PACKET_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE NF_PACKET_GETBYENTRYID (P_ENTRY_ID   IN     NUMBER,
@@ -460,8 +456,7 @@ AS
                                P_GANTRY_ID   IN NUMBER,
                                P_ENTRY_ID    IN NUMBER);
 
-   ---------------Transactions---------------
-
+   /*TRANSACTION*/
    PROCEDURE TRAN_INSERT_BY_CTP (P_TMS_ID                 IN     NUMBER,
                                  P_PLAZA_ID               IN     NUMBER,
                                  P_LANE_ID                IN     NUMBER,
@@ -592,8 +587,7 @@ AS
 
    PROCEDURE TRAN_GETFILTERED (P_FILTER IN NVARCHAR2, CUR_OUT OUT T_CURSOR);
 
-   --------------------PLAZA-------------------------------
-
+   /*PLAZA*/
    PROCEDURE PLAZA_INSERT (P_TMS_ID          IN NUMBER,
                            P_PLAZA_ID        IN NUMBER,
                            P_PLAZA_NAME      IN NVARCHAR2,
@@ -613,7 +607,7 @@ AS
 
    PROCEDURE PLAZA_GETBYID (P_PLAZA_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
-   -----------------------LANE----------------------------
+   /*LANE*/
    PROCEDURE LANE_INSERT (P_TMS_ID                 IN NUMBER,
                           P_PLAZA_ID               IN NUMBER,
                           P_LANE_ID                IN NUMBER,
@@ -645,7 +639,7 @@ AS
 
    PROCEDURE LANE_GETBYPLAZAID (P_PLAZA_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
-   -----------------------HARDWARE----------------------------
+   /*HARDWARE*/
    PROCEDURE HARDWARE_INSERT (P_TMS_ID              IN NUMBER,
                               P_PLAZA_ID            IN NUMBER,
                               P_HARDWARE_ID         IN NUMBER,
@@ -678,7 +672,10 @@ AS
    PROCEDURE HARDWARE_GETBYTYPE (P_HARDWARE_TYPE   IN     NUMBER,
                                  CUR_OUT              OUT T_CURSOR);
 
-   -----------------------VEHICLE CLASS----------------------------
+   PROCEDURE HARDWARE_LATEST_GETALL (P_LAST_UPDATE_TIME  IN DATE,
+                                    CUR_OUT OUT T_CURSOR);
+
+   /*VEHICLE CLASS*/
    PROCEDURE VEHICLE_CLASS_INSERT (P_TMS_ID               IN NUMBER,
                                    P_VEHICLE_CLASS_ID     IN NUMBER,
                                    P_VEHICLE_CLASS_NAME   IN NVARCHAR2,
@@ -701,7 +698,7 @@ AS
       P_VEHICLE_CLASS_NAME   IN     NVARCHAR2,
       CUR_OUT                   OUT T_CURSOR);
 
-   ---------------TOLL RATE---------------------
+   /*TOLL RATE*/
    PROCEDURE TOLL_RATE_INSERT (P_TMS_ID             IN NUMBER,
                                P_PLAZA_ID           IN NUMBER,
                                P_TRANSFER_STATUS    IN NUMBER,
@@ -737,8 +734,10 @@ AS
 
    PROCEDURE TOLL_RATE_GETALL (CUR_OUT OUT T_CURSOR);
 
-   ------------- SMS HISTORY--------
+   PROCEDURE TOLLRATE_LATEST_GETALL (P_LAST_UPDATE_TIME  IN DATE,
+                                    CUR_OUT OUT T_CURSOR);
 
+   /*SMS HISTORY*/
    PROCEDURE SMS_HISTORY_INSERT (P_ENTRY_ID                     OUT NUMBER,
                                  P_TMS_ID                    IN     NUMBER,
                                  P_CUSTOMER_ACCOUNT_ID       IN     NUMBER,
@@ -777,7 +776,7 @@ AS
    PROCEDURE SMS_HISTORY_GETFILTERED (P_FILTER   IN     NVARCHAR2,
                                       CUR_OUT       OUT T_CURSOR);
 
-   ----------TBL CUSTOMER ACCOUNT----------
+   /*CUSTOMER ACCOUNT*/
    PROCEDURE ACCOUNT_INSERT (P_TMS_ID                    IN     NUMBER,
                              P_ACCOUNT_ID                   OUT NUMBER,
                              P_FIRST_NAME                IN     NVARCHAR2,
@@ -809,8 +808,6 @@ AS
                              P_VALID_UNTIL               IN     DATE := NULL,
                              P_REGISTRATION_THROUGH      IN     NUMBER,
                              P_USERPASSWORD              IN     NVARCHAR2);
-
-
 
    PROCEDURE ACCOUNT_UPDATE (P_TMS_ID                    IN NUMBER,
                              P_ACCOUNT_ID                IN NUMBER,
@@ -865,10 +862,10 @@ AS
                                     P_ACCOUNT_ID   IN NUMBER,
                                     P_AMOUNT       IN NUMBER);
 
+   PROCEDURE ACCOUNT_LATEST_GETALL (P_LAST_UPDATE_TIME  IN DATE,
+                                    CUR_OUT OUT T_CURSOR);
 
-
-   ----------TBL CUSTOMER VEHICLE------------
-
+   /*CUSTOMER VEHICLE*/
    PROCEDURE CUSTOMER_VEHICLE_INSERT (
       P_TMS_ID                 IN     NUMBER,
       P_ENTRY_ID                  OUT NUMBER,
@@ -985,8 +982,11 @@ AS
                                        P_VEHICLE_RC_NO   IN     NVARCHAR2,
                                        CUR_OUT              OUT T_CURSOR);
 
-   ------------ACCOUNT HISTORY ----------
+    PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME  IN DATE,
+                                    CUR_OUT OUT T_CURSOR);
 
+
+   /*ACCOUNT HISTORY*/
    PROCEDURE ACCOUNT_HISTORY_INSERT (
       P_TMS_ID                      IN     NUMBER,
       P_ACCOUNT_ID                  IN     NUMBER,
@@ -1021,7 +1021,7 @@ AS
       P_TRANSACTION_TYPE   IN     NUMBER,
       CUR_OUT                 OUT T_CURSOR);
 
-   -----------------------POC CSV Data----------------
+   /*CSV*/
    PROCEDURE TRAN_CSV_GETNORMALTRAN (P_START_TIME   IN     DATE,
                                      P_END_TIME     IN     DATE,
                                      CUR_OUT           OUT T_CURSOR);
@@ -1042,7 +1042,7 @@ AS
       P_AUDITED_VEHICLE_CLASS_ID   IN NUMBER,
       P_AUDITOR_ID                 IN NUMBER);
 
-   ------------VEHICLE CLASS MAPPING ----------
+   /*VEHICLE CLASS MAPPING*/
    PROCEDURE VEHICLE_CLASS_MAPPING_INSERT (
       P_TMS_ID                     IN NUMBER,
       P_MAPPING_VEHICLE_CLASS_ID   IN NUMBER,
@@ -1075,32 +1075,31 @@ AS
       P_ANPR_VEHICLE_CLASS_NAME   IN     NVARCHAR2,
       CUR_OUT                        OUT T_CURSOR);
 
-   -----------Province ----------
+   /*PROVINCE*/
    PROCEDURE PROVINCE_GETALL (CUR_OUT OUT T_CURSOR);
 
-   -----------City ----------
+   /*CITY*/
    PROCEDURE CITY_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE CITY_GETBYPROVINCEID (P_TMS_ID        IN     NUMBER,
                                    P_PROVINCE_ID   IN     NUMBER,
                                    CUR_OUT            OUT T_CURSOR);
 
-   -----------District ----------
+   /*DISTRICT*/
    PROCEDURE DISTRICT_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE DISTRICT_GETBYCITYID (P_TMS_ID    IN     NUMBER,
                                    P_CITY_ID   IN     NUMBER,
                                    CUR_OUT        OUT T_CURSOR);
 
-   -----------SUB DISTRICT ----------
+   /*SUBDISTRICT*/
    PROCEDURE SUBDISTRICT_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE SUBDISTRICT_GETBYDISTRICTID (P_TMS_ID        IN     NUMBER,
                                           P_DISTRICT_ID   IN     NUMBER,
                                           CUR_OUT            OUT T_CURSOR);
 
-   ----------TBL CUSTOMER APPOINTMENT------------
-
+   /*CUSTOMER APPOINTMENT*/
    PROCEDURE CUSTOMER_APPOINTMENT_INSERT (
       P_TMS_ID                    IN     NUMBER,
       P_CUSTOMER_APPOINTMENT_ID      OUT NUMBER,

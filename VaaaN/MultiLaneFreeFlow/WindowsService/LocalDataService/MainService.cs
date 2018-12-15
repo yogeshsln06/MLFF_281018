@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using System.Messaging;
 using System.Collections;
 using System.Threading;
-using System.IO;
 using System.Globalization;
 
 namespace VaaaN.MLFF.WindowsServices
@@ -24,6 +19,7 @@ namespace VaaaN.MLFF.WindowsServices
 
         DateTime lastCollectionUpdateTime = DateTime.MinValue;
 
+        //convert these collections into hastables in future for performance - CJS
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCollection lanes;
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCollection hardwares;
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCollection plazas;
@@ -67,8 +63,6 @@ namespace VaaaN.MLFF.WindowsServices
         VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration smsFileConfig;
 
         Thread collectionUpdaterThread;
-
-        DateTime lastListUpdateTime = System.DateTime.MinValue;
 
         volatile Boolean stopCollectionUpdatingThread = false;
         #endregion
@@ -244,7 +238,6 @@ namespace VaaaN.MLFF.WindowsServices
                 }
                 #endregion
 
-
                 LogMessage("LDS service started successfully.");
             }
             catch (Exception ex)
@@ -260,7 +253,14 @@ namespace VaaaN.MLFF.WindowsServices
                 //inBoxQueueIKE.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueueIKE_PeekCompleted);
                 //inBoxQueueANPR.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueueANPR_PeekCompleted);
                 inBoxQueue.PeekCompleted -= new PeekCompletedEventHandler(InBoxQueue_PeekCompleted);
+            }
+            catch(Exception ex)
+            {
 
+            }
+
+            try
+            {
                 stopCollectionUpdatingThread = true;
                 Thread.Sleep(2000);
                 if (collectionUpdaterThread != null)
@@ -1378,7 +1378,13 @@ namespace VaaaN.MLFF.WindowsServices
 
                                 #region parsing tagid
                                 ctp.ObjectId = ctp.ObjectId.Trim(); //otherwise trailing and leading spaces create problems
-                                TagStructure ts = ParseEPC(ctp.ObjectId);
+
+                                ////////if (IsValidTag(ctp.ObjectId))
+                                ////////{
+                                ////////    filter out unnecessary tags
+                                ////////}
+
+                                TagStructure ts = ParseEPC(ctp.ObjectId); //this function also should validate the tag so that we need not go further processing-CJS
 
                                 int eviClass = -1;
                                 string eviVRN = "";
@@ -1388,7 +1394,7 @@ namespace VaaaN.MLFF.WindowsServices
                                     eviClass = ts.ClassId;
                                     eviVRN = ts.VRN;
 
-                                    LogMessage("Checking the tag exists in the system or not. " + ctp.ObjectId);
+                                    LogMessage("Checking the tag exists in the system or not. " + ctp.ObjectId); //it should not check existance, but isregistered or not with status "processed"
                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE associatedCVCT = DoesTagExist(ctp.ObjectId);
                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE associatedCACT = null;
                                     if (associatedCVCT != null)
@@ -1463,7 +1469,6 @@ namespace VaaaN.MLFF.WindowsServices
 
                                         //does recent transactions contains this tag? it may be reported repetatively. 
                                         //check in tbl_crosstalk_packet's most recent transactions of the same plaza
-
                                         #region Check in recent crosstalk packets
                                         LogMessage("Checking tag has been already inserted..." + ctp.PlazaId + ", " + ctp.ObjectId + ", " + ctp.TimeStamp + ", " + ctp.LocationId);
                                         if (!DoesExistInRecentCrossTalkPackets(ctp.PlazaId, ctp.ObjectId, Convert.ToDateTime(ctp.TimeStamp), ctp.LocationId))
@@ -2529,7 +2534,7 @@ namespace VaaaN.MLFF.WindowsServices
                 {
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE cvc in customerVehicles)
                     {
-                        if (cvc.TagId.ToLower() == tagId.ToLower())
+                        if (cvc.TagId.ToLower() == tagId.ToLower()) 
                         {
                             result = cvc;
                             break;
@@ -2564,12 +2569,11 @@ namespace VaaaN.MLFF.WindowsServices
                 //}
 
                 //the above code has been commented and the following code is used for efficiency
+                //the conditions also include the locationId, because we need to consider the tag read by rear antenna though the same tag is reported by front antenna
                 if (rfidRecentDataList.Any(e => (e.PlazaId == plazaId && e.ObjectId == tagId && e.PacketTimeStamp > tagReportingTime.AddMinutes(-1) && e.LocationId == locationId)))//locatinid is newly added
                 {
                     result = true;
                 }
-                //ikeRecentDataList.Any(x => (x.PlazaId == plazaId && x.ObjectId = tagId));
-                //ikeRecentDataList.Select(x => x.ObjectId= tagId && x.PlazaId=plazaId);               
             }
             catch (Exception ex)
             {
@@ -2771,7 +2775,7 @@ namespace VaaaN.MLFF.WindowsServices
                             result = ca;
                             break;
                         }
-                    }
+                    }                  
                 }
             }
             catch (Exception ex)
@@ -2827,6 +2831,44 @@ namespace VaaaN.MLFF.WindowsServices
                 result = string.Empty;
             }
 
+            return result;
+        }
+
+        private bool IsValidTag(string epcInput)
+        {
+            bool result = false;
+            try
+            {
+                LogMessage("Checking the validity of the tag: " + epcInput + "...");
+                string epc = epcInput.Trim();
+                if (epc.Length > 2)
+                {
+                    string ftc = epc.Substring(0, 2); //ftc = First Two Characters
+                    if ((ftc == "01") || (ftc == "02") || (ftc == "03") || (ftc == "04"))
+                    {
+                        int indexOfFC = epc.IndexOf("FC");
+                        if (indexOfFC == -1)
+                        {
+                            //invalid tag
+                            result = false;
+                        }
+                        else
+                        {
+                            result = true; //length of the vrn should be checked here
+                        }
+                    }
+                    else
+                    {
+                        //invalid tag
+                        result = false;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                LogMessage("Exception in checking validity of the tag. " + ex.ToString());
+                result = false;
+            }
             return result;
         }
 
@@ -2894,7 +2936,6 @@ namespace VaaaN.MLFF.WindowsServices
         //    return tollRates.Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>().Where(trans => (trans.PlazaId == plazaId && trans.LaneTypeId == laneType && trans.VehicleClassId == vehicleClass)).ToList();
         //    //return tollRates.Cast<List>.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == Vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30))).ToList();
         //}
-        #endregion
 
         public Double CalculateSpeed(DateTime StartTime, DateTime EndTime)
         {
@@ -2930,13 +2971,13 @@ namespace VaaaN.MLFF.WindowsServices
                 {
                     counter = counter + 1;
 
-                    if (counter > 60) // will update in every 1 minute
+                    if (counter > 60) // will update in every 1 minute (60 time 1000ms = 1 minute)
                     {
                         LogMessage("Going to check for any update in collections...");
 
                         #region Updating latest customer accounts
-                        //access records whose creation time is greater than the lastCollectionUpdateTime
-                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection tempCA = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetLatestCustomerAccounts(lastCollectionUpdateTime);
+                        //access records whose creation time is greater than the lastCollectionUpdateTime and status is equal to processed
+                        //VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection tempCA = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetLatestCustomerAccounts(lastCollectionUpdateTime);
                         //if(tempCA.Count > 0)
                         //{
                         //    LogMessage(tempCA.Count + " new customer account record(s) found.");
@@ -2956,8 +2997,8 @@ namespace VaaaN.MLFF.WindowsServices
                         #endregion
 
                         #region Updating latest customer vehicles
-                        //access records whose creation time is greater than the lastCollectionUpdateTime
-                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection tempCV = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetLatestCustomerVehicles(lastCollectionUpdateTime);
+                        //access records whose creation time is greater than the lastCollectionUpdateTime and status is equal to processed
+                        //VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection tempCV = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetLatestCustomerVehicles(lastCollectionUpdateTime);
                         //if(tempCV.Count > 0)
                         //{
                         //    LogMessage(tempCV.Count + " new customer vehicle record(s) found.");
@@ -3018,8 +3059,6 @@ namespace VaaaN.MLFF.WindowsServices
                         }
                         #endregion
 
-                        lastCollectionUpdateTime = DateTime.Now; //<===================================== important
-
                         counter = 0;
                     }
                 }
@@ -3030,14 +3069,14 @@ namespace VaaaN.MLFF.WindowsServices
                 }
                 finally
                 {
-                    lastListUpdateTime = System.DateTime.Now; //<==========================important
+                    lastCollectionUpdateTime = DateTime.Now; //<===================================== important
 
                     Thread.Sleep(1000); //should not use long time sleep like 1 minute, 1 hour etc
                 }
             }
 
         }
-
+        #endregion
 
         #region Service Logger
         private void LogMessage(String message)
@@ -3141,7 +3180,6 @@ namespace VaaaN.MLFF.WindowsServices
 
     public class TranscationData
     {
-
         public Int32 TMSId { get; set; }
 
         public Int32 PlazaId { get; set; }
@@ -3160,8 +3198,5 @@ namespace VaaaN.MLFF.WindowsServices
         public DateTime CurrentDateTime { get; set; }
         public DateTime TransactionDateTime { get; set; }
     }
-
-
-
 }
 

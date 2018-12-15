@@ -1,8 +1,7 @@
 /* Formatted on 13/12/2018 16:59:59 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
-   /* "USER" */
-
+   /*USER*/
    PROCEDURE USER_INSERT (P_USER_ID             IN NUMBER,
                           P_LOGIN_NAME          IN NVARCHAR2,
                           P_FIRST_NAME          IN NVARCHAR2,
@@ -513,7 +512,7 @@ AS
 
 
 
-   /* Role */
+   /*ROLE*/
    PROCEDURE ROLE_GETALL (CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
@@ -668,8 +667,7 @@ AS
    END ROLE_PAGEDGETALL;
 
 
-   /* Role Module Right */
-
+   /*ROLE MODULE RIGHT*/
    PROCEDURE ROLEMODRIGHT_INSERT (P_ROLE_ID         IN NUMBER,
                                   P_ENTRY_ID        IN NUMBER,
                                   P_MODULE_ID       IN NUMBER,
@@ -739,7 +737,7 @@ AS
       OPEN CUR_OUT FOR SELECT * FROM TBL_ROLE_MODULE_RIGHT;
    END ROLEMODRIGHT_GETALL;
 
-   /*"USER" MOD RIGHT*/
+   /*USER MODULE RIGHT*/
    PROCEDURE USERMODRIGHT_INSERT (P_USER_ID IN NUMBER, P_ENTRY_ID IN NUMBER)
    AS
    BEGIN
@@ -851,7 +849,7 @@ AS
    END USERSUBMOD_ACT_UPDATE;
 
 
-   /* Module Activity*/
+   /*MODULE ACTIVITY*/
    PROCEDURE MODULE_ACTIVITY_GETALL (CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
@@ -918,7 +916,7 @@ AS
           WHERE U.ENTRY_ID = P_ENTRY_ID;
    END USERMOD_ACT_GETBYENTRYID;
 
-   /*"USER" SUBMOD RIGHT*/
+   /*USER SUBMODULE RIGHT*/
    PROCEDURE USERSUBMODRIGHT_INSERT (P_USER_ID    IN NUMBER,
                                      P_ENTRY_ID   IN NUMBER)
    AS
@@ -1024,8 +1022,7 @@ AS
    END USERSUBMOD_ACT_GETBYENTRYID;
 
 
-   /* Submodule activity*/
-
+   /*SUBMODULE ACTIVITY*/
    PROCEDURE SUBMODULE_ACTIVITY_GETALL (CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
@@ -1036,7 +1033,7 @@ AS
    END SUBMODULE_ACTIVITY_GETALL;
 
 
-   /* Submodule*/
+   /*SUBMODULE*/
    PROCEDURE SUBMODULE_GETALL (CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
@@ -1212,7 +1209,7 @@ AS
           WHERE M.IS_GUI_VISIBLE = 1 AND M.MODULE_ID = P_MODULE_ID;
    END ROLESUBMODACT_GETBYROLEID;
 
-   /*SUBMODULE ACTIVITY */
+   /*SUBMODULE ACTIVITY*/
    PROCEDURE SUBMODULEACTIVITY_INSERT (P_ENTRY_ID       IN NUMBER,
                                        P_SUBMODULE_ID   IN NUMBER,
                                        P_ACTIVITY_ID    IN NUMBER)
@@ -1372,7 +1369,7 @@ AS
           WHERE M.IS_GUI_VISIBLE = 1;
    END MODULEACTIVITY_BYROLEID;
 
-   /*CrossTalk Event*/
+   /*CROSSTALK EVENT*/
    PROCEDURE CT_PACKET_GETALL (CUR_OUT OUT T_CURSOR)
    AS
    BEGIN
@@ -1533,7 +1530,7 @@ AS
    END CT_PACKET_DELETE;
 
 
-   /*NodeFlux Event*/
+   /*NODEFLUX EVENT*/
    PROCEDURE NF_PACKET_GETALL (CUR_OUT OUT T_CURSOR)
    AS
    BEGIN
@@ -1755,11 +1752,8 @@ AS
              AND GANTRY_ID = P_GANTRY_ID;
    END NF_PACKET_DELETE;
 
-   -------------TRANSACTIONS-------------
-
-
-   -------------TRAN_INSERT_BY_CTP-------------
-
+   /*TRANSACTIONS*/
+   /*TRAN_INSERT_BY_CTP*/
    PROCEDURE TRAN_INSERT_BY_CTP (P_TMS_ID                 IN     NUMBER,
                                  P_PLAZA_ID               IN     NUMBER,
                                  P_LANE_ID                IN     NUMBER,
@@ -1794,8 +1788,7 @@ AS
 
 
 
-   -------------TRAN_INSERT_BY_NFP_FRONT-------------
-
+   /*TRAN_INSERT_BY_NFP_FRONT*/
    PROCEDURE TRAN_INSERT_BY_NFP_FRONT (
       P_TMS_ID                 IN     NUMBER,
       P_PLAZA_ID               IN     NUMBER,
@@ -1828,8 +1821,7 @@ AS
    END TRAN_INSERT_BY_NFP_FRONT;
 
 
-   -------------TRAN_INSERT_BY_NFP_REAR-------------
-
+   /*TRAN_INSERT_BY_NFP_REAR*/
    PROCEDURE TRAN_INSERT_BY_NFP_REAR (P_TMS_ID                 IN     NUMBER,
                                       P_PLAZA_ID               IN     NUMBER,
                                       P_LANE_ID                IN     NUMBER,
@@ -1861,8 +1853,7 @@ AS
    END TRAN_INSERT_BY_NFP_REAR;
 
 
-   -------------TRAN_UPDATE_BY_NFP_FRONT-------------
-
+   /*TRAN_UPDATE_BY_NFP_FRONT*/
    PROCEDURE TRAN_UPDATE_BY_NFP_FRONT (P_TMS_ID              IN NUMBER,
                                        P_PLAZA_ID            IN NUMBER,
                                        P_LANE_ID             IN NUMBER,
@@ -1890,8 +1881,7 @@ AS
    END TRAN_UPDATE_BY_NFP_FRONT;
 
 
-   -------------TRAN_UPDATE_BY_NFP_REAR-------------
-
+   /*TRAN_UPDATE_BY_NFP_REAR*/
    PROCEDURE TRAN_UPDATE_BY_NFP_REAR (P_TMS_ID             IN NUMBER,
                                       P_PLAZA_ID           IN NUMBER,
                                       P_LANE_ID            IN NUMBER,
@@ -2332,8 +2322,7 @@ ORDER BY TRANSACTION_ID DESC';
 
 
 
-   --------------------PLAZA-------------------------------
-
+   /*PLAZA*/
    PROCEDURE PLAZA_INSERT (P_TMS_ID          IN NUMBER,
                            P_PLAZA_ID        IN NUMBER,
                            P_PLAZA_NAME      IN NVARCHAR2,
@@ -2392,7 +2381,7 @@ ORDER BY TRANSACTION_ID DESC';
           WHERE PLAZA_ID = P_PLAZA_ID;
    END PLAZA_GETBYID;
 
-   -----------------------LANE----------------------------
+   /*LANE*/
    PROCEDURE LANE_INSERT (P_TMS_ID                 IN NUMBER,
                           P_PLAZA_ID               IN NUMBER,
                           P_LANE_ID                IN NUMBER,
@@ -2582,7 +2571,7 @@ ORDER BY TRANSACTION_ID DESC';
           WHERE L.PLAZA_ID = P_PLAZA_ID;
    END LANE_GETBYPLAZAID;
 
-   -----------------------HARDWARE----------------------------
+   /*HARDWARE*/
    PROCEDURE HARDWARE_INSERT (P_TMS_ID              IN NUMBER,
                               P_PLAZA_ID            IN NUMBER,
                               P_HARDWARE_ID         IN NUMBER,
@@ -2677,7 +2666,17 @@ ORDER BY TRANSACTION_ID DESC';
           WHERE HARDWARE_TYPE = P_HARDWARE_TYPE;
    END HARDWARE_GETBYTYPE;
 
-   -----------------------VEHICLE CLASS----------------------------
+   PROCEDURE HARDWARE_LATEST_GETALL (P_LAST_UPDATE_TIME IN DATE, CUR_OUT OUT T_CURSOR)
+   AS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT  *
+           FROM TBL_HARDWARE
+           WHERE CREATION_DATE > P_LAST_UPDATE_TIME
+           ORDER BY HARDWARE_ID;
+   END HARDWARE_LATEST_GETALL;
+
+   /*VEHICLE CLASS*/
    PROCEDURE VEHICLE_CLASS_INSERT (P_TMS_ID               IN NUMBER,
                                    P_VEHICLE_CLASS_ID     IN NUMBER,
                                    P_VEHICLE_CLASS_NAME   IN NVARCHAR2,
@@ -2743,7 +2742,7 @@ ORDER BY TRANSACTION_ID DESC';
           WHERE LOWER (VEHICLE_CLASS_NAME) = LOWER (P_VEHICLE_CLASS_NAME);
    END VEHICLE_CLASS_GETBYNAME;
 
-   -------------------TOLL RATE-------------------
+   /*TOLL RATE*/
    PROCEDURE TOLL_RATE_INSERT (P_TMS_ID             IN NUMBER,
                                P_PLAZA_ID           IN NUMBER,
                                P_TRANSFER_STATUS    IN NUMBER,
@@ -2784,8 +2783,6 @@ ORDER BY TRANSACTION_ID DESC';
                    P_CREATION_DATE);
    END TOLL_RATE_INSERT;
 
-
-
    PROCEDURE TOLL_RATE_UPDATE (P_TMS_ID              IN NUMBER,
                                P_PLAZA_ID            IN NUMBER,
                                P_TRANSFER_STATUS     IN NUMBER,
@@ -2817,8 +2814,6 @@ ORDER BY TRANSACTION_ID DESC';
              AND PLAZA_ID = P_PLAZA_ID;
    END TOLL_RATE_UPDATE;
 
-
-
    PROCEDURE TOLL_RATE_GETBYID (P_RATE_ID    IN     NUMBER,
                                 P_TMS_ID     IN     NUMBER,
                                 P_PLAZA_ID   IN     NUMBER,
@@ -2832,7 +2827,6 @@ ORDER BY TRANSACTION_ID DESC';
                 AND TMS_ID = P_TMS_ID
                 AND PLAZA_ID = P_PLAZA_ID;
    END TOLL_RATE_GETBYID;
-
 
    PROCEDURE TOLL_RATE_GETALL (CUR_OUT OUT T_CURSOR)
    IS
@@ -2861,8 +2855,35 @@ ORDER BY TRANSACTION_ID DESC';
          ORDER BY RATE_ID;
    END TOLL_RATE_GETALL;
 
+   PROCEDURE TOLLRATE_LATEST_GETALL (P_LAST_UPDATE_TIME IN DATE, CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT TR.AMOUNT,
+                  TR.CREATION_DATE,
+                  TR.DESCRIPTION,
+                  TR.END_TIME,
+                  TR.LANE_TYPE_ID,
+                  TR.MODIFICATION_DATE,
+                  TR.MODIFIER_ID,
+                  TR.MODIFIER_ID,
+                  TR.PLAZA_ID,
+                  TR.PROFILE_ID,
+                  TR.RATE_ID,
+                  TR.START_TIME,
+                  TR.TMS_ID,
+                  TR.TRANSFER_STATUS,
+                  TR.VEHICLE_CLASS_ID,
+                  (SELECT VEHICLE_CLASS_NAME
+                     FROM TBL_VEHICLE_CLASS L
+                    WHERE L.VEHICLE_CLASS_ID = TR.VEHICLE_CLASS_ID)
+                     AS VEHICLE_CLASS_NAME
+             FROM TBL_TOLL_RATE TR
+             WHERE TR.CREATION_DATE > P_LAST_UPDATE_TIME
+         ORDER BY RATE_ID;
+   END TOLLRATE_LATEST_GETALL;
 
-   ------------SMS HISTORY ----------
+   /*SMS HISTORY*/
    PROCEDURE SMS_HISTORY_INSERT (P_ENTRY_ID                     OUT NUMBER,
                                  P_TMS_ID                    IN     NUMBER,
                                  P_CUSTOMER_ACCOUNT_ID       IN     NUMBER,
@@ -3002,7 +3023,7 @@ ORDER BY TRANSACTION_ID DESC';
       OPEN CUR_OUT FOR SQLQUERY;
    END SMS_HISTORY_GETFILTERED;
 
-   ----------TBL CUSTOMER ACCOUNT------------
+   /*CUSTOMER ACCOUNT*/
    PROCEDURE ACCOUNT_INSERT (P_TMS_ID                    IN     NUMBER,
                              P_ACCOUNT_ID                   OUT NUMBER,
                              P_FIRST_NAME                IN     NVARCHAR2,
@@ -3456,9 +3477,62 @@ ORDER BY TRANSACTION_ID DESC';
        WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
    END ACCOUNT_BALANCEUPDATE;
 
+   PROCEDURE ACCOUNT_LATEST_GETALL (P_LAST_UPDATE_TIME IN DATE, CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT CA.TMS_ID,
+                  CA.ACCOUNT_ID,
+                  CA.FIRST_NAME,
+                  CA.LAST_NAME,
+                  CA.MOB_NUMBER,
+                  CA.EMAIL_ID,
+                  CA.DESCRIPTION,
+                  CA.ADDRESS,
+                  CA.ACCOUNT_BALANCE,
+                  CA.CREATION_DATE,
+                  CA.CUSTOMER_IMAGE_PATH,
+                  CA.IS_DOC_VERIFIED,
+                  CA.ACCOUNT_STATUS,
+                  CA.TRANSFER_STATUS,
+                  CA.RESIDENT_ID,
+                  CA.BIRTH_PLACE,
+                  CA.BIRTH_DATE,
+                  CA.RT_RW,
+                  CA.PROVINCE_ID,
+                  P.PROVINCE_NAME,
+                  CA.CITY_ID,
+                  C.CITY_NAME,
+                  CA.DISTRICT_ID,
+                  D.DISTRICT_NAME,
+                  SD.SUB_DISTRICT_NAME,
+                  CA.SUB_DISTRICT_ID,
+                  CA.POSTAL_CODE,
+                  CA.NATIONALITY,
+                  CA.GENDER,
+                  CA.MARITAL_STATUS,
+                  CA.OCCUPATION,
+                  CA.RESIDENTIDCARDIMAGE,
+                  CA.VALID_UNTIL,
+                  CA.REGISTRATION_THROUGH,
+                  CA.USER_PASSWORD,
+                  CA.MODIFIER_ID,
+                  CA.CREATION_DATE,
+                  CA.MODIFICATION_DATE
+             FROM TBL_CUSTOMER_ACCOUNT CA
+                  LEFT OUTER JOIN TBL_PROVINCE P
+                     ON CA.PROVINCE_ID = P.PROVINCE_ID
+                  LEFT OUTER JOIN TBL_CITY C
+                     ON CA.CITY_ID = C.CITY_ID
+                  LEFT OUTER JOIN TBL_DISTRICT D
+                     ON CA.DISTRICT_ID = D.DISTRICT_ID
+                  LEFT OUTER JOIN TBL_SUB_DISTRICT SD
+                     ON CA.SUB_DISTRICT_ID = SD.SUB_DISTRICT_ID
+             WHERE CA.CREATION_DATE > P_LAST_UPDATE_TIME
+         ORDER BY CA.ACCOUNT_ID;
+   END ACCOUNT_LATEST_GETALL;
 
-
-   ----------TBL CUSTOMER VEHICLE------------
+   /*CUSTOMER VEHICLE*/
    PROCEDURE CUSTOMER_VEHICLE_INSERT (
       P_TMS_ID                 IN     NUMBER,
       P_ENTRY_ID                  OUT NUMBER,
@@ -3585,7 +3659,6 @@ ORDER BY TRANSACTION_ID DESC';
 
       P_ENTRY_ID := CUSTOMER_VEHICLE_SEQ.CURRVAL;
    END CUSTOMER_VEHICLE_INSERT;
-
 
    PROCEDURE CUSTOMER_VEHICLE_UPDATE (P_TMS_ID                 IN NUMBER,
                                       P_ENTRY_ID               IN NUMBER,
@@ -3842,8 +3915,6 @@ ORDER BY TRANSACTION_ID DESC';
           WHERE CV.ENTRY_ID = P_ENTRY_ID;
    END CUSTOMERVEHICLE_GETBYID;
 
-
-
    PROCEDURE CV_GET_BY_TRANCTPENTRYID (P_TRAN_CT_EN_ID   IN     NUMBER,
                                        CUR_OUT              OUT T_CURSOR)
    IS
@@ -3900,8 +3971,6 @@ ORDER BY TRANSACTION_ID DESC';
                                FROM TBL_CROSSTALK_PACKET CT
                               WHERE CT.ENTRY_ID = P_TRAN_CT_EN_ID);
    END CV_GET_BY_TRANCTPENTRYID;
-
-
 
    PROCEDURE CUSTOMERVEHICLE_GETBYACCOUNTID (P_TMS_ID       IN     NUMBER,
                                              P_ACCOUNT_ID   IN     NUMBER,
@@ -4372,8 +4441,100 @@ ORDER BY TRANSACTION_ID DESC';
                 AND CA.RESIDENT_ID = P_RESIDENT_ID;
    END VALIDATE_VEHICLE_DETAILS;
 
-   ------------ACCOUNT HISTORY ----------
+   PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME IN DATE, CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT CV.TMS_ID,
+                  CV.ENTRY_ID,
+                  CV.ACCOUNT_ID,
+                  CV.VEH_REG_NO,
+                  CV.TAG_ID,
+                  CV.VEHICLE_CLASS_ID,
+                  VC.VEHICLE_CLASS_NAME,
+                  CV.CREATION_DATE,
+                  CV.MODIFICATION_DATE,
+                  CV.MODIFIED_BY,
+                  CV.TRANSFER_STATUS,
+                  CV.VEHICLE_RC_NO,
+                  CV.OWNER_NAME,
+                  CV.OWNER_ADDRESS,
+                  CV.BRAND,
+                  CV.VEHICLE_TYPE,
+                  CV.VEHICLE_CATEGORY,
+                  CV.MODEL_NO,
+                  CV.MANUFACTURING_YEAR,
+                  CV.CYCLINDER_CAPACITY,
+                  CV.FRAME_NUMBER,
+                  CV.ENGINE_NUMBER,
+                  CV.VEHICLE_COLOR,
+                  CV.FUEL_TYPE,
+                  (CASE CV.FUEL_TYPE
+                      WHEN 1 THEN 'Diesel'
+                      WHEN 2 THEN 'Gasoline'
+                      WHEN 3 THEN 'Petrol'
+                      WHEN 4 THEN 'Electric'
+                      WHEN 5 THEN 'Solor'
+                      ELSE 'Unknown'
+                   END)
+                     FUEL_TYPE_NAME,
+                  CV.LICENCE_PLATE_COLOR,
+                  (CASE CV.LICENCE_PLATE_COLOR
+                      WHEN 1 THEN 'Black'
+                      WHEN 2 THEN 'White'
+                      WHEN 3 THEN 'Yellow'
+                      WHEN 4 THEN 'Red'
+                      WHEN 5 THEN 'Blue'
+                      WHEN 6 THEN 'Green'
+                      ELSE 'Unknown'
+                   END)
+                     LICENCE_PLATE_COLOR_NAME,
+                  CV.REGISTRATION_YEAR,
+                  CV.VEHICLE_OWNERSHIP_NO,
+                  CV.LOCATION_CODE,
+                  CV.REG_QUEUE_NO,
+                  CV.VEHICLEIMAGE_FRONT,
+                  CV.VEHICLEIMAGE_REAR,
+                  CV.VEHICLEIMAGE_RIGHT,
+                  CV.VEHICLEIMAGE_LEFT,
+                  CV.VEHICLE_RC_NO_PATH,
+                  CV.EXCEPTION_FLAG,
+                  (CASE CV.EXCEPTION_FLAG
+                      WHEN 1 THEN 'Charged'
+                      WHEN 2 THEN 'Not Charged'
+                      WHEN 3 THEN 'Blacklist'
+                      ELSE 'Unknown'
+                   END)
+                     EXCEPTION_FLAG_NAME,
+                  CV.STATUS,
+                  CV.VALID_UNTIL,
+                  CV.TID_FRONT,
+                  CV.TID_REAR,
+                  CV.ACCOUNT_BALANCE,
+                  CV.REGISTRATION_THROUGH,
+                  CV.IS_DOC_VERIFIED,
+                  CV.QUEUE_STATUS,
+                  (CASE CV.QUEUE_STATUS
+                      WHEN 1 THEN 'Open'
+                      WHEN 2 THEN 'Postponded'
+                      WHEN 3 THEN 'Processed'
+                      ELSE 'Unknown'
+                   END)
+                     QUEUE_STATUS_NAME,
+                  CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                  CA.RESIDENT_ID,
+                  CA.EMAIL_ID,
+                  CA.MOB_NUMBER
+             FROM TBL_CUSTOMER_VEHICLE CV
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                     ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                     ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+             WHERE CV.CREATION_DATE > P_LAST_UPDATE_TIME
+         ORDER BY CV.VEHICLE_CLASS_ID;
+   END VEHICLE_LATEST_GETALL;
 
+   /*ACCOUNT HISTORY*/
    PROCEDURE ACCOUNT_HISTORY_INSERT (
       P_TMS_ID                      IN     NUMBER,
       P_ACCOUNT_ID                  IN     NUMBER,
@@ -4512,7 +4673,7 @@ ORDER BY TRANSACTION_ID DESC';
          ORDER BY ENTRY_ID DESC;
    END ACCOUNT_HISTORY_BYACCOUNTID;
 
-   -----------------------POC CSV Data----------------
+   /*CSV*/
    PROCEDURE TRAN_CSV_GETNORMALTRAN (P_START_TIME   IN     DATE,
                                      P_END_TIME     IN     DATE,
                                      CUR_OUT           OUT T_CURSOR)
@@ -4766,7 +4927,7 @@ ORDER BY TRANSACTION_ID DESC';
    END JOIN_AUDIT_TRANSACTIONS;
 
 
-   -----------------------VEHICLE CLASS MAPPING----------------------------
+   /*VEHICLE CLASS MAPPING*/
    PROCEDURE VEHICLE_CLASS_MAPPING_INSERT (
       P_TMS_ID                     IN NUMBER,
       P_MAPPING_VEHICLE_CLASS_ID   IN NUMBER,
@@ -4883,7 +5044,7 @@ ORDER BY TRANSACTION_ID DESC';
                    LOWER (P_ANPR_VEHICLE_CLASS_NAME);
    END VEHICLECLASS_MAPPING_GETBYNAME;
 
-   -----------Province ----------
+   /*PROVINCE*/
    PROCEDURE PROVINCE_GETALL (CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
@@ -4893,7 +5054,7 @@ ORDER BY TRANSACTION_ID DESC';
          ORDER BY P.PROVINCE_ID;
    END PROVINCE_GETALL;
 
-   -----------City ----------
+   /*CITY*/
    PROCEDURE CITY_GETALL (CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
@@ -4915,7 +5076,7 @@ ORDER BY TRANSACTION_ID DESC';
          ORDER BY CITY_ID;
    END CITY_GETBYPROVINCEID;
 
-   -----------District ----------
+   /*DISTRICT*/
    PROCEDURE DISTRICT_GETALL (CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
@@ -4937,7 +5098,7 @@ ORDER BY TRANSACTION_ID DESC';
          ORDER BY DISTRICT_ID;
    END DISTRICT_GETBYCITYID;
 
-   -----------SUB DISTRICT ----------
+   /*SUB DISTRICT*/
    PROCEDURE SUBDISTRICT_GETALL (CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
@@ -4959,8 +5120,7 @@ ORDER BY TRANSACTION_ID DESC';
          ORDER BY SUB_DISTRICT_ID;
    END SUBDISTRICT_GETBYDISTRICTID;
 
-   ----------TBL CUSTOMER APPOINTMENT------------
-
+   /*CUSTOMER APPOINTMENT*/
    PROCEDURE CUSTOMER_APPOINTMENT_INSERT (
       P_TMS_ID                    IN     NUMBER,
       P_CUSTOMER_APPOINTMENT_ID      OUT NUMBER,
@@ -5022,8 +5182,6 @@ ORDER BY TRANSACTION_ID DESC';
              AND ACCOUNT_ID = P_ACCOUNT_ID
              AND CUSTOMER_APPOINTMENT_ID = P_CUSTOMER_APPOINTMENT_ID;
    END CUSTOMER_APPOINTMENT_UPDATE;
-
-
 
    PROCEDURE CUSTOMER_APPOINTMENT_GETALL (CUR_OUT OUT T_CURSOR)
    IS
