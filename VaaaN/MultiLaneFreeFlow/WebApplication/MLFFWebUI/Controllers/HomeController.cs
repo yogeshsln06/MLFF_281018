@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MLFFWebUI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,11 @@ namespace MLFFWebUI.Controllers
     {
         public ActionResult Index()
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Home");
+            }
+            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
             return View();
         }
 
