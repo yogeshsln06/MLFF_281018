@@ -306,4 +306,13 @@
   <data name="EPCNo" xml:space="preserve">
     <value>EPC Number</value>
   </data>
+  <data name="Transcation" xml:space="preserve">
+    <value>Transcation</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="SetUp" xml:space="preserve">
+    <value>SetUp</value>
+  </data>
 </root>

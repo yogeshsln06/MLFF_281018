@@ -84,7 +84,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.email_id = value; }
         }
        
-        [Display(Name = "LoginName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Username")]
+        [Required]
         public String LoginName
         {
             get { return this.loginName; }
@@ -115,7 +116,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.description = value; }
         }
 
-        [Display(Name = "Password", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Password")]
+        [Required]
         public String Password
         {
             get { return this.password; }
