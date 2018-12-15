@@ -20,12 +20,14 @@ namespace MobileWebAPI.Controllers
     public class VaaaNMobileController : ApiController
     {
         #region Globle variable 
-        List<ResponseMessage> respmsg = new List<ResponseMessage>();
         string sJSONResponse = string.Empty;
         string customerImageName = string.Empty;
         DataTable dt = new DataTable();
         CustomerAccountCBE objCustomerAccountCBE = new CustomerAccountCBE();
         CustomerVehicleCBE objCustomerVehicleCBE = new CustomerVehicleCBE();
+        ResponseMessage objResponse = new ResponseMessage();
+        List<ModelStateList> objResponseMessage = new List<ModelStateList>();
+        ModelStateList objModelState = new ModelStateList();
         #endregion
 
 
@@ -35,7 +37,6 @@ namespace MobileWebAPI.Controllers
         [Filters.ValidateModel]
         public HttpResponseMessage RegisterMobileCustomer(CustomerDataProcess objVehicleRegistration)
         {
-
             if (ModelState.IsValid)
             {
                 string CustomerFilepath = Constants.EventPath;
@@ -45,7 +46,7 @@ namespace MobileWebAPI.Controllers
                 int CustomerentryId = 0;
                 try
                 {
-                    #region Chnage the Mobile format
+                    #region Change the Mobile format
                     if (!string.IsNullOrEmpty(objVehicleRegistration.MobilePhoneNumber))
                     {
                         objVehicleRegistration.MobilePhoneNumber = Constants.MobileNoPrefix(objVehicleRegistration.MobilePhoneNumber.Trim());
@@ -66,7 +67,10 @@ namespace MobileWebAPI.Controllers
                         customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
                         List<CustomerVehicleCBE> VehRegNofiltered = customerVehicleDataList.FindAll(x => x.VehRegNo.ToLower() == objVehicleRegistration.VehicleRegistrationNumber.ToString().Trim().ToLower());
                         if (VehRegNofiltered.Count > 0)
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Vehicle Registration Number already exists" });
+                        {
+                            objModelState.ErrorMessage = "Vehicle Registration Number already exists.";
+                            objResponseMessage.Add(objModelState);
+                        }
 
                         #region Validate Vehicle Front
                         try
@@ -82,7 +86,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle image front of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle image front" });
+                            objModelState.ErrorMessage = "Invalid vehicle image front.";
+                            objResponseMessage.Add(objModelState);
 
                         }
                         #endregion
@@ -101,8 +106,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle image rear of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle image rear" });
-
+                            objModelState.ErrorMessage = "Invalid vehicle image rear.";
+                            objResponseMessage.Add(objModelState);
                         }
                         #endregion
 
@@ -120,7 +125,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle image Left of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle image Left" });
+                            objModelState.ErrorMessage = "Invalid vehicle image left.";
+                            objResponseMessage.Add(objModelState);
 
                         }
                         #endregion
@@ -139,7 +145,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle image Right of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle image Right" });
+                            objModelState.ErrorMessage = "Invalid vehicle image right.";
+                            objResponseMessage.Add(objModelState);
 
                         }
                         #endregion
@@ -158,16 +165,16 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle registration certificate image of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle registration certificate image" });
-
+                            objModelState.ErrorMessage = "Invalid vehicle registration certificate image.";
+                            objResponseMessage.Add(objModelState);
                         }
                         #endregion
 
                         #endregion
-                        if (respmsg.Count > 0)
+                        if (objResponseMessage.Count > 0)
                         {
-                            sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                            sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                         }
                         else
                         {
@@ -177,7 +184,7 @@ namespace MobileWebAPI.Controllers
                             if (sJSONResponse.Contains("Somthing went wrong"))
                                 return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
                             else
-                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                             #endregion
                         }
                     }
@@ -192,11 +199,20 @@ namespace MobileWebAPI.Controllers
 
                         #region Validate Mobile Resident Id and Email Id
                         if (Registrationfiltered.Count > 0)
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "eKTP already exists" });
+                        {
+                            objModelState.ErrorMessage = "eKTP already exists.";
+                            objResponseMessage.Add(objModelState);
+                        }
                         if (Mobilefiltered.Count > 0)
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Mobile phone number already exists" });
+                        {
+                            objModelState.ErrorMessage = "Mobile phone number already exists.";
+                            objResponseMessage.Add(objModelState);
+                        }
                         if (Emailfiltered.Count > 0)
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Email address already exists" });
+                        {
+                            objModelState.ErrorMessage = "Email address already exists.";
+                            objResponseMessage.Add(objModelState);
+                        }
                         #endregion
 
                         #region Validate Image
@@ -213,8 +229,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save resident identity card image of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid resident identity card image" });
-
+                            objModelState.ErrorMessage = "Invalid resident identity card image.";
+                            objResponseMessage.Add(objModelState);
 
                         }
                         #endregion
@@ -226,7 +242,10 @@ namespace MobileWebAPI.Controllers
                         customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
                         List<CustomerVehicleCBE> VehRegNofiltered = customerVehicleDataList.FindAll(x => x.VehRegNo.ToLower() == objVehicleRegistration.VehicleRegistrationNumber.ToString().Trim().ToLower());
                         if (VehRegNofiltered.Count > 0)
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Vehicle Registration Number already exists" });
+                        {
+                            objModelState.ErrorMessage = "Vehicle Registration Number already exists.";
+                            objResponseMessage.Add(objModelState);
+                        }
 
                         #region Validate Vehicle Front
                         try
@@ -242,7 +261,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle image front of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle image front" });
+                            objModelState.ErrorMessage = "Invalid vehicle image front.";
+                            objResponseMessage.Add(objModelState);
 
                         }
                         #endregion
@@ -261,8 +281,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle image rear of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle image rear" });
-
+                            objModelState.ErrorMessage = "Invalid vehicle image rear.";
+                            objResponseMessage.Add(objModelState);
                         }
                         #endregion
 
@@ -280,7 +300,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle image Left of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle image Left" });
+                            objModelState.ErrorMessage = "Invalid vehicle image left.";
+                            objResponseMessage.Add(objModelState);
 
                         }
                         #endregion
@@ -299,7 +320,8 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle image Right of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle image Right" });
+                            objModelState.ErrorMessage = "Invalid vehicle image right.";
+                            objResponseMessage.Add(objModelState);
 
                         }
                         #endregion
@@ -318,17 +340,17 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Unable to save vehicle registration certificate image of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Invalid vehicle registration certificate image" });
-
+                            objModelState.ErrorMessage = "Invalid vehicle registration certificate image.";
+                            objResponseMessage.Add(objModelState);
                         }
                         #endregion
 
                         #endregion
 
-                        if (respmsg.Count > 0)
+                        if (objResponseMessage.Count > 0)
                         {
-                            sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                            sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                         }
                         else
                         {
@@ -355,7 +377,7 @@ namespace MobileWebAPI.Controllers
                             if (sJSONResponse.Contains("Somthing went wrong"))
                                 return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
                             else
-                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                             #endregion
                         }
                         #endregion
@@ -363,11 +385,13 @@ namespace MobileWebAPI.Controllers
 
                     #endregion
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                    sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    Log("Exception in Transaction History Summary. : " + ex.ToString());
+                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objResponseMessage.Add(objModelState);
+                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                 }
             }
             else
@@ -380,8 +404,9 @@ namespace MobileWebAPI.Controllers
         {
             string sJSONResponse = string.Empty;
             int CustomerVehicleentryId = 0;
-            List<ResponseMessage> respmsg = new List<ResponseMessage>();
             CustomerRegistrationResponce objCustomerRegistrationResponce = new CustomerRegistrationResponce();
+            List<ModelStateList> objResponseMessage = new List<ModelStateList>();
+            ModelStateList objModelState = new ModelStateList();
             #region Register Customer Vehicle
             try
             {
@@ -425,21 +450,21 @@ namespace MobileWebAPI.Controllers
                     }
                     else
                     {
-                        respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                        sJSONResponse = JsonConvert.SerializeObject(respmsg);
+                        objModelState.ErrorMessage = "Somthing went wrong.";
+                        objResponseMessage.Add(objModelState);
+                        sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                     }
 
                 }
                 else {
-                    respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                    sJSONResponse = JsonConvert.SerializeObject(respmsg);
+                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objResponseMessage.Add(objModelState);
+                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                 }
             }
             catch (Exception ex)
             {
-
-                respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                sJSONResponse = JsonConvert.SerializeObject(respmsg);
+                throw ex;
             }
             return sJSONResponse;
             #endregion
@@ -473,6 +498,7 @@ namespace MobileWebAPI.Controllers
                             objCustomerVehicleCBE.TMSId = Convert.ToInt32(dt.Rows[0]["TMS_ID"].ToString());
                             objCustomerVehicleCBE.AccountBalance = CustomerVehicleBLL.UpdateVehiclebalance(objCustomerVehicleCBE, objCustomerVehicleInformation.TopUpAmount);
                             #endregion
+
                             #region Make Transcation of TOP UP
                             Int32 entryId = 0;
                             DateTime transcationDateTime = DateTime.Now;
@@ -489,30 +515,35 @@ namespace MobileWebAPI.Controllers
                             accountHistory.ModificationDate = transcationDateTime;
                             accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
                             entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "successful." });
-                            sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                            return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
+                            objModelState.ErrorMessage = "successful.";
+                            objResponseMessage.Add(objModelState);
+                            sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                            return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse.Replace("[", "").Replace("]", ""));
                             #endregion
                         }
                         catch (Exception ex)
                         {
                             Log("Exception in TOP Up. : " + ex.ToString());
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                            sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                            objModelState.ErrorMessage = "Somthing went wrong.";
+                            objResponseMessage.Add(objModelState);
+                            sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                         }
                     }
                     else {
-                        respmsg.Add(new ResponseMessage { ErrorMessage = "No account found" });
-                        sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                        objModelState.ErrorMessage = "No customer account found.";
+                        objResponseMessage.Add(objModelState);
+                        sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                    sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    Log("Exception in TOP Up. : " + ex.ToString());
+                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objResponseMessage.Add(objModelState);
+                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                 }
             }
             else
@@ -578,23 +609,27 @@ namespace MobileWebAPI.Controllers
                         }
                         catch (Exception ex)
                         {
-                            Log("Exception in TOP Up. : " + ex.ToString());
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                            sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                            Log("Exception in Inquiry Customer Vehicle Detail. : " + ex.ToString());
+                            objModelState.ErrorMessage = "Somthing went wrong.";
+                            objResponseMessage.Add(objModelState);
+                            sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                         }
                     }
                     else {
-                        respmsg.Add(new ResponseMessage { ErrorMessage = "No account found" });
-                        sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                        objModelState.ErrorMessage = "No Customer account found.";
+                        objResponseMessage.Add(objModelState);
+                        sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                    sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    Log("Exception in Inquiry Customer Vehicle Detail. : " + ex.ToString());
+                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objResponseMessage.Add(objModelState);
+                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                 }
             }
             else
@@ -614,7 +649,6 @@ namespace MobileWebAPI.Controllers
             {
                 try
                 {
-
                     dt = AccountHistoryBLL.AccountHistoryByVehicle(objCustomerVehicleInformation.ResidentIdentityNumber, objCustomerVehicleInformation.VehicleRegistrationCertificateNumber, objCustomerVehicleInformation.VehicleRegistrationNumber);
                     if (dt.Rows.Count > 0)
                     {
@@ -636,22 +670,26 @@ namespace MobileWebAPI.Controllers
                         catch (Exception ex)
                         {
                             Log("Exception in Transaction History Summary. : " + ex.ToString());
-                            respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                            sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                            objModelState.ErrorMessage = "Somthing went wrong.";
+                            objResponseMessage.Add(objModelState);
+                            sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                         }
                     }
                     else {
-                        respmsg.Add(new ResponseMessage { ErrorMessage = "No account found" });
-                        sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                        objModelState.ErrorMessage = "No customer account found.";
+                        objResponseMessage.Add(objModelState);
+                        sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    respmsg.Add(new ResponseMessage { ErrorMessage = "Somthing went wrong" });
-                    sJSONResponse = JsonConvert.SerializeObject(respmsg);
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    Log("Exception in Transaction History Summary. : " + ex.ToString());
+                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objResponseMessage.Add(objModelState);
+                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
                 }
             }
             else
@@ -662,8 +700,6 @@ namespace MobileWebAPI.Controllers
         #endregion
 
         #region Helper Method
-
-
         public void Log(String ExceptionMsg)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(ExceptionMsg, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.MobileWebAPI);

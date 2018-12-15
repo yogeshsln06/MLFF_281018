@@ -175,7 +175,11 @@ namespace MobileWebAPI.Models
     }
     public class ResponseMessage
     {
-        public string ErrorMessage { get; set; }
+        public List<ModelStateList> ModelState { get; set; }
+    }
 
+    public class ModelStateList
+    {
+        public string ErrorMessage { get; set; }
     }
 }
