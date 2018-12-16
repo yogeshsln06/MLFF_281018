@@ -7,15 +7,15 @@ using System.Web.Mvc;
 
 namespace MLFFWebUI.Controllers
 {
-    public class HomeController : Controller
+    public class DashboardController : Controller
     {
         public ActionResult Index()
         {
             if (Session["LoggedUserId"] == null)
             {
-                return RedirectToAction("Logout", "Home");
+                return RedirectToAction("Logout", "Login");
             }
-            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]));
+            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Dashboard","");
             return View();
         }
 

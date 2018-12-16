@@ -69,7 +69,7 @@ namespace MLFFWebUI.Controllers
                         //cookie.Value = LanguageAbbreviation;
                         //Response.Cookies.Add(cookie);
                         #endregion
-                        return RedirectToAction("Index","Home");
+                        return RedirectToAction("Index", "Dashboard");
                     }
                 }
                 else

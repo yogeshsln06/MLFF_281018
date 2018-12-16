@@ -148,20 +148,20 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\HelperClass.cs" />
-    <Compile Include="Models\UserLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\admin\bundle.js" />
     <Content Include="assets\admin\style.css" />
     <Content Include="assets\admin\vendor.js" />
-    <Content Include="assets\custom\custumStyle.css" />
+    <Content Include="assets\custom\custom.css" />
     <Content Include="assets\static\fonts\icons\fontawesome\fontawesome-webfont.svg" />
     <Content Include="assets\static\fonts\icons\themify\themify.svg" />
     <Content Include="assets\static\images\404.png" />
@@ -176,12 +176,51 @@
     <Content Include="assets\static\images\logo.png" />
     <Content Include="assets\static\images\logo.svg" />
     <Content Include="assets\static\images\SmartERP.png" />
+    <Content Include="Attachment\CustomerImage\adarsh_20180924.jpg" />
+    <Content Include="Attachment\CustomerImage\aditya_20180924.jpg" />
+    <Content Include="Attachment\Customer\098765_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\1234567334333_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\2123456111_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\21234567678_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\21234567890_Document_20181212.jpeg" />
+    <Content Include="Attachment\Customer\21234567890_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\212345678911_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\21234567896_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\21234567899_Document_20181213.jpeg" />
+    <Content Include="Attachment\Customer\21234567899_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\2222_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\3456789_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\44444_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\45565666_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\66666_Document_20181216.jpeg" />
+    <Content Include="Attachment\Customer\tapan1_20180924.jpg" />
+    <Content Include="Attachment\Customer\tapan_20180924.jpg" />
+    <Content Include="Attachment\VehicleImage\ABC1234ZYX_Document_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC1234ZYX_Front_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC1234ZYX_Left_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC1234ZYX_Rear_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC1234ZYX_Right_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC_Document_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC_Front_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC_Left_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC_Rear_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\ABC_Right_20181213.jpeg" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\dataTables.bootstrap.min.css" />
+    <Content Include="Content\imageviewer.css" />
+    <Content Include="Content\jquery.dataTables.min.css" />
+    <Content Include="Content\responsive.bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\sort_asc.png" />
+    <Content Include="images\sort_asc_disabled.png" />
+    <Content Include="images\sort_both.png" />
+    <Content Include="images\sort_desc.png" />
+    <Content Include="images\sort_desc_disabled.png" />
+    <Content Include="js\CustomerAccount.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -201,9 +240,12 @@
     <Content Include="assets\static\fonts\icons\themify\themify.ttf" />
     <Content Include="assets\static\fonts\icons\themify\themify.woff" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\imageviewer.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.11.3.min.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -224,7 +266,11 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Registration\Index.cshtml" />
+    <Content Include="Views\Registration\Customer.cshtml" />
+    <Content Include="Views\Registration\CustomerVehicle.cshtml" />
+    <Content Include="Views\Registration\_CustomerPopUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
