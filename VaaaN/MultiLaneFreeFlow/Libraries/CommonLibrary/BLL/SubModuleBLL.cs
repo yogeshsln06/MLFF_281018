@@ -58,7 +58,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SubModuleDAL.GetByUserId(userId, moduleId);
         }
-
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SubmoduleCollection GetByModuleId(int moduleId)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SubModuleDAL.GetByModuleId(moduleId);
+        }
 
     }
 }

@@ -1,4 +1,4 @@
-/* Formatted on 13/12/2018 16:59:35 (QP5 v5.215.12089.38647) */
+/* Formatted on 15-12-2018 10:09:14 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -301,6 +301,9 @@ AS
    PROCEDURE SUBMODULE_GETBYUSER (P_USER_ID     IN     NUMBER,
                                   P_MODULE_ID   IN     NUMBER,
                                   CUR_OUT          OUT T_CURSOR);
+
+   PROCEDURE SUBMODULE_GETBYMODULEID (P_MODULE_ID   IN     NUMBER,
+                                      CUR_OUT          OUT T_CURSOR);
 
 
    PROCEDURE SUBMODULE_INSERT (P_SUBMODULE_ID     IN NUMBER,
@@ -672,8 +675,8 @@ AS
    PROCEDURE HARDWARE_GETBYTYPE (P_HARDWARE_TYPE   IN     NUMBER,
                                  CUR_OUT              OUT T_CURSOR);
 
-   PROCEDURE HARDWARE_LATEST_GETALL (P_LAST_UPDATE_TIME  IN DATE,
-                                    CUR_OUT OUT T_CURSOR);
+   PROCEDURE HARDWARE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
+                                     CUR_OUT                 OUT T_CURSOR);
 
    /*VEHICLE CLASS*/
    PROCEDURE VEHICLE_CLASS_INSERT (P_TMS_ID               IN NUMBER,
@@ -734,8 +737,8 @@ AS
 
    PROCEDURE TOLL_RATE_GETALL (CUR_OUT OUT T_CURSOR);
 
-   PROCEDURE TOLLRATE_LATEST_GETALL (P_LAST_UPDATE_TIME  IN DATE,
-                                    CUR_OUT OUT T_CURSOR);
+   PROCEDURE TOLLRATE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
+                                     CUR_OUT                 OUT T_CURSOR);
 
    /*SMS HISTORY*/
    PROCEDURE SMS_HISTORY_INSERT (P_ENTRY_ID                     OUT NUMBER,
@@ -862,8 +865,8 @@ AS
                                     P_ACCOUNT_ID   IN NUMBER,
                                     P_AMOUNT       IN NUMBER);
 
-   PROCEDURE ACCOUNT_LATEST_GETALL (P_LAST_UPDATE_TIME  IN DATE,
-                                    CUR_OUT OUT T_CURSOR);
+   PROCEDURE ACCOUNT_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
+                                    CUR_OUT                 OUT T_CURSOR);
 
    /*CUSTOMER VEHICLE*/
    PROCEDURE CUSTOMER_VEHICLE_INSERT (
@@ -982,8 +985,8 @@ AS
                                        P_VEHICLE_RC_NO   IN     NVARCHAR2,
                                        CUR_OUT              OUT T_CURSOR);
 
-    PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME  IN DATE,
-                                    CUR_OUT OUT T_CURSOR);
+   PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
+                                    CUR_OUT                 OUT T_CURSOR);
 
 
    /*ACCOUNT HISTORY*/

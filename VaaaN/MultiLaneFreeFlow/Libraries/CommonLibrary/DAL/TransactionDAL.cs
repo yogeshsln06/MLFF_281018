@@ -260,7 +260,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_AUDITED_VEHICLE_CLASS_ID", DbType.Int32, auditedVehicleClassId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_AUDITOR_ID", DbType.Int32, auditorID, ParameterDirection.Input));
-              
+
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
             catch (Exception ex)
@@ -613,6 +613,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(Convert.ToString(dr["SMS_NOTIFICATION"]));
                 }
             }
+            if (dt.Rows.Count > 0)
+            {
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count) + 1).ToString());
+            }
 
             return sb;
         }
@@ -750,7 +757,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(Convert.ToString(dr["SMS_NOTIFICATION"]));
                 }
             }
-
+            if (dt.Rows.Count > 0)
+            {
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count) + 1).ToString());
+            }
             return sb;
         }
         #endregion

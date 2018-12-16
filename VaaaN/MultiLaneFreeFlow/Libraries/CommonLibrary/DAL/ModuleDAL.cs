@@ -40,7 +40,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         {
             try
             {
-                string spName = Constants.oraclePackagePrefix +"Module_Insert";
+                string spName = Constants.oraclePackagePrefix + "Module_Insert";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_module_name", DbType.String, module.ModuleName, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_is_gui_visible", DbType.Int32, module.IsGuiVisible, ParameterDirection.Input));
@@ -58,7 +58,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         {
             try
             {
-                string spName = Constants.oraclePackagePrefix +"Module_Update";
+                string spName = Constants.oraclePackagePrefix + "Module_Update";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_module_id", DbType.Int32, module.ModuleId, ParameterDirection.Input));
@@ -83,7 +83,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             {
                 CBE.ModuleCollection modules = new CBE.ModuleCollection();
 
-                string spName = Constants.oraclePackagePrefix +"Module_GetById";
+                string spName = Constants.oraclePackagePrefix + "Module_GetById";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_module_id", DbType.Int32, module.ModuleId, ParameterDirection.Input));
@@ -112,7 +112,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_user_id", DbType.Int32, userId, ParameterDirection.Input));
-                  DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 DataTable dt = ds.Tables[tableName];
                 modules = ConvertDataTableToCollection(dt);
             }
@@ -132,9 +132,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Stored procedure must have cur_out parameter.
                 //There is no need to add ref cursor for oracle in code.
 
-                string spName = Constants.oraclePackagePrefix +"Module_GetAll";
+                string spName = Constants.oraclePackagePrefix + "Module_GetAll";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-                  DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 DataTable dt = ds.Tables[tableName];
                 modules = ConvertDataTableToCollection(dt);
             }
@@ -156,10 +156,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_module_id", DbType.Int32, module.ModuleId, ParameterDirection.Input));
-                 DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 DataTable dt = ds.Tables[tableName];
 
-                if (dt != null && dt.Rows.Count>0)
+                if (dt != null && dt.Rows.Count > 0)
                 {
                     module.ModuleId = moduelId;
                     module.ModuleName = Convert.ToString(dt.Rows[0]["MODULE_NAME"]);
@@ -189,7 +189,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["MODULE_ID"] != DBNull.Value)
                         module.ModuleId = Convert.ToInt32(dt.Rows[i]["MODULE_ID"]);
 
-                 
+
 
                     if (dt.Rows[i]["MODULE_NAME"] != DBNull.Value)
                         module.ModuleName = Convert.ToString(dt.Rows[i]["MODULE_NAME"]);
@@ -198,9 +198,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                         module.IsGuiVisible = Convert.ToInt32(dt.Rows[i]["IS_GUI_VISIBLE"]);
 
                     if (dt.Rows[i]["MODULE_URL"] != DBNull.Value)
-                        module. ModuleUrl = Convert.ToString(dt.Rows[i]["MODULE_URL"]);
-
-
+                        module.ModuleUrl = Convert.ToString(dt.Rows[i]["MODULE_URL"]);
+                    if (dt.Rows[i]["ICON"] != DBNull.Value)
+                        module.Icon = Convert.ToString(dt.Rows[i]["ICON"]);
                     modules.Add(module);
 
                 }

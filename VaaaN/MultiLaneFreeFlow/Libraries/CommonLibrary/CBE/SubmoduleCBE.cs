@@ -17,6 +17,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private int transferStatus;
         private string languageKey;
         private string submoduleUrl;
+        private string icon;
 
         public SubmoduleCBE()
         {
@@ -28,6 +29,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.transferStatus = 1;
             this.languageKey = string.Empty;
             this.submoduleUrl = string.Empty;
+            this.icon = string.Empty;
         }
 
         public Int32 SubModuleId
@@ -73,6 +75,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.submoduleUrl = value; }
         }
 
+        public string Icon
+        {
+            get { return this.icon; }
+            set { this.icon = value; }
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -81,6 +89,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 
             sb.Append("SubModuleName" + this.submoduleName.ToString() + Environment.NewLine);
             sb.Append("IsGuiVisible" + this.isGuiVisible.ToString() + Environment.NewLine);
+            sb.Append("icon" + this.icon.ToString() + Environment.NewLine);
 
             return sb.ToString();
         }

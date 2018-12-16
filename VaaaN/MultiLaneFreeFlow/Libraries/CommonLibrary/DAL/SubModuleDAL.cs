@@ -37,12 +37,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         {
             try
             {
-                string spName = Constants.oraclePackagePrefix +"SubModule_Insert";
+                string spName = Constants.oraclePackagePrefix + "SubModule_Insert";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_submodule_id", DbType.Int32, GetNextValue(), ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_module_id", DbType.Int32, submodule.ModuleId, ParameterDirection.Input));
-               command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_submodule_name", DbType.String, submodule.SubModuleName, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_submodule_name", DbType.String, submodule.SubModuleName, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_is_gui_visible", DbType.Int32, submodule.IsGuiVisible, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transfer_status", DbType.Int32, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred, ParameterDirection.Input));
 
@@ -58,12 +58,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         {
             try
             {
-                string spName = Constants.oraclePackagePrefix +"SubModule_Update";
+                string spName = Constants.oraclePackagePrefix + "SubModule_Update";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_submodule_id", DbType.Int32, submodule.SubModuleId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_module_id", DbType.Int32, submodule.ModuleId, ParameterDirection.Input));
-               command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_submodule_name", DbType.String, submodule.SubModuleName, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_submodule_name", DbType.String, submodule.SubModuleName, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_is_gui_visible", DbType.Int32, submodule.IsGuiVisible, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transfer_status", DbType.Int32, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred, ParameterDirection.Input));
 
@@ -85,11 +85,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             {
                 CBE.SubmoduleCollection submodules = new CBE.SubmoduleCollection();
 
-                string spName = Constants.oraclePackagePrefix +"SubModule_GetById";
+                string spName = Constants.oraclePackagePrefix + "SubModule_GetById";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_submodule_id", DbType.Int32, submodule.SubModuleId, ParameterDirection.Input));
-                
+
                 submodules = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
 
                 return submodules[0];
@@ -109,8 +109,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_submodule_id", DbType.Int32, sub_module_id, ParameterDirection.Input));
-               
-              ldt = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+
+                ldt = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
             }
             catch (Exception ex)
             {
@@ -127,9 +127,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Stored procedure must have cur_out parameter.
                 //There is no need to add ref cursor for oracle in code.
 
-                string spName = Constants.oraclePackagePrefix +"SubModule_GetAll";
+                string spName = Constants.oraclePackagePrefix + "SubModule_GetAll";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-          
+
                 submodules = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
             }
             catch (Exception ex)
@@ -158,7 +158,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 DataTable dt = ds.Tables[tableName];
                 Submodules = ConvertDataTableToCollection(dt);
-               
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return Submodules;
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SubmoduleCollection GetByModuleId(int moduleId)
+        {
+            CBE.SubmoduleCollection Submodules = new CBE.SubmoduleCollection();
+            try
+            {
+                string spName = Constants.oraclePackagePrefix + "SUBMODULE_GETBYMODULEID";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_module_id", DbType.Int32, moduleId, ParameterDirection.Input));
+
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt = ds.Tables[tableName];
+                Submodules = ConvertDataTableToCollection(dt);
+
             }
             catch (Exception ex)
             {
@@ -242,8 +264,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["SUBMODULE_URL"] != DBNull.Value)
                         submodule.SubmoduleUrl = Convert.ToString(dt.Rows[i]["SUBMODULE_URL"]);
 
-                    //if (dt.Rows[i]["TRANSFER_STATUS"] != DBNull.Value)
-                    //    submodule.TransferStatus = Convert.ToInt32(dt.Rows[i]["TRANSFER_STATUS"]);
+                    if (dt.Rows[i]["ICON"] != DBNull.Value)
+                        submodule.Icon = Convert.ToString(dt.Rows[i]["ICON"]);
 
                     submodules.Add(submodule);
                 }

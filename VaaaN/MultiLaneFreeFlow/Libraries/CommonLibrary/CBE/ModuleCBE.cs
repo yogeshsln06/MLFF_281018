@@ -9,20 +9,22 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
     public class ModuleCBE
     {
         private Int32 moduleId;
-      
+
         private String moduleName;
         private Int32 isGuiVisible;
         private int transferStatus;
         private string moduleurl;
+        private string icon;
 
         public ModuleCBE()
         {
             this.moduleId = 0;
-      
+
             this.moduleName = String.Empty;
             this.isGuiVisible = 0;
             this.transferStatus = 1;
             this.moduleurl = string.Empty;
+            this.icon = string.Empty;
         }
         public Int32 ModuleId
         {
@@ -30,7 +32,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.moduleId = value; }
         }
 
-      
+
         public String ModuleName
         {
             get { return this.moduleName; }
@@ -54,13 +56,19 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.moduleurl = value; }
         }
 
+        public string Icon
+        {
+            get { return this.icon; }
+            set { this.icon = value; }
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("ModuleID" + this.moduleId.ToString() + Environment.NewLine);
-         
             sb.Append("ModuleName" + this.moduleName.ToString() + Environment.NewLine);
             sb.Append("IsGuiVisible" + this.isGuiVisible.ToString() + Environment.NewLine);
+            sb.Append("icon" + this.icon.ToString() + Environment.NewLine);
 
             return sb.ToString();
         }
