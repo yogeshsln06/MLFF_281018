@@ -2332,74 +2332,75 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 Decimal currentAccountBalance = customerVehicleInfo.AccountBalance;
                 Decimal afterDeduction = currentAccountBalance - tollToDeduct;
-                if (afterDeduction > 0)
+                #region Account History Section
+                try
                 {
 
-                    #region Account History Section
-                    try
-                    {
 
-
-                        LogMessage("Trying to record in account history table...");
-                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCBE accountHistory = new Libraries.CommonLibrary.CBE.AccountHistoryCBE();
-                        accountHistory.TMSId = transaction.TMSId;
-                        //accountHistory.EntryId = 0;//this  is the auto incremented and primery key of table
-                        accountHistory.AccountId = customerAccountInfo.AccountId;
-                        accountHistory.CustomerVehicleEntryId = customerVehicleInfo.EntryId; //<============================= 
-                        accountHistory.TransactionTypeId = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransactionType.LaneDebit;
-                        accountHistory.TransactionId = transaction.TransactionId;
-                        accountHistory.Amount = tollToDeduct;
-                        accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
-                        accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent;//will be updated later on//accountHistory.ModifierId = 1;//will be updated later on
-                        accountHistory.CreationDate = DateTime.Now;
-                        accountHistory.ModificationDate = DateTime.Now;
-                        accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
-                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
-                        LogMessage("Recorded in account history table successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        LogMessage("Exception in recording in the Account History table. " + ex.ToString());
-                    }
-                    #endregion
-
-                    #region Update Balance Section
-                    try
-                    {
-                        LogMessage("Trying to update balance in customer account table...");
-                        //should be by by trigger defined in TBL_ACCOUNT_HISTORY
-                        //customerVehicleInfo.AccountBalance += -1 * tollToDeduct;
-                        customerVehicleInfo.AccountBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerVehicleInfo, (-1 * tollToDeduct));
-                        //VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateBalance(customerAccountInfo, (-1 * tollToDeduct));
-
-                        LogMessage("Balance updated successfully in the customer account.");
-                    }
-                    catch (Exception ex)
-                    {
-                        LogMessage("Exception in updating customer's account balance. " + ex.ToString());
-                    }
-                    #endregion
-
-                    #region Mark transaction as balance updated
-                    try
-                    {
-                        LogMessage("Trying to update isBalanceUpdated field in transaction table...");
-                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsBalanceUpdated(transaction);
-                        NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
-                        LogMessage("Transaction is marked as balance updated.");
-                    }
-                    catch (Exception ex)
-                    {
-                        LogMessage("Exception in marking the transaction as balance updated. " + ex.ToString());
-                    }
-                    #endregion
-
+                    LogMessage("Trying to record in account history table...");
+                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCBE accountHistory = new Libraries.CommonLibrary.CBE.AccountHistoryCBE();
+                    accountHistory.TMSId = transaction.TMSId;
+                    //accountHistory.EntryId = 0;//this  is the auto incremented and primery key of table
+                    accountHistory.AccountId = customerAccountInfo.AccountId;
+                    accountHistory.CustomerVehicleEntryId = customerVehicleInfo.EntryId; //<============================= 
+                    accountHistory.TransactionTypeId = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransactionType.LaneDebit;
+                    accountHistory.TransactionId = transaction.TransactionId;
+                    accountHistory.Amount = tollToDeduct;
+                    accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
+                    accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent;//will be updated later on//accountHistory.ModifierId = 1;//will be updated later on
+                    accountHistory.CreationDate = DateTime.Now;
+                    accountHistory.ModificationDate = DateTime.Now;
+                    accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
+                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                    LogMessage("Recorded in account history table successfully.");
                 }
-                else
+                catch (Exception ex)
                 {
-                    LogMessage("Transaction declined due to insufficient balance.");
+                    LogMessage("Exception in recording in the Account History table. " + ex.ToString());
+                }
+                #endregion
+
+                #region Update Balance Section
+                try
+                {
+                    LogMessage("Trying to update balance in customer account table...");
+                    //should be by by trigger defined in TBL_ACCOUNT_HISTORY
+                    //customerVehicleInfo.AccountBalance += -1 * tollToDeduct;
+                    customerVehicleInfo.AccountBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerVehicleInfo, (-1 * tollToDeduct));
+                    //VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.UpdateBalance(customerAccountInfo, (-1 * tollToDeduct));
+
+                    LogMessage("Balance updated successfully in the customer account.");
+                }
+                catch (Exception ex)
+                {
+                    LogMessage("Exception in updating customer's account balance. " + ex.ToString());
+                }
+                #endregion
+
+                #region Mark transaction as balance updated
+                try
+                {
+                    LogMessage("Trying to update isBalanceUpdated field in transaction table...");
+                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsBalanceUpdated(transaction);
                     NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
+                    LogMessage("Transaction is marked as balance updated.");
                 }
+                catch (Exception ex)
+                {
+                    LogMessage("Exception in marking the transaction as balance updated. " + ex.ToString());
+                }
+                #endregion
+                //if (afterDeduction > 0)
+                //{
+
+                   
+
+                //}
+                //else
+                //{
+                //    LogMessage("Transaction declined due to insufficient balance.");
+                //    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
+                //}
 
             }
             else
