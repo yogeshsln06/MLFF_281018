@@ -1457,14 +1457,14 @@ namespace VaaaN.MLFF.WindowsServices
                                                 {
                                                     ctEvent.PlazaId = ctp.PlazaId;
                                                     ctEvent.PlazaName = GetPlazaNameById(ctp.PlazaId);
-                                                    //ctEvent.LaneId = ; //???
+                                                    //ctEvent.LaneId = ; //??? //not defined in CBE
                                                     ctEvent.LaneName = GetLaneNameById(ctp.LaneId);
                                                 }
                                                 else
                                                 {
                                                     ctEvent.PlazaId = 0;
                                                     ctEvent.PlazaName = "NA";
-                                                    //ctEvent.LaneId = 0;
+                                                    //ctEvent.LaneId = 0;// not defined in CBE?
                                                     ctEvent.LaneName = "NA";
                                                 }
 
@@ -1505,7 +1505,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 }
                                                 catch (Exception ex)
                                                 {
-                                                    #region Send data to Failed queue
+                                                    #region Send data to failed queue
                                                     LogMessage("Failed to insert crosstalk packet." + ex.Message);
                                                     try
                                                     {
