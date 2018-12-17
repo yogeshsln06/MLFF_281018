@@ -19,7 +19,7 @@ namespace VaaaN.MLFF.WindowsServices
 
         DateTime lastCollectionUpdateTime = DateTime.MinValue;
 
-        //convert these collections into hastables in future for performance - CJS
+        //convert these collections into Dictionary<int id, class> in future for performance - CJS
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCollection lanes;
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCollection hardwares;
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCollection plazas;
@@ -2330,9 +2330,9 @@ namespace VaaaN.MLFF.WindowsServices
 
             if (tollToDeduct > -1)
             {
-                Decimal CurrentAccountBalance = customerVehicleInfo.AccountBalance;
-                Decimal AfterDeduction = CurrentAccountBalance - tollToDeduct;
-                if (AfterDeduction > 0)
+                Decimal currentAccountBalance = customerVehicleInfo.AccountBalance;
+                Decimal afterDeduction = currentAccountBalance - tollToDeduct;
+                if (afterDeduction > 0)
                 {
 
                     #region Account History Section
@@ -2385,7 +2385,7 @@ namespace VaaaN.MLFF.WindowsServices
                     {
                         LogMessage("Trying to update isBalanceUpdated field in transaction table...");
                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsBalanceUpdated(transaction);
-                        NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, AfterDeduction);
+                        NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
                         LogMessage("Transaction is marked as balance updated.");
                     }
                     catch (Exception ex)
@@ -2397,8 +2397,8 @@ namespace VaaaN.MLFF.WindowsServices
                 }
                 else
                 {
-                    LogMessage("Due to insufficient balance.");
-                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, AfterDeduction);
+                    LogMessage("Transaction declined due to insufficient balance.");
+                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
                 }
 
             }

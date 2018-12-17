@@ -29,6 +29,8 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
         //string avcWebAPIAddress = "http://192.168.1.111:5555/VaaaN/MLFFWebAPI/SendNodeFluxPaket";
         //string etcWebAPIAddress = "http://192.168.1.111:5555/VaaaN/MLFFWebAPI/SendCrossTalkPaket";
 
+        Dictionary<int, string> customers = new Dictionary<int, string>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -495,7 +497,21 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
 
             //-------------------------------------------------------------------------------------------
 
-            RandomVehicleNumberGenerator();
+            ////////RandomVehicleNumberGenerator();
+
+            //-------------------------------------------------------------------------------------------
+
+            //check the performance of Dictionary
+            for(int i =0; i < 10000000; i++)
+            {
+                customers.Add(i, "customer " + i);
+            }
+
+            string myValue = string.Empty;
+            if (customers.TryGetValue(9999999, out myValue))
+            {
+                Console.Write(myValue);
+            }
 
         }
 
