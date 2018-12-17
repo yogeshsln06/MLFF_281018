@@ -208,7 +208,7 @@ namespace MobileWebAPI.Controllers
                         if (Registrationfiltered.Count > 0)
                         {
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "eKTP already exists.";
+                            objModelState.ErrorMessage = "Identity Card already exists.";
                             objResponseMessage.Add(objModelState);
                         }
                         if (Mobilefiltered.Count > 0)
@@ -240,7 +240,7 @@ namespace MobileWebAPI.Controllers
                         {
                             Log("Unable to save resident identity card image of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Invalid resident identity card image.";
+                            objModelState.ErrorMessage = "Invalid identity card image.";
                             objResponseMessage.Add(objModelState);
 
                         }
@@ -618,6 +618,10 @@ namespace MobileWebAPI.Controllers
                             objCustomerVehicleDetails.TIDRear = dt.Rows[0]["TID_REAR"].ToString();
                             objCustomerVehicleDetails.Type = dt.Rows[0]["VEHICLE_TYPE"].ToString();
                             objCustomerVehicleDetails.ValidUntil = dt.Rows[0]["VALID_UNTIL"].ToString();
+                            if (!string.IsNullOrEmpty(objCustomerVehicleDetails.ValidUntil))
+                            {
+                                objCustomerVehicleDetails.ValidUntil = Convert.ToDateTime(objCustomerVehicleDetails.ValidUntil).ToString("yyyy-MM-dd");
+                            }
                             objCustomerVehicleDetails.VehicleImageFront = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_FRONT"].ToString();
                             objCustomerVehicleDetails.VehicleImageLeft = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_LEFT"].ToString();
                             objCustomerVehicleDetails.VehicleImageRear = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_REAR"].ToString();

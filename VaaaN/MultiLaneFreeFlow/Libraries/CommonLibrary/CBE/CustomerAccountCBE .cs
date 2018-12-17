@@ -117,6 +117,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.tmsId = value; }
         }
 
+        [Display(Name = "Customer ID")]
         public Int32 AccountId
         {
             get { return this.accountId; }
@@ -242,7 +243,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
 
-        [Display(Name = "eKTP")]//Resident Identity Number
+        [Display(Name = "Identity Number")]//Resident Identity Number
         [Required]
         public string ResidentId
         {
@@ -272,7 +273,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Birth Date")]
+        [Display(Name = "Birth Until")]
         public Nullable<DateTime> BirthDate
         {
             get
@@ -285,7 +286,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.birthDate = value;
             }
         }
-
         [Display(Name = "RT")]
         public string RT
         {
@@ -554,7 +554,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Resident Id Card Image")]
+        [Display(Name = "Identity Card Image")]
         public System.Web.HttpPostedFileBase ResidentidImage { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
