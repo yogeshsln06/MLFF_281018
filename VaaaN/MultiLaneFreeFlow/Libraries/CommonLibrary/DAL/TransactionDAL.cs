@@ -618,7 +618,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.AppendLine();
                 sb.AppendLine();
                 sb.AppendLine();
-                sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count) + 1).ToString());
+                sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
             }
 
             return sb;
@@ -762,7 +762,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.AppendLine();
                 sb.AppendLine();
                 sb.AppendLine();
-                sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count) + 1).ToString());
+                sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
             }
             return sb;
         }
