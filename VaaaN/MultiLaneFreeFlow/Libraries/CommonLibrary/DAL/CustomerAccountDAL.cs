@@ -266,6 +266,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static List<CBE.CustomerAccountCBE> CustomerAccountLazyLoad(int PageIndex, int PageSize)
+        {
+            try
+            {
+                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> accounts = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+                string spName = Constants.oraclePackagePrefix + "ACCOUNT_GETALL_LAZYLOAD";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "PAGEINDEX", DbType.String, PageIndex, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "PAGESIZE", DbType.String, PageSize, ParameterDirection.Input));
+                DataTable dt = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+                accounts = ConvertDataTableToListDirect(dt);
+                return accounts;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 CustomerId, Int32 tmsId)
@@ -551,6 +569,53 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return customerAccountList;
         }
+
+        private static List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> ConvertDataTableToListDirect(DataTable dt)
+        {
+            try
+            {
+
+                List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerAccountList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE account = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE();
+
+                    if (dt.Rows[i]["ACCOUNT_ID"] != DBNull.Value)
+                        account.AccountId = Convert.ToInt32(dt.Rows[i]["ACCOUNT_ID"]);
+
+                    if (dt.Rows[i]["FIRST_NAME"] != DBNull.Value)
+                        account.FirstName = Convert.ToString(dt.Rows[i]["FIRST_NAME"]);
+
+                    if (dt.Rows[i]["MOB_NUMBER"] != DBNull.Value)
+                        account.MobileNo = Convert.ToString(dt.Rows[i]["MOB_NUMBER"]);
+
+                    if (dt.Rows[i]["EMAIL_ID"] != DBNull.Value)
+                        account.EmailId = Convert.ToString(dt.Rows[i]["EMAIL_ID"]);
+
+                    if (dt.Rows[i]["ADDRESS"] != DBNull.Value)
+                        account.Address = Convert.ToString(dt.Rows[i]["ADDRESS"]);
+
+                    if (dt.Rows[i]["CUSTOMER_IMAGE_PATH"] != DBNull.Value)
+                        account.CustomerImagePath = Convert.ToString(dt.Rows[i]["CUSTOMER_IMAGE_PATH"]);
+
+
+                    if (dt.Rows[i]["RESIDENT_ID"] != DBNull.Value)
+                        account.ResidentId = Convert.ToString(dt.Rows[i]["RESIDENT_ID"]);
+
+                    if (dt.Rows[i]["RESIDENTIDCARDIMAGE"] != DBNull.Value)
+                        account.ResidentidcardImagePath = Convert.ToString(dt.Rows[i]["RESIDENTIDCARDIMAGE"]);
+                    customerAccountList.Add(account);
+                }
+                return customerAccountList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+
         #endregion
     }
 }

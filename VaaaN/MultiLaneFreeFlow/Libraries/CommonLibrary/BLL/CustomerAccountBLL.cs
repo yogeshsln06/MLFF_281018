@@ -85,5 +85,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.ValidateCustomerAccount(customer);
         }
+
+        public static List<CBE.CustomerAccountCBE> CustomerAccountLazyLoad(int PageIndex, int PageSize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.CustomerAccountLazyLoad(PageIndex, PageSize);
+        }
     }
 }
