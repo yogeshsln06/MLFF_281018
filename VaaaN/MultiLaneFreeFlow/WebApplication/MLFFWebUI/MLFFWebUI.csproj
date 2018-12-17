@@ -215,6 +215,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\ajax-loader.gif" />
     <Content Include="images\sort_asc.png" />
     <Content Include="images\sort_asc_disabled.png" />
     <Content Include="images\sort_both.png" />
@@ -271,6 +272,7 @@
     <Content Include="Views\Registration\Customer.cshtml" />
     <Content Include="Views\Registration\CustomerVehicle.cshtml" />
     <Content Include="Views\Registration\_CustomerPopUp.cshtml" />
+    <Content Include="Views\Registration\CustomerChildList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
