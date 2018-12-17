@@ -1,4 +1,4 @@
-/* Formatted on 15-12-2018 10:09:14 (QP5 v5.215.12089.38647) */
+/* Formatted on 16/12/2018 17:08:49 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -867,6 +867,10 @@ AS
 
    PROCEDURE ACCOUNT_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
                                     CUR_OUT                 OUT T_CURSOR);
+
+   PROCEDURE ACCOUNT_GETALL_LAZYLOAD (PAGEINDEX   IN     NUMBER,
+                                      PAGESIZE    IN     NUMBER,
+                                      CUR_OUT        OUT T_CURSOR);
 
    /*CUSTOMER VEHICLE*/
    PROCEDURE CUSTOMER_VEHICLE_INSERT (

@@ -1,4 +1,4 @@
-/* Formatted on 15/12/2018 11:12:21 (QP5 v5.215.12089.38647) */
+/* Formatted on 16/12/2018 17:09:11 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -3569,6 +3569,44 @@ ORDER BY TRANSACTION_ID DESC';
    END ACCOUNT_LATEST_GETALL;
 
 
+   PROCEDURE ACCOUNT_GETALL_LAZYLOAD (PAGEINDEX   IN     NUMBER,
+                                      PAGESIZE    IN     NUMBER,
+                                      CUR_OUT        OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT ACCOUNT_ID,
+                FIRST_NAME,
+                MOB_NUMBER,
+                EMAIL_ID,
+                ADDRESS,
+                CUSTOMER_IMAGE_PATH,
+                RESIDENT_ID,
+                RESIDENTIDCARDIMAGE,
+                RNUM
+           FROM (SELECT ACCOUNT_ID,
+                        FIRST_NAME,
+                        MOB_NUMBER,
+                        EMAIL_ID,
+                        ADDRESS,
+                        CUSTOMER_IMAGE_PATH,
+                        RESIDENT_ID,
+                        RESIDENTIDCARDIMAGE,
+                        ROWNUM AS RNUM
+                   FROM (  SELECT CA.ACCOUNT_ID,
+                                  CA.FIRST_NAME,
+                                  CA.MOB_NUMBER,
+                                  CA.EMAIL_ID,
+                                  CA.ADDRESS,
+                                  CA.CUSTOMER_IMAGE_PATH,
+                                  CA.RESIDENT_ID,
+                                  CA.RESIDENTIDCARDIMAGE
+                             FROM TBL_CUSTOMER_ACCOUNT CA
+                         ORDER BY CA.ACCOUNT_ID DESC)
+                  WHERE ROWNUM <= PAGESIZE)
+          WHERE RNUM >= PAGEINDEX;
+   END ACCOUNT_GETALL_LAZYLOAD;
+
    /*CUSTOMER VEHICLE*/
    PROCEDURE CUSTOMER_VEHICLE_INSERT (
       P_TMS_ID                 IN     NUMBER,
@@ -4478,9 +4516,9 @@ ORDER BY TRANSACTION_ID DESC';
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
                 LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
                    ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
-          WHERE     CV.VEH_REG_NO = P_VEH_REG_NO
-                AND CV.VEHICLE_RC_NO = P_VEHICLE_RC_NO
-                AND CA.RESIDENT_ID = P_RESIDENT_ID;
+          WHERE     LOWER(CV.VEH_REG_NO) = LOWER(P_VEH_REG_NO)
+                AND LOWER(CV.VEHICLE_RC_NO) = LOWER(P_VEHICLE_RC_NO)
+                AND LOWER(CA.RESIDENT_ID) = LOWER(P_RESIDENT_ID);
    END VALIDATE_VEHICLE_DETAILS;
 
    PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
@@ -5276,8 +5314,13 @@ ORDER BY TRANSACTION_ID DESC';
       OPEN CUR_OUT FOR
          SELECT AH.ENTRY_ID,
                 CA.RESIDENT_ID,
+				CV.VEH_REG_NO,
                 CV.VEHICLE_RC_NO,
-                AH.TRANSACTION_ID,
+                (
+                CASE AH.TRANSACTION_ID
+                WHEN 0 THEN AH.ENTRY_ID
+                ELSE AH.TRANSACTION_ID
+                END) TRANSACTION_ID,
                 AH.TRANSACTION_TYPE,
                 (CASE AH.TRANSACTION_TYPE
                     WHEN 1 THEN 'Sale'
@@ -5291,20 +5334,18 @@ ORDER BY TRANSACTION_ID DESC';
                 AH.AMOUNT,
                 L.LANE_NAME,
                 P.PLAZA_NAME
-           FROM TBL_ACCOUNT_HISTORY AH
-                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
-                   ON AH.ACCOUNT_ID = CA.ACCOUNT_ID
-                LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
-                   ON AH.CUSTOMER_VEHICLE_ENTRY_ID = CV.ENTRY_ID
-                LEFT OUTER JOIN TBL_TRANSACTION T
+           FROM TBL_CUSTOMER_ACCOUNT  CA 
+		   LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV ON CA.ACCOUNT_ID=CV.ACCOUNT_ID
+                   LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH ON CA.ACCOUNT_ID=AH.ACCOUNT_ID AND AH.CUSTOMER_VEHICLE_ENTRY_ID=CV.ENTRY_ID
+                   LEFT OUTER JOIN TBL_TRANSACTION T
                    ON AH.TRANSACTION_ID = T.TRANSACTION_ID
-                LEFT OUTER JOIN TBL_LANE L
+                    LEFT OUTER JOIN TBL_LANE L
                    ON T.LANE_ID = L.LANE_ID
                 LEFT OUTER JOIN TBL_PLAZA P
                    ON T.PLAZA_ID = P.PLAZA_ID
-          WHERE     CV.VEH_REG_NO = P_VEH_REG_NO
-                AND CV.VEHICLE_RC_NO = P_VEHICLE_RC_NO
-                AND CA.RESIDENT_ID = P_RESIDENT_ID;
+          WHERE     LOWER(CV.VEH_REG_NO) = LOWER(P_VEH_REG_NO)
+                AND LOWER(CV.VEHICLE_RC_NO) = LOWER(P_VEHICLE_RC_NO)
+                AND LOWER(CA.RESIDENT_ID) = LOWER(P_RESIDENT_ID);
    END TRANSCATION_HISTORY_DETAILS;
 END MLFF_PACKAGE;
 /

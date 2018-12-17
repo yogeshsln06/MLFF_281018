@@ -140,6 +140,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 
         [Required]
         [Display(Name = "MobileNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Mobile Number must be numeric")]
         public String MobileNo
         {
             get { return this.mobileNo; }

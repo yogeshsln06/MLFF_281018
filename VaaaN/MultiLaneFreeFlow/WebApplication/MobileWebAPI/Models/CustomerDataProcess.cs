@@ -123,6 +123,9 @@ namespace MobileWebAPI.Models
         [Display(Name = "Vehicle Registration Number")]
         [Required(ErrorMessage = "The vehicle registration number is required")]
         public String VehicleRegistrationNumber { get; set; }
+
+        public Int32 PageIndex { get; set; }
+        
     }
 
     public class VehicleTransactionHistorySummary
@@ -137,6 +140,7 @@ namespace MobileWebAPI.Models
         public string LaneNumber { get; set; }
         public Decimal TransactionAmount { get; set; }
     }
+
     public class CustomerVehicleDetails
     {
         public string ResidentIdentityNumber { get; set; }
@@ -173,6 +177,7 @@ namespace MobileWebAPI.Models
         public Decimal Balance { get; set; }
 
     }
+
     public class ResponseMessage
     {
         public List<ModelStateList> ModelState { get; set; }
@@ -181,5 +186,11 @@ namespace MobileWebAPI.Models
     public class ModelStateList
     {
         public string ErrorMessage { get; set; }
+    }
+
+    public class VehicleTransactionHistorySummaryPagging
+    {
+
+
     }
 }

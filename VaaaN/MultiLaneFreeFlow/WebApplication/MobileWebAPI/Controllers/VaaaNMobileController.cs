@@ -27,7 +27,7 @@ namespace MobileWebAPI.Controllers
         CustomerVehicleCBE objCustomerVehicleCBE = new CustomerVehicleCBE();
         ResponseMessage objResponse = new ResponseMessage();
         List<ModelStateList> objResponseMessage = new List<ModelStateList>();
-       
+
         #endregion
 
 
@@ -180,7 +180,8 @@ namespace MobileWebAPI.Controllers
                         if (objResponseMessage.Count > 0)
                         {
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                            //return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                         }
                         else
                         {
@@ -188,9 +189,9 @@ namespace MobileWebAPI.Controllers
                             objCustomerVehicleCBE.AccountId = CustomerentryId;
                             sJSONResponse = SaveVehicleData(objVehicleRegistration, objCustomerVehicleCBE);
                             if (sJSONResponse.Contains("Somthing went wrong"))
-                                return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
+                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                             else
-                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                                return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
                             #endregion
                         }
                     }
@@ -366,7 +367,7 @@ namespace MobileWebAPI.Controllers
                         if (objResponseMessage.Count > 0)
                         {
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                         }
                         else
                         {
@@ -391,9 +392,9 @@ namespace MobileWebAPI.Controllers
                             objCustomerVehicleCBE.AccountId = CustomerentryId;
                             sJSONResponse = SaveVehicleData(objVehicleRegistration, objCustomerVehicleCBE);
                             if (sJSONResponse.Contains("Somthing went wrong"))
-                                return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
+                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                             else
-                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                                return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
                             #endregion
                         }
                         #endregion
@@ -408,7 +409,7 @@ namespace MobileWebAPI.Controllers
                     objModelState.ErrorMessage = "Somthing went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                 }
             }
             else
@@ -522,7 +523,7 @@ namespace MobileWebAPI.Controllers
                             AccountHistoryCBE accountHistory = new AccountHistoryCBE();
                             accountHistory.TMSId = objCustomerVehicleCBE.TMSId;
                             accountHistory.AccountId = Convert.ToInt32(dt.Rows[0]["ACCOUNT_ID"].ToString());
-                            accountHistory.CustomerVehicleEntryId = objCustomerVehicleCBE.AccountId;
+                            accountHistory.CustomerVehicleEntryId = objCustomerVehicleCBE.EntryId;
                             accountHistory.TransactionTypeId = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransactionType.Recharge;
                             accountHistory.TransactionId = 0;
                             accountHistory.Amount = objCustomerVehicleInformation.TopUpAmount;
@@ -536,7 +537,7 @@ namespace MobileWebAPI.Controllers
                             objModelState.ErrorMessage = "successful.";
                             objResponseMessage.Add(objModelState);
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                            return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse.Replace("[", "").Replace("]", ""));
+                            return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
                             #endregion
                         }
                         catch (Exception ex)
@@ -546,7 +547,7 @@ namespace MobileWebAPI.Controllers
                             objModelState.ErrorMessage = "Somthing went wrong.";
                             objResponseMessage.Add(objModelState);
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                         }
                     }
                     else {
@@ -554,7 +555,7 @@ namespace MobileWebAPI.Controllers
                         objModelState.ErrorMessage = "No customer account found.";
                         objResponseMessage.Add(objModelState);
                         sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                     }
                 }
                 catch (Exception ex)
@@ -564,7 +565,7 @@ namespace MobileWebAPI.Controllers
                     objModelState.ErrorMessage = "Somthing went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                 }
             }
             else
@@ -635,7 +636,7 @@ namespace MobileWebAPI.Controllers
                             objModelState.ErrorMessage = "Somthing went wrong.";
                             objResponseMessage.Add(objModelState);
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                         }
                     }
                     else {
@@ -643,7 +644,7 @@ namespace MobileWebAPI.Controllers
                         objModelState.ErrorMessage = "No Customer account found.";
                         objResponseMessage.Add(objModelState);
                         sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                     }
                 }
                 catch (Exception ex)
@@ -653,7 +654,7 @@ namespace MobileWebAPI.Controllers
                     objModelState.ErrorMessage = "Somthing went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                 }
             }
             else
@@ -663,7 +664,7 @@ namespace MobileWebAPI.Controllers
         }
         #endregion
 
-        #region API for Customer Vehicle Details
+        #region API for Customer Vehicle Transaction History Summary
         [Route("VaaaN/IndonesiaMLFFMobileApi/InquiryCustomerVehicleTransactionHistorySummary")]
         [HttpPost]
         [Filters.ValidateModel]
@@ -673,23 +674,74 @@ namespace MobileWebAPI.Controllers
             {
                 try
                 {
-                    dt = AccountHistoryBLL.AccountHistoryByVehicle(objCustomerVehicleInformation.ResidentIdentityNumber, objCustomerVehicleInformation.VehicleRegistrationCertificateNumber, objCustomerVehicleInformation.VehicleRegistrationNumber);
+                    objCustomerVehicleCBE.VehicleRCNumber = objCustomerVehicleInformation.VehicleRegistrationCertificateNumber;
+                    objCustomerVehicleCBE.VehRegNo = objCustomerVehicleInformation.VehicleRegistrationNumber;
+                    dt = CustomerVehicleBLL.ValidateCustomerVehicleDetails(objCustomerVehicleCBE, objCustomerVehicleInformation.ResidentIdentityNumber);
+
                     if (dt.Rows.Count > 0)
                     {
                         try
                         {
-                            VehicleTransactionHistorySummary objVehicleTransactionHistorySummary = new VehicleTransactionHistorySummary();
-                            objVehicleTransactionHistorySummary.ResidentIdentityNumber = Convert.ToString(dt.Rows[0]["RESIDENT_ID"].ToString());
-                            objVehicleTransactionHistorySummary.VehicleRegistrationCertificateNumber = dt.Rows[0]["VEHICLE_RC_NO"].ToString();
-                            objVehicleTransactionHistorySummary.VehicleRegistrationNumber = dt.Rows[0]["VEH_REG_NO"].ToString();
-                            objVehicleTransactionHistorySummary.TransactionID = Convert.ToInt32(dt.Rows[0]["TRANSACTION_ID"].ToString());
-                            objVehicleTransactionHistorySummary.TransactionType = dt.Rows[0]["TRANSACTION_TYPE_NAME"].ToString();
-                            objVehicleTransactionHistorySummary.TransactionTimestamp = Convert.ToDateTime(dt.Rows[0]["CREATION_DATE"].ToString());
-                            objVehicleTransactionHistorySummary.GantryName = dt.Rows[0]["PLAZA_NAME"].ToString();
-                            objVehicleTransactionHistorySummary.LaneNumber = dt.Rows[0]["LANE_NAME"].ToString();
-                            objVehicleTransactionHistorySummary.TransactionAmount = Convert.ToDecimal(dt.Rows[0]["AMOUNT"].ToString());
-                            sJSONResponse = JsonConvert.SerializeObject(objVehicleTransactionHistorySummary);
-                            return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
+                            dt = AccountHistoryBLL.AccountHistoryByVehicle(objCustomerVehicleInformation.ResidentIdentityNumber, objCustomerVehicleInformation.VehicleRegistrationCertificateNumber, objCustomerVehicleInformation.VehicleRegistrationNumber);
+                            if (dt.Rows.Count > 0)
+                            {
+                                try
+                                {
+                                    List<VehicleTransactionHistorySummary> objVehicleTransactionHistorySummaryList = new List<VehicleTransactionHistorySummary>();
+
+                                    for (int i = 0; i < dt.Rows.Count; i++)
+                                    {
+                                        VehicleTransactionHistorySummary objVehicleTransactionHistorySummary = new VehicleTransactionHistorySummary();
+
+                                        if (dt.Rows[i]["RESIDENT_ID"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.ResidentIdentityNumber = Convert.ToString(dt.Rows[i]["RESIDENT_ID"].ToString());
+
+                                        if (dt.Rows[i]["VEH_REG_NO"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.VehicleRegistrationNumber = dt.Rows[i]["VEH_REG_NO"].ToString();
+
+                                        if (dt.Rows[i]["VEHICLE_RC_NO"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.VehicleRegistrationCertificateNumber = dt.Rows[i]["VEHICLE_RC_NO"].ToString();
+
+                                        if (dt.Rows[i]["TRANSACTION_ID"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.TransactionID = Convert.ToInt32(dt.Rows[i]["TRANSACTION_ID"].ToString());
+
+                                        if (dt.Rows[i]["TRANSACTION_TYPE_NAME"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.TransactionType = Convert.ToString(dt.Rows[i]["TRANSACTION_TYPE_NAME"].ToString());
+
+                                        if (dt.Rows[i]["CREATION_DATE"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.TransactionTimestamp = Convert.ToDateTime(dt.Rows[i]["CREATION_DATE"].ToString());
+
+                                        if (dt.Rows[i]["AMOUNT"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.TransactionAmount = Convert.ToDecimal(dt.Rows[i]["AMOUNT"].ToString());
+
+                                        if (dt.Rows[i]["PLAZA_NAME"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.GantryName = dt.Rows[i]["PLAZA_NAME"].ToString();
+
+                                        if (dt.Rows[i]["LANE_NAME"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.LaneNumber = dt.Rows[i]["LANE_NAME"].ToString();
+
+                                        objVehicleTransactionHistorySummaryList.Add(objVehicleTransactionHistorySummary);
+                                    }
+                                    sJSONResponse = JsonConvert.SerializeObject(objVehicleTransactionHistorySummaryList);
+                                    return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Log("Exception in Transaction History Summary. : " + ex.ToString());
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = "Somthing went wrong.";
+                                    objResponseMessage.Add(objModelState);
+                                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                                }
+                            }
+                            else {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "No Transaction found.";
+                                objResponseMessage.Add(objModelState);
+                                sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -698,15 +750,16 @@ namespace MobileWebAPI.Controllers
                             objModelState.ErrorMessage = "Somthing went wrong.";
                             objResponseMessage.Add(objModelState);
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                         }
+
                     }
                     else {
                         ModelStateList objModelState = new ModelStateList();
                         objModelState.ErrorMessage = "No customer account found.";
                         objResponseMessage.Add(objModelState);
                         sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                     }
                 }
                 catch (Exception ex)
@@ -716,7 +769,7 @@ namespace MobileWebAPI.Controllers
                     objModelState.ErrorMessage = "Somthing went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse.Replace("[", "").Replace("]", ""));
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                 }
             }
             else
