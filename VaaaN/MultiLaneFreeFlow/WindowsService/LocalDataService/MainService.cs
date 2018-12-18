@@ -2308,7 +2308,7 @@ namespace VaaaN.MLFF.WindowsServices
             //All these to be converted into a ORACLE transaction -- CJS
             //calculation of deduct amount
             #region LaneType and TollRate Section
-            decimal tollToDeduct = -1;
+            decimal tollToDeduct = -1; //if no toll rate found it will be returned as -1
             try
             {
                 LogMessage("Finding out LaneType and toll rate to deduct...");
@@ -2316,10 +2316,10 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("LaneType is: " + laneTypeId);
                 tollToDeduct = GetTollRate(currentTMSId, laneTypeId, transaction.TransactionDateTime, customerVehicleInfo.VehicleClassId);
                 LogMessage("Toll to deduct is (for motorcycle it may be 0.00): " + tollToDeduct);
-                if (tollToDeduct == -1)
-                {
-                    tollToDeduct = 0;
-                }
+                //if (tollToDeduct == -1)
+                //{
+                //    tollToDeduct = 0;
+                //}
             }
             catch (Exception ex)
             {
@@ -2390,18 +2390,16 @@ namespace VaaaN.MLFF.WindowsServices
                     LogMessage("Exception in marking the transaction as balance updated. " + ex.ToString());
                 }
                 #endregion
+
                 //if (afterDeduction > 0)
                 //{
-
-                   
 
                 //}
                 //else
                 //{
-                //    LogMessage("Transaction declined due to insufficient balance.");
+                //    LogMessage("Transaction has been declined due to insufficient balance.");
                 //    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
                 //}
-
             }
             else
             {
