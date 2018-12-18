@@ -388,166 +388,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             {
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection accounts = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection();
 
-                for (int i = 0; i < dt.Rows.Count; i++)
+                foreach (DataRow dr in dt.Rows)
                 {
-                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE account = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE();
-
-                    if (dt.Rows[i]["TMS_ID"] != DBNull.Value)
-                        account.TmsId = Convert.ToInt32(dt.Rows[i]["TMS_ID"]);
-
-                    if (dt.Rows[i]["ACCOUNT_ID"] != DBNull.Value)
-                        account.AccountId = Convert.ToInt32(dt.Rows[i]["ACCOUNT_ID"]);
-
-                    if (dt.Rows[i]["FIRST_NAME"] != DBNull.Value)
-                        account.FirstName = Convert.ToString(dt.Rows[i]["FIRST_NAME"]);
-
-                    if (dt.Rows[i]["LAST_NAME"] != DBNull.Value)
-                        account.LastName = Convert.ToString(dt.Rows[i]["LAST_NAME"]);
-
-                    if (dt.Rows[i]["MOB_NUMBER"] != DBNull.Value)
-                        account.MobileNo = Convert.ToString(dt.Rows[i]["MOB_NUMBER"]);
-
-                    if (dt.Rows[i]["EMAIL_ID"] != DBNull.Value)
-                        account.EmailId = Convert.ToString(dt.Rows[i]["EMAIL_ID"]);
-
-                    if (dt.Rows[i]["DESCRIPTION"] != DBNull.Value)
-                        account.Description = Convert.ToString(dt.Rows[i]["DESCRIPTION"]);
-
-                    if (dt.Rows[i]["ADDRESS"] != DBNull.Value)
-                    {
-                        account.Address = Convert.ToString(dt.Rows[i]["ADDRESS"]);
-                        account.FullAddress = Convert.ToString(dt.Rows[i]["ADDRESS"]);
-                    }
-
-                    if (dt.Rows[i]["ACCOUNT_BALANCE"] != DBNull.Value)
-                        account.AccountBalance = Convert.ToDecimal(dt.Rows[i]["ACCOUNT_BALANCE"]);
-
-                    if (dt.Rows[i]["MODIFIER_ID"] != DBNull.Value)
-                        account.ModifierId = Convert.ToInt32(dt.Rows[i]["MODIFIER_ID"]);
-
-                    if (dt.Rows[i]["CREATION_DATE"] != DBNull.Value)
-                        account.CreationDate = Convert.ToDateTime(dt.Rows[i]["CREATION_DATE"]);
-
-                    if (dt.Rows[i]["MODIFICATION_DATE"] != DBNull.Value)
-                        account.ModificationDate = Convert.ToDateTime(dt.Rows[i]["MODIFICATION_DATE"]);
-
-                    if (dt.Rows[i]["CUSTOMER_IMAGE_PATH"] != DBNull.Value)
-                        account.CustomerImagePath = Convert.ToString(dt.Rows[i]["CUSTOMER_IMAGE_PATH"]);
-
-                    if (dt.Rows[i]["IS_DOC_VERIFIED"] != DBNull.Value)
-                        account.IsDocVerified = Convert.ToInt32(dt.Rows[i]["IS_DOC_VERIFIED"]);
-
-                    if (dt.Rows[i]["ACCOUNT_STATUS"] != DBNull.Value)
-                        account.AccountStatus = Convert.ToInt32(dt.Rows[i]["ACCOUNT_STATUS"]);
-
-                    if (dt.Rows[i]["TRANSFER_STATUS"] != DBNull.Value)
-                        account.TransferStatus = Convert.ToInt32(dt.Rows[i]["TRANSFER_STATUS"]);
-
-                    if (dt.Rows[i]["RESIDENT_ID"] != DBNull.Value)
-                        account.ResidentId = Convert.ToString(dt.Rows[i]["RESIDENT_ID"]);
-
-                    if (dt.Rows[i]["BIRTH_PLACE"] != DBNull.Value)
-                        account.BirthPlace = Convert.ToString(dt.Rows[i]["BIRTH_PLACE"]);
-
-                    if (dt.Rows[i]["BIRTH_DATE"] != DBNull.Value)
-                        account.BirthDate = Convert.ToDateTime(dt.Rows[i]["BIRTH_DATE"]);
-
-                    if (dt.Rows[i]["RT_RW"] != DBNull.Value)
-                        account.RT_RW = Convert.ToString(dt.Rows[i]["RT_RW"]);
-
-                    if (dt.Rows[i]["RT_RW"] != DBNull.Value)
-                    {
-                        string RT_RW = Convert.ToString(dt.Rows[i]["RT_RW"]);
-                        if (RT_RW.Contains("/"))
-                        {
-                            string[] RTRW = RT_RW.Split('/');
-                            account.RT = RTRW[0].ToString();
-                            if (RTRW.Length > 1)
-                            {
-                                account.RW = RTRW[1].ToString();
-                            }
-                        }
-                    }
-
-                    if (dt.Rows[i]["PROVINCE_ID"] != DBNull.Value)
-                        account.ProvinceId = Convert.ToInt32(dt.Rows[i]["PROVINCE_ID"]);
-
-                    if (dt.Rows[i]["PROVINCE_NAME"] != DBNull.Value)
-                    {
-                        account.ProvinceName = Convert.ToString(dt.Rows[i]["PROVINCE_NAME"]);
-                        account.FullAddress = account.FullAddress + " " + Convert.ToString(dt.Rows[i]["PROVINCE_NAME"]);
-                    }
-
-                    if (dt.Rows[i]["CITY_ID"] != DBNull.Value)
-                        account.CityId = Convert.ToInt32(dt.Rows[i]["CITY_ID"]);
-
-                    if (dt.Rows[i]["CITY_NAME"] != DBNull.Value)
-                    {
-                        account.CityName = Convert.ToString(dt.Rows[i]["CITY_NAME"]);
-                        account.FullAddress = account.FullAddress + " " + Convert.ToString(dt.Rows[i]["CITY_NAME"]);
-                    }
-
-                    if (dt.Rows[i]["DISTRICT_ID"] != DBNull.Value)
-                        account.DistrictId = Convert.ToInt32(dt.Rows[i]["DISTRICT_ID"]);
-
-                    if (dt.Rows[i]["DISTRICT_NAME"] != DBNull.Value)
-                    {
-                        account.DistrictName = Convert.ToString(dt.Rows[i]["DISTRICT_NAME"]);
-                        account.FullAddress = account.FullAddress + " " + Convert.ToString(dt.Rows[i]["DISTRICT_NAME"]);
-                    }
-
-                    if (dt.Rows[i]["SUB_DISTRICT_ID"] != DBNull.Value)
-                        account.SubDistrictId = Convert.ToInt32(dt.Rows[i]["SUB_DISTRICT_ID"]);
-
-                    if (dt.Rows[i]["SUB_DISTRICT_NAME"] != DBNull.Value)
-                    {
-                        account.SubDistrictName = Convert.ToString(dt.Rows[i]["SUB_DISTRICT_NAME"]);
-                        account.FullAddress = account.FullAddress + " " + Convert.ToString(dt.Rows[i]["SUB_DISTRICT_NAME"]);
-                    }
-
-                    if (dt.Rows[i]["POSTAL_CODE"] != DBNull.Value)
-                    {
-                        account.PostalCode = Convert.ToInt32(dt.Rows[i]["POSTAL_CODE"]);
-                        account.FullAddress = account.FullAddress + " " + Convert.ToString(dt.Rows[i]["POSTAL_CODE"]);
-                    }
-
-                    if (dt.Rows[i]["NATIONALITY"] != DBNull.Value)
-                    {
-                        account.Nationality = Convert.ToInt32(dt.Rows[i]["NATIONALITY"]);
-                        if (Convert.ToInt32(dt.Rows[i]["NATIONALITY"]) > 0)
-                            account.NationalityName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.NationalityName[Convert.ToInt32(dt.Rows[i]["NATIONALITY"]) - 1];
-                    }
-
-
-                    if (dt.Rows[i]["GENDER"] != DBNull.Value)
-                    {
-                        account.Gender = Convert.ToInt32(dt.Rows[i]["GENDER"]);
-                        if (Convert.ToInt32(dt.Rows[i]["GENDER"]) > 0)
-                            account.GenderName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GenderName[Convert.ToInt32(dt.Rows[i]["GENDER"]) - 1];
-                    }
-
-
-                    if (dt.Rows[i]["MARITAL_STATUS"] != DBNull.Value)
-                    {
-                        account.MaritalStatus = Convert.ToInt32(dt.Rows[i]["MARITAL_STATUS"]);
-                        if (Convert.ToInt32(dt.Rows[i]["MARITAL_STATUS"]) > 0)
-                            account.MaritalStatusName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatusName[Convert.ToInt32(dt.Rows[i]["MARITAL_STATUS"]) - 1];
-                    }
-
-                    if (dt.Rows[i]["OCCUPATION"] != DBNull.Value)
-                        account.Occupation = Convert.ToString(dt.Rows[i]["OCCUPATION"]);
-
-                    if (dt.Rows[i]["RESIDENTIDCARDIMAGE"] != DBNull.Value)
-                        account.ResidentidcardImagePath = Convert.ToString(dt.Rows[i]["RESIDENTIDCARDIMAGE"]);
-
-                    if (dt.Rows[i]["VALID_UNTIL"] != DBNull.Value)
-                        account.ValidUntil = Convert.ToDateTime(dt.Rows[i]["VALID_UNTIL"]);
-
-                    if (dt.Rows[i]["REGISTRATION_THROUGH"] != DBNull.Value)
-                        account.RegistartionThrough = Convert.ToInt32(dt.Rows[i]["REGISTRATION_THROUGH"]);
-
-                    accounts.Add(account);
+                    accounts.Add(ConvertDataTableToCBE(dr));
                 }
+                
                 return accounts;
             }
             catch (Exception ex)
@@ -558,13 +403,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
         private static List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> ConvertDataTableToList(DataTable dt)
         {
-            VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection customerAccounts = ConvertDataTableToCollection(dt);
 
-            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> customerAccountList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+            List<CBE.CustomerAccountCBE> customerAccountList = new List<CBE.CustomerAccountCBE>();
 
-            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE ca in customerAccounts)
+            foreach (DataRow dr in dt.Rows)
             {
-                customerAccountList.Add(ca);
+                customerAccountList.Add(ConvertDataTableToCBE(dr));
             }
 
             return customerAccountList;
@@ -615,6 +459,167 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
         }
 
+        private static CBE.CustomerAccountCBE ConvertDataTableToCBE(DataRow row)
+        {
+
+            CBE.CustomerAccountCBE account = new CBE.CustomerAccountCBE();
+
+            if (row["TMS_ID"] != DBNull.Value)
+                account.TmsId = Convert.ToInt32(row["TMS_ID"]);
+
+            if (row["ACCOUNT_ID"] != DBNull.Value)
+                account.AccountId = Convert.ToInt32(row["ACCOUNT_ID"]);
+
+            if (row["FIRST_NAME"] != DBNull.Value)
+                account.FirstName = Convert.ToString(row["FIRST_NAME"]);
+
+            if (row["LAST_NAME"] != DBNull.Value)
+                account.LastName = Convert.ToString(row["LAST_NAME"]);
+
+            if (row["MOB_NUMBER"] != DBNull.Value)
+                account.MobileNo = Convert.ToString(row["MOB_NUMBER"]);
+
+            if (row["EMAIL_ID"] != DBNull.Value)
+                account.EmailId = Convert.ToString(row["EMAIL_ID"]);
+
+            if (row["DESCRIPTION"] != DBNull.Value)
+                account.Description = Convert.ToString(row["DESCRIPTION"]);
+
+            if (row["ADDRESS"] != DBNull.Value)
+            {
+                account.Address = Convert.ToString(row["ADDRESS"]);
+                account.FullAddress = Convert.ToString(row["ADDRESS"]);
+            }
+
+            if (row["ACCOUNT_BALANCE"] != DBNull.Value)
+                account.AccountBalance = Convert.ToDecimal(row["ACCOUNT_BALANCE"]);
+
+            if (row["MODIFIER_ID"] != DBNull.Value)
+                account.ModifierId = Convert.ToInt32(row["MODIFIER_ID"]);
+
+            if (row["CREATION_DATE"] != DBNull.Value)
+                account.CreationDate = Convert.ToDateTime(row["CREATION_DATE"]);
+
+            if (row["MODIFICATION_DATE"] != DBNull.Value)
+                account.ModificationDate = Convert.ToDateTime(row["MODIFICATION_DATE"]);
+
+            if (row["CUSTOMER_IMAGE_PATH"] != DBNull.Value)
+                account.CustomerImagePath = Convert.ToString(row["CUSTOMER_IMAGE_PATH"]);
+
+            if (row["IS_DOC_VERIFIED"] != DBNull.Value)
+                account.IsDocVerified = Convert.ToInt32(row["IS_DOC_VERIFIED"]);
+
+            if (row["ACCOUNT_STATUS"] != DBNull.Value)
+                account.AccountStatus = Convert.ToInt32(row["ACCOUNT_STATUS"]);
+
+            if (row["TRANSFER_STATUS"] != DBNull.Value)
+                account.TransferStatus = Convert.ToInt32(row["TRANSFER_STATUS"]);
+
+            if (row["RESIDENT_ID"] != DBNull.Value)
+                account.ResidentId = Convert.ToString(row["RESIDENT_ID"]);
+
+            if (row["BIRTH_PLACE"] != DBNull.Value)
+                account.BirthPlace = Convert.ToString(row["BIRTH_PLACE"]);
+
+            if (row["BIRTH_DATE"] != DBNull.Value)
+                account.BirthDate = Convert.ToDateTime(row["BIRTH_DATE"]);
+
+            if (row["RT_RW"] != DBNull.Value)
+                account.RT_RW = Convert.ToString(row["RT_RW"]);
+
+            if (row["RT_RW"] != DBNull.Value)
+            {
+                string RT_RW = Convert.ToString(row["RT_RW"]);
+                if (RT_RW.Contains("/"))
+                {
+                    string[] RTRW = RT_RW.Split('/');
+                    account.RT = RTRW[0].ToString();
+                    if (RTRW.Length > 1)
+                    {
+                        account.RW = RTRW[1].ToString();
+                    }
+                }
+            }
+
+            if (row["PROVINCE_ID"] != DBNull.Value)
+                account.ProvinceId = Convert.ToInt32(row["PROVINCE_ID"]);
+
+            if (row["PROVINCE_NAME"] != DBNull.Value)
+            {
+                account.ProvinceName = Convert.ToString(row["PROVINCE_NAME"]);
+                account.FullAddress = account.FullAddress + " " + Convert.ToString(row["PROVINCE_NAME"]);
+            }
+
+            if (row["CITY_ID"] != DBNull.Value)
+                account.CityId = Convert.ToInt32(row["CITY_ID"]);
+
+            if (row["CITY_NAME"] != DBNull.Value)
+            {
+                account.CityName = Convert.ToString(row["CITY_NAME"]);
+                account.FullAddress = account.FullAddress + " " + Convert.ToString(row["CITY_NAME"]);
+            }
+
+            if (row["DISTRICT_ID"] != DBNull.Value)
+                account.DistrictId = Convert.ToInt32(row["DISTRICT_ID"]);
+
+            if (row["DISTRICT_NAME"] != DBNull.Value)
+            {
+                account.DistrictName = Convert.ToString(row["DISTRICT_NAME"]);
+                account.FullAddress = account.FullAddress + " " + Convert.ToString(row["DISTRICT_NAME"]);
+            }
+
+            if (row["SUB_DISTRICT_ID"] != DBNull.Value)
+                account.SubDistrictId = Convert.ToInt32(row["SUB_DISTRICT_ID"]);
+
+            if (row["SUB_DISTRICT_NAME"] != DBNull.Value)
+            {
+                account.SubDistrictName = Convert.ToString(row["SUB_DISTRICT_NAME"]);
+                account.FullAddress = account.FullAddress + " " + Convert.ToString(row["SUB_DISTRICT_NAME"]);
+            }
+
+            if (row["POSTAL_CODE"] != DBNull.Value)
+            {
+                account.PostalCode = Convert.ToInt32(row["POSTAL_CODE"]);
+                account.FullAddress = account.FullAddress + " " + Convert.ToString(row["POSTAL_CODE"]);
+            }
+
+            if (row["NATIONALITY"] != DBNull.Value)
+            {
+                account.Nationality = Convert.ToInt32(row["NATIONALITY"]);
+                if (Convert.ToInt32(row["NATIONALITY"]) > 0)
+                    account.NationalityName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.NationalityName[Convert.ToInt32(row["NATIONALITY"]) - 1];
+            }
+
+
+            if (row["GENDER"] != DBNull.Value)
+            {
+                account.Gender = Convert.ToInt32(row["GENDER"]);
+                if (Convert.ToInt32(row["GENDER"]) > 0)
+                    account.GenderName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GenderName[Convert.ToInt32(row["GENDER"]) - 1];
+            }
+
+
+            if (row["MARITAL_STATUS"] != DBNull.Value)
+            {
+                account.MaritalStatus = Convert.ToInt32(row["MARITAL_STATUS"]);
+                if (Convert.ToInt32(row["MARITAL_STATUS"]) > 0)
+                    account.MaritalStatusName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatusName[Convert.ToInt32(row["MARITAL_STATUS"]) - 1];
+            }
+
+            if (row["OCCUPATION"] != DBNull.Value)
+                account.Occupation = Convert.ToString(row["OCCUPATION"]);
+
+            if (row["RESIDENTIDCARDIMAGE"] != DBNull.Value)
+                account.ResidentidcardImagePath = Convert.ToString(row["RESIDENTIDCARDIMAGE"]);
+
+            if (row["VALID_UNTIL"] != DBNull.Value)
+                account.ValidUntil = Convert.ToDateTime(row["VALID_UNTIL"]);
+
+            if (row["REGISTRATION_THROUGH"] != DBNull.Value)
+                account.RegistartionThrough = Convert.ToInt32(row["REGISTRATION_THROUGH"]);
+
+            return account;
+        }
 
         #endregion
     }

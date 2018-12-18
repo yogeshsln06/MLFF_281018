@@ -64,9 +64,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetByTagId(TagId);
         }
-        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE GetByCustomerId(String customerId)
+        public static DataTable GetCustomerVehicleById_DT(CBE.CustomerVehicleCBE customerVehicle)
         {
-            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetByTagId(customerId);
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleById_DT(customerVehicle);
         }
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection GetUserByAccountId(CBE.CustomerVehicleCBE customerVehicle)
         {

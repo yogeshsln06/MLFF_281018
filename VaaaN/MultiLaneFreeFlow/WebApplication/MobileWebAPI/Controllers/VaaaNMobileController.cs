@@ -197,7 +197,7 @@ namespace MobileWebAPI.Controllers
                     }
                     else
                     {
-                        #region Cutomer Not Cound Need to registor
+                        #region Cutomer Not found Need to registor
                         #region Validate Customer Account
                         customerDataList = CustomerAccountBLL.GetAllAsList();
                         List<CustomerAccountCBE> Mobilefiltered = customerDataList.FindAll(x => x.MobileNo == objCustomerAccountCBE.MobileNo.ToString());

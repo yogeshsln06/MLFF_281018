@@ -1,4 +1,4 @@
-/* Formatted on 17-12-2018 18:19:44 (QP5 v5.215.12089.38647) */
+/* Formatted on 19/12/2018 00:20:45 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -3328,7 +3328,7 @@ ORDER BY TRANSACTION_ID DESC';
                      ON CA.DISTRICT_ID = D.DISTRICT_ID
                   LEFT OUTER JOIN TBL_SUB_DISTRICT SD
                      ON CA.SUB_DISTRICT_ID = SD.SUB_DISTRICT_ID
-         ORDER BY CA.CREATION_DATE, CA.MODIFICATION_DATE DESC;
+         ORDER BY CA.CREATION_DATE DESC, CA.MODIFICATION_DATE DESC;
    END ACCOUNT_GETALL;
 
    PROCEDURE ACCOUNT_GETBYID (P_TMS_ID       IN     NUMBER,
@@ -3642,7 +3642,7 @@ ORDER BY TRANSACTION_ID DESC';
       P_VEHICLE_RC_NO_PATH     IN     NVARCHAR2,
       P_EXCEPTION_FLAG         IN     NUMBER,
       P_STATUS                 IN     NUMBER,
-      P_VALID_UNTIL            IN     DATE,
+      P_VALID_UNTIL            IN     DATE := NULL,
       P_TID_FRONT              IN     NVARCHAR2,
       P_TID_REAR               IN     NVARCHAR2,
       P_ACCOUNT_BALANCE        IN     NUMBER,
@@ -3736,46 +3736,47 @@ ORDER BY TRANSACTION_ID DESC';
    END CUSTOMER_VEHICLE_INSERT;
 
 
-   PROCEDURE CUSTOMER_VEHICLE_UPDATE (P_TMS_ID                 IN NUMBER,
-                                      P_ENTRY_ID               IN NUMBER,
-                                      P_ACCOUNT_ID             IN NUMBER,
-                                      P_VEH_REG_NO             IN NVARCHAR2,
-                                      P_TAG_ID                 IN NVARCHAR2,
-                                      P_VEHICLE_CLASS_ID       IN NUMBER,
-                                      P_MODIFICATION_DATE      IN DATE,
-                                      P_MODIFIED_BY            IN NUMBER,
-                                      P_TRANSFER_STATUS        IN NUMBER,
-                                      P_VEHICLE_RC_NO          IN NVARCHAR2,
-                                      P_OWNER_NAME             IN NVARCHAR2,
-                                      P_OWNER_ADDRESS          IN NVARCHAR2,
-                                      P_BRAND                  IN NVARCHAR2,
-                                      P_VEHICLE_TYPE           IN NVARCHAR2,
-                                      P_VEHICLE_CATEGORY       IN NVARCHAR2,
-                                      P_MODEL_NO               IN NVARCHAR2,
-                                      P_MANUFACTURING_YEAR     IN NUMBER,
-                                      P_CYCLINDER_CAPACITY     IN NVARCHAR2,
-                                      P_FRAME_NUMBER           IN NVARCHAR2,
-                                      P_ENGINE_NUMBER          IN NVARCHAR2,
-                                      P_VEHICLE_COLOR          IN NVARCHAR2,
-                                      P_FUEL_TYPE              IN NUMBER,
-                                      P_LICENCE_PLATE_COLOR    IN NUMBER,
-                                      P_REGISTRATION_YEAR      IN NUMBER,
-                                      P_VEHICLE_OWNERSHIP_NO   IN NVARCHAR2,
-                                      P_LOCATION_CODE          IN NVARCHAR2,
-                                      P_REG_QUEUE_NO           IN NVARCHAR2,
-                                      P_VEHICLEIMAGE_FRONT     IN NVARCHAR2,
-                                      P_VEHICLEIMAGE_REAR      IN NVARCHAR2,
-                                      P_VEHICLEIMAGE_RIGHT     IN NVARCHAR2,
-                                      P_VEHICLEIMAGE_LEFT      IN NVARCHAR2,
-                                      P_VEHICLE_RC_NO_PATH     IN NVARCHAR2,
-                                      P_EXCEPTION_FLAG         IN NUMBER,
-                                      P_STATUS                 IN NUMBER,
-                                      P_VALID_UNTIL            IN DATE,
-                                      P_TID_FRONT              IN NVARCHAR2,
-                                      P_TID_REAR               IN NVARCHAR2,
-                                      P_ACCOUNT_BALANCE        IN NUMBER,
-                                      P_IS_DOC_VERIFIED        IN NUMBER,
-                                      P_QUEUE_STATUS           IN NUMBER)
+   PROCEDURE CUSTOMER_VEHICLE_UPDATE (
+      P_TMS_ID                 IN NUMBER,
+      P_ENTRY_ID               IN NUMBER,
+      P_ACCOUNT_ID             IN NUMBER,
+      P_VEH_REG_NO             IN NVARCHAR2,
+      P_TAG_ID                 IN NVARCHAR2,
+      P_VEHICLE_CLASS_ID       IN NUMBER,
+      P_MODIFICATION_DATE      IN DATE,
+      P_MODIFIED_BY            IN NUMBER,
+      P_TRANSFER_STATUS        IN NUMBER,
+      P_VEHICLE_RC_NO          IN NVARCHAR2,
+      P_OWNER_NAME             IN NVARCHAR2,
+      P_OWNER_ADDRESS          IN NVARCHAR2,
+      P_BRAND                  IN NVARCHAR2,
+      P_VEHICLE_TYPE           IN NVARCHAR2,
+      P_VEHICLE_CATEGORY       IN NVARCHAR2,
+      P_MODEL_NO               IN NVARCHAR2,
+      P_MANUFACTURING_YEAR     IN NUMBER,
+      P_CYCLINDER_CAPACITY     IN NVARCHAR2,
+      P_FRAME_NUMBER           IN NVARCHAR2,
+      P_ENGINE_NUMBER          IN NVARCHAR2,
+      P_VEHICLE_COLOR          IN NVARCHAR2,
+      P_FUEL_TYPE              IN NUMBER,
+      P_LICENCE_PLATE_COLOR    IN NUMBER,
+      P_REGISTRATION_YEAR      IN NUMBER,
+      P_VEHICLE_OWNERSHIP_NO   IN NVARCHAR2,
+      P_LOCATION_CODE          IN NVARCHAR2,
+      P_REG_QUEUE_NO           IN NVARCHAR2,
+      P_VEHICLEIMAGE_FRONT     IN NVARCHAR2,
+      P_VEHICLEIMAGE_REAR      IN NVARCHAR2,
+      P_VEHICLEIMAGE_RIGHT     IN NVARCHAR2,
+      P_VEHICLEIMAGE_LEFT      IN NVARCHAR2,
+      P_VEHICLE_RC_NO_PATH     IN NVARCHAR2,
+      P_EXCEPTION_FLAG         IN NUMBER,
+      P_STATUS                 IN NUMBER,
+      P_VALID_UNTIL            IN DATE := NULL,
+      P_TID_FRONT              IN NVARCHAR2,
+      P_TID_REAR               IN NVARCHAR2,
+      P_ACCOUNT_BALANCE        IN NUMBER,
+      P_IS_DOC_VERIFIED        IN NUMBER,
+      P_QUEUE_STATUS           IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_CUSTOMER_VEHICLE
@@ -3982,7 +3983,8 @@ ORDER BY TRANSACTION_ID DESC';
                 CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
                 CA.RESIDENT_ID,
                 CA.EMAIL_ID,
-                CA.MOB_NUMBER
+                CA.MOB_NUMBER,
+                CA.ADDRESS
            FROM TBL_CUSTOMER_VEHICLE CV
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
@@ -4235,7 +4237,7 @@ ORDER BY TRANSACTION_ID DESC';
                      ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
                   LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
                      ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
-         ORDER BY CV.VEHICLE_CLASS_ID;
+         ORDER BY CV.CREATION_DATE DESC, CV.MODIFICATION_DATE DESC;
    END CUSTOMER_VEHICLE_GETALL;
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYTAGID (P_TAG_ID   IN     NVARCHAR2,

@@ -352,6 +352,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static DataTable GetCustomerVehicleById_DT(CBE.CustomerVehicleCBE vehicle)
+        {
+            try
+            {
+
+                CBE.CustomerVehicleCollection vehicles = new CBE.CustomerVehicleCollection();
+
+                string spName = Constants.oraclePackagePrefix + "CUSTOMERVEHICLE_GETBYID";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ENTRY_ID", DbType.Int32, vehicle.EntryId, ParameterDirection.Input));
+                return VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public static CBE.CustomerVehicleCBE GetCustomerVehicleByVehRegNo(CBE.CustomerVehicleCBE vehicle)
         {
             CBE.CustomerVehicleCBE result = null;
@@ -443,158 +461,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         {
             try
             {
-                VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection vehicles = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection();
+                CBE.CustomerVehicleCollection vehicles = new CBE.CustomerVehicleCollection();
 
-                for (int i = 0; i < dt.Rows.Count; i++)
+                foreach (DataRow dr in dt.Rows)
                 {
-                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE();
-
-                    if (dt.Rows[i]["TMS_ID"] != DBNull.Value)
-                        vehicle.TMSId = Convert.ToInt32(dt.Rows[i]["TMS_ID"]);
-
-                    if (dt.Rows[i]["ENTRY_ID"] != DBNull.Value)
-                        vehicle.EntryId = Convert.ToInt32(dt.Rows[i]["ENTRY_ID"]);
-
-                    if (dt.Rows[i]["ACCOUNT_ID"] != DBNull.Value)
-                        vehicle.AccountId = Convert.ToInt32(dt.Rows[i]["ACCOUNT_ID"]);
-
-                    if (dt.Rows[i]["VEH_REG_NO"] != DBNull.Value)
-                        vehicle.VehRegNo = Convert.ToString(dt.Rows[i]["VEH_REG_NO"]);
-
-                    if (dt.Rows[i]["TAG_ID"] != DBNull.Value)
-                        vehicle.TagId = Convert.ToString(dt.Rows[i]["TAG_ID"]);
-
-                    if (dt.Rows[i]["VEHICLE_CLASS_ID"] != DBNull.Value)
-                        vehicle.VehicleClassId = Convert.ToInt32(dt.Rows[i]["VEHICLE_CLASS_ID"]);
-
-                    if (dt.Rows[i]["VEHICLE_CLASS_NAME"] != DBNull.Value)
-                        vehicle.VehicleClassName = Convert.ToString(dt.Rows[i]["VEHICLE_CLASS_NAME"]);
-
-                    if (dt.Rows[i]["CREATION_DATE"] != DBNull.Value)
-                        vehicle.CreationDate = Convert.ToDateTime(dt.Rows[i]["CREATION_DATE"]);
-
-                    if (dt.Rows[i]["MODIFICATION_DATE"] != DBNull.Value)
-                        vehicle.ModificationDate = Convert.ToDateTime(dt.Rows[i]["MODIFICATION_DATE"]);
-
-                    if (dt.Rows[i]["MODIFIED_BY"] != DBNull.Value)
-                        vehicle.ModifiedBy = Convert.ToInt32(dt.Rows[i]["MODIFIED_BY"]);
-
-                    if (dt.Rows[i]["TRANSFER_STATUS"] != DBNull.Value)
-                        vehicle.TransferStatus = Convert.ToInt32(dt.Rows[i]["TRANSFER_STATUS"]);
-
-                    if (dt.Rows[i]["VEHICLE_RC_NO"] != DBNull.Value)
-                        vehicle.VehicleRCNumber = Convert.ToString(dt.Rows[i]["VEHICLE_RC_NO"]);
-
-                    if (dt.Rows[i]["OWNER_NAME"] != DBNull.Value)
-                        vehicle.OwnerName = Convert.ToString(dt.Rows[i]["OWNER_NAME"]);
-
-                    if (dt.Rows[i]["OWNER_ADDRESS"] != DBNull.Value)
-                        vehicle.OwnerAddress = Convert.ToString(dt.Rows[i]["OWNER_ADDRESS"]);
-
-                    if (dt.Rows[i]["BRAND"] != DBNull.Value)
-                        vehicle.Brand = Convert.ToString(dt.Rows[i]["BRAND"]);
-
-                    if (dt.Rows[i]["VEHICLE_TYPE"] != DBNull.Value)
-                        vehicle.VehicleType = Convert.ToString(dt.Rows[i]["VEHICLE_TYPE"]);
-
-                    if (dt.Rows[i]["VEHICLE_CATEGORY"] != DBNull.Value)
-                        vehicle.VehicleCategory = Convert.ToString(dt.Rows[i]["VEHICLE_CATEGORY"]);
-
-                    if (dt.Rows[i]["MODEL_NO"] != DBNull.Value)
-                        vehicle.Model = Convert.ToString(dt.Rows[i]["MODEL_NO"]);
-
-                    if (dt.Rows[i]["MANUFACTURING_YEAR"] != DBNull.Value)
-                        vehicle.ManufacturingYear = Convert.ToInt32(dt.Rows[i]["MANUFACTURING_YEAR"]);
-
-                    if (dt.Rows[i]["CYCLINDER_CAPACITY"] != DBNull.Value)
-                        vehicle.CyclinderCapacity = Convert.ToString(dt.Rows[i]["CYCLINDER_CAPACITY"]);
-
-                    if (dt.Rows[i]["FRAME_NUMBER"] != DBNull.Value)
-                        vehicle.FrameNumber = Convert.ToString(dt.Rows[i]["FRAME_NUMBER"]);
-
-                    if (dt.Rows[i]["ENGINE_NUMBER"] != DBNull.Value)
-                        vehicle.EngineNumber = Convert.ToString(dt.Rows[i]["ENGINE_NUMBER"]);
-
-                    if (dt.Rows[i]["VEHICLE_COLOR"] != DBNull.Value)
-                        vehicle.VehicleColor = Convert.ToString(dt.Rows[i]["VEHICLE_COLOR"]);
-
-                    if (dt.Rows[i]["FUEL_TYPE"] != DBNull.Value)
-                    {
-                        vehicle.FuelType = Convert.ToInt32(dt.Rows[i]["FUEL_TYPE"]);
-                        if (Convert.ToInt32(dt.Rows[i]["FUEL_TYPE"]) > 0)
-                            vehicle.FuelTypeName = Constants.FuelTypeName[Convert.ToInt32(dt.Rows[i]["FUEL_TYPE"]) - 1];
-                    }
-
-                    if (dt.Rows[i]["LICENCE_PLATE_COLOR"] != DBNull.Value)
-                    {
-                        vehicle.LicencePlateColor = Convert.ToInt32(dt.Rows[i]["LICENCE_PLATE_COLOR"]);
-                        if (Convert.ToInt32(dt.Rows[i]["LICENCE_PLATE_COLOR"]) > 0)
-                            vehicle.LicencePlateColorName = Constants.LicencePlateColorName[Convert.ToInt32(dt.Rows[i]["LICENCE_PLATE_COLOR"]) - 1];
-                    }
-
-                    if (dt.Rows[i]["REGISTRATION_YEAR"] != DBNull.Value)
-                        vehicle.RegistrationYear = Convert.ToInt32(dt.Rows[i]["REGISTRATION_YEAR"]);
-
-                    if (dt.Rows[i]["VEHICLE_OWNERSHIP_NO"] != DBNull.Value)
-                        vehicle.VehicleOwnershipDocumentNumber = Convert.ToString(dt.Rows[i]["VEHICLE_OWNERSHIP_NO"]);
-
-                    if (dt.Rows[i]["LOCATION_CODE"] != DBNull.Value)
-                        vehicle.LocationCode = Convert.ToString(dt.Rows[i]["LOCATION_CODE"]);
-
-                    if (dt.Rows[i]["REG_QUEUE_NO"] != DBNull.Value)
-                        vehicle.RegistrationQueueNumber = Convert.ToString(dt.Rows[i]["REG_QUEUE_NO"]);
-
-                    if (dt.Rows[i]["VEHICLEIMAGE_FRONT"] != DBNull.Value)
-                        vehicle.VehicleImageFront = Convert.ToString(dt.Rows[i]["VEHICLEIMAGE_FRONT"]);
-
-                    if (dt.Rows[i]["VEHICLEIMAGE_REAR"] != DBNull.Value)
-                        vehicle.VehicleImageRear = Convert.ToString(dt.Rows[i]["VEHICLEIMAGE_REAR"]);
-
-                    if (dt.Rows[i]["VEHICLEIMAGE_RIGHT"] != DBNull.Value)
-                        vehicle.VehicleImageRight = Convert.ToString(dt.Rows[i]["VEHICLEIMAGE_RIGHT"]);
-
-                    if (dt.Rows[i]["VEHICLEIMAGE_LEFT"] != DBNull.Value)
-                        vehicle.VehicleImageLeft = Convert.ToString(dt.Rows[i]["VEHICLEIMAGE_LEFT"]);
-
-                    if (dt.Rows[i]["VEHICLE_RC_NO_PATH"] != DBNull.Value)
-                        vehicle.VehicleRCNumberImagePath = Convert.ToString(dt.Rows[i]["VEHICLE_RC_NO_PATH"]);
-
-                    if (dt.Rows[i]["EXCEPTION_FLAG"] != DBNull.Value)
-                    {
-                        vehicle.ExceptionFlag = Convert.ToInt16(dt.Rows[i]["EXCEPTION_FLAG"]);
-                        if (Convert.ToInt32(dt.Rows[i]["EXCEPTION_FLAG"]) > 0)
-                            vehicle.ExceptionFlagName = Constants.ExceptionFlagName[Convert.ToInt32(dt.Rows[i]["EXCEPTION_FLAG"]) - 1];
-                    }
-
-                    if (dt.Rows[i]["STATUS"] != DBNull.Value)
-                        vehicle.Status = Convert.ToInt16(dt.Rows[i]["STATUS"]);
-
-                    if (dt.Rows[i]["VALID_UNTIL"] != DBNull.Value)
-                        vehicle.ValidUntil = Convert.ToDateTime(dt.Rows[i]["VALID_UNTIL"]);
-
-                    if (dt.Rows[i]["TID_FRONT"] != DBNull.Value)
-                        vehicle.TidFront = Convert.ToString(dt.Rows[i]["TID_FRONT"]);
-
-                    if (dt.Rows[i]["TID_REAR"] != DBNull.Value)
-                        vehicle.TidRear = Convert.ToString(dt.Rows[i]["TID_REAR"]);
-
-                    if (dt.Rows[i]["ACCOUNT_BALANCE"] != DBNull.Value)
-                        vehicle.AccountBalance = Convert.ToDecimal(dt.Rows[i]["ACCOUNT_BALANCE"]);
-
-                    if (dt.Rows[i]["REGISTRATION_THROUGH"] != DBNull.Value)
-                        vehicle.RegistartionThrough = Convert.ToInt16(dt.Rows[i]["REGISTRATION_THROUGH"]);
-
-                    if (dt.Rows[i]["IS_DOC_VERIFIED"] != DBNull.Value)
-                        vehicle.IsDocVerified = Convert.ToInt16(dt.Rows[i]["IS_DOC_VERIFIED"]);
-
-                    if (dt.Rows[i]["QUEUE_STATUS"] != DBNull.Value)
-                    {
-                        vehicle.QueueStatus = Convert.ToInt16(dt.Rows[i]["QUEUE_STATUS"]);
-                        if (Convert.ToInt32(dt.Rows[i]["QUEUE_STATUS"]) > 0)
-                            vehicle.CustomerQueueStatusName = Constants.CustomerQueueStatusName[Convert.ToInt32(dt.Rows[i]["QUEUE_STATUS"]) - 1];
-                    }
-
-                    vehicles.Add(vehicle);
+                    vehicles.Add(ConvertDataTableToCBE(dr));
                 }
                 return vehicles;
             }
@@ -606,16 +477,167 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
         private static List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> ConvertDataTableToList(DataTable dt)
         {
-            VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection customerVehicles = ConvertDataTableToCollection(dt);
+            List<CBE.CustomerVehicleCBE> customerVehicleList = new List<CBE.CustomerVehicleCBE>();
 
-            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> customerVehicleList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE>();
-
-            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE lane in customerVehicles)
+            foreach (DataRow dr in dt.Rows)
             {
-                customerVehicleList.Add(lane);
+                customerVehicleList.Add(ConvertDataTableToCBE(dr));
             }
 
             return customerVehicleList;
+        }
+
+
+        private static CBE.CustomerVehicleCBE ConvertDataTableToCBE(DataRow row)
+        {
+
+            CBE.CustomerVehicleCBE vehicle = new CBE.CustomerVehicleCBE();
+
+            if (row["TMS_ID"] != DBNull.Value)
+                vehicle.TMSId = Convert.ToInt32(row["TMS_ID"]);
+
+            if (row["ENTRY_ID"] != DBNull.Value)
+                vehicle.EntryId = Convert.ToInt32(row["ENTRY_ID"]);
+
+            if (row["ACCOUNT_ID"] != DBNull.Value)
+                vehicle.AccountId = Convert.ToInt32(row["ACCOUNT_ID"]);
+
+            if (row["VEH_REG_NO"] != DBNull.Value)
+                vehicle.VehRegNo = Convert.ToString(row["VEH_REG_NO"]);
+
+            if (row["TAG_ID"] != DBNull.Value)
+                vehicle.TagId = Convert.ToString(row["TAG_ID"]);
+
+            if (row["VEHICLE_CLASS_ID"] != DBNull.Value)
+                vehicle.VehicleClassId = Convert.ToInt32(row["VEHICLE_CLASS_ID"]);
+
+            if (row["VEHICLE_CLASS_NAME"] != DBNull.Value)
+                vehicle.VehicleClassName = Convert.ToString(row["VEHICLE_CLASS_NAME"]);
+
+            if (row["CREATION_DATE"] != DBNull.Value)
+                vehicle.CreationDate = Convert.ToDateTime(row["CREATION_DATE"]);
+
+            if (row["MODIFICATION_DATE"] != DBNull.Value)
+                vehicle.ModificationDate = Convert.ToDateTime(row["MODIFICATION_DATE"]);
+
+            if (row["MODIFIED_BY"] != DBNull.Value)
+                vehicle.ModifiedBy = Convert.ToInt32(row["MODIFIED_BY"]);
+
+            if (row["TRANSFER_STATUS"] != DBNull.Value)
+                vehicle.TransferStatus = Convert.ToInt32(row["TRANSFER_STATUS"]);
+
+            if (row["VEHICLE_RC_NO"] != DBNull.Value)
+                vehicle.VehicleRCNumber = Convert.ToString(row["VEHICLE_RC_NO"]);
+
+            if (row["OWNER_NAME"] != DBNull.Value)
+                vehicle.OwnerName = Convert.ToString(row["OWNER_NAME"]);
+
+            if (row["OWNER_ADDRESS"] != DBNull.Value)
+                vehicle.OwnerAddress = Convert.ToString(row["OWNER_ADDRESS"]);
+
+            if (row["BRAND"] != DBNull.Value)
+                vehicle.Brand = Convert.ToString(row["BRAND"]);
+
+            if (row["VEHICLE_TYPE"] != DBNull.Value)
+                vehicle.VehicleType = Convert.ToString(row["VEHICLE_TYPE"]);
+
+            if (row["VEHICLE_CATEGORY"] != DBNull.Value)
+                vehicle.VehicleCategory = Convert.ToString(row["VEHICLE_CATEGORY"]);
+
+            if (row["MODEL_NO"] != DBNull.Value)
+                vehicle.Model = Convert.ToString(row["MODEL_NO"]);
+
+            if (row["MANUFACTURING_YEAR"] != DBNull.Value)
+                vehicle.ManufacturingYear = Convert.ToInt32(row["MANUFACTURING_YEAR"]);
+
+            if (row["CYCLINDER_CAPACITY"] != DBNull.Value)
+                vehicle.CyclinderCapacity = Convert.ToString(row["CYCLINDER_CAPACITY"]);
+
+            if (row["FRAME_NUMBER"] != DBNull.Value)
+                vehicle.FrameNumber = Convert.ToString(row["FRAME_NUMBER"]);
+
+            if (row["ENGINE_NUMBER"] != DBNull.Value)
+                vehicle.EngineNumber = Convert.ToString(row["ENGINE_NUMBER"]);
+
+            if (row["VEHICLE_COLOR"] != DBNull.Value)
+                vehicle.VehicleColor = Convert.ToString(row["VEHICLE_COLOR"]);
+
+            if (row["FUEL_TYPE"] != DBNull.Value)
+            {
+                vehicle.FuelType = Convert.ToInt32(row["FUEL_TYPE"]);
+                if (Convert.ToInt32(row["FUEL_TYPE"]) > 0)
+                    vehicle.FuelTypeName = Constants.FuelTypeName[Convert.ToInt32(row["FUEL_TYPE"]) - 1];
+            }
+
+            if (row["LICENCE_PLATE_COLOR"] != DBNull.Value)
+            {
+                vehicle.LicencePlateColor = Convert.ToInt32(row["LICENCE_PLATE_COLOR"]);
+                if (Convert.ToInt32(row["LICENCE_PLATE_COLOR"]) > 0)
+                    vehicle.LicencePlateColorName = Constants.LicencePlateColorName[Convert.ToInt32(row["LICENCE_PLATE_COLOR"]) - 1];
+            }
+
+            if (row["REGISTRATION_YEAR"] != DBNull.Value)
+                vehicle.RegistrationYear = Convert.ToInt32(row["REGISTRATION_YEAR"]);
+
+            if (row["VEHICLE_OWNERSHIP_NO"] != DBNull.Value)
+                vehicle.VehicleOwnershipDocumentNumber = Convert.ToString(row["VEHICLE_OWNERSHIP_NO"]);
+
+            if (row["LOCATION_CODE"] != DBNull.Value)
+                vehicle.LocationCode = Convert.ToString(row["LOCATION_CODE"]);
+
+            if (row["REG_QUEUE_NO"] != DBNull.Value)
+                vehicle.RegistrationQueueNumber = Convert.ToString(row["REG_QUEUE_NO"]);
+
+            if (row["VEHICLEIMAGE_FRONT"] != DBNull.Value)
+                vehicle.VehicleImageFront = Convert.ToString(row["VEHICLEIMAGE_FRONT"]);
+
+            if (row["VEHICLEIMAGE_REAR"] != DBNull.Value)
+                vehicle.VehicleImageRear = Convert.ToString(row["VEHICLEIMAGE_REAR"]);
+
+            if (row["VEHICLEIMAGE_RIGHT"] != DBNull.Value)
+                vehicle.VehicleImageRight = Convert.ToString(row["VEHICLEIMAGE_RIGHT"]);
+
+            if (row["VEHICLEIMAGE_LEFT"] != DBNull.Value)
+                vehicle.VehicleImageLeft = Convert.ToString(row["VEHICLEIMAGE_LEFT"]);
+
+            if (row["VEHICLE_RC_NO_PATH"] != DBNull.Value)
+                vehicle.VehicleRCNumberImagePath = Convert.ToString(row["VEHICLE_RC_NO_PATH"]);
+
+            if (row["EXCEPTION_FLAG"] != DBNull.Value)
+            {
+                vehicle.ExceptionFlag = Convert.ToInt16(row["EXCEPTION_FLAG"]);
+                if (Convert.ToInt32(row["EXCEPTION_FLAG"]) > 0)
+                    vehicle.ExceptionFlagName = Constants.ExceptionFlagName[Convert.ToInt32(row["EXCEPTION_FLAG"]) - 1];
+            }
+
+            if (row["STATUS"] != DBNull.Value)
+                vehicle.Status = Convert.ToInt16(row["STATUS"]);
+
+            if (row["VALID_UNTIL"] != DBNull.Value)
+                vehicle.ValidUntil = Convert.ToDateTime(row["VALID_UNTIL"]);
+
+            if (row["TID_FRONT"] != DBNull.Value)
+                vehicle.TidFront = Convert.ToString(row["TID_FRONT"]);
+
+            if (row["TID_REAR"] != DBNull.Value)
+                vehicle.TidRear = Convert.ToString(row["TID_REAR"]);
+
+            if (row["ACCOUNT_BALANCE"] != DBNull.Value)
+                vehicle.AccountBalance = Convert.ToDecimal(row["ACCOUNT_BALANCE"]);
+
+            if (row["REGISTRATION_THROUGH"] != DBNull.Value)
+                vehicle.RegistartionThrough = Convert.ToInt16(row["REGISTRATION_THROUGH"]);
+
+            if (row["IS_DOC_VERIFIED"] != DBNull.Value)
+                vehicle.IsDocVerified = Convert.ToInt16(row["IS_DOC_VERIFIED"]);
+
+            if (row["QUEUE_STATUS"] != DBNull.Value)
+            {
+                vehicle.QueueStatus = Convert.ToInt16(row["QUEUE_STATUS"]);
+                if (Convert.ToInt32(row["QUEUE_STATUS"]) > 0)
+                    vehicle.CustomerQueueStatusName = Constants.CustomerQueueStatusName[Convert.ToInt32(row["QUEUE_STATUS"]) - 1];
+            }
+            return vehicle;
         }
         #endregion
     }
