@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <script src="/scripts/jquery-1.10.2.min.js"></script>
+    <style>
+        .vc_custom_1478767772246 {
+            padding-top: 20px !important;
+            padding-bottom: 20px !important;
+            background-color: #f8f8f8 !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            background-size: cover !important;
+        }
+
+        .container {
+            margin-right: auto;
+            margin-left: auto;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .logo {
+            margin-right: auto;
+            margin-left: auto;
+            font-size: 30px;
+            text-transform: uppercase;
+            color: #333;
+        }
+    </style>
+    <script>
+        function getData() {
+
+            var cameraList = [{
+                id: "83",
+                name: "Camera PTZ",
+                address: "Jalan Hayam wuruk",
+                coordinate: "[1231.12312,123123.123]"
+               }
+            ];
+
+            var dataList = [{
+                plate: "B1922IK",
+                vehicle_type: "car",
+                thumbnail: "http://192.168.100.1/dump-data/lpr/2018-05-05/1asdfa.jpg",
+                vehicle_thumbnail: "http://192.168.100.1/dump-data/vehicle-classification/2018-05-05/aaksldf.jpg"
+            }];
+
+            var TripObject = {
+                event_type: "lpr-event",
+                timestamp: "2018-05-05 12:00:00",
+                camera: cameraList,
+                data: dataList,
+            };
+            $.ajax({
+                type: "POST",
+                url: 'http://103.194.88.237:5555/VaaaN/IndonesiaMLFFApi/SendNodefluxEvent', //change to your url
+                data: JSON.stringify(TripObject) , // pass json object to web api
+                contentType: 'application/json',
+                success: function (data) {
+                    alert('success!');
+                    alert(data);
+                }            });
+        }
+    </script>
+</head>
+<body class="vc_custom_1478767772246">
+    <div class="container">
+        <div class="logo">
+            <a href="http://vaaaninfra.com/"><img src="http://vaaaninfra.com/wp-content/uploads/2016/10/NEW_LOGO.png" alt="VaaaN Infra"></a>
+        </div>
+
+    </div>
+    <input type="button" value="Send Json File" onclick="getData()" />
+</body>
+</html>
