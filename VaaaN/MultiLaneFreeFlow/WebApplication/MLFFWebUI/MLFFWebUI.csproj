@@ -154,6 +154,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CustomerVehicleModel.cs" />
     <Compile Include="Models\HelperClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -205,6 +206,11 @@
     <Content Include="Attachment\VehicleImage\ABC_Left_20181213.jpeg" />
     <Content Include="Attachment\VehicleImage\ABC_Rear_20181213.jpeg" />
     <Content Include="Attachment\VehicleImage\ABC_Right_20181213.jpeg" />
+    <Content Include="Attachment\VehicleImage\B1234MM_Document_Front_20181218.jpeg" />
+    <Content Include="Attachment\VehicleImage\B1234MM_Document_Left_20181218.jpeg" />
+    <Content Include="Attachment\VehicleImage\B1234MM_Document_RC_20181218.jpeg" />
+    <Content Include="Attachment\VehicleImage\B1234MM_Document_Rear_20181218.jpeg" />
+    <Content Include="Attachment\VehicleImage\B1234MM_Document_Right_20181218.jpeg" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\dataTables.bootstrap.min.css" />
@@ -222,6 +228,7 @@
     <Content Include="images\sort_desc.png" />
     <Content Include="images\sort_desc_disabled.png" />
     <Content Include="js\CustomerAccount.js" />
+    <Content Include="js\CustomerVehicle.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -273,6 +280,8 @@
     <Content Include="Views\Registration\CustomerVehicle.cshtml" />
     <Content Include="Views\Registration\_CustomerPopUp.cshtml" />
     <Content Include="Views\Registration\CustomerChildList.cshtml" />
+    <Content Include="Views\Registration\CustomerVehicleChildList.cshtml" />
+    <Content Include="Views\Registration\_CustomerVehiclePopUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

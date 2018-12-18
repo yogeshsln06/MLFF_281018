@@ -1,0 +1,278 @@
+﻿@model MLFFWebUI.Models.CustomerVehicleModel
+@{
+    Layout = null;
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<fieldset id="fildset">
+    @using (Html.BeginForm("CustomerVehicle", "Registration", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" id="hfVehicleImageFront" value="@ViewBag.VehicleImageFront" />
+        <input type="hidden" id="hfVehicleImageRear" value="@ViewBag.VehicleImageRear" />
+        <input type="hidden" id="hfVehicleImageLeft" value="@ViewBag.VehicleImageLeft" />
+        <input type="hidden" id="hfVehicleImageRight" value="@ViewBag.VehicleImageRight" />
+        <input type="hidden" id="hfVehicleRCNumberImage" value="@ViewBag.VehicleRCNumberImagePath" />
+
+        <div class="modal-body" style="height:400px; overflow-y:scroll;">
+            <h5 class="c-grey-900 heading"><strong>Customer </strong>Information<span></span></h5>
+            <div class="mT-5">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.AccountId)
+                        @Html.EditorFor(model => model.AccountId, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.ResidentId, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.ResidentId, new { htmlAttributes = new { @class = "form-control required", } })
+                        @Html.ValidationMessageFor(model => model.ResidentId, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control required", } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control ", } })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control required", } })
+                        @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control required", } })
+                        @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <h5 class="c-grey-900 heading"><strong>Vehicle </strong> Information <span></span></h5>
+            <div class="mT-5">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.EntryId, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.EntryId, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.VehicleRCNumber, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.VehicleRCNumber, new { htmlAttributes = new { @class = "form-control required", } })
+                        @Html.ValidationMessageFor(model => model.VehicleRCNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.VehRegNo, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.VehRegNo, new { htmlAttributes = new { @class = "form-control required", } })
+                        @Html.ValidationMessageFor(model => model.VehRegNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.OwnerName, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.OwnerName, new { htmlAttributes = new { @class = "form-control required", } })
+                        @Html.ValidationMessageFor(model => model.OwnerName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.OwnerAddress, htmlAttributes: new { @class = "control-label required" })
+                        @Html.EditorFor(model => model.OwnerAddress, new { htmlAttributes = new { @class = "form-control required", } })
+                        @Html.ValidationMessageFor(model => model.OwnerAddress, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.Brand, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Brand, new { htmlAttributes = new { @class = "form-control", } })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.VehicleType, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.VehicleType, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.VehicleCategory, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.VehicleCategory, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.Model, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Model, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.ManufacturingYear, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.ManufacturingYear, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.CyclinderCapacity, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.CyclinderCapacity, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.FrameNumber, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.FrameNumber, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.EngineNumber, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.EngineNumber, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.VehicleColor, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.VehicleColor, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.FuelType, htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownList("FuelType", (IEnumerable<SelectListItem>)ViewBag.FuelTypeList, new { @class = "form-control" })
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.LicencePlateColor, htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownList("LicencePlateColor", (IEnumerable<SelectListItem>)ViewBag.LicencePlateColorList, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.RegistrationYear, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.RegistrationYear, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.VehicleOwnershipDocumentNumber, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.VehicleOwnershipDocumentNumber, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.LocationCode, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.LocationCode, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.RegistrationQueueNumber, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.RegistrationQueueNumber, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.ValidUntil, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.ValidUntil, new { htmlAttributes = new { @class = "form-control ", } })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <h5 class="c-grey-900 heading"><strong>Other </strong> Information <span></span></h5>
+            <div class="mT-5">
+                <div class="form-row">
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.VehicleImageFront, htmlAttributes: new { @class = "control-label required" })
+                        <label id="lblVehicleImageFront" class="form-control" onclick="openImg(this);">Click to View Image</label>
+                        <input name="VehicleImageFront" id="VehicleImageFront" type="file" class="form-control" onchange="encodeImagetoBase64(this)" />
+                        @Html.ValidationMessageFor(model => model.VehicleImageFront, "", new { @class = "text-danger" })
+                        <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
+                             data-high-res-src="" alt="" class="gallery-items" id="imgVehicleImageFront">
+                        <a href="" style="display:none" id="VehicleImageFrontPath"></a>
+                        <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
+                             data-high-res-src="" alt="" class="gallery-items" id="imgVehicleImageFront">
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.VehicleImageRear, htmlAttributes: new { @class = "control-label required" })
+                        <label id="lblVehicleImageRear" class="form-control" onclick="openImg(this);">Click to View Image</label>
+                        <input name="VehicleImageRear" id="VehicleImageRear" type="file" class="form-control" onchange="encodeImagetoBase64(this)" />
+                        @Html.ValidationMessageFor(model => model.VehicleImageRear, "", new { @class = "text-danger" })
+                        <a href="" style="display:none" id="VehicleImageRearPath"></a>
+                        <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
+                             data-high-res-src="" alt="" class="gallery-items" id="imgVehicleImageRear">
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.VehicleImageRight, htmlAttributes: new { @class = "control-label required" })
+                        <label id="lblVehicleImageRight" class="form-control" onclick="openImg(this);">Click to View Image</label>
+                        <input name="VehicleImageRight" id="VehicleImageRight" type="file" class="form-control" onchange="encodeImagetoBase64(this)" />
+                        @Html.ValidationMessageFor(model => model.VehicleImageRight, "", new { @class = "text-danger" })
+                        <a href="" style="display:none" id="VehicleImageRightPath"></a>
+                        <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
+                             data-high-res-src="" alt="" class="gallery-items" id="imgVehicleImageRight">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.VehicleImageLeft, htmlAttributes: new { @class = "control-label required" })
+                        <label id="lblVehicleImageLeft" class="form-control" onclick="openImg(this);">Click to View Image</label>
+                        <input name="VehicleImageLeft" id="VehicleImageLeft" type="file" class="form-control" onchange="encodeImagetoBase64(this)" />
+                        @Html.ValidationMessageFor(model => model.VehicleImageLeft, "", new { @class = "text-danger" })
+                        <a href="" style="display:none" id="VehicleImageLeftPath"></a>
+                        <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
+                             data-high-res-src="" alt="" class="gallery-items" id="imgVehicleImageLeft">
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.VehicleRCNumberImagePath, htmlAttributes: new { @class = "control-label required" })
+                        <label id="lblVehicleRCNumberImagePath" class="form-control" onclick="openImg(this);">Click to View Image</label>
+                        <input name="VehicleRCNumberImagePath" id="VehicleRCNumberImagePath" type="file" class="form-control" onchange="encodeImagetoBase64(this)" />
+                        @Html.ValidationMessageFor(model => model.VehicleRCNumberImagePath, "", new { @class = "text-danger" })
+                        <a href="" style="display:none" id="VehicleRCNumberImagePathPath"></a>
+                        <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
+                             data-high-res-src="" alt="" class="gallery-items" id="imgVehicleRCNumberImagePath">
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.ExceptionFlag, htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownList("ExceptionFlag", (IEnumerable<SelectListItem>)ViewBag.ExceptionFlagList, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ExceptionFlag, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.TidFront, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.TidFront, new { htmlAttributes = new { @class = "form-control", } })
+                        @Html.ValidationMessageFor(model => model.TidFront, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.TidRear, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.TidRear, new { htmlAttributes = new { @class = "form-control", } })
+                        @Html.ValidationMessageFor(model => model.TidRear, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.VehicleClassId, htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownList("VehicleClassId", (IEnumerable<SelectListItem>)ViewBag.VehicleClassList, new { @class = "form-control", onchange = "GetTagId();" })
+                        @Html.ValidationMessageFor(model => model.VehicleClassId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-4">
+                        @Html.LabelFor(model => model.TagId, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.TagId, new { htmlAttributes = new { @class = "form-control", } })
+                        @Html.ValidationMessageFor(model => model.TagId, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.QueueStatus, htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownList("QueueStatus", (IEnumerable<SelectListItem>)ViewBag.QueueStatusList, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.QueueStatus, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.AccountBalance, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.AccountBalance, new { htmlAttributes = new { @class = "form-control", } })
+                        @Html.ValidationMessageFor(model => model.AccountBalance, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    }
+    <div class="modal-footer">
+        <div class="alert alert-warning" role="alert" id="warning">
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
+        <button type="button" class="btn btn-primary" onclick="SaveData('new')">Save & New</button>
+        <button type="button" class="btn btn-primary" onclick="SaveData('close')">Save changes</button>
+    </div>
+</fieldset>
+
+
+

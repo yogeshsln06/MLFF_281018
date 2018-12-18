@@ -1,6 +1,7 @@
 ﻿using MLFFWebUI.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -16,8 +17,8 @@ namespace MLFFWebUI.Controllers
     public class RegistrationController : Controller
     {
         int tmsId = 1;
-        ResponseMessage objResponse = new ResponseMessage();
         List<ModelStateList> objResponseMessage = new List<ModelStateList>();
+        DataTable dt = new DataTable();
 
         // GET: Registration
         public ActionResult Index()
@@ -25,6 +26,7 @@ namespace MLFFWebUI.Controllers
             return View();
         }
 
+        #region Customer Account
         [HttpGet]
         public ActionResult Customer()
         {
@@ -37,8 +39,6 @@ namespace MLFFWebUI.Controllers
                     return RedirectToAction("Logout", "Login");
                 }
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "Customer");
-                //customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(1, 10);
-                //customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.CustomerAccountLazyLoad(1, 10);
                 customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
                 return View(customerDataList);
 
@@ -48,91 +48,13 @@ namespace MLFFWebUI.Controllers
 
                 HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
             }
-            return View();
-            //return View(customerDataList);
+            //return View();
+            return View(customerDataList);
         }
-        [HttpGet]
-        public JsonResult CustomerList()
-        {
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-            JsonResult result = new JsonResult();
-            try
-            {
-
-                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "Customer");
-                customerDataList = CustomerAccountBLL.GetAllAsList(); ;
-                //customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.CustomerAccountLazyLoad(1, 10);
-                //customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
-                result.Data = customerDataList;
-
-            }
-            catch (Exception ex)
-            {
-
-                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
-            }
-            return Json(result.Data, JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
-        public JsonResult CustomerData(int pageindex, int pagesize)
-        {
-            JsonResult result = new JsonResult();
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-            customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
-            result.Data = customerDataList;
-            return Json(result.Data);
-        }
-
-        [HttpPost]
-        public JsonResult CustomerDataonScroll(int pageindex, int pagesize)
-        {
-            JsonResult result = new JsonResult();
-            System.Threading.Thread.Sleep(1000);
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-            customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
-            result.Data = customerDataList;
-            return Json(result.Data);
-        }
-
         [ChildActionOnly]
         public ActionResult CustomerChildList(List<CustomerAccountCBE> Model)
         {
             return PartialView(Model);
-        }
-
-        protected string renderPartialViewtostring(string Viewname, object model)
-        {
-            if (string.IsNullOrEmpty(Viewname))
-
-                Viewname = ControllerContext.RouteData.GetRequiredString("action");
-            ViewData.Model = model;
-            using (StringWriter sw = new StringWriter())
-            {
-                ViewEngineResult viewresult = ViewEngines.Engines.FindPartialView(ControllerContext, Viewname);
-                ViewContext viewcontext = new ViewContext(ControllerContext, viewresult.View, ViewData, TempData, sw);
-                viewresult.View.Render(viewcontext, sw);
-                return sw.GetStringBuilder().ToString();
-            }
-
-        }
-
-        public class JsonModel
-        {
-            public string HTMLString { get; set; }
-            public bool NoMoredata { get; set; }
-        }
-
-        [HttpPost]
-        public ActionResult InfiniteScroll(int pageindex, int RowNo, int pagesize)
-        {
-            ViewBag.RowNo = RowNo;
-            System.Threading.Thread.Sleep(1000);
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-            customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
-            JsonModel jsonmodel = new JsonModel();
-            jsonmodel.NoMoredata = customerDataList.Count < pagesize;
-            jsonmodel.HTMLString = renderPartialViewtostring("CustomerChildList", customerDataList);
-            return Json(jsonmodel);
         }
 
         [HttpGet]
@@ -201,7 +123,7 @@ namespace MLFFWebUI.Controllers
         {
             if (Session["LoggedUserId"] == null)
             {
-                return RedirectToAction("SessionPage", "Home");
+                return RedirectToAction("Logout", "Login");
             }
             ViewBag.AccountId = id;
             #region Bind Province DropDowm
@@ -400,6 +322,9 @@ namespace MLFFWebUI.Controllers
                         customerAccount.AccountStatus = 1;
                         customerAccount.TransferStatus = 1;
                         customerAccount.IsDocVerified = 1;
+                        if (string.IsNullOrEmpty(customerAccount.Occupation))
+                            customerAccount.Occupation = string.Empty;
+
                         if (string.IsNullOrEmpty(customerAccount.RT) && string.IsNullOrEmpty(customerAccount.RW))
                             customerAccount.RT_RW = string.Empty;
                         else
@@ -606,17 +531,1102 @@ namespace MLFFWebUI.Controllers
             return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
 
+        #region Testing method not in use
+        [HttpGet]
+        public JsonResult CustomerList()
+        {
+            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+            JsonResult result = new JsonResult();
+            try
+            {
+
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "Customer");
+                //customerDataList = CustomerAccountBLL.GetAllAsList(); ;
+                //customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.CustomerAccountLazyLoad(1, 10);
+                //customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
+                result.Data = customerDataList;
+
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult CustomerData(int pageindex, int pagesize)
+        {
+            JsonResult result = new JsonResult();
+            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+            customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
+            result.Data = customerDataList;
+            return Json(result.Data);
+        }
+
+        [HttpPost]
+        public JsonResult CustomerDataonScroll(int pageindex, int pagesize)
+        {
+            JsonResult result = new JsonResult();
+            System.Threading.Thread.Sleep(1000);
+            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+            customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
+            result.Data = customerDataList;
+            return Json(result.Data);
+        }
+
+
+
+        protected string renderPartialViewtostring(string Viewname, object model)
+        {
+            if (string.IsNullOrEmpty(Viewname))
+
+                Viewname = ControllerContext.RouteData.GetRequiredString("action");
+            ViewData.Model = model;
+            using (StringWriter sw = new StringWriter())
+            {
+                ViewEngineResult viewresult = ViewEngines.Engines.FindPartialView(ControllerContext, Viewname);
+                ViewContext viewcontext = new ViewContext(ControllerContext, viewresult.View, ViewData, TempData, sw);
+                viewresult.View.Render(viewcontext, sw);
+                return sw.GetStringBuilder().ToString();
+            }
+
+        }
+
+        public class JsonModel
+        {
+            public string HTMLString { get; set; }
+            public bool NoMoredata { get; set; }
+        }
+
+        [HttpPost]
+        public ActionResult InfiniteScroll(int pageindex, int RowNo, int pagesize)
+        {
+            ViewBag.RowNo = RowNo;
+            System.Threading.Thread.Sleep(1000);
+            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+            customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
+            JsonModel jsonmodel = new JsonModel();
+            jsonmodel.NoMoredata = customerDataList.Count < pagesize;
+            jsonmodel.HTMLString = renderPartialViewtostring("CustomerChildList", customerDataList);
+            return Json(jsonmodel);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Customer Vehicle
         public ActionResult CustomerVehicle()
         {
+            List<CustomerVehicleCBE> customerVehicleDataList = new List<CustomerVehicleCBE>();
             if (Session["LoggedUserId"] == null)
             {
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "CustomerVehicle");
-            return View();
+
+            customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
+            return View(customerVehicleDataList);
 
         }
 
+        [ChildActionOnly]
+        public ActionResult CustomerVehicleChildList(List<CustomerVehicleCBE> Model)
+        {
+            return PartialView(Model);
+        }
+
+        [HttpGet]
+        public ActionResult NewCustomerVehicle()
+        {
+            #region Vehicle Class Dropdown
+            List<SelectListItem> vehicleclassList = new List<SelectListItem>();
+            List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
+            vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
+
+            vehicleclassList.Add(new SelectListItem() { Text = "--Select Vehicle Class--", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
+            {
+                vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
+            }
+            ViewBag.VehicleClassList = vehicleclassList;
+
+            #endregion
+
+            #region Queue Status
+            List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
+            Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
+
+            for (int i = 0; i < arStatus.Length; i++)
+            {
+                customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
+            }
+            ViewBag.QueueStatusList = customerQueueStatus;
+
+            #endregion
+
+            #region Exception Flag
+            List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
+            Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
+
+            for (int i = 0; i < ExceptionFlagListart.Length; i++)
+            {
+                ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
+            }
+            ViewBag.ExceptionFlagList = ExceptionFlagList;
+
+            #endregion
+
+            #region Fuel Type
+            List<SelectListItem> fuelTypeList = new List<SelectListItem>();
+            Array arcfuelType = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelType));
+
+            for (int i = 0; i < arcfuelType.Length; i++)
+            {
+                fuelTypeList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelTypeName[i], Value = System.Convert.ToString((int)arcfuelType.GetValue(i)) });
+            }
+            ViewBag.FuelTypeList = fuelTypeList;
+
+            #endregion
+
+            #region Licence Plate Color
+            List<SelectListItem> licencePlateColorList = new List<SelectListItem>();
+            Array arlicencePlateColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColor));
+
+            for (int i = 0; i < arlicencePlateColor.Length; i++)
+            {
+                licencePlateColorList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColorName[i], Value = System.Convert.ToString((int)arlicencePlateColor.GetValue(i)) });
+            }
+            ViewBag.LicencePlateColorList = licencePlateColorList;
+
+            #endregion
+
+            return View("_CustomerVehiclePopUp");
+        }
+
+        [HttpPost]
+        public ActionResult GetCustomerVehicle(int id)
+        {
+            CustomerVehicleModel objCustomerVehicleModel = new CustomerVehicleModel();
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    return RedirectToAction("Logout", "Login");
+                }
+
+                #region Get vehicle Information
+                CustomerVehicleCBE vehicle = new CustomerVehicleCBE();
+                vehicle.EntryId = id;
+                vehicle.TMSId = 1;
+                dt = CustomerVehicleBLL.GetCustomerVehicleById_DT(vehicle);
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        #region Convert Dt to CBE
+                        if (row["TMS_ID"] != DBNull.Value)
+                            objCustomerVehicleModel.TMSId = Convert.ToInt32(row["TMS_ID"]);
+
+                        if (row["ENTRY_ID"] != DBNull.Value)
+                            objCustomerVehicleModel.EntryId = Convert.ToInt32(row["ENTRY_ID"]);
+
+                        if (row["ACCOUNT_ID"] != DBNull.Value)
+                            objCustomerVehicleModel.AccountId = Convert.ToInt32(row["ACCOUNT_ID"]);
+
+                        if (row["VEH_REG_NO"] != DBNull.Value)
+                            objCustomerVehicleModel.VehRegNo = Convert.ToString(row["VEH_REG_NO"]);
+
+                        if (row["TAG_ID"] != DBNull.Value)
+                            objCustomerVehicleModel.TagId = Convert.ToString(row["TAG_ID"]);
+
+                        if (row["VEHICLE_CLASS_ID"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleClassId = Convert.ToInt32(row["VEHICLE_CLASS_ID"]);
+
+                        if (row["VEHICLE_CLASS_NAME"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleClassName = Convert.ToString(row["VEHICLE_CLASS_NAME"]);
+
+                        if (row["CREATION_DATE"] != DBNull.Value)
+                            objCustomerVehicleModel.CreationDate = Convert.ToDateTime(row["CREATION_DATE"]);
+
+                        if (row["MODIFICATION_DATE"] != DBNull.Value)
+                            objCustomerVehicleModel.ModificationDate = Convert.ToDateTime(row["MODIFICATION_DATE"]);
+
+                        if (row["MODIFIED_BY"] != DBNull.Value)
+                            objCustomerVehicleModel.ModifiedBy = Convert.ToInt32(row["MODIFIED_BY"]);
+
+                        if (row["TRANSFER_STATUS"] != DBNull.Value)
+                            objCustomerVehicleModel.TransferStatus = Convert.ToInt32(row["TRANSFER_STATUS"]);
+
+                        if (row["VEHICLE_RC_NO"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleRCNumber = Convert.ToString(row["VEHICLE_RC_NO"]);
+
+                        if (row["OWNER_NAME"] != DBNull.Value)
+                            objCustomerVehicleModel.OwnerName = Convert.ToString(row["OWNER_NAME"]);
+
+                        if (row["OWNER_ADDRESS"] != DBNull.Value)
+                            objCustomerVehicleModel.OwnerAddress = Convert.ToString(row["OWNER_ADDRESS"]);
+
+                        if (row["BRAND"] != DBNull.Value)
+                            objCustomerVehicleModel.Brand = Convert.ToString(row["BRAND"]);
+
+                        if (row["VEHICLE_TYPE"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleType = Convert.ToString(row["VEHICLE_TYPE"]);
+
+                        if (row["VEHICLE_CATEGORY"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleCategory = Convert.ToString(row["VEHICLE_CATEGORY"]);
+
+                        if (row["MODEL_NO"] != DBNull.Value)
+                            objCustomerVehicleModel.Model = Convert.ToString(row["MODEL_NO"]);
+
+                        if (row["MANUFACTURING_YEAR"] != DBNull.Value)
+                            objCustomerVehicleModel.ManufacturingYear = Convert.ToInt32(row["MANUFACTURING_YEAR"]);
+
+                        if (row["CYCLINDER_CAPACITY"] != DBNull.Value)
+                            objCustomerVehicleModel.CyclinderCapacity = Convert.ToString(row["CYCLINDER_CAPACITY"]);
+
+                        if (row["FRAME_NUMBER"] != DBNull.Value)
+                            objCustomerVehicleModel.FrameNumber = Convert.ToString(row["FRAME_NUMBER"]);
+
+                        if (row["ENGINE_NUMBER"] != DBNull.Value)
+                            objCustomerVehicleModel.EngineNumber = Convert.ToString(row["ENGINE_NUMBER"]);
+
+                        if (row["VEHICLE_COLOR"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleColor = Convert.ToString(row["VEHICLE_COLOR"]);
+
+                        if (row["FUEL_TYPE"] != DBNull.Value)
+                        {
+                            objCustomerVehicleModel.FuelType = Convert.ToInt32(row["FUEL_TYPE"]);
+                            if (Convert.ToInt32(row["FUEL_TYPE"]) > 0)
+                                objCustomerVehicleModel.FuelTypeName = Constants.FuelTypeName[Convert.ToInt32(row["FUEL_TYPE"]) - 1];
+                        }
+
+                        if (row["LICENCE_PLATE_COLOR"] != DBNull.Value)
+                        {
+                            objCustomerVehicleModel.LicencePlateColor = Convert.ToInt32(row["LICENCE_PLATE_COLOR"]);
+                            if (Convert.ToInt32(row["LICENCE_PLATE_COLOR"]) > 0)
+                                objCustomerVehicleModel.LicencePlateColorName = Constants.LicencePlateColorName[Convert.ToInt32(row["LICENCE_PLATE_COLOR"]) - 1];
+                        }
+
+                        if (row["REGISTRATION_YEAR"] != DBNull.Value)
+                            objCustomerVehicleModel.RegistrationYear = Convert.ToInt32(row["REGISTRATION_YEAR"]);
+
+                        if (row["VEHICLE_OWNERSHIP_NO"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleOwnershipDocumentNumber = Convert.ToString(row["VEHICLE_OWNERSHIP_NO"]);
+
+                        if (row["LOCATION_CODE"] != DBNull.Value)
+                            objCustomerVehicleModel.LocationCode = Convert.ToString(row["LOCATION_CODE"]);
+
+                        if (row["REG_QUEUE_NO"] != DBNull.Value)
+                            objCustomerVehicleModel.RegistrationQueueNumber = Convert.ToString(row["REG_QUEUE_NO"]);
+
+                        if (row["VEHICLEIMAGE_FRONT"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleImageFront = Convert.ToString(row["VEHICLEIMAGE_FRONT"]);
+
+                        if (row["VEHICLEIMAGE_REAR"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleImageRear = Convert.ToString(row["VEHICLEIMAGE_REAR"]);
+
+                        if (row["VEHICLEIMAGE_RIGHT"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleImageRight = Convert.ToString(row["VEHICLEIMAGE_RIGHT"]);
+
+                        if (row["VEHICLEIMAGE_LEFT"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleImageLeft = Convert.ToString(row["VEHICLEIMAGE_LEFT"]);
+
+                        if (row["VEHICLE_RC_NO_PATH"] != DBNull.Value)
+                            objCustomerVehicleModel.VehicleRCNumberImagePath = Convert.ToString(row["VEHICLE_RC_NO_PATH"]);
+
+                        if (row["EXCEPTION_FLAG"] != DBNull.Value)
+                        {
+                            objCustomerVehicleModel.ExceptionFlag = Convert.ToInt16(row["EXCEPTION_FLAG"]);
+                            if (Convert.ToInt32(row["EXCEPTION_FLAG"]) > 0)
+                                objCustomerVehicleModel.ExceptionFlagName = Constants.ExceptionFlagName[Convert.ToInt32(row["EXCEPTION_FLAG"]) - 1];
+                        }
+
+                        if (row["STATUS"] != DBNull.Value)
+                            objCustomerVehicleModel.Status = Convert.ToInt16(row["STATUS"]);
+
+                        if (row["VALID_UNTIL"] != DBNull.Value)
+                            objCustomerVehicleModel.ValidUntil = Convert.ToDateTime(row["VALID_UNTIL"]);
+
+                        if (row["TID_FRONT"] != DBNull.Value)
+                            objCustomerVehicleModel.TidFront = Convert.ToString(row["TID_FRONT"]);
+
+                        if (row["TID_REAR"] != DBNull.Value)
+                            objCustomerVehicleModel.TidRear = Convert.ToString(row["TID_REAR"]);
+
+                        if (row["ACCOUNT_BALANCE"] != DBNull.Value)
+                            objCustomerVehicleModel.AccountBalance = Convert.ToDecimal(row["ACCOUNT_BALANCE"]);
+
+                        if (row["REGISTRATION_THROUGH"] != DBNull.Value)
+                            objCustomerVehicleModel.RegistartionThrough = Convert.ToInt16(row["REGISTRATION_THROUGH"]);
+
+                        if (row["IS_DOC_VERIFIED"] != DBNull.Value)
+                            objCustomerVehicleModel.IsDocVerified = Convert.ToInt16(row["IS_DOC_VERIFIED"]);
+
+                        if (row["QUEUE_STATUS"] != DBNull.Value)
+                        {
+                            objCustomerVehicleModel.QueueStatus = Convert.ToInt16(row["QUEUE_STATUS"]);
+                            if (Convert.ToInt32(row["QUEUE_STATUS"]) > 0)
+                                objCustomerVehicleModel.CustomerQueueStatusName = Constants.CustomerQueueStatusName[Convert.ToInt32(row["QUEUE_STATUS"]) - 1];
+
+                        }
+                        if (row["CUSTOMER_NAME"] != DBNull.Value)
+                            objCustomerVehicleModel.FirstName = Convert.ToString(row["CUSTOMER_NAME"]);
+
+                        if (row["RESIDENT_ID"] != DBNull.Value)
+                            objCustomerVehicleModel.ResidentId = Convert.ToString(row["RESIDENT_ID"]);
+
+                        if (row["EMAIL_ID"] != DBNull.Value)
+                            objCustomerVehicleModel.EmailId = Convert.ToString(row["EMAIL_ID"]);
+
+                        if (row["MOB_NUMBER"] != DBNull.Value)
+                            objCustomerVehicleModel.MobileNo = Convert.ToString(row["MOB_NUMBER"]);
+
+                        if (row["ADDRESS"] != DBNull.Value)
+                            objCustomerVehicleModel.Address = Convert.ToString(row["ADDRESS"]);
+                        #endregion
+                    }
+                    #region ViewBag for DDL Values
+                    ViewBag.VehicleImageFront = objCustomerVehicleModel.VehicleImageFront;
+                    ViewBag.VehicleImageRear = objCustomerVehicleModel.VehicleImageRear;
+                    ViewBag.VehicleImageLeft = objCustomerVehicleModel.VehicleImageLeft;
+                    ViewBag.VehicleImageRight = objCustomerVehicleModel.VehicleImageRight;
+                    ViewBag.VehicleRCNumberImagePath = objCustomerVehicleModel.VehicleRCNumberImagePath;
+                    #endregion
+                }
+                #endregion
+
+                #region Vehicle Class Dropdown
+                List<SelectListItem> vehicleclassList = new List<SelectListItem>();
+                List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
+                vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
+
+                vehicleclassList.Add(new SelectListItem() { Text = "--Select Vehicle Class--", Value = "0" });
+                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
+                {
+                    vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
+                }
+                ViewBag.VehicleClassList = vehicleclassList;
+
+                #endregion
+
+                #region Queue Status
+                List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
+                Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
+
+                for (int i = 0; i < arStatus.Length; i++)
+                {
+                    customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
+                }
+                ViewBag.QueueStatusList = customerQueueStatus;
+
+                #endregion
+
+                #region Exception Flag
+                List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
+                Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
+
+                for (int i = 0; i < ExceptionFlagListart.Length; i++)
+                {
+                    ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
+                }
+                ViewBag.ExceptionFlagList = ExceptionFlagList;
+
+                #endregion
+
+                #region Fuel Type
+                List<SelectListItem> fuelTypeList = new List<SelectListItem>();
+                Array arcfuelType = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelType));
+
+                for (int i = 0; i < arcfuelType.Length; i++)
+                {
+                    fuelTypeList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelTypeName[i], Value = System.Convert.ToString((int)arcfuelType.GetValue(i)) });
+                }
+                ViewBag.FuelTypeList = fuelTypeList;
+
+                #endregion
+
+                #region Licence Plate Color
+                List<SelectListItem> licencePlateColorList = new List<SelectListItem>();
+                Array arlicencePlateColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColor));
+
+                for (int i = 0; i < arlicencePlateColor.Length; i++)
+                {
+                    licencePlateColorList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColorName[i], Value = System.Convert.ToString((int)arlicencePlateColor.GetValue(i)) });
+                }
+                ViewBag.LicencePlateColorList = licencePlateColorList;
+
+                #endregion
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return View("_CustomerVehiclePopUp", objCustomerVehicleModel);
+        }
+
+        [HttpPost]
+        public JsonResult CustomerVehicleAdd(CustomerVehicleModel objCustomerVehicleModel)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+
+                }
+                else {
+                    #region Process Custmer Vehicle Data
+                    List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
+                    {
+                        objCustomerVehicleModel.MobileNo = Constants.MobileNoPrefix(objCustomerVehicleModel.MobileNo.Trim());
+                    }
+
+                    objCustomerVehicleModel.AccountId = ValidateCustomerAccount(objCustomerVehicleModel);
+
+                    CustomerVehicleCBE objCustomerVehicleCBE = new CustomerVehicleCBE();
+                    if (objCustomerVehicleModel.AccountId > 0)
+                    {
+                        objResponseMessage = ValidateVehicleData(objCustomerVehicleModel, objResponseMessage);
+                        if (objResponseMessage.Count == 0)
+                        {
+                            #region Insert Into Customer Vehicle Data
+                            objCustomerVehicleCBE = UpdateVehicleCBE(objCustomerVehicleCBE, objCustomerVehicleModel);
+                            objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
+                            objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
+
+                            int customerVehicleEntryId = CustomerVehicleBLL.Insert(objCustomerVehicleCBE);
+                            if (customerVehicleEntryId > 0)
+                            {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "success";
+                                objResponseMessage.Add(objModelState);
+                            }
+                            else
+                            {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "Something went wrong";
+                                objResponseMessage.Add(objModelState);
+                            }
+
+                            #endregion
+                        }
+                    }
+                    else {
+                        objResponseMessage = ValidateCustomerAccountData(objCustomerVehicleModel, objResponseMessage);
+                        objResponseMessage = ValidateVehicleData(objCustomerVehicleModel, objResponseMessage);
+                        if (objResponseMessage.Count == 0)
+                        {
+                            #region Data set for Customer Account
+                            CustomerAccountCBE objCustomerAccountCBE = new CustomerAccountCBE();
+                            objCustomerAccountCBE.ResidentId = objCustomerVehicleModel.ResidentId.Trim();
+                            objCustomerAccountCBE.EmailId = objCustomerVehicleModel.EmailId.Trim();
+                            objCustomerAccountCBE.MobileNo = objCustomerVehicleModel.MobileNo.Trim();
+                            objCustomerAccountCBE.FirstName = objCustomerVehicleModel.FirstName.Trim();
+                            objCustomerAccountCBE.Address = objCustomerVehicleModel.Address.Trim();
+                            objCustomerAccountCBE.TmsId = tmsId;
+                            objCustomerAccountCBE.TransferStatus = 1;
+                            objCustomerAccountCBE.AccountId = 0;
+                            objCustomerAccountCBE.AccountStatus = 1;
+                            objCustomerAccountCBE.CreationDate = DateTime.Now;
+                            objCustomerAccountCBE.IsDocVerified = 1;
+                            objCustomerAccountCBE.RegistartionThrough = 1;
+                            #endregion
+
+                            #region Insert Customer Data
+                            objCustomerVehicleModel.AccountId = CustomerAccountBLL.Insert(objCustomerAccountCBE);
+                            #endregion
+
+                            if (objCustomerVehicleModel.AccountId > 0)
+                            {
+                                #region Insert Into Customer Vehicle Data
+                                objCustomerVehicleCBE = UpdateVehicleCBE(objCustomerVehicleCBE, objCustomerVehicleModel);
+                                objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
+                                objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
+
+                                int customerVehicleEntryId = CustomerVehicleBLL.Insert(objCustomerVehicleCBE);
+                                if (customerVehicleEntryId > 0)
+                                {
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = "success";
+                                    objResponseMessage.Add(objModelState);
+                                }
+                                else
+                                {
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = "Something went wrong";
+                                    objResponseMessage.Add(objModelState);
+                                }
+
+                                #endregion
+                            }
+                            else {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "Something went wrong";
+                                objResponseMessage.Add(objModelState);
+                            }
+
+
+                        }
+                    }
+                    #endregion
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to Insert Customer Vehicle Add Registration Controller" + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult CustomerVehicleUpdate(CustomerVehicleModel objCustomerVehicleModel)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else {
+                    CustomerVehicleCBE objCustomerVehicleCBE = new CustomerVehicleCBE();
+
+                    #region Update Customer Mobile No
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
+                    {
+                        objCustomerVehicleModel.MobileNo = Constants.MobileNoPrefix(objCustomerVehicleModel.MobileNo.Trim());
+                    }
+                    #endregion
+
+                    #region Check Customer Account exists or not
+                    objCustomerVehicleModel.AccountId = ValidateCustomerAccount(objCustomerVehicleModel);
+
+                    #endregion
+
+                    if (objCustomerVehicleModel.AccountId > 0)
+                    {
+                        objResponseMessage = ValidateVehicleData(objCustomerVehicleModel, objResponseMessage);
+
+                        if (objResponseMessage.Count == 0)
+                        {
+                            #region Update Customer Vehicle Data
+                            objCustomerVehicleCBE = UpdateVehicleCBE(objCustomerVehicleCBE, objCustomerVehicleModel);
+                            objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
+                            objCustomerVehicleCBE.EntryId = objCustomerVehicleModel.EntryId;
+                            objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
+
+                            CustomerVehicleBLL.Update(objCustomerVehicleCBE);
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                            #endregion
+                        }
+                        else
+                        {
+                            #region Data set for Customer Account
+                            CustomerAccountCBE objCustomerAccountCBE = new CustomerAccountCBE();
+                            objCustomerAccountCBE.ResidentId = objCustomerVehicleModel.ResidentId.Trim();
+                            objCustomerAccountCBE.EmailId = objCustomerVehicleModel.EmailId.Trim();
+                            objCustomerAccountCBE.MobileNo = objCustomerVehicleModel.MobileNo.Trim();
+                            objCustomerAccountCBE.FirstName = objCustomerVehicleModel.FirstName.Trim();
+                            objCustomerAccountCBE.Address = objCustomerVehicleModel.Address.Trim();
+                            objCustomerAccountCBE.TmsId = tmsId;
+                            objCustomerAccountCBE.TransferStatus = 1;
+                            objCustomerAccountCBE.AccountId = 0;
+                            objCustomerAccountCBE.AccountStatus = 1;
+                            objCustomerAccountCBE.CreationDate = DateTime.Now;
+                            objCustomerAccountCBE.IsDocVerified = 1;
+                            objCustomerAccountCBE.RegistartionThrough = 1;
+                            #endregion
+
+                            #region Insert Customer Data
+                            objCustomerVehicleModel.AccountId = CustomerAccountBLL.Insert(objCustomerAccountCBE);
+                            #endregion
+
+                            if (objCustomerVehicleModel.AccountId > 0)
+                            {
+                                #region Update Customer Vehicle Data
+
+                                objCustomerVehicleCBE = UpdateVehicleCBE(objCustomerVehicleCBE, objCustomerVehicleModel);
+                                objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
+                                objCustomerVehicleCBE.EntryId = objCustomerVehicleModel.EntryId;
+                                objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
+                                CustomerVehicleBLL.Update(objCustomerVehicleCBE);
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "success";
+                                objResponseMessage.Add(objModelState);
+
+                                #endregion
+                            }
+                            else
+                            {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "Something went wrong";
+                                objResponseMessage.Add(objModelState);
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to Insert Customer Registration List in Registration Controller" + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+
+        private static Int32 ValidateCustomerAccount(CustomerVehicleModel objCustomerVehicleModel)
+        {
+            Int32 CustomerAccountId = 0;
+            CustomerAccountCBE objCustomerAccountCBE = new CustomerAccountCBE();
+            objCustomerAccountCBE.ResidentId = objCustomerVehicleModel.ResidentId.Trim();
+            objCustomerAccountCBE.MobileNo = objCustomerVehicleModel.MobileNo.Trim();
+            objCustomerAccountCBE.EmailId = objCustomerVehicleModel.EmailId.Trim();
+            List<CustomerAccountCBE> CustomerAccountByResident = CustomerAccountBLL.ValidateCustomerAccount(objCustomerAccountCBE);
+            if (CustomerAccountByResident.Count > 0)
+            {
+                CustomerAccountId = CustomerAccountByResident[0].AccountId;
+            }
+            return CustomerAccountId;
+
+
+        }
+
+        private static List<ModelStateList> ValidateCustomerAccountData(CustomerVehicleModel objCustomerVehicleModel, List<ModelStateList> objResponseMessage)
+        {
+            try
+            {
+                #region Validate Customer Account
+                List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+                customerDataList = CustomerAccountBLL.GetAllAsList();
+                List<CustomerAccountCBE> Mobilefiltered = customerDataList.FindAll(x => x.MobileNo == objCustomerVehicleModel.MobileNo.ToString() && x.AccountId != objCustomerVehicleModel.AccountId);
+                List<CustomerAccountCBE> Emailfiltered = customerDataList.FindAll(x => x.EmailId == objCustomerVehicleModel.EmailId.ToString().Trim() && x.AccountId != objCustomerVehicleModel.AccountId);
+                List<CustomerAccountCBE> Registrationfiltered = customerDataList.FindAll(x => x.ResidentId == objCustomerVehicleModel.ResidentId.Trim() && x.AccountId != objCustomerVehicleModel.AccountId);
+                #region Validate Mobile Resident Id and Email Id
+                if (Registrationfiltered.Count > 0)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Identity Card already exists.";
+                    objResponseMessage.Add(objModelState);
+                }
+                if (Mobilefiltered.Count > 0)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Mobile phone number already exists.";
+                    objResponseMessage.Add(objModelState);
+                }
+                if (Emailfiltered.Count > 0)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Email address already exists.";
+                    objResponseMessage.Add(objModelState);
+                }
+                #endregion
+                #endregion
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return objResponseMessage;
+
+        }
+
+        private static List<ModelStateList> ValidateVehicleData(CustomerVehicleModel objCustomerVehicleModel, List<ModelStateList> objResponseMessage)
+        {
+            try
+            {
+                #region Vehicle Validation
+                List<CustomerVehicleCBE> customerVehicleDataList = new List<CustomerVehicleCBE>();
+                customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
+                List<CustomerVehicleCBE> VehRegNofiltered = customerVehicleDataList.FindAll(x => x.VehRegNo.ToLower() == objCustomerVehicleModel.VehRegNo.ToString().ToLower() && x.EntryId != objCustomerVehicleModel.EntryId);
+                List<CustomerVehicleCBE> TagIdfiltered = customerVehicleDataList.FindAll(x => x.TagId == objCustomerVehicleModel.TagId.ToString() && x.EntryId != objCustomerVehicleModel.EntryId);
+                if (VehRegNofiltered.Count > 0)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Registration Number already exists.";
+                    objResponseMessage.Add(objModelState);
+
+                }
+                else if (TagIdfiltered.Count > 0)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "EPC already exists.";
+                    objResponseMessage.Add(objModelState);
+
+                }
+                #region Validate and proces Image
+                var DocumentTypes = new string[] { "image/gif", "image/jpg", "image/jpeg", "image/png" };
+                #region Front Image
+                if (objCustomerVehicleModel.ImageFrontChnage)
+                {
+                    if (string.IsNullOrEmpty(objCustomerVehicleModel.VehicleImageFront))
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Front Image is required";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    else {
+                        try
+                        {
+                            string[] block = objCustomerVehicleModel.VehicleImageFront.Split(';');
+                            var contentType = block[0].Split(':')[1];
+                            var realData = block[1].Split(',')[1];
+                            if (!DocumentTypes.Contains(contentType))
+                            {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "Please choose valid front vehicle image either GIF, JPG or PNG.";
+                                objResponseMessage.Add(objModelState);
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    string CustomerFilepath = Constants.CustomerImagePath + @"VehicleImage\";
+                                    if (!Directory.Exists(CustomerFilepath))
+                                    {
+                                        Directory.CreateDirectory(CustomerFilepath);
+                                    }
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Front_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    objCustomerVehicleModel.VehicleImageFront = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
+                                }
+                                catch (Exception ex)
+                                {
+                                    HelperClass.LogMessage("Failed to Convert Front Image" + ex);
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = "Invalid Front Image";
+                                    objResponseMessage.Add(objModelState);
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            HelperClass.LogMessage("Failed to Convert Front Image" + ex);
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Invalid Front Image";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+                #endregion
+                #region Rear Image
+                if (objCustomerVehicleModel.ImageRearChnage)
+                {
+                    if (string.IsNullOrEmpty(objCustomerVehicleModel.VehicleImageRear))
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Rear Image is required";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    else {
+                        try
+                        {
+                            string[] block = objCustomerVehicleModel.VehicleImageRear.Split(';');
+                            var contentType = block[0].Split(':')[1];
+                            var realData = block[1].Split(',')[1];
+                            if (!DocumentTypes.Contains(contentType))
+                            {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "Please choose valid rear vehicle image either GIF, JPG or PNG.";
+                                objResponseMessage.Add(objModelState);
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    string CustomerFilepath = Constants.CustomerImagePath + @"VehicleImage\";
+                                    if (!Directory.Exists(CustomerFilepath))
+                                    {
+                                        Directory.CreateDirectory(CustomerFilepath);
+                                    }
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Rear_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    objCustomerVehicleModel.VehicleImageRear = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
+                                }
+                                catch (Exception ex)
+                                {
+                                    HelperClass.LogMessage("Failed to Convert Rear Image" + ex);
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = "Invalid Rear Image";
+                                    objResponseMessage.Add(objModelState);
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            HelperClass.LogMessage("Failed to Convert Rear Image" + ex);
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Invalid Rear Image";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+                #endregion
+                #region Left Image
+                if (objCustomerVehicleModel.ImageLeftChnage)
+                {
+                    if (string.IsNullOrEmpty(objCustomerVehicleModel.VehicleImageLeft))
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Left Image is required";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    else {
+                        try
+                        {
+                            string[] block = objCustomerVehicleModel.VehicleImageLeft.Split(';');
+                            var contentType = block[0].Split(':')[1];
+                            var realData = block[1].Split(',')[1];
+                            if (!DocumentTypes.Contains(contentType))
+                            {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "Please choose valid left vehicle image either GIF, JPG or PNG.";
+                                objResponseMessage.Add(objModelState);
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    string CustomerFilepath = Constants.CustomerImagePath + @"VehicleImage\";
+                                    if (!Directory.Exists(CustomerFilepath))
+                                    {
+                                        Directory.CreateDirectory(CustomerFilepath);
+                                    }
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Left_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    objCustomerVehicleModel.VehicleImageLeft = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
+                                }
+                                catch (Exception ex)
+                                {
+                                    HelperClass.LogMessage("Failed to Convert Left Image" + ex);
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = "Invalid Left Image.";
+                                    objResponseMessage.Add(objModelState);
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            HelperClass.LogMessage("Failed to Convert Left Image" + ex);
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Invalid Left Image.";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+                #endregion
+                #region Right Image
+                if (objCustomerVehicleModel.ImageRightChnage)
+                {
+                    if (string.IsNullOrEmpty(objCustomerVehicleModel.VehicleImageRight))
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Right Image is required";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    else {
+                        try
+                        {
+                            string[] block = objCustomerVehicleModel.VehicleImageRight.Split(';');
+                            var contentType = block[0].Split(':')[1];
+                            var realData = block[1].Split(',')[1];
+                            if (!DocumentTypes.Contains(contentType))
+                            {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "Please choose valid right vehicle image either GIF, JPG or PNG.";
+                                objResponseMessage.Add(objModelState);
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    string CustomerFilepath = Constants.CustomerImagePath + @"VehicleImage\";
+                                    if (!Directory.Exists(CustomerFilepath))
+                                    {
+                                        Directory.CreateDirectory(CustomerFilepath);
+                                    }
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Right_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    objCustomerVehicleModel.VehicleImageRight = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
+                                }
+                                catch (Exception ex)
+                                {
+                                    HelperClass.LogMessage("Failed to Convert Right Image" + ex);
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = "Invalid Right Image.";
+                                    objResponseMessage.Add(objModelState);
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            HelperClass.LogMessage("Failed to Convert Right Image" + ex);
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Invalid Right Image.";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+                #endregion
+                #region RC Image
+                if (objCustomerVehicleModel.RCNumberImageChnage)
+                {
+                    if (string.IsNullOrEmpty(objCustomerVehicleModel.VehicleRCNumberImagePath))
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Registration Certificate Image Image is required";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    else {
+                        try
+                        {
+                            string[] block = objCustomerVehicleModel.VehicleRCNumberImagePath.Split(';');
+                            var contentType = block[0].Split(':')[1];
+                            var realData = block[1].Split(',')[1];
+                            if (!DocumentTypes.Contains(contentType))
+                            {
+                                ModelStateList objModelState = new ModelStateList();
+                                objModelState.ErrorMessage = "Please choose valid registration certificate image vehicle image either GIF, JPG or PNG.";
+                                objResponseMessage.Add(objModelState);
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    string CustomerFilepath = Constants.CustomerImagePath + @"VehicleImage\";
+                                    if (!Directory.Exists(CustomerFilepath))
+                                    {
+                                        Directory.CreateDirectory(CustomerFilepath);
+                                    }
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_RC_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    objCustomerVehicleModel.VehicleRCNumberImagePath = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
+                                }
+                                catch (Exception ex)
+                                {
+                                    HelperClass.LogMessage("Failed to Convert Registration Certificate Image Image" + ex);
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = "Invalid Registration Certificate Image Image.";
+                                    objResponseMessage.Add(objModelState);
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            HelperClass.LogMessage("Failed to Convert Registration Certificate Image Image" + ex);
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Invalid Registration Certificate Image Image.";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+                #endregion
+                #endregion
+                #endregion
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return objResponseMessage;
+        }
+
+        private static CustomerVehicleCBE UpdateVehicleCBE(CustomerVehicleCBE objCustomerVehicleCBE, CustomerVehicleModel objCustomerVehicleModel)
+        {
+
+            objCustomerVehicleCBE.CreationDate = DateTime.Now;
+            objCustomerVehicleCBE.ModificationDate = DateTime.Now;
+
+            objCustomerVehicleCBE.TMSId = 1;
+            objCustomerVehicleCBE.RegistartionThrough = 1;
+            objCustomerVehicleCBE.TransferStatus = 1;
+            objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
+            objCustomerVehicleCBE.VehicleClassId = objCustomerVehicleModel.VehicleClassId;
+            objCustomerVehicleCBE.ExceptionFlag = objCustomerVehicleModel.ExceptionFlag;
+            objCustomerVehicleCBE.AccountBalance = objCustomerVehicleModel.AccountBalance;
+            objCustomerVehicleCBE.FuelType = objCustomerVehicleModel.FuelType;
+            objCustomerVehicleCBE.LicencePlateColor = objCustomerVehicleModel.LicencePlateColor;
+            objCustomerVehicleCBE.ManufacturingYear = objCustomerVehicleModel.ManufacturingYear;
+            objCustomerVehicleCBE.QueueStatus = objCustomerVehicleModel.QueueStatus;
+            objCustomerVehicleCBE.RegistrationYear = objCustomerVehicleModel.RegistrationYear;
+            objCustomerVehicleCBE.ValidUntil = objCustomerVehicleModel.ValidUntil;
+            objCustomerVehicleCBE.EntryId = objCustomerVehicleModel.EntryId;
+
+            if (objCustomerVehicleModel.Brand != null)
+                objCustomerVehicleCBE.Brand = objCustomerVehicleModel.Brand;
+            if (objCustomerVehicleModel.CyclinderCapacity != null)
+                objCustomerVehicleCBE.CyclinderCapacity = objCustomerVehicleModel.CyclinderCapacity;
+            if (objCustomerVehicleModel.EngineNumber != null)
+                objCustomerVehicleCBE.EngineNumber = objCustomerVehicleModel.EngineNumber;
+            if (objCustomerVehicleModel.FrameNumber != null)
+                objCustomerVehicleCBE.FrameNumber = objCustomerVehicleModel.FrameNumber;
+            if (objCustomerVehicleModel.LocationCode != null)
+                objCustomerVehicleCBE.LocationCode = objCustomerVehicleModel.LocationCode;
+            if (objCustomerVehicleModel.Model != null)
+                objCustomerVehicleCBE.Model = objCustomerVehicleModel.Model;
+            if (objCustomerVehicleModel.OwnerAddress != null)
+                objCustomerVehicleCBE.OwnerAddress = objCustomerVehicleModel.OwnerAddress.Trim();
+            if (objCustomerVehicleModel.OwnerName != null)
+                objCustomerVehicleCBE.OwnerName = objCustomerVehicleModel.OwnerName.Trim();
+            if (objCustomerVehicleModel.RegistrationQueueNumber != null)
+                objCustomerVehicleCBE.RegistrationQueueNumber = objCustomerVehicleModel.RegistrationQueueNumber;
+            if (objCustomerVehicleModel.TagId != null)
+                objCustomerVehicleCBE.TagId = objCustomerVehicleModel.TagId.Trim();
+            if (objCustomerVehicleModel.TidFront != null)
+                objCustomerVehicleCBE.TidFront = objCustomerVehicleModel.TidFront.Trim();
+            if (objCustomerVehicleModel.TidRear != null)
+                objCustomerVehicleCBE.TidRear = objCustomerVehicleModel.TidRear.Trim();
+            if (objCustomerVehicleModel.VehicleCategory != null)
+                objCustomerVehicleCBE.VehicleCategory = objCustomerVehicleModel.VehicleCategory;
+            if (objCustomerVehicleModel.VehicleColor != null)
+                objCustomerVehicleCBE.VehicleColor = objCustomerVehicleModel.VehicleColor;
+            if (objCustomerVehicleModel.VehicleImageFront != null)
+                objCustomerVehicleCBE.VehicleImageFront = objCustomerVehicleModel.VehicleImageFront;
+            if (objCustomerVehicleModel.VehicleImageLeft != null)
+                objCustomerVehicleCBE.VehicleImageLeft = objCustomerVehicleModel.VehicleImageLeft;
+            if (objCustomerVehicleModel.VehicleImageRear != null)
+                objCustomerVehicleCBE.VehicleImageRear = objCustomerVehicleModel.VehicleImageRear;
+            if (objCustomerVehicleModel.VehicleImageRight != null)
+                objCustomerVehicleCBE.VehicleImageRight = objCustomerVehicleModel.VehicleImageRight;
+            if (objCustomerVehicleModel.VehicleRCNumberImagePath != null)
+                objCustomerVehicleCBE.VehicleRCNumberImagePath = objCustomerVehicleModel.VehicleRCNumberImagePath;
+            if (objCustomerVehicleModel.VehicleType != null)
+                objCustomerVehicleCBE.VehicleType = objCustomerVehicleModel.VehicleType;
+            if (objCustomerVehicleModel.VehRegNo != null)
+                objCustomerVehicleCBE.VehRegNo = objCustomerVehicleModel.VehRegNo.Trim();
+            if (objCustomerVehicleModel.VehicleRCNumber != null)
+                objCustomerVehicleCBE.VehicleRCNumber = objCustomerVehicleModel.VehicleRCNumber.Trim();
+            if (objCustomerVehicleModel.VehicleOwnershipDocumentNumber != null)
+                objCustomerVehicleCBE.VehicleOwnershipDocumentNumber = objCustomerVehicleModel.VehicleOwnershipDocumentNumber;
+            return objCustomerVehicleCBE;
+        }
+
+        [HttpPost]
+        public JsonResult GetTagId(CustomerVehicleCBE customerVehicle)
+        {
+            JsonResult result = new JsonResult();
+            result.Data = Constants.VRNToByte(customerVehicle.VehicleClassId, customerVehicle.VehRegNo);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
 
         #region Customer Address Dropdown Lists
 
