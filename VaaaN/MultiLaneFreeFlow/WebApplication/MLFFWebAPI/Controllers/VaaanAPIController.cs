@@ -292,8 +292,8 @@ namespace MLFFWebAPI.Controllers
                     nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
 
                     #region Convert 64 bit String into PNG Image
-                    //filepath = Constants.EventPath + @"Thumbnail\Plates\";
-                    filepath = rootpath + @"Thumbnail\Plates\";
+                    filepath = Constants.EventPath + @"Thumbnail\Plates\";
+                    //filepath = rootpath + @"Thumbnail\Plates\";
                     if (!Directory.Exists(filepath))
                     {
                         Directory.CreateDirectory(filepath);
@@ -306,8 +306,8 @@ namespace MLFFWebAPI.Controllers
 
                     imgfilepath = string.Empty;
                     FileName = string.Empty;
-                    //filepath = Constants.EventPath + @"Thumbnail\Vehicle\";
-                    filepath = rootpath + @"Thumbnail\Vehicle\";
+                    filepath = Constants.EventPath + @"Thumbnail\Vehicle\";
+                    //filepath = rootpath + @"Thumbnail\Vehicle\";
                     if (!Directory.Exists(filepath))
                     {
                         Directory.CreateDirectory(filepath);
