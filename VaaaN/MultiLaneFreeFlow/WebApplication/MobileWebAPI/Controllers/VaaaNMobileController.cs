@@ -686,7 +686,9 @@ namespace MobileWebAPI.Controllers
                     {
                         try
                         {
-                            dt = AccountHistoryBLL.AccountHistoryByVehicle(objCustomerVehicleInformation.ResidentIdentityNumber, objCustomerVehicleInformation.VehicleRegistrationCertificateNumber, objCustomerVehicleInformation.VehicleRegistrationNumber);
+
+                            dt = AccountHistoryBLL.AccountHistoryByVehicleWithPaging(objCustomerVehicleInformation.ResidentIdentityNumber, objCustomerVehicleInformation.VehicleRegistrationCertificateNumber, objCustomerVehicleInformation.VehicleRegistrationNumber, objCustomerVehicleInformation.PageIndex, objCustomerVehicleInformation.PageSize);
+                            // dt = AccountHistoryBLL.AccountHistoryByVehicle(objCustomerVehicleInformation.ResidentIdentityNumber, objCustomerVehicleInformation.VehicleRegistrationCertificateNumber, objCustomerVehicleInformation.VehicleRegistrationNumber);
                             if (dt.Rows.Count > 0)
                             {
                                 try
@@ -723,6 +725,9 @@ namespace MobileWebAPI.Controllers
 
                                         if (dt.Rows[i]["LANE_NAME"] != DBNull.Value)
                                             objVehicleTransactionHistorySummary.LaneNumber = dt.Rows[i]["LANE_NAME"].ToString();
+
+                                        if (dt.Rows[i]["RecordCount"] != DBNull.Value)
+                                            objVehicleTransactionHistorySummary.RecordCount = Convert.ToInt32(dt.Rows[i]["RecordCount"].ToString());
 
                                         objVehicleTransactionHistorySummaryList.Add(objVehicleTransactionHistorySummary);
                                     }
