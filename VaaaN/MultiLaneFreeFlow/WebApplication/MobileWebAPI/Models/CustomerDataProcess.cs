@@ -125,7 +125,8 @@ namespace MobileWebAPI.Models
         public String VehicleRegistrationNumber { get; set; }
 
         public Int32 PageIndex { get; set; }
-        
+        public Int32 PageSize { get; set; }
+
     }
 
     public class VehicleTransactionHistorySummary
@@ -139,6 +140,7 @@ namespace MobileWebAPI.Models
         public string GantryName { get; set; }
         public string LaneNumber { get; set; }
         public Decimal TransactionAmount { get; set; }
+        public Int32 RecordCount { get; set; }
     }
 
     public class CustomerVehicleDetails
