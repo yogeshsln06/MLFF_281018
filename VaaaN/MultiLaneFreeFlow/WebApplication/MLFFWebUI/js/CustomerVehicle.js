@@ -246,7 +246,7 @@ function encodeImagetoBase64(element) {
         $(ancoreTag).text(reader.result);
     }
     reader.readAsDataURL(file);
-  
+
 }
 
 function NewCustomerVehicle() {
@@ -285,7 +285,6 @@ function NewCustomerVehicle() {
     });
 }
 
-
 function DetailsOpen(ctrl, id) {
     $('#loader').removeClass('fadeOut');
     $.ajax({
@@ -295,8 +294,8 @@ function DetailsOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
-            $("exampleModalLabel").text("View [Vehicle Registration Number]");
             $('#partialassociated').html(result);
+            $("#exampleModalLabel").text("View [" + $('#VehRegNo').val() + "]");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $('#loader').addClass('fadeOut');
@@ -336,8 +335,8 @@ function EditOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
-            $("exampleModalLabel").text("Update [Vehicle Registration Number]");
             $('#partialassociated').html(result);
+            $("#exampleModalLabel").text("Update [" + $('#VehRegNo').val() + "]");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
@@ -365,10 +364,7 @@ function EditOpen(ctrl, id) {
 }
 
 function SaveData(action) {
-    debugger;
-   
     if ($("#needs-validation").valid()) {
-
         var ValidUntil = $('#ValidUntil').val() || ''
         if (ValidUntil != '') {
             ValidUntil = DateFormat(ValidUntil);

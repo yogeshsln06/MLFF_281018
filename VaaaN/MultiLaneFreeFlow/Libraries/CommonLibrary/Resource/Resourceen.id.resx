@@ -315,4 +315,25 @@
   <data name="SetUp" xml:space="preserve">
     <value>SetUp</value>
   </data>
+  <data name="CustomerTransaction" xml:space="preserve">
+    <value>Customer Transaction</value>
+  </data>
+  <data name="Charged" xml:space="preserve">
+    <value>Charged</value>
+  </data>
+  <data name="Reviewed" xml:space="preserve">
+    <value>Reviewed</value>
+  </data>
+  <data name="TopUP" xml:space="preserve">
+    <value>Top-Up</value>
+  </data>
+  <data name="Unidentified" xml:space="preserve">
+    <value>Unidentified</value>
+  </data>
+  <data name="Unreviewed" xml:space="preserve">
+    <value>Unreviewed</value>
+  </data>
+  <data name="Violation" xml:space="preserve">
+    <value>Violation</value>
+  </data>
 </root>

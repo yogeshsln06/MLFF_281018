@@ -212,6 +212,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
             return dt;
         }
+        public static DataTable AccountHistoryByVehicleWithPaging(string ResidentIdentityNumber, string VehicleRegistrationCertificateNumber, string VehicleRegistrationNumber, int PageIndex, int PageSize)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRANS_HISTORY_DETAILS_PAGING";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEH_REG_NO", DbType.String, VehicleRegistrationNumber, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RESIDENT_ID", DbType.String, ResidentIdentityNumber, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_RC_NO", DbType.String, VehicleRegistrationCertificateNumber, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PAGE_INDEX", DbType.Int32, PageIndex, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PAGE_SIZE", DbType.Int32, PageSize, ParameterDirection.Input));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dt;
+        }
         #endregion
 
         #region Helper Methods

@@ -20,6 +20,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         public static string DATETIME_FORMAT_WITHOUT_SECONDS = "dd/MM/yyyy hh:mm tt";
         public static string DATETIME_FORMAT_WITHOUT_SECONDSForSMS = "dd-MMM-yyyy HH:mm:ss";
         public static string dateTimeFormat24H = "yyyy-MM-dd HH:mm:ss.fff";
+        public static string dateTimeFormat24HWithoutMS = "yyyy-MM-dd HH:mm:ss";
         public static string dateTimeFormat24HForFileName = "yyyy-MM-dd-HH-mm-ss-fff";
         public static string dateTimeFormat24HsqlServer = "yyyy-MM-dd HH:mm:ss.fff";
         public static string dateTimeFormat24HOracleQuery = "dd/MM/yyyy HH:mm:ss";
@@ -182,6 +183,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             ControlRoom2 = 2,
             ControlRoom3 = 3,
         }
+        public enum VRNRegistred
+        {
+            Registered = 1,
+            NotRegistered,
+        }
+
+        public static string[] VRNRegistredName = new string[]
+        {
+            "Registered" ,
+            "Not Registered",
+        };
+
+        public enum TranscationVoilation
+        {
+            Violation = 1,
+            NotViolation,
+        }
+
+        public static string[] TranscationVoilationName = new string[]
+        {
+            "Violation" ,
+            "Not Violation",
+        };
         public enum TransactionType
         {
             Sale = 1,
@@ -1547,14 +1571,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
                     double Dtimestamp = Convert.ToDouble(timestamp);
                     dt = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(Dtimestamp / 1000d)).ToLocalTime();
 
-                    cTime = dt.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
+                    cTime = dt.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24HWithoutMS);
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                dt = DateTime.Now;
-                cTime = dt.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
+                throw ex;
             }
             return cTime;
         }
@@ -1563,12 +1586,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         {
             try
             {
-                return Convert.ToDateTime(timestamp).ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
+                return Convert.ToDateTime(timestamp).ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24HWithoutMS);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return DateTime.Now.ToString(Libraries.CommonLibrary.Constants.dateTimeFormat24H);
+                throw ex;
             }
         }
 

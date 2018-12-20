@@ -40,6 +40,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_observation_uuid", DbType.String, crossTalkPacket.ObservationUUID, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_reads", DbType.String, crossTalkPacket.Reads, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_creation_date", DbType.DateTime, crossTalkPacket.CreationDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_class_id", DbType.Int32, crossTalkPacket.VehicleClassId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_plate_number", DbType.String, crossTalkPacket.PlateNumber, ParameterDirection.Input));
 
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);

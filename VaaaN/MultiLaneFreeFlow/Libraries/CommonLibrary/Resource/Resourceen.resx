@@ -300,4 +300,34 @@
   <data name="SetUp" xml:space="preserve">
     <value>SetUp</value>
   </data>
+  <data name="CustomerTransaction" xml:space="preserve">
+    <value>Customer Transaction</value>
+  </data>
+  <data name="Reviewed" xml:space="preserve">
+    <value>Reviewed</value>
+  </data>
+  <data name="TopUP" xml:space="preserve">
+    <value>Top-Up</value>
+  </data>
+  <data name="Unidentified" xml:space="preserve">
+    <value>Unidentified</value>
+  </data>
+  <data name="Unreviewed" xml:space="preserve">
+    <value>Unreviewed</value>
+  </data>
+  <data name="Users1" xml:space="preserve">
+    <value>Pengguna</value>
+  </data>
+  <data name="VehicleClass1" xml:space="preserve">
+    <value>Kelas Kendaraan</value>
+  </data>
+  <data name="VehicleRegNo1" xml:space="preserve">
+    <value>Pendaftaran Kendaraan No</value>
+  </data>
+  <data name="Violation" xml:space="preserve">
+    <value>Violation</value>
+  </data>
+  <data name="Charged" xml:space="preserve">
+    <value>Charged</value>
+  </data>
 </root>

@@ -1,4 +1,4 @@
-/* Formatted on 19/12/2018 00:20:26 (QP5 v5.215.12089.38647) */
+/* Formatted on 20/12/2018 13:22:52 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -379,7 +379,9 @@ AS
                                P_LAST_READ          IN     NVARCHAR2,
                                P_OBSERVATION_UUID   IN     NVARCHAR2,
                                P_READS              IN     NVARCHAR2,
-                               P_CREATION_DATE      IN     DATE);
+                               P_CREATION_DATE      IN     DATE,
+                               P_VEHICLE_CLASS_ID   IN     NUMBER,
+                               P_PLATE_NUMBER       IN     NVARCHAR2);
 
    PROCEDURE CT_PACKET_UPDATE (P_TMS_ID              IN NUMBER,
                                P_PLAZA_ID            IN NUMBER,
@@ -589,6 +591,26 @@ AS
                                 CUR_OUT               OUT T_CURSOR);
 
    PROCEDURE TRAN_GETFILTERED (P_FILTER IN NVARCHAR2, CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE TRAN_UNREVIEWED_FILTERED (P_FILTER   IN     NVARCHAR2,
+                                       CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE TRAN_UNREVIEWED_BY_ID (P_TRANSACTION_ID   IN     NUMBER,
+                                    CUR_OUT               OUT T_CURSOR);
+
+   PROCEDURE TRAN_REVIEWED_FILTERED (P_FILTER   IN     NVARCHAR2,
+                                     CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE TRAN_CHARGED_FILTERED (P_FILTER   IN     NVARCHAR2,
+                                    CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE TRAN_VIOLATION_FILTERED (P_FILTER   IN     NVARCHAR2,
+                                      CUR_OUT       OUT T_CURSOR);
+
+
+
+   PROCEDURE TRAN_UNIDENTIFIED_FILTERED (P_FILTER   IN     NVARCHAR2,
+                                         CUR_OUT       OUT T_CURSOR);
 
    /*PLAZA*/
    PROCEDURE PLAZA_INSERT (P_TMS_ID          IN NUMBER,
@@ -1150,5 +1172,13 @@ AS
                                           P_RESIDENT_ID     IN     NVARCHAR2,
                                           P_VEHICLE_RC_NO   IN     NVARCHAR2,
                                           CUR_OUT              OUT T_CURSOR);
+
+   PROCEDURE TRANS_HISTORY_DETAILS_PAGING (
+      P_VEH_REG_NO      IN     NVARCHAR2,
+      P_RESIDENT_ID     IN     NVARCHAR2,
+      P_VEHICLE_RC_NO   IN     NVARCHAR2,
+      P_PAGE_INDEX      IN     NUMBER,
+      P_PAGE_SIZE       IN     NUMBER,
+      CUR_OUT              OUT T_CURSOR);
 END MLFF_PACKAGE;
 /

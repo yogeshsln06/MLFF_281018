@@ -263,6 +263,36 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetDataTableFilteredRecords(filter);
         }
 
+        public static DataTable GetUnReviewedDataTableById(int TransactionId)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetUnReviewedDataTableById(TransactionId);
+        }
+
+        public static DataTable GetReviewedDataTableFilteredRecords(string filter)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetReviewedDataTableFilteredRecords(filter);
+        }
+
+        public static DataTable GetUnReviewedDataTableFilteredRecords(string filter)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetUnReviewedDataTableFilteredRecords(filter);
+        }
+
+        public static DataTable GetChargedDataTableFilteredRecords(string filter)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetChargedDataTableFilteredRecords(filter);
+        }
+
+        public static DataTable GetViolationDataTableFilteredRecords(string filter)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetViolationDataTableFilteredRecords(filter);
+        }
+
+        public static DataTable GetUnIdentifiedDataTableFilteredRecords(string filter)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetUnIdentifiedDataTableFilteredRecords(filter);
+        }
+
         public static CBE.TransactionCollection FilteredTransactions(string filter)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.FilteredTransactions(filter);

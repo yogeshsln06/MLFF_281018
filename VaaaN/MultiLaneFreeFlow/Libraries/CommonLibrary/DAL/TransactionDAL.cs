@@ -1063,7 +1063,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return trans;
         }
 
-
         public static DataTable GetDataTableFilteredRecords(string filter)
         {
             DataTable dt = new DataTable();
@@ -1089,6 +1088,151 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return dt;
         }
 
+        public static DataTable GetUnReviewedDataTableById(int TransactionId)
+        {
+            DataTable dt = new DataTable();
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UNREVIEWED_BY_ID";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_ID", DbType.Int32, TransactionId, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetUnReviewedDataTableFilteredRecords(string filter)
+        {
+            DataTable dt = new DataTable();
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UNREVIEWED_FILTERED";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetReviewedDataTableFilteredRecords(string filter)
+        {
+            DataTable dt = new DataTable();
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_REVIEWED_FILTERED";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetChargedDataTableFilteredRecords(string filter)
+        {
+            DataTable dt = new DataTable();
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_CHARGED_FILTERED";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetViolationDataTableFilteredRecords(string filter)
+        {
+            DataTable dt = new DataTable();
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_VIOLATION_FILTERED";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetUnIdentifiedDataTableFilteredRecords(string filter)
+        {
+            DataTable dt = new DataTable();
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UNIDENTIFIED_FILTERED";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
+
+       
         public static CBE.TransactionCollection FilteredTransactions(string filter)
         {
             DataTable dt = new DataTable();

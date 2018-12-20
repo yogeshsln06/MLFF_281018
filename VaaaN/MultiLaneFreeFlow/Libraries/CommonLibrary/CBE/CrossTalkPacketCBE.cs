@@ -28,6 +28,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         int modifierId;
         DateTime creationDate;
         DateTime modificationDate;
+        Int32 vehicleClassId;
+        string vehicleClassName;
+        string plateNumber;
         #endregion
 
         #region Property
@@ -218,6 +221,42 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.modificationDate = value;
+            }
+        }
+
+        public int VehicleClassId
+        {
+            get
+            {
+                return this.vehicleClassId;
+            }
+            set
+            {
+                this.vehicleClassId = value;
+            }
+        }
+
+        public String VehicleClassName
+        {
+            get
+            {
+                return this.vehicleClassName;
+            }
+            set
+            {
+                this.vehicleClassName = value;
+            }
+        }
+
+        public String PlateNumber
+        {
+            get
+            {
+                return this.plateNumber;
+            }
+            set
+            {
+                this.plateNumber = value;
             }
         }
         #endregion

@@ -135,3 +135,7 @@ E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WebApplication\MLFFWebAPI\obj\Rele
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WebApplication\MLFFWebAPI\obj\Release\MLFFWebAPI.pdb
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WebApplication\MLFFWebAPI\bin\Microsoft.Practices.EnterpriseLibrary.Data.dll
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WebApplication\MLFFWebAPI\bin\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WebApplication\MLFFWebAPI\bin\VaaaN.MLFF.CommonLibrary.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WebApplication\MLFFWebAPI\bin\VaaaN.MLFF.CommonLibrary.pdb
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WebApplication\MLFFWebAPI\bin\en\VaaaN.MLFF.CommonLibrary.resources.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WebApplication\MLFFWebAPI\bin\id\VaaaN.MLFF.CommonLibrary.resources.dll

@@ -383,8 +383,8 @@ function DetailsOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
-            $("exampleModalLabel").text("Register Customer");
             $('#partialassociated').html(result);
+            $("#exampleModalLabel").text("View [" + $("#FirstName").val() + "]");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $('#loader').addClass('fadeOut');
@@ -419,9 +419,9 @@ function EditOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
-            $("exampleModalLabel").text("Register Customer");
             $('#partialassociated').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#exampleModalLabel").text("Update [" + $("#FirstName").val() + "]");
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
@@ -559,4 +559,3 @@ function DateFormat(newDate) {
     yy = d.getFullYear();
     return dd + '-' + mm + '-' + +yy
 }
-

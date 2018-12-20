@@ -41,5 +41,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryByVehicle(ResidentIdentityNumber, VehicleRegistrationCertificateNumber, VehicleRegistrationNumber);
         }
+
+        public static DataTable AccountHistoryByVehicleWithPaging(string ResidentIdentityNumber, string VehicleRegistrationCertificateNumber, string VehicleRegistrationNumber, int PageIndex, int PageSize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryByVehicleWithPaging(ResidentIdentityNumber, VehicleRegistrationCertificateNumber, VehicleRegistrationNumber, PageIndex, PageSize);
+        }
     }
 }
