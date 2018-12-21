@@ -162,6 +162,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         [Display(Name = "Registration Number")]
         //[Display(Name = "VehicleRegNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [Required]
+        [StringLength(10, ErrorMessage = "Vehicle Registration Number max length is 10")]
         public String VehRegNo
         {
             get { return this.vehRegNo; }

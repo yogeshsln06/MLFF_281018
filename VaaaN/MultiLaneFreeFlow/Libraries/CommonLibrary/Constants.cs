@@ -146,6 +146,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
         }
 
+        public enum TranscationStatus
+        {
+            Charged = 1,
+            Mearged,
+            MeargedCharged,
+            Violation,
+            ViolationCharged,
+            ViolationMearged,
+            ViolationMeargedCharged,
+            Unknown,
+        }
+        public static string[] TranscationStatusName = new string[]
+        {
+            "Charged",
+            "Mearged",
+            "Mearged and Charged",
+            "Violation",
+            "Violation and Charged",
+            "Violation and Mearged",
+            "Violation, Mearged and Charged",
+            "Unknown",
+        };
+
         public enum TransferStatus
         {
             NotTransferred = 1,
