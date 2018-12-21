@@ -40,7 +40,10 @@ function zoomImage(ctrl) {
     //           highResolutionImage = $(ctrl).data('high-res-img');
     //viewer.show(imgSrc, highResolutionImage);
     // $('.enlargeImageModalSource').attr('src', $(ctrl).attr('src'));
-    $('#enlargeImageModal').modal('show');
+
+    var modalImg = document.getElementById("img01");
+    modalImg.src = $(ctrl).src;
+    $("#btnImageModalOpen").trigger('click');
 }
 
 function SaveUnidentified() {
