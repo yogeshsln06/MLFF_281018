@@ -14,7 +14,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.MSMQ
         //public static string failedQueueNameANPR = ".\\Private$\\failedQueueANPR";
 
         public static string eventQueue = ".\\Private$\\eventQueue";
-        public static TimeSpan eventQueueTimeOut = new TimeSpan(1, 0, 3);
+        public static TimeSpan eventQueueTimeOut = new TimeSpan(0, 0, 5);
 
         public static string localEventQueue = ".\\Private$\\localEventQueue";
         public static TimeSpan localEventQueueTimeOut = new TimeSpan(1, 0, 10);
