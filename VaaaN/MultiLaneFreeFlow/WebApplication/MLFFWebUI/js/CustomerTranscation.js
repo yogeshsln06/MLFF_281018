@@ -81,3 +81,51 @@ function SaveUnidentified() {
 
     });
 }
+
+function Complete() {
+    if ($("#txtVRN").val() == '') {
+        alert('Please Enter Audited VRN');
+        return false;
+    }
+    if ($("#ddlAuditedVehicleClass").val() < 1) {
+        alert('Please Select Audited Vehicle Class');
+        return false;
+    }
+    var selectedIDs = new Array();
+    $('input:checkbox.checkBox').each(function () {
+        if ($(this).prop('checked')) {
+            selectedIDs.push($(this).val());
+        }
+    });
+
+    if (selectedIDs.length > 2) {
+        alert('You cannot join more than two trancation.');
+        return false;
+    }
+
+    var InputData = {
+        AssociatedTransactionIds: selectedIDs, TransactionId: TranscationId,
+        VehRegNo: $('#txtfinalVrn').val(),
+        vehicleClassID: $('#ddlAuditedVehicleClass').val()
+    }
+    $('#loader').removeClass('fadeOut');
+    $.ajax({
+        type: "POST",
+        url: "JoinTransactions",
+        dataType: "JSON",
+        async: true,
+        data: JSON.stringify(InputData),
+        contentType: "application/json; charset=utf-8",
+        success: function (JsonfilterData) {
+            $('#loader').addClass('fadeOut');
+            closePopup();
+            $(Transcationcol).parent().parent().remove();
+            //ResponceData = JsonfilterData;
+
+        },
+        error: function (x, e) {
+            $('#loader').addClass('fadeOut');
+        }
+
+    });
+}
