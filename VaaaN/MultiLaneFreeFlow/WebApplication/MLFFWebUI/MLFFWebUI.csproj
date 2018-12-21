@@ -266,6 +266,7 @@
     <Content Include="assets\static\fonts\icons\themify\themify.eot" />
     <Content Include="assets\static\fonts\icons\themify\themify.ttf" />
     <Content Include="assets\static\fonts\icons\themify\themify.woff" />
+    <None Include="Properties\PublishProfiles\NewUI.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\imageviewer.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
