@@ -1,12 +1,172 @@
-﻿function openpopup() {
-    $("#warning").hide();
-    $("#btnpopupOpen").trigger('click');
-}
+﻿var pageload = 1;
+var pagesize = 30;
+var NoMoredata = false;
+var inProgress = false;
+$(document).ready(function () {
+    BindCustmerVehicleAccount();
+});
 
+function refreshData() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "CustomerVehicleListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+
+
+        }
+
+    });
+
+}
 function closePopup() {
     $("#btnpopupClose").trigger('click');
+    $(".modal-backdrop").hide()
 }
 
+function BindCustmerVehicleAccount() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "CustomerVehicleListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            
+            NoMoredata = data.length < pagesize
+            $(".animationload").hide();
+            pageload++;
+            datatableVariable = $('#tblCustomerVehicle').DataTable({
+                data: data,
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                scrollY: "35vh",
+                pageResize: true,
+                scroller: {
+                    loadingIndicator: true
+                },
+                processing: true,
+                scrollCollapse: true,
+                stateSave: true,
+                autoWidth: false,
+                paging: false,
+                info: false,
+                columns: [
+                     { 'data': 'EntryId' },
+                    {
+                        'data': 'EntryId',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).html("<a href='javascript:void(0);' onclick='DetailsOpen(this," + oData.EntryId + ")'>" + oData.EntryId + "</a>");
+                        }
+                    },
+                    { 'data': 'VehRegNo' },
+                    { 'data': 'VehicleClassName' },
+                    { 'data': 'TagId' },
+                    { 'data': 'AccountBalance' },
+                    { 'data': 'CustomerQueueStatusName' },
+                    {
+                        'data': 'AccountId',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).html("<div class='dropdown'>" +
+                                "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
+                    "<span class='icon-holder'>" +
+                         "<i class='c-blue-500 ti-angle-down'></i>" +
+                     "</span>" +
+                 "</a>" +
+                 " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
+                 //"<div style='position: absolute; top: 0px; right: 0px; min-width: 100px;margin-right:-30px' x-placement='bottom-start' aria-labelledby='dropdownMenuButton' class='dropdown-menu myfilter'>" +
+                 "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditOpen(this," + oData.EntryId + ")'>" +
+                 "        <span class='icon-holder'>" +
+                 "            <i class='c-blue-500 ti-pencil'></i>" +
+                 "        </span>" +
+                 "        <span class='title'>Edit</span>" +
+                 "    </a>" +
+                 "    <a class='dropdown-item' href='javascript:void(0);' onclick='HistoryRecords(this," + oData.EntryId + ")'>" +
+                 "        <span class='icon-holder'>" +
+                 "            <i class='c-blue-500 ti-exchange-vertical'></i>" +
+                 "        </span>" +
+                 "        <span class='title'>History</span>" +
+                 "    </a>" +
+                 "</div>" +
+             "</div>");
+                        }
+                    },
+                ],
+                columnDefs: [{ "orderable": false, "targets": 7 }],
+                order: [[1, 'asc']],
+                width: "100%"
+            });
+            $('.dataTable').css('width', '1200px !important');
+            datatableVariable.on('order.dt search.dt', function () {
+                datatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+            inProgress = false;
+            $('.dataTables_scrollBody').on('scroll', function () {
+                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerVehicle").height()) && !NoMoredata && !inProgress) {
+                    AppendCustomerData();
+                }
+            });
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+
+    });
+
+
+}
+
+function AppendCustomerData() {
+    inProgress = true;
+    $('#loadingdiv').show()
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "CustomerVehicleListScroll?pageIndex=" + pageload + "&pagesize=" + pagesize,
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $('#loadingdiv').hide()
+            //datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $('#loadingdiv').hide()
+        }
+
+    });
+}
+
+function openpopup() {
+    $("#warning").hide();
+    $('#customerModal').modal('show');
+}
 function validEmail(str) {
     var pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return String(str).match(pattern);
@@ -235,22 +395,9 @@ function openImg(ctrl) {
     $("#" + id.replace('lbl', 'img')).trigger('click');
 }
 
-function encodeImagetoBase64(element) {
-    var file = element.files[0];
-    var ParentDiv = $(element).parent();
-    var ancoreTag = $(element).parent().find('a');
-    var ValidateFile = file;
-    var reader = new FileReader();
-    reader.onloadend = function () {
-        $(ancoreTag).attr("href", reader.result);
-        $(ancoreTag).text(reader.result);
-    }
-    reader.readAsDataURL(file);
-
-}
 
 function NewCustomerVehicle() {
-    $('#loader').removeClass('fadeOut');
+    $(".animationload").show();
     $.ajax({
         type: "GET",
         url: "/Registration/NewCustomerVehicle",
@@ -264,7 +411,7 @@ function NewCustomerVehicle() {
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#EntryId").attr("disabled", "disabled");
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#VehicleImageFront").show();
             $("#VehicleImageRear").show();
@@ -279,14 +426,14 @@ function NewCustomerVehicle() {
             $("#lblVehicleRCNumberImagePath").hide();
         },
         error: function (x, e) {
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
         }
 
     });
 }
 
 function DetailsOpen(ctrl, id) {
-    $('#loader').removeClass('fadeOut');
+    $(".animationload").show();
     $.ajax({
         type: "POST",
         url: "/Registration/GetCustomerVehicle?id=" + id,
@@ -298,7 +445,7 @@ function DetailsOpen(ctrl, id) {
             $("#exampleModalLabel").text("View [" + $('#VehRegNo').val() + "]");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
             $("#fildset").attr("disabled", "disabled");
             $("#VehicleImageFront").hide();
             $("#VehicleImageRear").hide();
@@ -319,7 +466,7 @@ function DetailsOpen(ctrl, id) {
             $("#imgVehicleRCNumberImagePath").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleRCNumberImage").val());
         },
         error: function (x, e) {
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
         }
 
     });
@@ -327,7 +474,7 @@ function DetailsOpen(ctrl, id) {
 }
 
 function EditOpen(ctrl, id) {
-    $('#loader').removeClass('fadeOut');
+    $(".animationload").show();
     $.ajax({
         type: "POST",
         url: "/Registration/GetCustomerVehicle?id=" + id,
@@ -341,7 +488,7 @@ function EditOpen(ctrl, id) {
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#EntryIdId").attr("disabled", "disabled");
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#VehicleImageFront").show();
             $("#VehicleImageRear").show();
@@ -356,7 +503,7 @@ function EditOpen(ctrl, id) {
             $("#lblVehicleRCNumberImagePath").hide();
         },
         error: function (x, e) {
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
         }
 
     });
@@ -464,7 +611,7 @@ function SaveData(action) {
                 RCNumberImageChnage: RCNumberImageChnage,
             }
 
-            $('#loader').removeClass('fadeOut');
+            $(".animationload").show();
             $.ajax({
                 type: "POST",
                 url: PostURL,
@@ -473,7 +620,7 @@ function SaveData(action) {
                 data: JSON.stringify(Inputdata),
                 contentType: "application/json; charset=utf-8",
                 success: function (resultData) {
-                    $('#loader').addClass('fadeOut');
+                    $(".animationload").hide();
                     var meassage = '';
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
@@ -500,7 +647,7 @@ function SaveData(action) {
                     }
                 },
                 error: function (ex) {
-                    $('#loader').addClass('fadeOut');
+                    $(".animationload").hide();
                 }
             });
         }

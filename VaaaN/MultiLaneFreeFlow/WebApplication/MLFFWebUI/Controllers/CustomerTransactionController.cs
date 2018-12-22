@@ -12,6 +12,7 @@ using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
 using static MLFFWebUI.Models.HelperClass;
 using System.Messaging;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace MLFFWebUI.Controllers
 {
@@ -39,10 +40,21 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Unreviewed");
-            //AND TRANSACTION_DATETIME BETWEEN TO_DATE('" + DateTime.Now.AddMinutes(-30) + "', 'DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + DateTime.Now + "', 'DD/MM/YYYY HH24:MI:SS')
-            string strQuery = "WHERE 1=1";
-            dt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strQuery);
-            #region Vehicle Class Dropdown 
+            #region Gantry Class Dropdown
+            List<SelectListItem> gantryList = new List<SelectListItem>();
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
+
+            gantryList.Add(new SelectListItem() { Text = "--Sel Gantry--", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
+            {
+                gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
+            }
+
+            ViewBag.Gantry = gantryList;
+
+            #endregion
+
+            #region Vehicle Class Dropdown
             List<SelectListItem> vehicleClass = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE> vehicle = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
@@ -52,91 +64,32 @@ namespace MLFFWebUI.Controllers
                 vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
             }
 
-            ViewBag.AuditorVehicleClass = vehicleClass;
+            ViewBag.VehicleClass = vehicleClass;
 
             #endregion
 
-            return View("Unreviewed", dt);
+            #region Transaction Category
+            ViewBag.TransactionCategory = HelperClass.GetManualReviewTransactionCategory();
+            #endregion
+
+            return View();
+        }
+
+        [HttpPost]
+        public string UnreviewedListScroll(int pageindex, int pagesize)
+        {
+            JsonResult result = new JsonResult();
+            dt = TransactionBLL.GetUnReviewedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+            string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
         }
 
         public ActionResult AssociatedTransaction(int TranscationId)
         {
-            DataSet ds = new DataSet();
-
             try
             {
-                int IKEEntryId = 0;
-                int ANPRFrontEntryId = 0;
-                int ANPRRearEntryId = 0;
-                DateTime TranscationDateTime;
                 dt = TransactionBLL.GetUnReviewedDataTableById(TranscationId);
-                DataTable dtCurrentTranscation = new DataTable();
-                dtCurrentTranscation = dt.Copy();
-                ds.Tables.Add(dtCurrentTranscation);
-                ds.Tables[0].TableName = "CurrentTranscation";
-                if (dtCurrentTranscation.Rows.Count > 0)
-                {
-                    TranscationDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"]);
-                    if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString()))
-                    {
-                        IKEEntryId = Convert.ToInt32(dt.Rows[0]["CT_ENTRY_ID"]);
-                    }
-                    if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
-                    {
-                        ANPRFrontEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                    }
-                    if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
-                    {
-                        ANPRRearEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                    }
-
-                    if (IKEEntryId > 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId > 0)
-                    {
-                        DataTable Assodt = new DataTable();
-                        DataTable dtAssociatedTranscation = new DataTable();
-                        dtAssociatedTranscation = Assodt.Copy();
-                        ds.Tables.Add(dtAssociatedTranscation);
-                    }
-                    else {
-                        string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TranscationDateTime.AddMinutes(-1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TranscationDateTime.AddMinutes(1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TranscationId;
-
-                        if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId == 0)
-                        {
-                            strfilter += " AND (NVL(CT_ENTRY_ID,0) = 0 AND (NVL(NF_ENTRY_ID_FRONT,0) > 0 OR NVL(NF_ENTRY_ID_REAR,0) > 0))";
-                        }
-                        else if (IKEEntryId == 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId == 0)
-                        {
-                            strfilter += " AND (NVL(NF_ENTRY_ID_FRONT,0) = 0 AND (NVL(CT_ENTRY_ID,0) > 0 OR NVL(NF_ENTRY_ID_REAR,0) > 0))";
-                        }
-                        else if (IKEEntryId == 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId > 0)
-                        {
-                            strfilter += " AND (NVL(NF_ENTRY_ID_REAR,0) = 0 AND (NVL(CT_ENTRY_ID,0) > 0 OR NVL(NF_ENTRY_ID_FRONT,0) > 0))";
-                        }
-                        else if (IKEEntryId > 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId == 0)
-                        {
-                            strfilter += " AND NVL(CT_ENTRY_ID,0) = 0 AND NVL(NF_ENTRY_ID_FRONT,0) = 0) AND (NVL(NF_ENTRY_ID_REAR,0) <> 0 ";
-                        }
-                        else if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId > 0)
-                        {
-                            strfilter += " AND NVL(CT_ENTRY_ID,0) = 0 AND NVL(NF_ENTRY_ID_FRONT,0) <> 0 AND NVL(NF_ENTRY_ID_REAR,0) = 0 ";
-                        }
-                        else if (IKEEntryId == 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId > 0)
-                        {
-                            strfilter += " AND NVL(CT_ENTRY_ID,0) <> 0 AND NVL(NF_ENTRY_ID_FRONT,0) = 0 AND NVL(NF_ENTRY_ID_REAR,0) = 0 ";
-                        }
-                        DataTable Assodt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strfilter);
-                        DataTable dtAssociatedTranscation = new DataTable();
-                        dtAssociatedTranscation = Assodt.Clone();
-                        ds.Tables.Add(dtAssociatedTranscation);
-                    }
-
-                }
-                else {
-                    DataTable Assodt = new DataTable();
-                    DataTable dtAssociatedTranscation = new DataTable();
-                    dtAssociatedTranscation = Assodt.Copy();
-                    ds.Tables.Add(dtAssociatedTranscation);
-                }
+                Session["CurrentTranscation"] = dt;
 
             }
             catch (Exception ex)
@@ -145,7 +98,75 @@ namespace MLFFWebUI.Controllers
                 HelperClass.LogMessage("Failed To Associated Transaction finding Controller" + ex);
             }
 
-            return PartialView("AssociatedTransaction", ds);
+            return PartialView("AssociatedTransaction", dt);
+        }
+
+        [HttpGet]
+        public string GetAssociated()
+        {
+            string Det = "No Record Found";
+            dt = (DataTable)Session["CurrentTranscation"];
+            int IKEEntryId = 0;
+            int ANPRFrontEntryId = 0;
+            int ANPRRearEntryId = 0;
+            DateTime TranscationDateTime;
+            int TranscationId;
+            if (dt.Rows.Count > 0)
+            {
+                TranscationDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"]);
+                TranscationId = Convert.ToInt32(dt.Rows[0]["TRANSACTION_ID"]);
+                if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString()))
+                {
+                    IKEEntryId = Convert.ToInt32(dt.Rows[0]["CT_ENTRY_ID"]);
+                }
+                if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
+                {
+                    ANPRFrontEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_FRONT"]);
+                }
+                if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
+                {
+                    ANPRRearEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_REAR"]);
+                }
+
+                if (IKEEntryId > 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId > 0)
+                {
+                    Det = "No Record Found";
+
+                }
+                else {
+                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TranscationDateTime.AddMinutes(-1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TranscationDateTime.AddMinutes(1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TranscationId;
+
+                    if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId == 0)
+                    {
+                        strfilter += " AND (NVL(CT_ENTRY_ID,0) = 0 AND (NVL(NF_ENTRY_ID_FRONT,0) > 0 OR NVL(NF_ENTRY_ID_REAR,0) > 0))";
+                    }
+                    else if (IKEEntryId == 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId == 0)
+                    {
+                        strfilter += " AND (NVL(NF_ENTRY_ID_FRONT,0) = 0 AND (NVL(CT_ENTRY_ID,0) > 0 OR NVL(NF_ENTRY_ID_REAR,0) > 0))";
+                    }
+                    else if (IKEEntryId == 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId > 0)
+                    {
+                        strfilter += " AND (NVL(NF_ENTRY_ID_REAR,0) = 0 AND (NVL(CT_ENTRY_ID,0) > 0 OR NVL(NF_ENTRY_ID_FRONT,0) > 0))";
+                    }
+                    else if (IKEEntryId > 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId == 0)
+                    {
+                        strfilter += " AND NVL(CT_ENTRY_ID,0) = 0 AND NVL(NF_ENTRY_ID_FRONT,0) = 0) AND (NVL(NF_ENTRY_ID_REAR,0) <> 0 ";
+                    }
+                    else if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId > 0)
+                    {
+                        strfilter += " AND NVL(CT_ENTRY_ID,0) = 0 AND NVL(NF_ENTRY_ID_FRONT,0) <> 0 AND NVL(NF_ENTRY_ID_REAR,0) = 0 ";
+                    }
+                    else if (IKEEntryId == 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId > 0)
+                    {
+                        strfilter += " AND NVL(CT_ENTRY_ID,0) <> 0 AND NVL(NF_ENTRY_ID_FRONT,0) = 0 AND NVL(NF_ENTRY_ID_REAR,0) = 0 ";
+                    }
+                    DataTable Assodt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strfilter);
+                    Det = JsonConvert.SerializeObject(Assodt, Formatting.Indented);
+                    Det = Det.Replace("\r", "").Replace("\n", "");
+                }
+
+            }
+            return Det;
         }
 
         [HttpPost]
@@ -295,7 +316,7 @@ namespace MLFFWebUI.Controllers
                             {
                                 ParentPacketCount++;
                                 ParentANPRRearEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                ParentANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["NFP_VEHICLE_CLASS_NAME_REAR"]);
+                                ParentANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
                             }
                             #endregion
 
@@ -367,7 +388,7 @@ namespace MLFFWebUI.Controllers
                                             {
                                                 if (!string.IsNullOrEmpty(childOnedt.Rows[0]["CT_ENTRY_ID"].ToString()))
                                                 {
-                                                    if (ParentIKEEntryId != 0)
+                                                    if (ParentIKEEntryId == 0)
                                                     {
                                                         ChildIKEEntryId = Convert.ToInt32(childOnedt.Rows[0]["CT_ENTRY_ID"]);
                                                         ChildIKEVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
@@ -380,7 +401,7 @@ namespace MLFFWebUI.Controllers
                                                 }
                                                 if (!string.IsNullOrEmpty(childOnedt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
                                                 {
-                                                    if (ParentANPRFrontEntryId != 0)
+                                                    if (ParentANPRFrontEntryId == 0)
                                                     {
                                                         ChildAnprFrontEntryId = Convert.ToInt32(childOnedt.Rows[0]["NF_ENTRY_ID_FRONT"]);
                                                         ChildANPRFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
@@ -393,7 +414,7 @@ namespace MLFFWebUI.Controllers
                                                 }
                                                 if (!string.IsNullOrEmpty(childOnedt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
                                                 {
-                                                    if (ParentANPRRearEntryId != 0)
+                                                    if (ParentANPRRearEntryId == 0)
                                                     {
                                                         ChildAnprRearEntryId = Convert.ToInt32(childOnedt.Rows[0]["NF_ENTRY_ID_REAR"]);
                                                         ChildANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
@@ -426,7 +447,7 @@ namespace MLFFWebUI.Controllers
                                                 {
                                                     if (!string.IsNullOrEmpty(childTwodt.Rows[0]["CT_ENTRY_ID"].ToString()))
                                                     {
-                                                        if (ParentIKEEntryId != 0)
+                                                        if (ParentIKEEntryId == 0)
                                                         {
                                                             if (ChildIKEEntryId == 0)
                                                             {
@@ -445,7 +466,7 @@ namespace MLFFWebUI.Controllers
                                                     }
                                                     if (!string.IsNullOrEmpty(childTwodt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
                                                     {
-                                                        if (ParentANPRRearEntryId != 0)
+                                                        if (ParentANPRRearEntryId == 0)
                                                         {
                                                             if (ChildAnprFrontEntryId == 0)
                                                             {
@@ -464,7 +485,7 @@ namespace MLFFWebUI.Controllers
                                                     }
                                                     if (!string.IsNullOrEmpty(childTwodt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
                                                     {
-                                                        if (ParentANPRRearEntryId != 0)
+                                                        if (ParentANPRRearEntryId == 0)
                                                         {
                                                             if (ChildAnprRearEntryId == 0)
                                                             {
@@ -768,7 +789,7 @@ namespace MLFFWebUI.Controllers
                             {
                                 ParentPacketCount++;
                                 ParentANPRRearEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                ParentANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["NFP_VEHICLE_CLASS_NAME_REAR"]);
+                                ParentANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
                             }
                             #endregion
                             if (AssociatedTransactionCount > 0)//Associated Transcation Found
@@ -781,7 +802,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         if (!string.IsNullOrEmpty(childOnedt.Rows[0]["CT_ENTRY_ID"].ToString()))
                                         {
-                                            if (ParentIKEEntryId != 0)
+                                            if (ParentIKEEntryId == 0)
                                             {
                                                 ChildIKEEntryId = Convert.ToInt32(childOnedt.Rows[0]["CT_ENTRY_ID"]);
                                                 ChildIKEVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
@@ -794,7 +815,7 @@ namespace MLFFWebUI.Controllers
                                         }
                                         if (!string.IsNullOrEmpty(childOnedt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
                                         {
-                                            if (ParentANPRFrontEntryId != 0)
+                                            if (ParentANPRFrontEntryId == 0)
                                             {
                                                 ChildAnprFrontEntryId = Convert.ToInt32(childOnedt.Rows[0]["NF_ENTRY_ID_FRONT"]);
                                                 ChildANPRFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
@@ -807,7 +828,7 @@ namespace MLFFWebUI.Controllers
                                         }
                                         if (!string.IsNullOrEmpty(childOnedt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
                                         {
-                                            if (ParentANPRRearEntryId != 0)
+                                            if (ParentANPRRearEntryId == 0)
                                             {
                                                 ChildAnprRearEntryId = Convert.ToInt32(childOnedt.Rows[0]["NF_ENTRY_ID_REAR"]);
                                                 ChildANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
@@ -840,7 +861,7 @@ namespace MLFFWebUI.Controllers
                                         {
                                             if (!string.IsNullOrEmpty(childTwodt.Rows[0]["CT_ENTRY_ID"].ToString()))
                                             {
-                                                if (ParentIKEEntryId != 0)
+                                                if (ParentIKEEntryId == 0)
                                                 {
                                                     if (ChildIKEEntryId == 0)
                                                     {
@@ -859,7 +880,7 @@ namespace MLFFWebUI.Controllers
                                             }
                                             if (!string.IsNullOrEmpty(childTwodt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
                                             {
-                                                if (ParentANPRRearEntryId != 0)
+                                                if (ParentANPRRearEntryId == 0)
                                                 {
                                                     if (ChildAnprFrontEntryId == 0)
                                                     {
@@ -878,7 +899,7 @@ namespace MLFFWebUI.Controllers
                                             }
                                             if (!string.IsNullOrEmpty(childTwodt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
                                             {
-                                                if (ParentANPRRearEntryId != 0)
+                                                if (ParentANPRRearEntryId == 0)
                                                 {
                                                     if (ChildAnprRearEntryId == 0)
                                                     {
@@ -1004,10 +1025,26 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Charged");
-            //AND TRANSACTION_DATETIME BETWEEN TO_DATE('" + DateTime.Now.AddMinutes(-30) + "', 'DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + DateTime.Now + "', 'DD/MM/YYYY HH24:MI:SS')
-            string strQuery = "WHERE 1=1";
-            dt = TransactionBLL.GetChargedDataTableFilteredRecords(strQuery);
-            return View("Charged", dt);
+            return View();
+        }
+
+        [HttpPost]
+        public string ChargedListScroll(int pageindex, int pagesize)
+        {
+            string Det = "";
+            try
+            {
+                JsonResult result = new JsonResult();
+                dt = TransactionBLL.GetChargedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det= Det.Replace("\r", "").Replace("\n", "");
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+            }
+            return Det;
         }
 
         public ActionResult TopUP()

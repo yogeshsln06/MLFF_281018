@@ -30,8 +30,6 @@ namespace MLFFWebUI.Controllers
         [HttpGet]
         public ActionResult Customer()
         {
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-
             try
             {
                 if (Session["LoggedUserId"] == null)
@@ -39,8 +37,7 @@ namespace MLFFWebUI.Controllers
                     return RedirectToAction("Logout", "Login");
                 }
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "Customer");
-                customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
-                return View(customerDataList);
+                return View();
 
             }
             catch (Exception ex)
@@ -48,13 +45,17 @@ namespace MLFFWebUI.Controllers
 
                 HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
             }
-            //return View();
-            return View(customerDataList);
+            return View();
         }
-        [ChildActionOnly]
-        public ActionResult CustomerChildList(List<CustomerAccountCBE> Model)
+
+        [HttpPost]
+        public JsonResult CustomerAccountListScroll(int pageindex, int pagesize)
         {
-            return PartialView(Model);
+            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+            JsonResult result = new JsonResult();
+            customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
+            result.Data = customerDataList;
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -530,90 +531,6 @@ namespace MLFFWebUI.Controllers
             }
             return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
-
-        #region Testing method not in use
-        [HttpGet]
-        public JsonResult CustomerList()
-        {
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-            JsonResult result = new JsonResult();
-            try
-            {
-
-                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "Customer");
-                //customerDataList = CustomerAccountBLL.GetAllAsList(); ;
-                //customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.CustomerAccountLazyLoad(1, 10);
-                //customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetAllAsList();
-                result.Data = customerDataList;
-
-            }
-            catch (Exception ex)
-            {
-
-                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
-            }
-            return Json(result.Data, JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
-        public JsonResult CustomerData(int pageindex, int pagesize)
-        {
-            JsonResult result = new JsonResult();
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-            customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
-            result.Data = customerDataList;
-            return Json(result.Data);
-        }
-
-        [HttpPost]
-        public JsonResult CustomerDataonScroll(int pageindex, int pagesize)
-        {
-            JsonResult result = new JsonResult();
-            System.Threading.Thread.Sleep(1000);
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-            customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
-            result.Data = customerDataList;
-            return Json(result.Data);
-        }
-
-
-
-        protected string renderPartialViewtostring(string Viewname, object model)
-        {
-            if (string.IsNullOrEmpty(Viewname))
-
-                Viewname = ControllerContext.RouteData.GetRequiredString("action");
-            ViewData.Model = model;
-            using (StringWriter sw = new StringWriter())
-            {
-                ViewEngineResult viewresult = ViewEngines.Engines.FindPartialView(ControllerContext, Viewname);
-                ViewContext viewcontext = new ViewContext(ControllerContext, viewresult.View, ViewData, TempData, sw);
-                viewresult.View.Render(viewcontext, sw);
-                return sw.GetStringBuilder().ToString();
-            }
-
-        }
-
-        public class JsonModel
-        {
-            public string HTMLString { get; set; }
-            public bool NoMoredata { get; set; }
-        }
-
-        [HttpPost]
-        public ActionResult InfiniteScroll(int pageindex, int RowNo, int pagesize)
-        {
-            ViewBag.RowNo = RowNo;
-            System.Threading.Thread.Sleep(1000);
-            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
-            customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
-            JsonModel jsonmodel = new JsonModel();
-            jsonmodel.NoMoredata = customerDataList.Count < pagesize;
-            jsonmodel.HTMLString = renderPartialViewtostring("CustomerChildList", customerDataList);
-            return Json(jsonmodel);
-        }
-
-        #endregion
-
         #endregion
 
         #region Customer Vehicle
@@ -626,9 +543,20 @@ namespace MLFFWebUI.Controllers
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "CustomerVehicle");
 
-            customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
-            return View(customerVehicleDataList);
+            //customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
+            return View();
 
+        }
+
+        [HttpPost]
+        public JsonResult CustomerVehicleListScroll(int pageindex,int pagesize)
+        {
+           
+            List<CustomerVehicleCBE> customerDataList = new List<CustomerVehicleCBE>();
+            JsonResult result = new JsonResult();
+            customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.CustomerVehicleAccountLazyLoad(pageindex, pagesize);
+            result.Data = customerDataList;
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
         }
 
         [ChildActionOnly]

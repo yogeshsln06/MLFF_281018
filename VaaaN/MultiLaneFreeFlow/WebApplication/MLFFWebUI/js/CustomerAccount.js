@@ -1,30 +1,65 @@
 ﻿var pageload = 1;
-var pageindex = 1;
-var pagesize = 10;
-var DataLenght = 10;
-var datatableVariable;
+var pagesize = 30;
 var NoMoredata = false;
 var inProgress = false;
+
+
 $(document).ready(function () {
-
-    console.log("The height for the window is " + $(window).height() + "px.");
-    console.log("The height for the document is " + $(document).height() + "px.");
-    console.log("The height for the document is " + $("#mainContent").height() + "px.");
-    // BindCustmerAccount();
+    BindCustmerAccount();
 });
+function closePopup() {
+    $("#btnpopupClose").trigger('click');
+    $(".modal-backdrop").hide()
+}
 
-
-function BindCustmerAccount() {
+function reloadData() {
+    pageload = 1;
+    $(".animationload").show();
     inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
     $.ajax({
-        type: "GET",
+        type: "POST",
         dataType: "json",
-        url: "CustomerList",
+        data: JSON.stringify(Inputdata),
+        url: "CustomerAccountListScroll",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
-            datatableVariable = $('#tblCustomer').DataTable({
+            $(".animationload").hide();
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+
+
+        }
+
+    });
+}
+
+function BindCustmerAccount() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "CustomerAccountListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            NoMoredata = data.length < pagesize
+            pageload++;
+            datatableVariable = $('#tblCustomerData').DataTable({
                 data: data,
-                scrollY: 300,
+                scrollY: 230,
                 scrollCollapse: true,
                 scroller: {
                     loadingIndicator: true
@@ -49,12 +84,12 @@ function BindCustmerAccount() {
                        'data': 'AccountId', "autowidth": true,
                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                            $(nTd).html("<div class='dropdown'>" +
-                               "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false'>" +
+                              "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
                    "<span class='icon-holder'>" +
                         "<i class='c-blue-500 ti-angle-down'></i>" +
                     "</span>" +
                 "</a>" +
-                "<div style='position: absolute; top: 0px; right: 0px; min-width: 100px;margin-right:-30px' x-placement='bottom-start' aria-labelledby='dropdownMenuButton' class='dropdown-menu'>" +
+                " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
                 "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditOpen(this," + oData.AccountId + ")'>" +
                 "        <span class='icon-holder'>" +
                 "            <i class='c-blue-500 ti-pencil'></i>" +
@@ -75,38 +110,50 @@ function BindCustmerAccount() {
                 columnDefs: [{ "orderable": false, "targets": 7 }],
                 order: [[1, 'asc']]
             });
-            $('.dataTable').css('width', '1200px !important');
             datatableVariable.on('order.dt search.dt', function () {
                 datatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                     cell.innerHTML = i + 1;
                 });
             }).draw();
             inProgress = false;
-
+            $('.dataTables_scrollBody').on('scroll', function () {
+                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerData").height()) && !NoMoredata && !inProgress) {
+                    AppendCustomerData();
+                }
+            });
+        },
+        error: function (ex) {
+            $(".animationload").hide();
         }
     });
-
-
 }
 
-function chk_scroll(e) {
-    var elem = $(e.currentTarget);
-    if (elem[0].scrollHeight - elem.scrollTop() <= (elem.outerHeight())) {
-        if (!NoMoredata && !inProgress) {
-            $("#loadingdiv").show();
-            $("#loadingdiv").hide();
-
+function AppendCustomerData() {
+    inProgress = true;
+    $('#loadingdiv').show()
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "CustomerAccountListScroll?pageIndex=" + pageload + "&pagesize=" + pagesize,
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $('#loadingdiv').hide()
+            //datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $('#loadingdiv').hide()
         }
-    }
+
+    });
 
 }
 
-function zoomImage(ctrl) {
-    var viewer = ImageViewer();
-    var imgSrc = ctrl.src,
-               highResolutionImage = $(ctrl).data('high-res-img');
-    viewer.show(imgSrc, highResolutionImage);
-}
+
 
 function GetCityList() {
     var ProvinceId = $("#ProvinceId").val();
@@ -296,36 +343,12 @@ function showError(ctrlid, errorMsg) {
     $(ctrlid).next().text(errorMsg);
 }
 
-function encodeImagetoBase64(element) {
-    var file = element.files[0];
-    var ParentDiv = $(element).parent();
-    var ancoreTag = $(element).parent().find('a');
-    var ValidateFile = file;
-    var reader = new FileReader();
-    reader.onloadend = function () {
-        $(ancoreTag).attr("href", reader.result);
-        $(ancoreTag).text(reader.result);
-    }
-    reader.readAsDataURL(file);
-
-    if (element.files[0]) {
-        var Preader = new FileReader();
-        Preader.onload = function (e) {
-            $(ParentDiv).next().find('img').attr('src', e.target.result);
-        }
-        Preader.readAsDataURL(element.files[0]);
-    }
-}
-
-
 function openpopup() {
     $("#warning").hide();
-    $("#btnpopupOpen").trigger('click');
+    $('#customerModal').modal('show');
 }
 
-function closePopup() {
-    $("#btnpopupClose").trigger('click');
-}
+
 
 function OpenCustmerRegistration() {
     $.ajax({
@@ -350,7 +373,7 @@ function OpenCustmerRegistration() {
 }
 
 function NewCustomer() {
-    $('#loader').removeClass('fadeOut');
+    $(".animationload").show();
     $.ajax({
         type: "GET",
         url: "/Registration/NewCustomer",
@@ -358,24 +381,25 @@ function NewCustomer() {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
+            $(".animationload").hide();
             $("#exampleModalLabel").text("New Customer");
             $('#partialassociated').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
-            $('#loader').addClass('fadeOut');
+            
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
         },
         error: function (x, e) {
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
         }
 
     });
 }
 
 function DetailsOpen(ctrl, id) {
-    $('#loader').removeClass('fadeOut');
+    $(".animationload").show();
     $.ajax({
         type: "POST",
         url: "/Registration/GetCustomer?id=" + id,
@@ -383,11 +407,12 @@ function DetailsOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
+            $(".animationload").hide();
             $('#partialassociated').html(result);
             $("#exampleModalLabel").text("View [" + $("#FirstName").val() + "]");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
-            $('#loader').addClass('fadeOut');
+           
             $("#fildset").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
@@ -403,7 +428,7 @@ function DetailsOpen(ctrl, id) {
             }
         },
         error: function (x, e) {
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
         }
 
     });
@@ -411,7 +436,7 @@ function DetailsOpen(ctrl, id) {
 }
 
 function EditOpen(ctrl, id) {
-    $('#loader').removeClass('fadeOut');
+    $(".animationload").show();
     $.ajax({
         type: "POST",
         url: "/Registration/GetCustomer?id=" + id,
@@ -419,6 +444,7 @@ function EditOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
+            $(".animationload").hide();
             $('#partialassociated').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#exampleModalLabel").text("Update [" + $("#FirstName").val() + "]");
@@ -427,7 +453,7 @@ function EditOpen(ctrl, id) {
             $("#ProvinceId").val($("#hfProvinceId").val());
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             GetCityList();
-            $('#loader').addClass('fadeOut');
+          
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
             if ($("#hfBirthPlace").val() || '' != '') {
@@ -441,7 +467,7 @@ function EditOpen(ctrl, id) {
             }
         },
         error: function (x, e) {
-            $('#loader').addClass('fadeOut');
+            $(".animationload").hide();
         }
 
     });
@@ -502,7 +528,7 @@ function SaveData(action) {
                 ResidentidcardImagePath: ImagePath
             }
 
-            $('#loader').removeClass('fadeOut');
+            $(".animationload").show();
             $.ajax({
                 type: "POST",
                 url: PostURL,
@@ -511,7 +537,7 @@ function SaveData(action) {
                 data: JSON.stringify(Inputdata),
                 contentType: "application/json; charset=utf-8",
                 success: function (resultData) {
-                    $('#loader').addClass('fadeOut');
+                    $(".animationload").hide();
                     var meassage = '';
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
@@ -538,9 +564,7 @@ function SaveData(action) {
                     }
                 },
                 error: function (ex) {
-                    $('#loader').addClass('fadeOut');
-
-
+                    $(".animationload").hide();
                 }
 
             });
