@@ -1,4 +1,4 @@
-/* Formatted on 23/12/2018 04:03:18 (QP5 v5.215.12089.38647) */
+/* Formatted on 12/23/2018 4:39:35 AM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2933,10 +2933,10 @@ ORDER BY TRANSACTION_DATETIME DESC';
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_VIOLATION_FILTERED;
 
-   
+
    PROCEDURE VIOLATION_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
-                                          P_PAGE_SIZE    IN     NUMBER,
-                                          CUR_OUT           OUT T_CURSOR)
+                                       P_PAGE_SIZE    IN     NUMBER,
+                                       CUR_OUT           OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
@@ -3016,10 +3016,10 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                        + P_PAGE_SIZE)
                                     - 1
          ORDER BY ROWNUMBER ASC;
-   END UNIDENTIFIED_TRANS_LAZYLOAD;
-   
-   
-   
+   END VIOLATION_TRANS_LAZYLOAD;
+
+
+
    PROCEDURE TRAN_UNIDENTIFIED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                          CUR_OUT       OUT T_CURSOR)
    IS
