@@ -1,4 +1,4 @@
-/* Formatted on 20/12/2018 18:52:47 (QP5 v5.215.12089.38647) */
+/* Formatted on 23-12-2018 01:09:15 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2294,65 +2294,73 @@ AS
    BEGIN
       SQLQUERY :=
             ' SELECT T.TMS_ID,
-         T.PLAZA_ID,
-         T.PLAZA_NAME,
-         T.LANE_ID,
-         T.LANE_NAME,
-         T.TRANSACTION_ID,
-         T.TRANSACTION_DATETIME,
-         T.CT_ENTRY_ID,
-         CTP.OBJECT_ID AS TAG_ID,
-         CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
-         VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
-         CTP.PLATE_NUMBER AS CTP_VRN,
-         T.NF_ENTRY_ID_FRONT,
-         NFPF.PLATE_NUMBER AS FRONT_VRN,
-         NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
-         VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
-         NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
-         NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
-         T.NF_ENTRY_ID_REAR,
-         NFPR.PLATE_NUMBER AS REAR_VRN,
-         NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
-         VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
-         NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
-         NFPR.VIDEO_URL AS REAR_VIDEO_URL,
-         T.IS_BALANCE_UPDATED,
-         T.IS_TRANSFERED,
-         T.IS_VIOLATION,
-         T.IS_REGISTERED,
-         T.AUDIT_STATUS,
-         T.AUDITOR_ID,
-         T.AUDIT_DATE,
-         T.AUDITED_VEHICLE_CLASS_ID,
-         T.AUDITED_VRN,
-         T.VEHICLESPEED,
-         AH.AMOUNT
-    FROM TRANS_UNREVIEWED T
-         LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
-            ON T.CT_ENTRY_ID = CTP.ENTRY_ID
-         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
-            ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
-         LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
-            ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
-         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF
-            ON CV_NFPF.VEH_REG_NO = NFPF.PLATE_NUMBER
-         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
-            ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
-         LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
-            ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
-         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPR
-            ON CV_NFPR.VEH_REG_NO = NFPR.PLATE_NUMBER
-         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
-            ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
-         LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
-            ON T.TRANSACTION_ID = AH.TRANSACTION_ID '
+       T.PLAZA_ID,
+       P.PLAZA_NAME,
+       T.LANE_ID,
+       L.LANE_NAME,
+       T.TRANSACTION_ID,
+       T.TRANSACTION_DATETIME,
+       T.CT_ENTRY_ID,
+       CTP.OBJECT_ID AS TAG_ID,
+       CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
+       VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
+       CTP.PLATE_NUMBER AS CTP_VRN,
+       T.NF_ENTRY_ID_FRONT,
+       NFPF.PLATE_NUMBER AS FRONT_VRN,
+       NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
+       VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
+       NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
+       NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
+       T.NF_ENTRY_ID_REAR,
+       NFPR.PLATE_NUMBER AS REAR_VRN,
+       NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
+       VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
+       NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
+       NFPR.VIDEO_URL AS REAR_VIDEO_URL,
+       T.IS_BALANCE_UPDATED,
+       T.IS_TRANSFERED,
+       T.IS_VIOLATION,
+       T.IS_REGISTERED,
+       T.AUDIT_STATUS,
+       T.AUDITOR_ID,
+       T.AUDIT_DATE,
+       T.AUDITED_VEHICLE_CLASS_ID,
+       T.AUDITED_VRN,
+       T.VEHICLESPEED,
+       AH.AMOUNT,
+       T.MEARGED_TRAN_ID,
+       T.TRANS_STATUS
+  FROM TBL_TRANSACTION T
+       LEFT OUTER JOIN TBL_PLAZA P
+          ON T.PLAZA_ID = P.PLAZA_ID
+       LEFT OUTER JOIN TBL_LANE L
+          ON T.LANE_ID = L.LANE_ID
+       LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+          ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+       LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
+          ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+       LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
+          ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
+       LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF
+          ON CV_NFPF.VEH_REG_NO = NFPF.PLATE_NUMBER
+       LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
+          ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
+       LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
+          ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
+       LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPR
+          ON CV_NFPR.VEH_REG_NO = NFPR.PLATE_NUMBER
+       LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
+          ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
+       LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
+          ON T.TRANSACTION_ID = AH.TRANSACTION_ID '
          || P_FILTER
          || '
-ORDER BY TRANSACTION_ID DESC';
+ORDER BY TRANSACTION_DATETIME DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_GETFILTERED;
+
+
 
    PROCEDURE TRAN_GETFILTERED_BYID (P_TRANSACTION_ID   IN     NUMBER,
                                     CUR_OUT               OUT T_CURSOR)
@@ -2423,72 +2431,155 @@ ORDER BY TRANSACTION_ID DESC';
    BEGIN
       SQLQUERY :=
             ' SELECT T.TMS_ID,
-       T.PLAZA_ID,
-       P.PLAZA_NAME,
-       T.LANE_ID,
-       L.LANE_NAME,
-       T.TRANSACTION_ID,
-       T.TRANSACTION_DATETIME,
-       T.CT_ENTRY_ID,
-       CTP.OBJECT_ID AS TAG_ID,
-       CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
-       VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
-       CTP.PLATE_NUMBER AS CTP_VRN,
-       T.NF_ENTRY_ID_FRONT,
-       NFPF.PLATE_NUMBER AS FRONT_VRN,
-       NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
-       VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
-       NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
-       NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
-       T.NF_ENTRY_ID_REAR,
-       NFPR.PLATE_NUMBER AS REAR_VRN,
-       NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
-       VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
-       NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
-       NFPR.VIDEO_URL AS REAR_VIDEO_URL,
-       T.IS_BALANCE_UPDATED,
-       T.IS_TRANSFERED,
-       T.IS_VIOLATION,
-       T.IS_REGISTERED,
-       T.AUDIT_STATUS,
-       T.AUDITOR_ID,
-       T.AUDIT_DATE,
-       T.AUDITED_VEHICLE_CLASS_ID,
-       T.AUDITED_VRN,
-       T.VEHICLESPEED,
-       AH.AMOUNT,
-       T.MEARGED_TRAN_ID,
-       T.TRANS_STATUS
-  FROM TBL_TRANSACTION T
-       LEFT OUTER JOIN TBL_PLAZA P
-          ON T.PLAZA_ID = P.PLAZA_ID
-       LEFT OUTER JOIN TBL_LANE L
-          ON T.LANE_ID = L.LANE_ID
-       LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
-          ON T.CT_ENTRY_ID = CTP.ENTRY_ID
-       LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
-          ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
-       LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
-          ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
-       LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF
-          ON CV_NFPF.VEH_REG_NO = NFPF.PLATE_NUMBER
-       LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
-          ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
-       LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
-          ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
-       LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPR
-          ON CV_NFPR.VEH_REG_NO = NFPR.PLATE_NUMBER
-       LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
-          ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
-       LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
-          ON T.TRANSACTION_ID = AH.TRANSACTION_ID '
+         T.PLAZA_ID,
+         T.PLAZA_NAME,
+         T.LANE_ID,
+         T.LANE_NAME,
+         T.TRANSACTION_ID,
+         T.TRANSACTION_DATETIME,
+         T.CT_ENTRY_ID,
+         CTP.OBJECT_ID AS TAG_ID,
+         CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
+         VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
+         CTP.PLATE_NUMBER AS CTP_VRN,
+         T.NF_ENTRY_ID_FRONT,
+         NFPF.PLATE_NUMBER AS FRONT_VRN,
+         NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
+         VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
+         NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
+         NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
+         T.NF_ENTRY_ID_REAR,
+         NFPR.PLATE_NUMBER AS REAR_VRN,
+         NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
+         VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
+         NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
+         NFPR.VIDEO_URL AS REAR_VIDEO_URL,
+         T.IS_BALANCE_UPDATED,
+         T.IS_TRANSFERED,
+         T.IS_VIOLATION,
+         T.IS_REGISTERED,
+         T.AUDIT_STATUS,
+         T.AUDITOR_ID,
+         T.AUDIT_DATE,
+         T.AUDITED_VEHICLE_CLASS_ID,
+         T.AUDITED_VRN,
+         T.VEHICLESPEED,
+         AH.AMOUNT
+    FROM TRANS_UNREVIEWED T
+         LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+            ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
+            ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+         LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
+            ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
+         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF
+            ON CV_NFPF.VEH_REG_NO = NFPF.PLATE_NUMBER
+         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
+            ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
+         LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
+            ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
+         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPR
+            ON CV_NFPR.VEH_REG_NO = NFPR.PLATE_NUMBER
+         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
+            ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
+         LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
+            ON T.TRANSACTION_ID = AH.TRANSACTION_ID '
          || P_FILTER
          || '
-ORDER BY TRANSACTION_DATETIME DESC';
+ORDER BY TRANSACTION_ID DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_UNREVIEWED_FILTERED;
 
+   PROCEDURE UNREVIEWED_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                        P_PAGE_SIZE    IN     NUMBER,
+                                        CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH CTE_TRANS_HISTORY
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY TRANSACTION_DATETIME)
+                              AS ROWNUMBER,
+                           T.TMS_ID,
+                           T.PLAZA_ID,
+                           P.PLAZA_NAME,
+                           T.LANE_ID,
+                           L.LANE_NAME,
+                           T.TRANSACTION_ID,
+                           T.TRANSACTION_DATETIME,
+                           T.CT_ENTRY_ID,
+                           T.NF_ENTRY_ID_FRONT,
+                           T.NF_ENTRY_ID_REAR,
+                           T.IS_BALANCE_UPDATED,
+                           T.IS_TRANSFERED,
+                           T.IS_VIOLATION,
+                           T.IS_REGISTERED,
+                           T.AUDIT_STATUS,
+                           T.AUDITOR_ID,
+                           T.AUDIT_DATE,
+                           T.AUDITED_VEHICLE_CLASS_ID,
+                           T.AUDITED_VRN,
+                           T.VEHICLESPEED,
+                           T.MEARGED_TRAN_ID
+                      FROM TBL_TRANSACTION T
+                           LEFT OUTER JOIN TBL_PLAZA P
+                              ON T.PLAZA_ID = P.PLAZA_ID
+                           LEFT OUTER JOIN TBL_LANE L
+                              ON T.LANE_ID = L.LANE_ID
+                     WHERE     NVL (T.IS_BALANCE_UPDATED, 2) <> 1
+                           AND NVL (T.AUDIT_STATUS, 2) <> 1
+                           AND ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                  ORDER BY TRANSACTION_DATETIME)
+           SELECT ROWNUMBER,
+                  T.TMS_ID,
+                  T.PLAZA_ID,
+                  T.PLAZA_NAME,
+                  T.LANE_ID,
+                  T.LANE_NAME,
+                  T.TRANSACTION_ID,
+                  T.TRANSACTION_DATETIME,
+                  T.CT_ENTRY_ID,
+                  CTP.OBJECT_ID AS TAG_ID,
+                  CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
+                  VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
+                  CTP.PLATE_NUMBER AS CTP_VRN,
+                  T.NF_ENTRY_ID_FRONT,
+                  NFPF.PLATE_NUMBER AS FRONT_VRN,
+                  NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
+                  VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
+                  NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
+                  NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
+                  T.NF_ENTRY_ID_REAR,
+                  NFPR.PLATE_NUMBER AS REAR_VRN,
+                  NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
+                  VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
+                  NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
+                  NFPR.VIDEO_URL AS REAR_VIDEO_URL,
+                  T.IS_BALANCE_UPDATED,
+                  T.IS_TRANSFERED,
+                  T.IS_VIOLATION,
+                  T.IS_REGISTERED,
+                  T.AUDIT_STATUS,
+                  T.VEHICLESPEED
+             FROM CTE_TRANS_HISTORY T
+                  LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                     ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
+                     ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
+                     ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
+                     ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
+                     ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
+                     ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END UNREVIEWED_TRANS_LAZYLOAD;
 
    PROCEDURE TRAN_UNREVIEWED_BY_ID (P_TRANSACTION_ID   IN     NUMBER,
                                     CUR_OUT               OUT T_CURSOR)
@@ -2686,6 +2777,94 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_CHARGED_FILTERED;
+
+   PROCEDURE CHARGED_TRANS_LAZYLOAD_TEST (P_PAGE_INDEX   IN     NUMBER,
+                                     P_PAGE_SIZE    IN     NUMBER,
+                                     CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH CTE_TRANS_HISTORY
+              AS (  SELECT ROW_NUMBER ()
+                              OVER (ORDER BY TRANSACTION_DATETIME DESC)
+                              AS ROWNUMBER,
+                           T.TMS_ID,
+                           T.PLAZA_ID,
+                           T.PLAZA_NAME,
+                           T.LANE_ID,
+                           T.LANE_NAME,
+                           T.TRANSACTION_ID,
+                           T.TRANSACTION_DATETIME,
+                           T.CT_ENTRY_ID,
+                           T.NF_ENTRY_ID_FRONT,
+                           T.NF_ENTRY_ID_REAR,
+                           T.IS_BALANCE_UPDATED,
+                           T.IS_TRANSFERED,
+                           T.IS_VIOLATION,
+                           T.IS_REGISTERED,
+                           T.AUDIT_STATUS,
+                           T.AUDITOR_ID,
+                           T.AUDIT_DATE,
+                           T.AUDITED_VEHICLE_CLASS_ID,
+                           T.AUDITED_VRN,
+                           T.VEHICLESPEED,
+                           T.MEARGED_TRAN_ID
+                      FROM TRANS_CHARGED T
+                     WHERE    ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                  ORDER BY TRANSACTION_DATETIME DESC)
+           SELECT ROWNUMBER,
+                  T.TMS_ID,
+                  T.PLAZA_ID,
+                  T.PLAZA_NAME,
+                  T.LANE_ID,
+                  T.LANE_NAME,
+                  T.TRANSACTION_ID,
+                  T.TRANSACTION_DATETIME,
+                  T.CT_ENTRY_ID,
+                  CTP.OBJECT_ID AS TAG_ID,
+                  CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
+                  VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
+                  CTP.PLATE_NUMBER AS CTP_VRN,
+                  T.NF_ENTRY_ID_FRONT,
+                  NFPF.PLATE_NUMBER AS FRONT_VRN,
+                  NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
+                  VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
+                  NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
+                  NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
+                  T.NF_ENTRY_ID_REAR,
+                  NFPR.PLATE_NUMBER AS REAR_VRN,
+                  NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
+                  VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
+                  NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
+                  NFPR.VIDEO_URL AS REAR_VIDEO_URL,
+                  T.IS_BALANCE_UPDATED,
+                  T.IS_TRANSFERED,
+                  T.IS_VIOLATION,
+                  T.IS_REGISTERED,
+                  T.AUDIT_STATUS,
+                  T.VEHICLESPEED,
+                  AH.AMOUNT
+             FROM CTE_TRANS_HISTORY T
+                  LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                     ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
+                     ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
+                     ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
+                     ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
+                     ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
+                     ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
+                     ON T.TRANSACTION_ID = AH.TRANSACTION_ID
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END CHARGED_TRANS_LAZYLOAD_TEST;
 
    PROCEDURE TRAN_VIOLATION_FILTERED (P_FILTER   IN     NVARCHAR2,
                                       CUR_OUT       OUT T_CURSOR)
@@ -4041,42 +4220,42 @@ ORDER BY TRANSACTION_DATETIME DESC';
    END ACCOUNT_LATEST_GETALL;
 
 
-   PROCEDURE ACCOUNT_GETALL_LAZYLOAD (PAGEINDEX   IN     NUMBER,
-                                      PAGESIZE    IN     NUMBER,
-                                      CUR_OUT        OUT T_CURSOR)
+
+   PROCEDURE ACCOUNT_GETALL_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                      P_PAGE_SIZE    IN     NUMBER,
+                                      CUR_OUT           OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
-         SELECT ACCOUNT_ID,
-                FIRST_NAME,
-                MOB_NUMBER,
-                EMAIL_ID,
-                ADDRESS,
-                CUSTOMER_IMAGE_PATH,
-                RESIDENT_ID,
-                RESIDENTIDCARDIMAGE,
-                RNUM
-           FROM (SELECT ACCOUNT_ID,
-                        FIRST_NAME,
-                        MOB_NUMBER,
-                        EMAIL_ID,
-                        ADDRESS,
-                        CUSTOMER_IMAGE_PATH,
-                        RESIDENT_ID,
-                        RESIDENTIDCARDIMAGE,
-                        ROWNUM AS RNUM
-                   FROM (  SELECT CA.ACCOUNT_ID,
-                                  CA.FIRST_NAME,
-                                  CA.MOB_NUMBER,
-                                  CA.EMAIL_ID,
-                                  CA.ADDRESS,
-                                  CA.CUSTOMER_IMAGE_PATH,
-                                  CA.RESIDENT_ID,
-                                  CA.RESIDENTIDCARDIMAGE
-                             FROM TBL_CUSTOMER_ACCOUNT CA
-                         ORDER BY CA.ACCOUNT_ID DESC)
-                  WHERE ROWNUM <= PAGESIZE)
-          WHERE RNUM >= PAGEINDEX;
+         WITH CTE_CUSTOMER_HISTORY
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY CREATION_DATE DESC)
+                              AS ROWNUMBER,
+                           CA.ACCOUNT_ID,
+                           CA.FIRST_NAME,
+                           CA.MOB_NUMBER,
+                           CA.EMAIL_ID,
+                           CA.ADDRESS,
+                           CA.CUSTOMER_IMAGE_PATH,
+                           CA.RESIDENT_ID,
+                           CA.RESIDENTIDCARDIMAGE
+                      FROM TBL_CUSTOMER_ACCOUNT CA
+                  ORDER BY CREATION_DATE DESC)
+           SELECT ROWNUMBER,
+                  ACCOUNT_ID,
+                  FIRST_NAME,
+                  MOB_NUMBER,
+                  EMAIL_ID,
+                  ADDRESS,
+                  CUSTOMER_IMAGE_PATH,
+                  RESIDENT_ID,
+                  RESIDENTIDCARDIMAGE,
+                  (SELECT COUNT (1) FROM CTE_CUSTOMER_HISTORY) AS RECORDCOUNT
+             FROM CTE_CUSTOMER_HISTORY
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
    END ACCOUNT_GETALL_LAZYLOAD;
 
    /*CUSTOMER VEHICLE*/
@@ -4711,6 +4890,168 @@ ORDER BY TRANSACTION_DATETIME DESC';
                      ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
          ORDER BY CV.CREATION_DATE DESC, CV.MODIFICATION_DATE DESC;
    END CUSTOMER_VEHICLE_GETALL;
+
+
+   PROCEDURE CUSTOMER_VEHICLE_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                        P_PAGE_SIZE    IN     NUMBER,
+                                        CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH CTE_VEHICLE_HISTORY
+              AS (  SELECT ROW_NUMBER ()
+                           OVER (
+                              ORDER BY
+                                 CV.CREATION_DATE DESC,
+                                 CV.MODIFICATION_DATE DESC)
+                              AS ROWNUMBER,
+                           CV.TMS_ID,
+                           CV.ENTRY_ID,
+                           CV.ACCOUNT_ID,
+                           CV.VEH_REG_NO,
+                           CV.TAG_ID,
+                           CV.VEHICLE_CLASS_ID,
+                           VC.VEHICLE_CLASS_NAME,
+                           CV.CREATION_DATE,
+                           CV.MODIFICATION_DATE,
+                           CV.MODIFIED_BY,
+                           CV.TRANSFER_STATUS,
+                           CV.VEHICLE_RC_NO,
+                           CV.OWNER_NAME,
+                           CV.OWNER_ADDRESS,
+                           CV.BRAND,
+                           CV.VEHICLE_TYPE,
+                           CV.VEHICLE_CATEGORY,
+                           CV.MODEL_NO,
+                           CV.MANUFACTURING_YEAR,
+                           CV.CYCLINDER_CAPACITY,
+                           CV.FRAME_NUMBER,
+                           CV.ENGINE_NUMBER,
+                           CV.VEHICLE_COLOR,
+                           CV.FUEL_TYPE,
+                           (CASE CV.FUEL_TYPE
+                               WHEN 1 THEN 'Diesel'
+                               WHEN 2 THEN 'Gasoline'
+                               WHEN 3 THEN 'Petrol'
+                               WHEN 4 THEN 'Electric'
+                               WHEN 5 THEN 'Solor'
+                               ELSE 'Unknown'
+                            END)
+                              FUEL_TYPE_NAME,
+                           CV.LICENCE_PLATE_COLOR,
+                           (CASE CV.LICENCE_PLATE_COLOR
+                               WHEN 1 THEN 'Black'
+                               WHEN 2 THEN 'White'
+                               WHEN 3 THEN 'Yellow'
+                               WHEN 4 THEN 'Red'
+                               WHEN 5 THEN 'Blue'
+                               WHEN 6 THEN 'Green'
+                               ELSE 'Unknown'
+                            END)
+                              LICENCE_PLATE_COLOR_NAME,
+                           CV.REGISTRATION_YEAR,
+                           CV.VEHICLE_OWNERSHIP_NO,
+                           CV.LOCATION_CODE,
+                           CV.REG_QUEUE_NO,
+                           CV.VEHICLEIMAGE_FRONT,
+                           CV.VEHICLEIMAGE_REAR,
+                           CV.VEHICLEIMAGE_RIGHT,
+                           CV.VEHICLEIMAGE_LEFT,
+                           CV.VEHICLE_RC_NO_PATH,
+                           CV.EXCEPTION_FLAG,
+                           (CASE CV.EXCEPTION_FLAG
+                               WHEN 1 THEN 'Charged'
+                               WHEN 2 THEN 'Not Charged'
+                               WHEN 3 THEN 'Blacklist'
+                               ELSE 'Unknown'
+                            END)
+                              EXCEPTION_FLAG_NAME,
+                           CV.STATUS,
+                           CV.VALID_UNTIL,
+                           CV.TID_FRONT,
+                           CV.TID_REAR,
+                           CV.ACCOUNT_BALANCE,
+                           CV.REGISTRATION_THROUGH,
+                           CV.IS_DOC_VERIFIED,
+                           CV.QUEUE_STATUS,
+                           (CASE CV.QUEUE_STATUS
+                               WHEN 1 THEN 'Open'
+                               WHEN 2 THEN 'Postponded'
+                               WHEN 3 THEN 'Processed'
+                               ELSE 'Unknown'
+                            END)
+                              QUEUE_STATUS_NAME,
+                           CA.FIRST_NAME || ' ' || CA.LAST_NAME
+                              AS CUSTOMER_NAME,
+                           CA.RESIDENT_ID,
+                           CA.EMAIL_ID,
+                           CA.MOB_NUMBER
+                      FROM TBL_CUSTOMER_VEHICLE CV
+                           LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                              ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                           LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                              ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+                  ORDER BY CV.CREATION_DATE DESC, CV.MODIFICATION_DATE DESC)
+           SELECT ROWNUMBER,
+                  TMS_ID,
+                  ENTRY_ID,
+                  ACCOUNT_ID,
+                  VEH_REG_NO,
+                  TAG_ID,
+                  VEHICLE_CLASS_ID,
+                  VEHICLE_CLASS_NAME,
+                  CREATION_DATE,
+                  MODIFICATION_DATE,
+                  MODIFIED_BY,
+                  TRANSFER_STATUS,
+                  VEHICLE_RC_NO,
+                  OWNER_NAME,
+                  OWNER_ADDRESS,
+                  BRAND,
+                  VEHICLE_TYPE,
+                  VEHICLE_CATEGORY,
+                  MODEL_NO,
+                  MANUFACTURING_YEAR,
+                  CYCLINDER_CAPACITY,
+                  FRAME_NUMBER,
+                  ENGINE_NUMBER,
+                  VEHICLE_COLOR,
+                  FUEL_TYPE,
+                  FUEL_TYPE_NAME,
+                  LICENCE_PLATE_COLOR,
+                  LICENCE_PLATE_COLOR_NAME,
+                  REGISTRATION_YEAR,
+                  VEHICLE_OWNERSHIP_NO,
+                  LOCATION_CODE,
+                  REG_QUEUE_NO,
+                  VEHICLEIMAGE_FRONT,
+                  VEHICLEIMAGE_REAR,
+                  VEHICLEIMAGE_RIGHT,
+                  VEHICLEIMAGE_LEFT,
+                  VEHICLE_RC_NO_PATH,
+                  EXCEPTION_FLAG,
+                  EXCEPTION_FLAG_NAME,
+                  STATUS,
+                  VALID_UNTIL,
+                  TID_FRONT,
+                  TID_REAR,
+                  ACCOUNT_BALANCE,
+                  REGISTRATION_THROUGH,
+                  IS_DOC_VERIFIED,
+                  QUEUE_STATUS,
+                  QUEUE_STATUS_NAME,
+                  CUSTOMER_NAME,
+                  RESIDENT_ID,
+                  EMAIL_ID,
+                  MOB_NUMBER,
+                  (SELECT COUNT (1) FROM CTE_VEHICLE_HISTORY) AS RECORDCOUNT
+             FROM CTE_VEHICLE_HISTORY
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END CUSTOMER_VEHICLE_LAZYLOAD;
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYTAGID (P_TAG_ID   IN     NVARCHAR2,
                                           CUR_OUT       OUT T_CURSOR)

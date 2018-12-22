@@ -16,6 +16,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         string laneName;
         string vehicleClassName;
         string vrn;
+        string tagid;
 
         public DateTime Timestamp
         {
@@ -95,6 +96,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.vrn = value;
+            }
+        }
+
+        public string TagId
+        {
+            get
+            {
+                return this.tagid;
+            }
+            set
+            {
+                this.tagid = value;
             }
         }
 

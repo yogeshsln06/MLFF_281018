@@ -220,6 +220,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+
+
         public static void UpdateAuditSection(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction)
         {
             try
@@ -269,7 +271,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
-        public static void MeargedAuditTransaction(Int32 ParentId, Int32 IkeEntryId, Int32 ANPRFrontEntryId, Int32 ANPRRearEntryId, string AuditedVRN, int AuditedVehicleClassId, int AuditorID,int TranscationStatus)
+        public static void MeargedAuditTransaction(Int32 ParentId, Int32 IkeEntryId, Int32 ANPRFrontEntryId, Int32 ANPRRearEntryId, string AuditedVRN, int AuditedVehicleClassId, int AuditorID, int TranscationStatus)
         {
             try
             {
@@ -1183,6 +1185,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return dt;
         }
 
+        public static DataTable GetUnReviewedDataTableFilteredRecordsLazyLoad(int PageIndex, int PageSize)
+        {
+            try
+            {
+                string spName = Constants.oraclePackagePrefix + "UNREVIEWED_TRANS_LAZYLOAD";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PAGE_INDEX", DbType.String, PageIndex, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PAGE_SIZE", DbType.String, PageSize, ParameterDirection.Input));
+                DataTable dt = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         public static DataTable GetReviewedDataTableFilteredRecords(string filter)
         {
             DataTable dt = new DataTable();
@@ -1219,6 +1239,30 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetChargedDataTableFilteredRecordsLazyLoad(int pageIndex, int pageSize)
+        {
+            DataTable dt = new DataTable();
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = Constants.oraclePackagePrefix + "CHARGED_TRANS_LAZYLOAD_TEST";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PAGE_INDEX", DbType.String, pageIndex, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PAGE_SIZE", DbType.String, pageSize, ParameterDirection.Input));
                 DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 dt = ds.Tables[tableName];
 
@@ -1279,7 +1323,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return dt;
         }
 
-       
+
         public static CBE.TransactionCollection FilteredTransactions(string filter)
         {
             DataTable dt = new DataTable();

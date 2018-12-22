@@ -1452,13 +1452,14 @@ namespace VaaaN.MLFF.WindowsServices
                                                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.CrossTalkEvent ctEvent = new Libraries.CommonLibrary.CBE.CrossTalkEvent();
 
                                                 ctEvent.Timestamp = Convert.ToDateTime(ctp.TimeStamp);// Convert.ToDateTime(ConversionDateTime(ctp.TimeStamp, "crosstalk"));
-
+                                                ctEvent.TagId = ctp.ObjectId;
                                                 if (lane != null)
                                                 {
                                                     ctEvent.PlazaId = ctp.PlazaId;
                                                     ctEvent.PlazaName = GetPlazaNameById(ctp.PlazaId);
                                                     ctEvent.LaneId = ctp.LaneId;
                                                     ctEvent.LaneName = GetLaneNameById(ctp.LaneId);
+                                                   
                                                 }
                                                 else
                                                 {

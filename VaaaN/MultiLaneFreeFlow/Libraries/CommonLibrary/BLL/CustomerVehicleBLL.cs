@@ -20,6 +20,7 @@ Date of Creation :
 using System;
 using System.Collections.Generic;
 using System.Data;
+using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
 
 namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
 {
@@ -103,6 +104,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetLatestCustomerVehicles(lastCollectionUpdateTime);
         }
 
-
+        public static List<CustomerVehicleCBE> CustomerVehicleAccountLazyLoad(int PageIndex, int PageSize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.CustomerVehicleAccountLazyLoad(PageIndex, PageSize);
+        }
     }
 }

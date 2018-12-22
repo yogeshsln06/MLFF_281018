@@ -272,6 +272,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetUnReviewedDataTableById(TransactionId);
         }
 
+        public static DataTable GetUnReviewedDataTableFilteredRecordsLazyLoad(int PageIndex, int PageSize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetUnReviewedDataTableFilteredRecordsLazyLoad(PageIndex, PageSize);
+        }
+        
+
         public static DataTable GetReviewedDataTableFilteredRecords(string filter)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetReviewedDataTableFilteredRecords(filter);
@@ -285,6 +291,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static DataTable GetChargedDataTableFilteredRecords(string filter)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetChargedDataTableFilteredRecords(filter);
+        }
+
+        public static DataTable GetChargedDataTableFilteredRecordsLazyLoad(int pageindex, int pagesize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetChargedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
         }
 
         public static DataTable GetViolationDataTableFilteredRecords(string filter)
@@ -310,5 +321,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.MeargedAuditTransaction(ParentId, IkeEntryId, ANPRFrontEntryId, ANPRRearEntryId, AuditedVRN, AuditedVehicleClassId, AuditorID, TranscationStatus);
         }
+
+       
     }
 }

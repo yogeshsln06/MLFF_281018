@@ -1,4 +1,4 @@
-/* Formatted on 20/12/2018 18:52:05 (QP5 v5.215.12089.38647) */
+/* Formatted on 23-12-2018 01:08:38 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -598,6 +598,10 @@ AS
    PROCEDURE TRAN_UNREVIEWED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                        CUR_OUT       OUT T_CURSOR);
 
+   PROCEDURE UNREVIEWED_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                        P_PAGE_SIZE    IN     NUMBER,
+                                        CUR_OUT           OUT T_CURSOR);
+
    PROCEDURE TRAN_UNREVIEWED_BY_ID (P_TRANSACTION_ID   IN     NUMBER,
                                     CUR_OUT               OUT T_CURSOR);
 
@@ -606,6 +610,10 @@ AS
 
    PROCEDURE TRAN_CHARGED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                     CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE CHARGED_TRANS_LAZYLOAD_TEST (P_PAGE_INDEX   IN     NUMBER,
+                                     P_PAGE_SIZE    IN     NUMBER,
+                                     CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE TRAN_VIOLATION_FILTERED (P_FILTER   IN     NVARCHAR2,
                                       CUR_OUT       OUT T_CURSOR);
@@ -893,9 +901,9 @@ AS
    PROCEDURE ACCOUNT_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
                                     CUR_OUT                 OUT T_CURSOR);
 
-   PROCEDURE ACCOUNT_GETALL_LAZYLOAD (PAGEINDEX   IN     NUMBER,
-                                      PAGESIZE    IN     NUMBER,
-                                      CUR_OUT        OUT T_CURSOR);
+   PROCEDURE ACCOUNT_GETALL_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                      P_PAGE_SIZE    IN     NUMBER,
+                                      CUR_OUT           OUT T_CURSOR);
 
    /*CUSTOMER VEHICLE*/
    PROCEDURE CUSTOMER_VEHICLE_INSERT (
@@ -1003,6 +1011,10 @@ AS
                                              CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE CUSTOMER_VEHICLE_GETALL (CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE CUSTOMER_VEHICLE_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                        P_PAGE_SIZE    IN     NUMBER,
+                                        CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE CUSTOMER_VEHICLE_GETBYTAGID (P_TAG_ID   IN     NVARCHAR2,
                                           CUR_OUT       OUT T_CURSOR);
