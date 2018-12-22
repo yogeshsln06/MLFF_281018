@@ -303,9 +303,19 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetViolationDataTableFilteredRecords(filter);
         }
 
+        public static DataTable GetVIOLATIONDataTableFilteredRecordsLazyLoad(int pageindex, int pagesize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetVIOLATIONDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+        }
+
         public static DataTable GetUnIdentifiedDataTableFilteredRecords(string filter)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetUnIdentifiedDataTableFilteredRecords(filter);
+        }
+
+        public static DataTable GetUnidentifiedDataTableFilteredRecordsLazyLoad(int pageindex, int pagesize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetUnidentifiedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
         }
 
         public static CBE.TransactionCollection FilteredTransactions(string filter)

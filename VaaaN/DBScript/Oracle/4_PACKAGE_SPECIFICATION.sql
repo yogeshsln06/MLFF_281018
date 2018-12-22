@@ -1,4 +1,4 @@
-/* Formatted on 23-12-2018 01:08:38 (QP5 v5.215.12089.38647) */
+/* Formatted on 23/12/2018 04:25:44 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -612,16 +612,23 @@ AS
                                     CUR_OUT       OUT T_CURSOR);
 
    PROCEDURE CHARGED_TRANS_LAZYLOAD_TEST (P_PAGE_INDEX   IN     NUMBER,
-                                     P_PAGE_SIZE    IN     NUMBER,
-                                     CUR_OUT           OUT T_CURSOR);
+                                          P_PAGE_SIZE    IN     NUMBER,
+                                          CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE TRAN_VIOLATION_FILTERED (P_FILTER   IN     NVARCHAR2,
                                       CUR_OUT       OUT T_CURSOR);
 
 
+   PROCEDURE VIOLATION_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                       P_PAGE_SIZE    IN     NUMBER,
+                                       CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE TRAN_UNIDENTIFIED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                          CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE UNIDENTIFIED_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                          P_PAGE_SIZE    IN     NUMBER,
+                                          CUR_OUT           OUT T_CURSOR);
 
    /*PLAZA*/
    PROCEDURE PLAZA_INSERT (P_TMS_ID          IN NUMBER,

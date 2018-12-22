@@ -1,4 +1,4 @@
-/* Formatted on 23-12-2018 01:09:15 (QP5 v5.215.12089.38647) */
+/* Formatted on 23/12/2018 04:03:18 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2779,8 +2779,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
    END TRAN_CHARGED_FILTERED;
 
    PROCEDURE CHARGED_TRANS_LAZYLOAD_TEST (P_PAGE_INDEX   IN     NUMBER,
-                                     P_PAGE_SIZE    IN     NUMBER,
-                                     CUR_OUT           OUT T_CURSOR)
+                                          P_PAGE_SIZE    IN     NUMBER,
+                                          CUR_OUT           OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
@@ -2810,7 +2810,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            T.VEHICLESPEED,
                            T.MEARGED_TRAN_ID
                       FROM TRANS_CHARGED T
-                     WHERE    ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                     WHERE ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
                   ORDER BY TRANSACTION_DATETIME DESC)
            SELECT ROWNUMBER,
                   T.TMS_ID,
@@ -2933,6 +2933,93 @@ ORDER BY TRANSACTION_DATETIME DESC';
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_VIOLATION_FILTERED;
 
+   
+   PROCEDURE VIOLATION_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                          P_PAGE_SIZE    IN     NUMBER,
+                                          CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH CTE_TRANS_HISTORY
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY AUDIT_DATE DESC)
+                              AS ROWNUMBER,
+                           T.TMS_ID,
+                           T.PLAZA_ID,
+                           T.PLAZA_NAME,
+                           T.LANE_ID,
+                           T.LANE_NAME,
+                           T.TRANSACTION_ID,
+                           T.TRANSACTION_DATETIME,
+                           T.CT_ENTRY_ID,
+                           T.NF_ENTRY_ID_FRONT,
+                           T.NF_ENTRY_ID_REAR,
+                           T.IS_BALANCE_UPDATED,
+                           T.IS_TRANSFERED,
+                           T.IS_VIOLATION,
+                           T.IS_REGISTERED,
+                           T.AUDIT_STATUS,
+                           T.AUDITOR_ID,
+                           T.AUDIT_DATE,
+                           T.AUDITED_VEHICLE_CLASS_ID,
+                           T.AUDITED_VRN,
+                           T.VEHICLESPEED,
+                           T.MEARGED_TRAN_ID
+                      FROM TRANS_VIOLATION T
+                     WHERE ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                  ORDER BY AUDIT_DATE DESC)
+           SELECT ROWNUMBER,
+                  T.TMS_ID,
+                  T.PLAZA_ID,
+                  T.PLAZA_NAME,
+                  T.LANE_ID,
+                  T.LANE_NAME,
+                  T.TRANSACTION_ID,
+                  T.TRANSACTION_DATETIME,
+                  T.CT_ENTRY_ID,
+                  CTP.OBJECT_ID AS TAG_ID,
+                  CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
+                  VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
+                  CTP.PLATE_NUMBER AS CTP_VRN,
+                  T.NF_ENTRY_ID_FRONT,
+                  NFPF.PLATE_NUMBER AS FRONT_VRN,
+                  NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
+                  VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
+                  NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
+                  NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
+                  T.NF_ENTRY_ID_REAR,
+                  NFPR.PLATE_NUMBER AS REAR_VRN,
+                  NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
+                  VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
+                  NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
+                  NFPR.VIDEO_URL AS REAR_VIDEO_URL,
+                  T.IS_BALANCE_UPDATED,
+                  T.IS_TRANSFERED,
+                  T.IS_VIOLATION,
+                  T.IS_REGISTERED,
+                  T.AUDIT_STATUS,
+                  T.VEHICLESPEED
+             FROM CTE_TRANS_HISTORY T
+                  LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                     ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
+                     ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
+                     ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
+                     ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
+                     ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
+                     ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END UNIDENTIFIED_TRANS_LAZYLOAD;
+   
+   
+   
    PROCEDURE TRAN_UNIDENTIFIED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                          CUR_OUT       OUT T_CURSOR)
    IS
@@ -2999,6 +3086,91 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_UNIDENTIFIED_FILTERED;
+
+
+   PROCEDURE UNIDENTIFIED_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                          P_PAGE_SIZE    IN     NUMBER,
+                                          CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH CTE_TRANS_HISTORY
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY AUDIT_DATE DESC)
+                              AS ROWNUMBER,
+                           T.TMS_ID,
+                           T.PLAZA_ID,
+                           T.PLAZA_NAME,
+                           T.LANE_ID,
+                           T.LANE_NAME,
+                           T.TRANSACTION_ID,
+                           T.TRANSACTION_DATETIME,
+                           T.CT_ENTRY_ID,
+                           T.NF_ENTRY_ID_FRONT,
+                           T.NF_ENTRY_ID_REAR,
+                           T.IS_BALANCE_UPDATED,
+                           T.IS_TRANSFERED,
+                           T.IS_VIOLATION,
+                           T.IS_REGISTERED,
+                           T.AUDIT_STATUS,
+                           T.AUDITOR_ID,
+                           T.AUDIT_DATE,
+                           T.AUDITED_VEHICLE_CLASS_ID,
+                           T.AUDITED_VRN,
+                           T.VEHICLESPEED,
+                           T.MEARGED_TRAN_ID
+                      FROM TRANS_UNIDENTIFIED T
+                     WHERE ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                  ORDER BY AUDIT_DATE DESC)
+           SELECT ROWNUMBER,
+                  T.TMS_ID,
+                  T.PLAZA_ID,
+                  T.PLAZA_NAME,
+                  T.LANE_ID,
+                  T.LANE_NAME,
+                  T.TRANSACTION_ID,
+                  T.TRANSACTION_DATETIME,
+                  T.CT_ENTRY_ID,
+                  CTP.OBJECT_ID AS TAG_ID,
+                  CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
+                  VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
+                  CTP.PLATE_NUMBER AS CTP_VRN,
+                  T.NF_ENTRY_ID_FRONT,
+                  NFPF.PLATE_NUMBER AS FRONT_VRN,
+                  NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
+                  VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
+                  NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
+                  NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
+                  T.NF_ENTRY_ID_REAR,
+                  NFPR.PLATE_NUMBER AS REAR_VRN,
+                  NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
+                  VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
+                  NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
+                  NFPR.VIDEO_URL AS REAR_VIDEO_URL,
+                  T.IS_BALANCE_UPDATED,
+                  T.IS_TRANSFERED,
+                  T.IS_VIOLATION,
+                  T.IS_REGISTERED,
+                  T.AUDIT_STATUS,
+                  T.VEHICLESPEED
+             FROM CTE_TRANS_HISTORY T
+                  LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                     ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
+                     ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
+                     ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
+                     ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
+                     ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
+                     ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END UNIDENTIFIED_TRANS_LAZYLOAD;
 
    /*PLAZA*/
 
