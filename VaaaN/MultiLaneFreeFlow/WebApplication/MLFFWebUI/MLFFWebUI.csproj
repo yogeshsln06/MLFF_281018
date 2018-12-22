@@ -289,6 +289,8 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\CustomerTransaction\AssociatedTransaction.cshtml" />
+    <Content Include="Views\CustomerTransaction\Unidentified.cshtml" />
+    <Content Include="Views\CustomerTransaction\Unreviewed.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -310,9 +312,7 @@
     <Content Include="Views\Registration\CustomerVehicleChildList.cshtml" />
     <Content Include="Views\Registration\_CustomerVehiclePopUp.cshtml" />
     <Content Include="Views\CustomerTransaction\Index.cshtml" />
-    <Content Include="Views\CustomerTransaction\Unreviewed.cshtml" />
     <Content Include="Views\CustomerTransaction\TranscationList.cshtml" />
-    <Content Include="Views\CustomerTransaction\Unidentified.cshtml" />
     <Content Include="Views\CustomerTransaction\Violation.cshtml" />
     <Content Include="Views\CustomerTransaction\TopUP.cshtml" />
     <Content Include="Views\CustomerTransaction\Charged.cshtml" />

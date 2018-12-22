@@ -630,3 +630,335 @@ function AppendChargedData() {
     });
 
 }
+
+
+function BindUnIdentifiedFirstLoad() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "UnidentifiedListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $("#tblUnidentifiedData").removeClass('my-table-bordered').addClass('table-bordered');
+            $(".animationload").hide();
+            NoMoredata = data.length < pagesize
+            pageload++;
+            datatableVariable = $('#tblUnidentifiedData').DataTable({
+                data: data,
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                scrollY: 230,
+                scroller: {
+                    loadingIndicator: true
+                },
+                processing: true,
+                scrollCollapse: true,
+                stateSave: true,
+                autoWidth: false,
+                paging: false,
+                info: false,
+                columns: [
+                    { 'data': 'ROWNUMBER' },
+                    { 'data': 'TRANSACTION_ID' },
+                    {
+                        'data': 'TRANSACTION_DATETIME',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
+                                oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
+                                $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                            }
+                        }
+
+                    },
+                    { 'data': 'PLAZA_NAME' },
+                    { 'data': 'CTP_VRN' },
+                    { 'data': 'CTP_VEHICLE_CLASS_NAME' },
+                    { 'data': 'FRONT_VRN' },
+                    { 'data': 'NFP_VEHICLE_CLASS_NAME_FRONT' },
+                    {
+                        'data': 'FRONT_IMAGE',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
+                                oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                                $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'FRONT_VIDEO_URL',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
+
+                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                            }
+                        }
+                    },
+                    { 'data': 'REAR_VRN' },
+                    { 'data': 'NFP_VEHICLE_CLASS_NAME_REAR' },
+                    {
+                        'data': 'REAR_IMAGE',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
+                                oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                                $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'REAR_VIDEO_URL',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
+
+                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'VEHICLESPEED',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.VEHICLESPEED != '' && oData.VEHICLESPEED != null) {
+                                $(nTd).html("" + oData.VEHICLESPEED + "KM/H");
+                            }
+                        }
+
+                    },
+                ],
+                width: "100%"
+            });
+            $('.dataTable').css('width', '1200px !important');
+            inProgress = false;
+            $('.dataTables_scrollBody').on('scroll', function () {
+                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblUnidentifiedData").height()) && !NoMoredata && !inProgress) {
+                    AppendUnIdentifiedData();
+                }
+            });
+
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function reloadUnIdentifiedData() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "UnidentifiedListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}
+
+function AppendUnIdentifiedData() {
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "UnidentifiedListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}
+
+
+function BindViolationFirstLoad() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ViolationListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $("#tblViolationData").removeClass('my-table-bordered').addClass('table-bordered');
+            $(".animationload").hide();
+            NoMoredata = data.length < pagesize
+            pageload++;
+            datatableVariable = $('#tblViolationData').DataTable({
+                data: data,
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                scrollY: 230,
+                scroller: {
+                    loadingIndicator: true
+                },
+                processing: true,
+                scrollCollapse: true,
+                stateSave: true,
+                autoWidth: false,
+                paging: false,
+                info: false,
+                columns: [
+                    { 'data': 'ROWNUMBER' },
+                    { 'data': 'TRANSACTION_ID' },
+                    {
+                        'data': 'TRANSACTION_DATETIME',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
+                                oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
+                                $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                            }
+                        }
+
+                    },
+                    { 'data': 'PLAZA_NAME' },
+                    { 'data': 'CTP_VRN' },
+                    { 'data': 'CTP_VEHICLE_CLASS_NAME' },
+                    { 'data': 'FRONT_VRN' },
+                    { 'data': 'NFP_VEHICLE_CLASS_NAME_FRONT' },
+                    {
+                        'data': 'FRONT_IMAGE',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
+                                oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                                $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'FRONT_VIDEO_URL',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
+
+                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                            }
+                        }
+                    },
+                    { 'data': 'REAR_VRN' },
+                    { 'data': 'NFP_VEHICLE_CLASS_NAME_REAR' },
+                    {
+                        'data': 'REAR_IMAGE',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
+                                oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                                $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'REAR_VIDEO_URL',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
+
+                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'VEHICLESPEED',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.VEHICLESPEED != '' && oData.VEHICLESPEED != null) {
+                                $(nTd).html("" + oData.VEHICLESPEED + "KM/H");
+                            }
+                        }
+
+                    },
+                ],
+                width: "100%"
+            });
+            $('.dataTable').css('width', '1200px !important');
+            inProgress = false;
+            $('.dataTables_scrollBody').on('scroll', function () {
+                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblViolationData").height()) && !NoMoredata && !inProgress) {
+                    AppendViolationData();
+                }
+            });
+
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function reloadViolationData() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ViolationListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}
+
+function AppendViolationData() {
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ViolationListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}

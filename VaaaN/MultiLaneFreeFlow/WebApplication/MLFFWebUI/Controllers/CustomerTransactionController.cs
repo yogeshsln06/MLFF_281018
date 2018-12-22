@@ -1067,10 +1067,26 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Violation");
-            //AND TRANSACTION_DATETIME BETWEEN TO_DATE('" + DateTime.Now.AddMinutes(-30) + "', 'DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + DateTime.Now + "', 'DD/MM/YYYY HH24:MI:SS')
-            string strQuery = "WHERE 1=1";
-            dt = TransactionBLL.GetViolationDataTableFilteredRecords(strQuery);
-            return View("Violation", dt);
+            return View();
+        }
+
+        [HttpPost]
+        public string ViolationListScroll(int pageindex, int pagesize)
+        {
+            string Det = "";
+            try
+            {
+                JsonResult result = new JsonResult();
+                dt = TransactionBLL.GetVIOLATIONDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+            }
+            return Det;
         }
 
         public ActionResult Unidentified()
@@ -1080,9 +1096,26 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Unidentified");
-            string strQuery = "WHERE 1=1";
-            dt = TransactionBLL.GetUnIdentifiedDataTableFilteredRecords(strQuery);
-            return View("Unidentified", dt);
+            return View();
+        }
+
+        [HttpPost]
+        public string UnidentifiedListScroll(int pageindex, int pagesize)
+        {
+            string Det = "";
+            try
+            {
+                JsonResult result = new JsonResult();
+                dt = TransactionBLL.GetUnidentifiedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+            }
+            return Det;
         }
 
 

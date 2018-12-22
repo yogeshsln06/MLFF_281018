@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Violation Transcation";
+    ViewBag.Title = "Unidentified Transcation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -38,14 +38,14 @@
                 <div class="form-row">
                     <div class="col-md-8">
                         <div class="mT-10">
-                            <h4 class="c-grey-900 mB-20">Violation Transcation</h4>
+                            <h4 class="c-grey-900 mB-20">Unidentified Transcation</h4>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mT-10">
                             <div class="gap-5 peers" style="float:right;overflow: visible !important;">
                                 <div class="peer">
-                                    <a class="btn cur-p btn-light" href='javascript:void(0);' onclick="reloadViolationData();">
+                                    <a class="btn cur-p btn-light" href='javascript:void(0);' onclick="reloadUnIdentifiedData();">
                                         <span class='icon-holder'>
                                             <i class='c-blue-500 ti-reload'></i>
                                         </span>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <table id="tblViolationData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
+                <table id="tblUnidentifiedData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th style="text-align: center; vertical-align: middle; " rowspan="2">
@@ -145,7 +145,7 @@
 </div>
 <script>
     $(document).ready(function () {
-        BindViolationFirstLoad();
+        BindUnIdentifiedFirstLoad();
     });
 </script>
 <script src="~/js/CustomerTranscation.js"></script>
