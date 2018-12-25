@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VaaaN.MLFF.VehicleFlowSimulator"
         mc:Ignorable="d"
-        Title="MLFF Vehicle Flow Simulator" Height="400" Width="624" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="MLFF Vehicle Flow Simulator" Height="482" Width="624" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Canvas>
         <Label x:Name="labelWebAPIAddress" Content="API Add." Canvas.Left="20" Canvas.Top="2"/>
         <TextBox x:Name="textBoxAPIAddress" Height="23" Canvas.Left="80" TextWrapping="Wrap" Text="http://192.168.1.63:5555" Canvas.Top="5" Width="415"/>
@@ -48,7 +48,9 @@
 
         <Button x:Name="buttonGenerateNFHTML" Content="Generate" Canvas.Left="511" Canvas.Top="240" Width="75" Click="buttonGenerateNFHTML_Click"/>
 
-
+        <Button x:Name="buttonStartMLFF" Content="Start MLFF" Canvas.Left="160" Canvas.Top="365" Width="140" Click="buttonStartMLFF_Click"/>
+        
+        <Button x:Name="buttonStopMLFF" Content="Stop MLFF" Canvas.Left="340" Canvas.Top="365" Width="140" Click="buttonStopMLFF_Click"/>
 
     </Canvas>
 </Window>
