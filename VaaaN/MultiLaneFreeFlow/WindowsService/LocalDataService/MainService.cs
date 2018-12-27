@@ -52,7 +52,7 @@ namespace VaaaN.MLFF.WindowsServices
         List<TranscationData> transcationDataList = new List<TranscationData>();
         List<TagData> recentlyProcessedTagsList = new List<TagData>();
 
-        List<TranscationData> TranscationDataFilterList = new List<TranscationData>();
+        List<TranscationData> filteredTransactionList = new List<TranscationData>();
         List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE> TollRateFilteredList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>();
 
         VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration generalFileConfig;
@@ -69,7 +69,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
         }
 
@@ -494,17 +494,17 @@ namespace VaaaN.MLFF.WindowsServices
                                                     DateTime ctpDateTime = Convert.ToDateTime(ctp.TimeStamp);
                                                     LogMessage("Search criteria: " + ctp.TMSId + ", " + ctp.PlazaId + ", " + ctpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + ", " + associatedCVCT.VehRegNo);
                                                     //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans1 = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(ctp.TMSId, ctp.PlazaId, ctpDateTime, associatedCVCT.VehRegNo);
-                                                    TranscationDataFilterList = GetAssociatedData(ctp.TMSId, ctp.PlazaId, ctpDateTime, associatedCVCT.VehRegNo, "ANPR");
-                                                    if (TranscationDataFilterList.Count > 0)
+                                                    filteredTransactionList = GetAssociatedTransactions(ctp.TMSId, ctp.PlazaId, ctpDateTime, associatedCVCT.VehRegNo, "ANPR");
+                                                    if (filteredTransactionList.Count > 0)
                                                     {
-                                                        if (TranscationDataFilterList.Count == 1)
+                                                        if (filteredTransactionList.Count == 1)
                                                         {
                                                             #region Update in main transaction table
                                                             try
                                                             {
                                                                 #region Update CTP section in main transaction table
                                                                 LogMessage("Updating in main transaction table...");
-                                                                TranscationData Filtertransaction = TranscationDataFilterList[0];
+                                                                TranscationData Filtertransaction = filteredTransactionList[0];
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
                                                                 transaction.CrosstalkEntryId = Convert.ToInt32(Filtertransaction.IKEId);
                                                                 transaction.NodefluxEntryIdFront = Convert.ToInt32(Filtertransaction.AnprFId);
@@ -516,11 +516,12 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateCrossTalkSection(transaction, ctpEntryId);//, eviVehicleClassId, eviVRN);
                                                                 var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
-                                                                if (obj != null) {
+                                                                if (obj != null)
+                                                                {
                                                                     obj.IKEId = ctpEntryId;
                                                                     obj.IKEVechileClassId = ctp.VehicleClassId;
                                                                 }
-                                                                LogMessage("RFID Transcation updated successfully.");
+                                                                LogMessage("RFID transcation updated successfully.");
                                                                 #endregion
 
                                                                 #region Get vehicle class matched to VRN front and rear
@@ -554,30 +555,52 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 // if IKE Pakect vehcile class not matched with ANPR and Dataabse than balance never deducated and mark Violation
                                                                 if (ctp.VehicleClassId == associatedCVCT.VehicleClassId && (ctp.VehicleClassId == vehicleClassIdFront) || (ctp.VehicleClassId == vehicleClassIdRear))
                                                                 {
-                                                                    if (transaction.IsViolation == -1) //0 for normal, 1 for violtion, by default -1 (this means this is not not updated)
+                                                                    //updated on 26 Dec, 2018 following if removed
+                                                                    //if (transaction.IsViolation == -1) //0 for normal, 1 for violtion, by default -1 (this means this is not not updated)
+                                                                    //{ 
+                                                                    if (transaction.IsBalanceUpdated == -1) //0 for balance not updated, 1 means balance updated
                                                                     {
-                                                                        if (transaction.IsBalanceUpdated == -1) //0 for balance not updated, 1 means balance updated
+                                                                        if (associatedCACT != null)
                                                                         {
-                                                                            if (associatedCACT != null)
+                                                                            //update the local list
+                                                                            if (obj != null)
                                                                             {
-                                                                                if (obj != null) obj.IsBalanceUpdated = 1;
-                                                                                //financial operation here
-                                                                                FinancialProcessing(associatedCVCT, associatedCACT, transaction);
+                                                                                obj.IsBalanceUpdated = 1;
+                                                                            }
 
-                                                                                //notification operation here
-                                                                                //NotificationProcessing(associatedCVCT, associatedCACT, transaction);
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                LogMessage("Associated customer account of this EVI id is found null.");
-                                                                            }
+                                                                            //do financial transaction
+                                                                            FinancialProcessing(associatedCVCT, associatedCACT, transaction);
+
+                                                                            //do notification
+                                                                            //NotificationProcessing(associatedCVCT, associatedCACT, transaction);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            LogMessage("Associated customer account of this tag id is found null.");
                                                                         }
                                                                     }
+                                                                    //}
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (obj != null) obj.IsViolation = 1;
-                                                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsViolation(transaction);
+                                                                    //update local list
+                                                                    if (obj != null)
+                                                                    {
+                                                                        if (obj.IsBalanceUpdated != 1) //updated on 26 Dec, 2018
+                                                                        {
+                                                                            obj.IsViolation = 1;
+                                                                        }
+                                                                    }
+                                                                    //update in database
+                                                                    if (transaction.IsBalanceUpdated != 1) //updated on 26 Dec, 2018
+                                                                    {
+                                                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsViolation(transaction);
+                                                                        LogMessage("Transaction is marked as violation.");
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        LogMessage("Transaction cannot be marked as violation as balance has been already updated.");
+                                                                    }
 
                                                                     //violation vms message
                                                                 }
@@ -601,6 +624,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         {
                                                             LogMessage("No associated transaction found in transaction table. Inserting into main transaction table...");
                                                             Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByCTP(ctp, ctpEntryId); //, eviVehicleClassId, eviVRN);
+                                                            //update local list
                                                             transcationDataList.Add(new TranscationData { TranscationId = TranscationId, LaneId = ctp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = associatedCVCT.VehRegNo, PlazaId = ctp.PlazaId, IKEId = ctpEntryId, CameraPosition = 0, TransactionDateTime = Convert.ToDateTime(ctp.TimeStamp), CurrentDateTime = DateTime.Now, IKEVechileClassId = ctp.VehicleClassId });
                                                             LogMessage("Crosstalk packet inserted successfully.");
                                                         }
@@ -884,27 +908,31 @@ namespace VaaaN.MLFF.WindowsServices
                                             LogMessage("VRN exists in the system, checking whether it is in recent transactions or not...");
 
                                             LogMessage("Search criteria: " + nfp.TMSId + ", " + nfp.GantryId + ", " + nfpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + " " + nfp.PlateNumber);
+                                            
                                             //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedCrossTalkTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInCrossTalk(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
-                                            TranscationDataFilterList = GetAssociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "RFID");
+                                            filteredTransactionList = GetAssociatedTransactions(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "RFID");
                                             #endregion
 
-                                            if (TranscationDataFilterList.Count > 0)
+                                            if (filteredTransactionList.Count > 0)
                                             {
                                                 #region Complete transaction, balance update and SMS
-                                                if (TranscationDataFilterList.Count == 1)
+                                                if (filteredTransactionList.Count == 1)
                                                 {
-                                                    LogMessage("Transaction found to update...");
+                                                    LogMessage("Transaction is found to update...");
                                                     // VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = associatedCrossTalkTrans[0];
-                                                    TranscationData Filtertransaction = TranscationDataFilterList[0];
+                                                    TranscationData filteredTransaction = filteredTransactionList[0];
                                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
-                                                    transaction.CrosstalkEntryId = Convert.ToInt32(Filtertransaction.IKEId);
-                                                    transaction.NodefluxEntryIdFront = Convert.ToInt32(Filtertransaction.AnprFId);
-                                                    transaction.NodefluxEntryIdRear = Convert.ToInt32(Filtertransaction.AnprRId);
-                                                    transaction.TMSId = Filtertransaction.TMSId;
-                                                    transaction.PlazaId = Filtertransaction.PlazaId;
+                                                    transaction.CrosstalkEntryId = Convert.ToInt32(filteredTransaction.IKEId);
+                                                    transaction.NodefluxEntryIdFront = Convert.ToInt32(filteredTransaction.AnprFId);
+                                                    transaction.NodefluxEntryIdRear = Convert.ToInt32(filteredTransaction.AnprRId);
+                                                    transaction.TMSId = filteredTransaction.TMSId;
+                                                    transaction.PlazaId = filteredTransaction.PlazaId;
                                                     transaction.LaneId = nfp.LaneId;
-                                                    transaction.TransactionId = Filtertransaction.TranscationId;
-                                                    transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
+                                                    transaction.TransactionId = filteredTransaction.TranscationId;
+                                                    transaction.TransactionDateTime = filteredTransaction.TransactionDateTime;
+
+                                                    transaction.IsBalanceUpdated = filteredTransaction.IsBalanceUpdated; //26 Dec, 2018
+
                                                     #region Get customer vehicle and customer account
                                                     //Get vehicle details of the associated tagid (VRN, Customer Account id etc)
                                                     LogMessage("Getting vehicle details...");
@@ -938,7 +966,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPFront(transaction, nfpEntryId);
                                                         //VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateNodefluxSectionFront(transaction, nfpEntryId);
                                                         LogMessage("Transaction updated by nf entry id front.");
-                                                        var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
+                                                        var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == filteredTransaction.TranscationId);
                                                         if (obj != null) obj.AnprFId = nfpEntryId;
                                                     }
                                                     else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
@@ -953,7 +981,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         }
                                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPRear(transaction, nfpEntryId);
                                                         //VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateNodefluxSectionRear(transaction, nfpEntryId);
-                                                        var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
+                                                        var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == filteredTransaction.TranscationId);
                                                         if (obj != null) obj.AnprRId = nfpEntryId;
                                                         LogMessage("Transaction updated by nf entry id rear.");
                                                     }
@@ -964,40 +992,54 @@ namespace VaaaN.MLFF.WindowsServices
                                                     #endregion
 
                                                     #region charging and notification
-                                                    //if the transactionno marked as violation before?
-                                                    if (Filtertransaction.IsViolation == -1) //0 for normal, 1 for violtion, by default -1 (not updated)
+                                                    //if the transaction marked as violation before?
+                                                    //26 Dec, 2012 the following if has been removed
+                                                    //if (Filtertransaction.IsViolation == -1) //0 for normal, 1 for violtion, by default -1 (not updated)
+                                                    //{
+                                                    LogMessage("Transaction is not marked as violation previously. Going to check violation...");
+                                                    if (filteredTransaction.IKEVechileClassId == nfp.VehicleClassId && customerVehicleInfo.VehicleClassId == nfp.VehicleClassId)
                                                     {
-                                                        LogMessage("Transaction is not marked as violation previously. Going to check violation...");
-                                                        if (Filtertransaction.IKEVechileClassId == nfp.VehicleClassId && customerVehicleInfo.VehicleClassId == nfp.VehicleClassId)
+                                                        LogMessage("Tag class and NF class matched. Going to financial and notification processing...");
+                                                        if (filteredTransaction.IsBalanceUpdated == -1) //0 for balance not updated, 1 means balance updated
                                                         {
-                                                            LogMessage("Tag class and NF class matched. Going to financial and notification processing...");
-                                                            if (Filtertransaction.IsBalanceUpdated == -1) //0 for balance not updated, 1 means balance updated
-                                                            {
-                                                                var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
-                                                                if (obj != null) obj.IsBalanceUpdated = 1;
-                                                                //financial operation here
-                                                                FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
-                                                                LogMessage("Financial processing has been done.");
+                                                            var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == filteredTransaction.TranscationId);
+                                                            if (obj != null) obj.IsBalanceUpdated = 1;
+                                                            //financial operation here
+                                                            FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+                                                            LogMessage("Financial processing has been done.");
 
-                                                                //notification operation here
-                                                                // NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
-                                                                //LogMessage("Notification processing has been done.");
-                                                            }
-                                                            else
-                                                            {
-                                                                LogMessage("Balance is already updated.");
-                                                            }
+                                                            //notification operation here
+                                                            // NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
+                                                            //LogMessage("Notification processing has been done.");
                                                         }
                                                         else
                                                         {
-                                                            LogMessage("Tag class and NF class does not match. Transaction will be marked as violation.");
-                                                            //mark the transaction as violation and leave it for manual review
-                                                            var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
-                                                            if (obj != null) obj.IsViolation = 1;
+                                                            LogMessage("Balance is already updated.");
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        LogMessage("Tag class and NF class does not match. Transaction will be marked as violation.");
+                                                        //mark the transaction as violation and leave it for manual review
+                                                        var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == filteredTransaction.TranscationId);
+                                                        if (obj != null)
+                                                        {
+                                                            if (obj.IsBalanceUpdated != 1) //26 Dec, 2018
+                                                            {
+                                                                obj.IsViolation = 1;
+                                                            }
+                                                        }
+                                                        if (transaction.IsBalanceUpdated != 1) //26 Dec, 2018
+                                                        {
                                                             VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsViolation(transaction);
                                                             LogMessage("Transaction is marked as violation.");
                                                         }
+                                                        else
+                                                        {
+                                                            LogMessage("Transaction cannot be marked as violation as balance has been already updated.");
+                                                        }
                                                     }
+                                                    //}
                                                     #endregion
 
 
@@ -1017,16 +1059,16 @@ namespace VaaaN.MLFF.WindowsServices
                                                     LogMessage("VRN exists but no associated crosstalk transaction found in transaction table. Checking associated nodeflux transaction...");
 
                                                     //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
-                                                    TranscationDataFilterList = GetAssociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
-                                                    if (TranscationDataFilterList.Count > 0)
+                                                    filteredTransactionList = GetAssociatedTransactions(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
+                                                    if (filteredTransactionList.Count > 0)
                                                     {
                                                         #region Update Tran Table if ANPR found
-                                                        if (TranscationDataFilterList.Count == 1)
+                                                        if (filteredTransactionList.Count == 1)
                                                         {
                                                             LogMessage("Transaction found to update...");
                                                             //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = associatedNodeFluxTrans[0];
                                                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
-                                                            TranscationData Filtertransaction = TranscationDataFilterList[0];
+                                                            TranscationData Filtertransaction = filteredTransactionList[0];
                                                             transaction.NodefluxEntryIdFront = Convert.ToInt32(Filtertransaction.AnprFId);
                                                             transaction.NodefluxEntryIdRear = Convert.ToInt32(Filtertransaction.AnprRId);
                                                             transaction.TMSId = Filtertransaction.TMSId;
@@ -1112,17 +1154,17 @@ namespace VaaaN.MLFF.WindowsServices
                                             #region Create/ Update a transaction Main transaction table 
                                             try
                                             {
-                                                LogMessage("VRN not exists. Checking associated nodeflux transaction...");
+                                                LogMessage("VRN does not exist. Checking associated nodeflux transaction...");
 
                                                 //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
-                                                TranscationDataFilterList = GetAssociatedData(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
-                                                if (TranscationDataFilterList.Count > 0)
+                                                filteredTransactionList = GetAssociatedTransactions(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
+                                                if (filteredTransactionList.Count > 0)
                                                 {
                                                     #region Associate ANPR Found
-                                                    if (TranscationDataFilterList.Count == 1)
+                                                    if (filteredTransactionList.Count == 1)
                                                     {
                                                         #region ANPR Associated Data found in ANPR
-                                                        TranscationData Filtertransaction = TranscationDataFilterList[0];
+                                                        TranscationData Filtertransaction = filteredTransactionList[0];
                                                         LogMessage("Transaction found to update...");
                                                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
                                                         transaction.CrosstalkEntryId = Convert.ToInt32(Filtertransaction.IKEId);
@@ -1381,7 +1423,7 @@ namespace VaaaN.MLFF.WindowsServices
                     AFTERDEDUCTION = AFTERDEDUCTION.Replace("tid", transaction.TransactionId.ToString());
                     if (AFTERDEDUCTION.Length > 160)
                     {
-                        AFTERDEDUCTION = AFTERDEDUCTION.Substring(0, 149);
+                        AFTERDEDUCTION = AFTERDEDUCTION.Substring(0, 159);
                     }
                     smsDetail.SMSMessage = AFTERDEDUCTION;// "Pelanggan Yth, telah dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", "") + " terhadap saldo SJBE anda atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di tempat " + GetPlazaNameById(transaction.PlazaId) + ". Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture).Replace("Rp", "") + " Ref: [" + transaction.TransactionId.ToString() + "]";
                 }
@@ -1397,7 +1439,7 @@ namespace VaaaN.MLFF.WindowsServices
                     NOTIFICATION = NOTIFICATION.Replace("tid", transaction.TransactionId.ToString());
                     if (NOTIFICATION.Length > 160)
                     {
-                        NOTIFICATION = NOTIFICATION.Substring(0, 149);
+                        NOTIFICATION = NOTIFICATION.Substring(0, 159);
                     }
                     smsDetail.SMSMessage = NOTIFICATION;//"Pelanggan Yth, Saldo SJBE anda saat ini tidak mencukupi untuk dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", "") + " atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di Gantry - Medan Merdeka Barat 1. Silahkan melakukan pengisian ulang saldo SJBE anda sebelum " + RechareDate + ". Keterlambatan pengisian ulang saldo akan dikenakan denda sebesar Rp 1.000.000,00. Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse((AfterDeduction + tollToDeduct).ToString()).ToString("C", culture).Replace("Rp", "") + " Ref: [" + transaction.TransactionId.ToString() + "]";
                 }
@@ -1914,7 +1956,7 @@ namespace VaaaN.MLFF.WindowsServices
             return result;
         }
 
-        public List<TranscationData> GetAssociatedData(Int32 tmsId, Int32 plazaId, DateTime timestamp, string vrn, string pktType)
+        public List<TranscationData> GetAssociatedTransactions(Int32 tmsId, Int32 plazaId, DateTime timestamp, string vrn, string pktType)
         {
             if (pktType.ToLower() == "rfid")
             {

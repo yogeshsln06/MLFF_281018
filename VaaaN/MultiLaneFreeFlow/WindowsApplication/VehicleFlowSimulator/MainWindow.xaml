@@ -7,45 +7,44 @@
         mc:Ignorable="d"
         Title="MLFF Vehicle Flow Simulator" Height="482" Width="624" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Canvas RenderTransformOrigin="0.503,0.499">
-        <Label x:Name="labelWebAPIAddress" Content="API Address" Canvas.Left="10" Canvas.Top="16" VerticalAlignment="Center" Width="75"/>
-        <TextBox x:Name="textBoxAPIAddress" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="http://192.168.1.63:5555" Canvas.Top="20" Width="460" VerticalAlignment="Center"/>
+        <Label x:Name="labelWebAPIAddress" Content="API Address:" Canvas.Left="10" Canvas.Top="16" VerticalAlignment="Center" Width="80" FontWeight="Bold"/>
+        <TextBox x:Name="textBoxAPIAddress" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="http://192.168.1.63:5555" Canvas.Top="20" Width="221" VerticalAlignment="Center"/>
 
-        <Label x:Name="label1" Content="Vehicle" Canvas.Left="10" Canvas.Top="46" VerticalAlignment="Center" HorizontalAlignment="Left" Width="75"/>
+        <Label x:Name="label1" Content="Vehicle:" Canvas.Left="10" Canvas.Top="46" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" FontWeight="Bold"/>
         <ComboBox x:Name="comboBoxVehicle" Canvas.Left="99" Canvas.Top="50" Width="460" SelectionChanged="comboBoxVehicle_SelectionChanged" VerticalAlignment="Center"/>
 
-        <Label x:Name="labelFront" Content="Front ANPR" Canvas.Left="94" Canvas.Top="80" VerticalAlignment="Top"/>
-        <Label x:Name="labelCrossTalk1" Content="CT Front" Canvas.Left="214" Canvas.Top="80" VerticalAlignment="Top"/>
-        <Label x:Name="labelRear" Content="Rear ANPR" Canvas.Left="333" Canvas.Top="80" RenderTransformOrigin="0.455,0.423" VerticalAlignment="Top"/>
-        <Label x:Name="labelCrossTal2" Content="CT Rear" Canvas.Left="495" Canvas.Top="80" VerticalAlignment="Top"/>
+        <Label x:Name="labelFront" Content="Front ANPR" Canvas.Left="94" Canvas.Top="156" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="labelCrossTalk1" Content="CT Front" Canvas.Left="214" Canvas.Top="156" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="labelRear" Content="Rear ANPR" Canvas.Left="333" Canvas.Top="156" RenderTransformOrigin="0.455,0.423" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="labelCrossTalk" Content="CT Rear" Canvas.Left="495" Canvas.Top="156" VerticalAlignment="Top" FontWeight="Bold"/>
 
-        <CheckBox x:Name="checkBoxFrontAttachement" Content="" Canvas.Left="99" Canvas.Top="140" IsChecked="True"/>
+        <CheckBox x:Name="checkBoxFrontAttachement" Content="" Canvas.Left="99" Canvas.Top="216" IsChecked="True"/>
 
-        <CheckBox x:Name="checkBoxCrossTalkAttachmentFront" Content="" Canvas.Left="219" Canvas.Top="140" IsChecked="True"/>
+        <CheckBox x:Name="checkBoxCrossTalkAttachmentFront" Content="" Canvas.Left="219" Canvas.Top="216" IsChecked="True"/>
 
-        <CheckBox x:Name="checkBoxRearAttachementFront" Content="" Canvas.Left="339" Canvas.Top="140" IsChecked="True"/>
+        <CheckBox x:Name="checkBoxRearAttachementFront" Content="" Canvas.Left="339" Canvas.Top="216" IsChecked="True"/>
 
-        <CheckBox x:Name="checkBoxCrossTalkAttachmentRear" Content="" Canvas.Left="501" Canvas.Top="140" IsChecked="True"/>
+        <CheckBox x:Name="checkBoxCrossTalkAttachmentRear" Content="" Canvas.Left="501" Canvas.Top="216" IsChecked="True"/>
 
-        <Button x:Name="buttonSimulate" Content="Simulate" Canvas.Left="260" Canvas.Top="275" Width="100" Click="buttonSimulate_Click"/>
+        <Button x:Name="buttonSimulate" Content="Simulate" Canvas.Left="260" Canvas.Top="351" Width="100" Click="buttonSimulate_Click"/>
 
-        <Label x:Name="labelCustomer" Content="Customer" Canvas.Left="20" Canvas.Top="331" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <TextBox x:Name="textBoxCustomer" Height="23" Canvas.Left="80" TextWrapping="Wrap" Text="" Canvas.Top="334" Width="415"/>
+        <Label x:Name="labelCustomer" Content="Customer:" Canvas.Left="10" Canvas.Top="79" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold"/>
+        <Label x:Name="textBoxCustomer" Height="23" Canvas.Left="99" Content="" Canvas.Top="82" Width="301"/>
 
-        <TextBox x:Name="textBoxFrontOrder" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="1" Canvas.Top="110" Width="20" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBoxCrossTalkOrderFront" Height="23" Canvas.Left="219" TextWrapping="Wrap" Text="2" Canvas.Top="110" Width="20" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBoxRearOrder" Height="23" Canvas.Left="339" TextWrapping="Wrap" Text="3" Canvas.Top="110" Width="20" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBoxCrossTalkOrderRear" Height="23" Canvas.Left="501" TextWrapping="Wrap" Text="4" Canvas.Top="110" Width="20" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxFrontOrder" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="1" Canvas.Top="186" Width="20" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxCrossTalkOrderFront" Height="23" Canvas.Left="219" TextWrapping="Wrap" Text="2" Canvas.Top="186" Width="20" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxRearOrder" Height="23" Canvas.Left="339" TextWrapping="Wrap" Text="3" Canvas.Top="186" Width="20" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxCrossTalkOrderRear" Height="23" Canvas.Left="501" TextWrapping="Wrap" Text="4" Canvas.Top="186" Width="20" VerticalAlignment="Top"/>
 
+        <Label x:Name="labelVehicle" Content="Vehicle:" Canvas.Left="10" Canvas.Top="115" FontWeight="Bold"/>
+        <Label x:Name="textBoxVehicle" Height="23" Canvas.Left="99" Content="" Canvas.Top="118" Width="301"/>
 
-        <Label x:Name="labelVehicle" Content="Vehicle" Canvas.Left="20" Canvas.Top="367"/>
-        <TextBox x:Name="textBoxVehicle" Height="23" Canvas.Left="80" TextWrapping="Wrap" Text="" Canvas.Top="370" Width="415"/>
+        <Button x:Name="buttonGenerateNFHTML" Content="Generate" Canvas.Left="511" Canvas.Top="416" Width="75" Click="buttonGenerateNFHTML_Click" Visibility="Hidden"/>
 
-        <Button x:Name="buttonGenerateNFHTML" Content="Generate" Canvas.Left="511" Canvas.Top="416" Width="75" Click="buttonGenerateNFHTML_Click" IsEnabled="False"/>
+        <Button x:Name="buttonStartMLFF" Content="Start MLFF" Canvas.Left="160" Canvas.Top="415" Width="140" Click="buttonStartMLFF_Click" Visibility="Hidden"/>
 
-        <Button x:Name="buttonStartMLFF" Content="Start MLFF" Canvas.Left="160" Canvas.Top="415" Width="140" Click="buttonStartMLFF_Click" IsEnabled="False"/>
-
-        <Button x:Name="buttonStopMLFF" Content="Stop MLFF" Canvas.Left="340" Canvas.Top="415" Width="140" Click="buttonStopMLFF_Click" IsEnabled="False"/>
-        <ComboBox x:Name="comboBoxFrontClass" Canvas.Left="99" Canvas.Top="200" Width="100">
+        <Button x:Name="buttonStopMLFF" Content="Stop MLFF" Canvas.Left="340" Canvas.Top="415" Width="140" Click="buttonStopMLFF_Click" Visibility="Hidden"/>
+        <ComboBox x:Name="comboBoxFrontClass" Canvas.Left="99" Canvas.Top="276" Width="100">
             <ComboBoxItem>Not Detected</ComboBoxItem>
             <ComboBoxItem>motorcycle</ComboBoxItem>
             <ComboBoxItem>small</ComboBoxItem>
@@ -53,20 +52,20 @@
             <ComboBoxItem>big</ComboBoxItem>
         </ComboBox>
 
-        <ComboBox x:Name="comboBoxRearClass" Canvas.Left="339" Canvas.Top="200" Width="100">
+        <ComboBox x:Name="comboBoxRearClass" Canvas.Left="339" Canvas.Top="276" Width="100">
             <ComboBoxItem>Not Detected</ComboBoxItem>
             <ComboBoxItem>motorcycle</ComboBoxItem>
             <ComboBoxItem>small</ComboBoxItem>
             <ComboBoxItem>medium</ComboBoxItem>
             <ComboBoxItem>big</ComboBoxItem>
         </ComboBox>
-        <TextBox x:Name="textBoxNFFText" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="" Canvas.Top="170" Width="100"/>
-        <TextBox x:Name="textBoxNFRText" Height="23" Canvas.Left="339" TextWrapping="Wrap" Text="" Canvas.Top="170" Width="100"/>
-        <Label x:Name="label1_Copy" Content="Packet" Canvas.Left="10" Canvas.Top="76" VerticalAlignment="Center" HorizontalAlignment="Left" Width="75"/>
-        <Label x:Name="label1_Copy1" Content="Order" Canvas.Left="10" Canvas.Top="106" VerticalAlignment="Center" HorizontalAlignment="Left" Width="75"/>
-        <Label x:Name="label1_Copy2" Content="Attach" Canvas.Left="10" Canvas.Top="136" VerticalAlignment="Center" HorizontalAlignment="Left" Width="75"/>
-        <Label x:Name="label1_Copy3" Content="VRN" Canvas.Left="10" Canvas.Top="167" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <Label x:Name="label1_Copy5" Content="Class" Canvas.Left="10" Canvas.Top="196" VerticalAlignment="Center" HorizontalAlignment="Left" Width="75"/>
+        <TextBox x:Name="textBoxNFFText" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="" Canvas.Top="246" Width="100"/>
+        <TextBox x:Name="textBoxNFRText" Height="23" Canvas.Left="339" TextWrapping="Wrap" Text="" Canvas.Top="246" Width="100"/>
+        <Label x:Name="label1_Copy" Content="Packet:" Canvas.Left="10" Canvas.Top="156" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" FontWeight="Bold"/>
+        <Label x:Name="label1_Copy1" Content="Order:" Canvas.Left="10" Canvas.Top="182" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" FontWeight="Bold"/>
+        <Label x:Name="label1_Copy2" Content="Attach:" Canvas.Left="10" Canvas.Top="212" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" FontWeight="Bold"/>
+        <Label x:Name="label1_Copy3" Content="VRN:" Canvas.Left="10" Canvas.Top="243" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold" Width="80"/>
+        <Label x:Name="label1_Copy5" Content="Class:" Canvas.Left="10" Canvas.Top="272" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" FontWeight="Bold"/>
         <!--<Rectangle Fill="#FFF4F4F5" Height="135" Canvas.Left="180" Stroke="Black" Canvas.Top="125" Width="2"/>
         <Rectangle Fill="#FFF4F4F5" Height="135" Canvas.Left="310" Stroke="Black" Canvas.Top="125" Width="2"/>
         <Rectangle Fill="#FFF4F4F5" Height="135" Canvas.Left="448" Stroke="Black" Canvas.Top="125" Width="2"/>

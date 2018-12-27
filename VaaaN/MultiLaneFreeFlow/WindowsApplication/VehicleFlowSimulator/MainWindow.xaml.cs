@@ -47,7 +47,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 comboBoxVehicle.Items.Add("--Select--");
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE cv in vehicles)
                 {
-                    comboBoxVehicle.Items.Add(cv.EntryId + ", " + cv.AccountId + ", " + cv.VehicleClassId + ", " + cv.VehRegNo + ", " + cv.TagId);
+                    comboBoxVehicle.Items.Add(cv.EntryId + ", " + cv.AccountId + ", " + cv.VehicleClassId + ", " + cv.VehRegNo + ", " + cv.TagId + ", " + cv.AccountBalance);
                 }
                 comboBoxVehicle.SelectedIndex = 0;
 
@@ -99,13 +99,13 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 currentTagId = vals[4];
 
                 //display account details of the corresponding vehicle
-                textBoxCustomer.Text = GetAccountById(currentAccountId);
+                textBoxCustomer.Content = GetAccountById(currentAccountId);
 
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE temp = new Libraries.CommonLibrary.CBE.VehicleClassCBE();
                 temp.Id = Convert.ToInt32(currentVehicleClassId);
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vehicle = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetVehicleClassId(temp);
 
-                textBoxVehicle.Text = vehicle.Id + ", " + vehicle.Name;
+                textBoxVehicle.Content = vehicle.Id + ", " + vehicle.Name;
 
                 textBoxNFFText.Text = currentVehicleRegNum;
                 textBoxNFRText.Text = currentVehicleRegNum;
@@ -345,7 +345,6 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
             return result;
         }
 
-
         private void SendPacketsInOrder(string frontPacket, string crossTalkPacketFront, string rearPacket, string crossTalkPacketRear)
         {
             foreach (TextBox tb in orderTextBoxes)
@@ -515,21 +514,21 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
 
             //-------------------------------------------------------------------------------------------
 
-            ////////RandomVehicleNumberGenerator();
+            ////////RandomVehicleNumberGenerator(); //<=========================== important for creating 20,000 vehicles inside the database
 
             //-------------------------------------------------------------------------------------------
 
-            //check the performance of Dictionary
-            for(int i =0; i < 10000000; i++)
-            {
-                customers.Add(i, "customer " + i);
-            }
+            ////check the performance of Dictionary
+            //for(int i =0; i < 10000000; i++)
+            //{
+            //    customers.Add(i, "customer " + i);
+            //}
 
-            string myValue = string.Empty;
-            if (customers.TryGetValue(9999999, out myValue))
-            {
-                Console.Write(myValue);
-            }
+            //string myValue = string.Empty;
+            //if (customers.TryGetValue(9999999, out myValue))
+            //{
+            //    Console.Write(myValue);
+            //}
 
         }
 
@@ -543,9 +542,16 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
             int numIndex = 0;
             int classIndex = 0;
 
+            Dictionary<int, string> vrns = new Dictionary<int, string>();
+
             int x = 1;
 
-            for(int i = 0; i < 2000; i++)
+            string strvrn = string.Empty;
+            //string strVRNPrevious = string.Empty;
+
+            Random randomAccount = new Random();
+
+            for (int i = 0; i < 20000; i++)
             {
                 StringBuilder vrn = new StringBuilder();
 
@@ -561,17 +567,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 //vrn.Append("=");
 
                 charIndex = rand1.Next(0, 25);
-                vrn.Append(characters[charIndex].ToString());                
-                charIndex = rand1.Next(0, 25);
                 vrn.Append(characters[charIndex].ToString());
-
-                //vrn.Append("-");
-                
-                numIndex = rand2.Next(0, 9);
-                vrn.Append(numbers[numIndex].ToString());
-                numIndex = rand2.Next(0, 9);
-                vrn.Append(numbers[numIndex].ToString());
-
                 charIndex = rand1.Next(0, 25);
                 vrn.Append(characters[charIndex].ToString());
 
@@ -581,18 +577,60 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 vrn.Append(numbers[numIndex].ToString());
                 numIndex = rand2.Next(0, 9);
                 vrn.Append(numbers[numIndex].ToString());
+
+                charIndex = rand1.Next(0, 25);
+                vrn.Append(characters[charIndex].ToString());
+
+                //vrn.Append("-");
+
+                numIndex = rand2.Next(0, 9);
+                vrn.Append(numbers[numIndex].ToString());
+                numIndex = rand2.Next(0, 9);
+                vrn.Append(numbers[numIndex].ToString());
                 numIndex = rand2.Next(0, 9);
                 vrn.Append(numbers[numIndex].ToString());
                 numIndex = rand2.Next(0, 9);
                 vrn.Append(numbers[numIndex].ToString());
 
-                x = x + 1;
+                x = x + 1;//for random seed
 
-                Console.Write(vrn.ToString() + " ");
+                //strVRNPrevious = strvrn;
+                strvrn = vrn.ToString();
 
-                Console.Write(VRNToByte(classString, vrn.ToString()));
+                //if (i % 10 == 0)
+                //{
+                //    strvrn = strVRNPrevious;
+                //}
 
-                Console.WriteLine();
+                if (!vrns.ContainsValue(strvrn)) //checking accidental generation of duplicate vrn
+                {
+                    vrns.Add(i, strvrn);
+                    //Console.Write(vrn.ToString() + " ");
+                    //Console.Write(VRNToByte(classString, vrn.ToString()));
+                    //Console.WriteLine();
+                    Console.WriteLine(i.ToString().PadLeft(4, ' ') + " - " + strvrn);
+
+                    //inserting in database---------------------------------------
+                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle = new Libraries.CommonLibrary.CBE.CustomerVehicleCBE();
+                    vehicle.TMSId = 1;
+                    //vehicle.EntryId = i;
+                    vehicle.AccountId = randomAccount.Next(1, 18);
+                    vehicle.VehRegNo = strvrn;
+                    vehicle.TagId = VRNToByte(classString, strvrn);
+                    vehicle.VehicleClassId = Convert.ToInt32(classString);
+                    vehicle.CreationDate = System.DateTime.Now;
+                    //vehicle.ModificationDate = System.DateTime.Now;
+                    //vehicle.ModifiedBy = 1;
+                    vehicle.TransferStatus = 1;
+                    vehicle.AccountBalance = 1000000;
+
+                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.Insert(vehicle);
+                    //------------------------------------------------------------
+                }
+                else
+                {
+                    Console.WriteLine("Duplicate generation of " + strvrn);
+                }
 
             }
         }
@@ -675,7 +713,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
 
     public class MLFFSimulator
     {
-        bool isToSendPacket = true; //switch to link/ delink the API
+        bool isToSendPacket = false; //switch to link/ delink the API
         int gantryId = 0;
         string apiIPAddress = string.Empty;
 
@@ -719,7 +757,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
         Dictionary<int, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> registeredVehiclesDictionary = new Dictionary<int, Libraries.CommonLibrary.CBE.CustomerVehicleCBE>();
         Dictionary<int, string> registeredVehiclesDictionaryString = new Dictionary<int, string>();
 
-        Dictionary<int, string> unRegisteredVehiclesDictionaryString = new Dictionary<int, string>();
+        Dictionary<int, UnregisteredVehicle> unRegisteredVehiclesDictionaryString = new Dictionary<int, UnregisteredVehicle>();
 
         VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCollection vehicleClasses = null;
 
@@ -795,6 +833,8 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
             }
         }
 
+        string currentVehicleClassName = String.Empty;
+
         int randomSeed = 0;
         private void SimulatorThreadFunction()
         {
@@ -851,7 +891,19 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                     {
                         doANPRMistake = false;
                     }
+                    //===================================================
 
+                    //===================================================
+                    classificationMistakeProbabilityIndex = classificationMistakeProbability.Next(0, 10); //10% probability
+
+                    if (classificationMistakeProbabilityIndex == 0)
+                    {
+                        doClassificationMistake = true;
+                    }
+                    else
+                    {
+                        doClassificationMistake = false;
+                    }
                     //===================================================
 
                     string currentTagId = String.Empty;
@@ -870,7 +922,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                         currentVRN = vehicle.VehRegNo;
                         currentVehicleClassid = vehicle.VehicleClassId;
 
-                        Console.WriteLine(dt.ToString("dd/MM/yyyy HH:mm:ss.fff") + " - Sending vehicle..." + currentVRN);
+                        //Console.WriteLine(dt.ToString("dd/MM/yyyy HH:mm:ss.fff") + " - Passing vehicle..." + currentVRN + ", " + GetVehicleClassNameById(currentVehicleClassid));
                     }
 
                     if (isRegistered == false)
@@ -878,19 +930,55 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                         Random randomVehicleUnregistered = new Random();
                         int randomVehicleUnregisteredIndex = randomVehicleUnregistered.Next(0, unRegisteredVehiclesDictionaryString.Count);
 
-                        string unRegisteredVehicleVRN;
-                        unRegisteredVehiclesDictionaryString.TryGetValue(randomVehicleUnregisteredIndex, out unRegisteredVehicleVRN);
+                        UnregisteredVehicle unRegisteredVehicle;
+                        unRegisteredVehiclesDictionaryString.TryGetValue(randomVehicleUnregisteredIndex, out unRegisteredVehicle);
 
                         //currentTagId = vehicle.TagId;
-                        currentVRN = unRegisteredVehicleVRN; // vehicle.VehRegNo;
-                        //currentVehicleClassid = vehicle.VehicleClassId;
+                        currentVRN = unRegisteredVehicle.VRN; // vehicle.VehRegNo;
+                        currentVehicleClassid = unRegisteredVehicle.VehicleClass;
 
-                        Console.WriteLine(dt.ToString("dd/MM/yyyy HH:mm:ss.fff") + " - Sending vehicle.............." + currentVRN);
+                        //Console.WriteLine(dt.ToString("dd/MM/yyyy HH:mm:ss.fff") + " - Passing vehicle.............." + currentVRN + ", " + currentVehicleClassid);
                     }
+
+                    Console.WriteLine(dt.ToString("dd/MM/yyyy HH:mm:ss.fff") + " - Passing vehicle..." + currentVRN + ", " + GetVehicleClassNameById(currentVehicleClassid));
+
+
                     if (doANPRMistake)
                     {
-                        Console.WriteLine("Do ANPR mistake.<=====================================");
+                        Console.Write("Do ANPR mistake.<=====================================");
+                        currentVRN = currentVRN + "X";
+                        Console.WriteLine(currentVRN);
                     }
+
+                    if(doClassificationMistake) //classification mistake is visible in registered vehicle only
+                    {
+                        Console.Write("Do classification mistake.<=====================================");
+                        int tempClassid = 0;
+                        if(currentVehicleClassid == 1)
+                        {
+                            tempClassid = 4;
+                        }
+                        else if (currentVehicleClassid == 2)
+                        {
+                            tempClassid = 3;
+                        }
+                        else if (currentVehicleClassid == 3)
+                        {
+                            tempClassid = 2;
+                        }
+                        else if (currentVehicleClassid == 4)
+                        {
+                            tempClassid = 1;
+                        }
+                        else
+                        {
+                            tempClassid = 1; //<========================
+                        }
+                        Console.WriteLine(GetVehicleClassNameById(currentVehicleClassid) + "=>" + GetVehicleClassNameById(tempClassid));
+                        currentVehicleClassid = tempClassid;
+                    }
+
+                    currentVehicleClassName = GetVehicleClassNameById(currentVehicleClassid);
                     //-------------------------------------------------------------
 
                     //pick a lane randomly-----------------------------------------
@@ -952,24 +1040,11 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                             ANPRPacket frontANPRPacket = new ANPRPacket();
                             frontANPRPacket.Timestamp = System.DateTime.Now;
                             frontANPRPacket.HardwareId = currentFrontCameraId; //<=========================== any front camera id of the gantry
-
-                            if (doANPRMistake)
-                            {
-                                frontANPRPacket.VRN = currentVRN + "X";
-                            }
-                            else
-                            {
-                                frontANPRPacket.VRN = currentVRN; //<=============================VRN of the selected vehicle
-                            }
-
-                            if (isRegistered)
-                            {
-                                frontANPRPacket.VehicleClassName = GetVehicleClassNameById(currentVehicleClassid);
-                            }
-                            else
-                            {
-                                frontANPRPacket.VehicleClassName = "small";
-                            }
+                            frontANPRPacket.VRN = currentVRN; //<=============================VRN of the selected vehicle
+                            
+                            
+                            frontANPRPacket.VehicleClassName = currentVehicleClassName;
+                            
 
                             if (isToSendPacket)
                             {
@@ -998,25 +1073,10 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                             ANPRPacket rearANPRPacket = new ANPRPacket();
                             rearANPRPacket.Timestamp = System.DateTime.Now;
                             rearANPRPacket.HardwareId = currentRearCameraId; //<=========================== any rear camera id of the gantry
+                            rearANPRPacket.VRN = currentVRN; //<=============================VRN of the selected vehicle
 
-                            if (doANPRMistake)
-                            {
-                                rearANPRPacket.VRN = currentVRN + "XX";
-                            }
-                            else
-                            {
-                                rearANPRPacket.VRN = currentVRN; //<=============================VRN of the selected vehicle
-                            }
-
-                            if (isRegistered)
-                            {
-                                rearANPRPacket.VehicleClassName = GetVehicleClassNameById(currentVehicleClassid);
-                            }
-                            else
-                            {
-                                rearANPRPacket.VehicleClassName = "small";
-                            }
-
+                            rearANPRPacket.VehicleClassName = currentVehicleClassName;
+                            
                             if (isToSendPacket)
                             {
                                 SendANPRPacket(rearANPRPacket);
@@ -1057,9 +1117,10 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
             }
         }
 
-        private Dictionary<int, string> CreateUnRegisteredVehicle(int howMany, Dictionary<int, string> registeredVehiclesDictionaryString)
+        private Dictionary<int, UnregisteredVehicle> CreateUnRegisteredVehicle(int howMany, Dictionary<int, string> registeredVehiclesDictionaryString)
         {
             Dictionary<int, string> vrns = new Dictionary<int, string>();
+            Dictionary<int, UnregisteredVehicle> result = new Dictionary<int, UnregisteredVehicle>();
 
             try
             {
@@ -1128,6 +1189,12 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                     if (!vrns.ContainsValue(strvrn) && !registeredVehiclesDictionaryString.ContainsValue(strvrn)) //checking accidental generation of duplicate vrn and not contained in registered vehicle
                     {
                         vrns.Add(i, strvrn);
+
+                        //generating random vehicle class between 1 and 4
+                        Random randomVehicleClass = new Random(x);
+                        int randomVehicleClassIndex = randomVehicleClass.Next(1, 5);
+
+                        result.Add(i, new UnregisteredVehicle(strvrn, randomVehicleClassIndex));
                     }
                     else
                     {
@@ -1145,7 +1212,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
 
             }
 
-            return vrns;
+            return result;
         }
 
         private string VRNToByte(string vehicleClass, string vehicleRegistrationNumber)
@@ -1461,6 +1528,42 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                     result = string.Empty;
                 }
                 return result;
+            }
+        }
+
+        public class UnregisteredVehicle
+        {
+            private string vrn = string.Empty;
+            private int vehicleClass = 0;
+
+            public UnregisteredVehicle (string vrn, int vehicleClass)
+            {
+                this.vrn = vrn;
+                this.vehicleClass = vehicleClass;
+            }
+
+            public String VRN
+            {
+                get
+                {
+                    return this.vrn;
+                }
+                set
+                {
+                    this.vrn = value;
+                }
+            }
+
+            public Int32 VehicleClass
+            {
+                get
+                {
+                    return this.vehicleClass;
+                }
+                set
+                {
+                    this.vehicleClass = value;
+                }
             }
         }
     }
