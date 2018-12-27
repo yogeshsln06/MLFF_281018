@@ -9,74 +9,59 @@
     <thead>
         <tr>
             <th style="text-align: center; vertical-align: middle; " rowspan="2">
-                <div class="th-inner sortable both">ID</div>
-                <div class="fht-cell"></div>
+                ID
             </th>
             <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                <div class="th-inner sortable both">Date Time</div>
-                <div class="fht-cell"></div>
+                Date Time
             </th>
             <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                <div class="th-inner sortable both">Gantry</div>
-                <div class="fht-cell"></div>
+                Gantry
             </th>
             <th style="text-align: center; " colspan="2">
-                <div class="th-inner ">EVI</div>
-                <div class="fht-cell"></div>
+                EVI
             </th>
             <th style="text-align: center; " colspan="4">
-                <div class="th-inner ">ANPR Front</div>
-                <div class="fht-cell"></div>
+                ANPR Front
             </th>
             <th style="text-align: center; " colspan="4">
-                <div class="th-inner ">ANPR Rear</div>
-                <div class="fht-cell"></div>
+                ANPR Rear
             </th>
             <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
-                <div class="th-inner sortable both">Speed</div>
-                <div class="fht-cell"></div>
+                Speed
+                <br />
+                (km/h)
             </th>
         </tr>
         <tr>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner sortable both">VRN</div>
-                <div class="fht-cell"></div>
+                VRN
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner sortable both">Class</div>
-                <div class="fht-cell"></div>
+                Class
             </th>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner sortable both">VRN</div>
-                <div class="fht-cell"></div>
+                VRN
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner sortable both">Class</div>
-                <div class="fht-cell"></div>
+                Class
             </th>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner">Image</div>
-                <div class="fht-cell"></div>
+                Image
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner">Video</div>
-                <div class="fht-cell"></div>
+                Video
             </th>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner sortable both">VRN</div>
-                <div class="fht-cell"></div>
+                VRN
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner sortable both">Class</div>
-                <div class="fht-cell"></div>
+                Class
             </th>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner">Image</div>
-                <div class="fht-cell"></div>
+                Image
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner">Video</div>
-                <div class="fht-cell"></div>
+                Video
             </th>
         </tr>
     </thead>
@@ -111,9 +96,9 @@
                 </td>
                 <td>
                     @if (item["FRONT_VIDEO_URL"].ToString() != "")
-                {
-                    string path = item["FRONT_VIDEO_URL"].ToString();
-                    //path = path.Replace('/', '^');
+                    {
+                        string path = item["FRONT_VIDEO_URL"].ToString();
+                        //path = path.Replace('/', '^');
                         <span class="cur-p btn-light icon-holder" aria-expanded="false" onclick="openVideo(this);" style="font-size: 18px;" path="@path" data-toggle="tooltip" data-placement="top" title="Click to View">
                             <i class='c-blue-500 ti-video-clapper'></i>
                         </span>
@@ -134,9 +119,9 @@
                 </td>
                 <td>
                     @if (item["REAR_VIDEO_URL"].ToString() != "")
-                {
-                    string path = item["REAR_VIDEO_URL"].ToString();
-                    //path = path.Replace('/', '^');
+                    {
+                        string path = item["REAR_VIDEO_URL"].ToString();
+                        //path = path.Replace('/', '^');
                         <span class="cur-p btn-light icon-holder" aria-expanded="false" onclick="openVideo(this);" style="font-size: 18px;" path="@path" data-toggle="tooltip" data-placement="top" title="Click to View">
                             <i class='c-blue-500 ti-video-clapper'></i>
                         </span>
@@ -144,7 +129,7 @@
                     }
                 </td>
                 <td>
-                    @item["VEHICLESPEED"].ToString() Km/h
+                    @item["VEHICLESPEED"].ToString()
                 </td>
             </tr>
         }
@@ -159,74 +144,59 @@
 
             </th>
             <th style="text-align: center; vertical-align: middle; " rowspan="2">
-                <div class="th-inner sortable both">ID</div>
-                <div class="fht-cell"></div>
+                ID
             </th>
             <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                <div class="th-inner sortable both">Date Time</div>
-                <div class="fht-cell"></div>
+                Date Time
             </th>
             <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                <div class="th-inner sortable both">Gantry</div>
-                <div class="fht-cell"></div>
+                Gantry
             </th>
             <th style="text-align: center; " colspan="2">
-                <div class="th-inner ">EVI</div>
-                <div class="fht-cell"></div>
+                EVI
             </th>
             <th style="text-align: center; " colspan="4">
-                <div class="th-inner ">ANPR Front</div>
-                <div class="fht-cell"></div>
+                ANPR Front
             </th>
             <th style="text-align: center; " colspan="4">
-                <div class="th-inner ">ANPR Rear</div>
-                <div class="fht-cell"></div>
+                ANPR Rear
             </th>
             <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
-                <div class="th-inner sortable both">Speed</div>
-                <div class="fht-cell"></div>
+                Speed
+                <br />
+                (km/h)
             </th>
         </tr>
         <tr>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner sortable both">VRN</div>
-                <div class="fht-cell"></div>
+                VRN
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner sortable both">Class</div>
-                <div class="fht-cell"></div>
+                Class
             </th>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner sortable both">VRN</div>
-                <div class="fht-cell"></div>
+                VRN
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner sortable both">Class</div>
-                <div class="fht-cell"></div>
+                Class
             </th>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner">Image</div>
-                <div class="fht-cell"></div>
+                Image
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner">Video</div>
-                <div class="fht-cell"></div>
+                Video
             </th>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner sortable both">VRN</div>
-                <div class="fht-cell"></div>
+                VRN
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner sortable both">Class</div>
-                <div class="fht-cell"></div>
+                Class
             </th>
             <th style="text-align: center; " data-field="price">
-                <div class="th-inner">Image</div>
-                <div class="fht-cell"></div>
+                Image
             </th>
             <th style="text-align: center; " data-field="operate">
-                <div class="th-inner">Video</div>
-                <div class="fht-cell"></div>
+                Video
             </th>
         </tr>
     </thead>

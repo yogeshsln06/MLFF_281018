@@ -46,6 +46,7 @@ function BindUnreviewedFirstLoad() {
 
             datatableVariable = $('#tblUnreviewedData').DataTable({
                 data: data,
+                "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
                 scrollY: 230,
@@ -95,7 +96,7 @@ function BindUnreviewedFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
@@ -115,24 +116,19 @@ function BindUnreviewedFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
                     {
                         'data': 'VEHICLESPEED',
-                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                            if (oData.VEHICLESPEED != '' && oData.VEHICLESPEED != null) {
-                                $(nTd).html("" + oData.VEHICLESPEED + "KM/H");
-                            }
-                        }
-
                     }
                 ],
                 width: "100%"
             });
             $('.dataTable').css('width', '1200px !important');
             inProgress = false;
+            $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
                 if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblUnreviewedData").height()) && !NoMoredata && !inProgress) {
                     AppendUnreviewedData();
@@ -238,6 +234,7 @@ function BindAssociatedData() {
                 $("#tblAssociatedData").removeClass('my-table-bordered').addClass('table-bordered');
                 datatableVariable = $('#tblAssociatedData').DataTable({
                     data: data,
+                    "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                     "bScrollInfinite": true,
                     "bScrollCollapse": true,
                     scrollY: 230,
@@ -287,7 +284,7 @@ function BindAssociatedData() {
                             fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                 if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
 
-                                    $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                    $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                                 }
                             }
                         },
@@ -307,22 +304,17 @@ function BindAssociatedData() {
                             fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                 if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
 
-                                    $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                    $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                                 }
                             }
                         },
                         {
                             'data': 'VEHICLESPEED',
-                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                if (oData.VEHICLESPEED != '' && oData.VEHICLESPEED != null) {
-                                    $(nTd).html("" + oData.VEHICLESPEED + "KM/H");
-                                }
-                            }
-
                         }
                     ],
                     width: "100%"
                 });
+                $('.dataTables_filter input').attr("placeholder", "Search this list…");
             }
         },
         error: function (x, e) {
@@ -336,6 +328,8 @@ function openpopup() {
     $("#warning").hide();
     //$("#btnAssociatedModalOpen").trigger('click');
     $('#AssociatedModal').modal('show');
+    $("#txtVRN").val('');
+    $("#ddlAuditedVehicleClass").val(0)
 }
 
 function closePopup() {
@@ -483,6 +477,7 @@ function BindReviewedFirstLoad() {
             pageload++;
             datatableVariable = $('#tblReviewedData').DataTable({
                 data: data,
+                "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
                 scrollY: '48vh',
@@ -509,6 +504,7 @@ function BindReviewedFirstLoad() {
                         }
 
                     },
+                    { 'data': 'PLAZA_NAME' },
                     { 'data': 'CTP_VRN' },
                     { 'data': 'CTP_VEHICLE_CLASS_NAME' },
                     { 'data': 'FRONT_VRN' },
@@ -527,7 +523,7 @@ function BindReviewedFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
@@ -547,21 +543,22 @@ function BindReviewedFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
-                    {'data': 'VEHICLESPEED',},
+                    { 'data': 'VEHICLESPEED', },
                     { 'data': 'AUDITED_VRN' },
                     { 'data': 'AUDIT_VEHICLE_CLASS_NAME' },
-                    { 'data': 'AUDITOR_ID' },
                     { 'data': 'MEARGED_TRAN_ID' },
+                    { 'data': 'AUDITOR_NAME' },
                     { 'data': 'TRANS_STATUS_NAME' },
                 ],
                 width: "100%"
             });
             $('.dataTable').css('width', '1200px !important');
             inProgress = false;
+            $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
                 if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblReviewedData").height()) && !NoMoredata && !inProgress) {
                     AppendReviewedData();
@@ -646,7 +643,22 @@ function BindChargedFirstLoad() {
             pageload++;
 
             datatableVariable = $('#tblChargedData').DataTable({
+                //"oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+                //"bScrollInfinite": true,
+                //"bScrollCollapse": true,
+                //scrollY: '48vh',
+                //scroller: {
+                //    loadingIndicator: true
+                //},
+                //scrollX: true,
+                //processing: true,
+                //scrollCollapse: true,
+                //stateSave: true,
+                //autoWidth: true,
+                //paging: false,
+                //info: false,
                 data: data,
+                "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
                 scrollY: 230,
@@ -661,7 +673,7 @@ function BindChargedFirstLoad() {
                 info: false,
                 columns: [
                     { 'data': 'ROWNUMBER' },
-                    {'data': 'TRANSACTION_ID'},
+                    { 'data': 'TRANSACTION_ID' },
                     {
                         'data': 'TRANSACTION_DATETIME',
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -691,7 +703,7 @@ function BindChargedFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
@@ -711,17 +723,12 @@ function BindChargedFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p  icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
                     {
                         'data': 'VEHICLESPEED',
-                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                            if (oData.VEHICLESPEED != '' && oData.VEHICLESPEED != null) {
-                                $(nTd).html("" + oData.VEHICLESPEED + "KM/H");
-                            }
-                        }
 
                     },
                     { 'data': 'AMOUNT' },
@@ -730,6 +737,7 @@ function BindChargedFirstLoad() {
             });
             $('.dataTable').css('width', '1200px !important');
             inProgress = false;
+            $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
                 if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblChargedData").height()) && !NoMoredata && !inProgress) {
                     AppendChargedData();
@@ -858,7 +866,7 @@ function BindUnIdentifiedFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
@@ -878,7 +886,7 @@ function BindUnIdentifiedFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
@@ -1024,7 +1032,7 @@ function BindViolationFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
@@ -1044,7 +1052,7 @@ function BindViolationFirstLoad() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
 
-                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                                $(nTd).html("<span class='cur-p  icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                             }
                         }
                     },
@@ -1146,6 +1154,7 @@ function BindTopUpFirstLoad() {
             pageload++;
             datatableVariable = $('#tblTopUpData').DataTable({
                 data: data,
+                "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
                 scrollY: 230,
@@ -1179,6 +1188,7 @@ function BindTopUpFirstLoad() {
                 width: "100%"
             });
             $('.dataTable').css('width', '1200px !important');
+            $('.dataTables_filter input').attr("placeholder", "Search this list…");
             inProgress = false;
             $('.dataTables_scrollBody').on('scroll', function () {
                 if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblTopUpData").height()) && !NoMoredata && !inProgress) {

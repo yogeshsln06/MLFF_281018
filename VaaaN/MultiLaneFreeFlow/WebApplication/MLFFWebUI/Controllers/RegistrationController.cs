@@ -539,7 +539,7 @@ namespace MLFFWebUI.Controllers
         [HttpPost]
         public string GetTranscationHistoryByCustomer(int AccountId, int pageindex, int pagesize)
         {
-            string Det="";
+            string Det = "";
             if (Session["LoggedUserId"] == null)
             {
                 ModelStateList objModelState = new ModelStateList();
@@ -571,7 +571,7 @@ namespace MLFFWebUI.Controllers
             {
                 customerDataList = CustomerVehicleBLL.GetCustomerVehicleByAccountId(AccountId);
                 result.Data = customerDataList;
-              
+
             }
 
             return Json(result.Data, JsonRequestBehavior.AllowGet);
@@ -1603,6 +1603,26 @@ namespace MLFFWebUI.Controllers
             JsonResult result = new JsonResult();
             result.Data = Constants.VRNToByte(customerVehicle.VehicleClassId, customerVehicle.VehRegNo);
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public string GetTranscationHistoryByCustomereVehicle(int VehicleId, int AccountId, int pageindex, int pagesize)
+        {
+            string Det = "";
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+            }
+            else
+            {
+                dt = AccountHistoryBLL.AccountHistoryBYVehicleIdLazyLoad(AccountId, VehicleId, pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+            }
+
+            return Det;
         }
         #endregion
 

@@ -105,3 +105,121 @@ function openImagePreview(ctrl) {
 function showError(ctrlid, errorMsg) {
     $(ctrlid).next().text(errorMsg);
 }
+
+function GetCityList() {
+    var ProvinceId = $("#ProvinceId").val();
+    $.ajax
+    ({
+        url: '/Registration/GetCityList',
+        type: 'POST',
+        datatype: 'application/json',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            ProvinceId: +ProvinceId
+        }),
+        success: function (result) {
+            $("#CityId").html("");
+            $("#DistrictId").html("");
+            $("#SubDistrictId").html("");
+            $('#PostalCode').val('');
+
+            $("#CityId").append
+               ($('<option></option>').val(0).html('--Select Kabupaten/Kota--'));
+
+            $("#DistrictId").append
+           ($('<option></option>').val(0).html('--Select Kecamatan--'));
+
+            $("#SubDistrictId").append
+          ($('<option zipcode=""></option>').val(0).html('--Select Kelurahan/Desa--'));
+
+            $.each($.parseJSON(result), function (i, city) {
+                $("#CityId").append
+                ($('<option></option>').val(city.CityId).html(city.CityName))
+                if (city.CityId == $("#hfCityId").val() && pageload == 1) {
+                    $("#CityId").val($("#hfCityId").val());
+                    GetDistrictList();
+                }
+            })
+        },
+        error: function () {
+            alert("Whooaaa! Something went wrong..")
+        },
+    });
+}
+
+function GetDistrictList() {
+    var CityId = $("#CityId").val();
+    $.ajax
+    ({
+        url: '/Registration/GetDistrictList',
+        type: 'POST',
+        datatype: 'application/json',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            CityId: +CityId
+        }),
+        success: function (result) {
+
+            $("#DistrictId").html("");
+            $("#SubDistrictId").html("");
+            $('#PostalCode').val('');
+            $("#DistrictId").append
+            ($('<option></option>').val(0).html('--Select Kecamatan--'));
+
+            $("#SubDistrictId").append
+        ($('<option zipcode=""></option>').val(0).html('--Select Kelurahan/Desa--'));
+            $.each($.parseJSON(result), function (i, district) {
+                $("#DistrictId").append
+                ($('<option></option>').val(district.DistrictId).html(district.DistrictName))
+                if (district.DistrictId == $("#hfDistrictId").val() && pageload == 1) {
+                    $("#DistrictId").val($("#hfDistrictId").val());
+                    GetSubDistrictList();
+                }
+            })
+
+
+
+        },
+        error: function () {
+            alert("Whooaaa! Something went wrong..")
+        },
+    });
+}
+
+function GetSubDistrictList() {
+    var DistrictId = $("#DistrictId").val();
+    $.ajax
+    ({
+        url: '/Registration/GetSubDistrictList',
+        type: 'POST',
+        datatype: 'application/json',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            DistrictId: +DistrictId
+        }),
+        success: function (result) {
+            $("#SubDistrictId").html("");
+            $('#PostalCode').val('');
+            $("#SubDistrictId").append
+            ($('<option zipcode=""></option>').val(0).html('--Select Kelurahan/Desa--'));
+            $.each($.parseJSON(result), function (i, subdistrict) {
+                $("#SubDistrictId").append
+                ($('<option zipcode="' + subdistrict.ZipCode + '"></option>').val(subdistrict.SubDistrictId).html(subdistrict.SubDistrictName))
+
+                if (subdistrict.SubDistrictId == $("#hfSubDistrictId").val() && pageload == 1) {
+                    $("#SubDistrictId").val($("#hfSubDistrictId").val());
+                    $("#PostalCode").val($("#hfPostalCode").val());
+                    pageload = pageload + 1;
+                }
+            })
+        },
+        error: function () {
+            alert("Whooaaa! Something went wrong..")
+        },
+    });
+}
+
+function GetZip(ctrl) {
+    var option = $('option:selected', ctrl).attr('zipcode');
+    $('#PostalCode').val(option || '');
+}

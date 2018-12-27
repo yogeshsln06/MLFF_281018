@@ -1,4 +1,4 @@
-/* Formatted on 27/12/2018 09:48:44 (QP5 v5.215.12089.38647) */
+/* Formatted on 27/12/2018 13:10:30 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2506,7 +2506,7 @@ ORDER BY TRANSACTION_ID DESC';
    BEGIN
       OPEN CUR_OUT FOR
          WITH CTE_TRANS_HISTORY
-              AS (  SELECT ROW_NUMBER () OVER (ORDER BY TRANSACTION_DATETIME)
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY TRANSACTION_DATETIME DESC)
                               AS ROWNUMBER,
                            T.TMS_ID,
                            T.PLAZA_ID,
@@ -2537,7 +2537,7 @@ ORDER BY TRANSACTION_ID DESC';
                      WHERE     NVL (T.IS_BALANCE_UPDATED, 2) <> 1
                            AND NVL (T.AUDIT_STATUS, 2) <> 1
                            AND ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
-                  ORDER BY TRANSACTION_DATETIME)
+                  ORDER BY TRANSACTION_DATETIME DESC)
            SELECT ROWNUMBER,
                   T.TMS_ID,
                   T.PLAZA_ID,
@@ -2779,6 +2779,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   T.IS_REGISTERED,
                   T.VEHICLESPEED,
                   T.AUDITOR_ID,
+                  U.FIRST_NAME AS AUDITOR_NAME,
                   T.AUDIT_DATE,
                   T.AUDITED_VEHICLE_CLASS_ID,
                   VC_AUDIT.VEHICLE_CLASS_NAME AS AUDIT_VEHICLE_CLASS_NAME,
@@ -2801,6 +2802,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                      ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
                   LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_AUDIT
                      ON T.AUDITED_VEHICLE_CLASS_ID = VC_AUDIT.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_USER U
+                     ON T.AUDITOR_ID = U.USER_ID
             WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
                                 AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
                                        + P_PAGE_SIZE)

@@ -119,12 +119,13 @@ function BindCustmerVehicleAccount() {
                 "</a>" +
                 " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
                 "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditOpen(this," + oData.EntryId + ")'>" +
-
                 "        <span class='title'>Update</span>" +
                 "    </a>" +
                 "    <a class='dropdown-item ' href='javascript:void(0);' onclick='HistoryRecords(this," + oData.EntryId + "," + oData.AccountId + ")'>" +
-
                 "        <span class='title'>Transactions</span>" +
+                "    </a>" +
+                "    <a class='dropdown-item ' href='javascript:void(0);' onclick='CustomerDetailsOpen(this," + oData.AccountId + ")'>" +
+                "        <span class='title'>Customer</span>" +
                 "    </a>" +
                 "</div>" +
             "</div>");
@@ -711,7 +712,7 @@ function BindHistoryRecords() {
             CurrentData = data;
             $(".animationload").hide();
             $('#customerHistoryModal').modal('show');
-            $("#HistoryModalLabel").text('View [' + CustomerName + '] Transaction')
+            $("#HistoryModalLabel").text('View [' + CustomerRegistrationNumber + '] Transaction')
             HNoMoredata = data.length < 10
             Transload++;
             $("#tblCustomerHistoryData").removeClass('my-table-bordered').addClass('table-bordered');
@@ -751,7 +752,7 @@ function BindHistoryRecords() {
 
                 ],
                 width: "100%",
-                scrollY: "48vh",
+                scrollY: "55vh",
             });
             HdatatableVariable.on('order.dt search.dt', function () {
                 HdatatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -795,6 +796,47 @@ function AppendHistoryRecords() {
         },
         error: function (ex) {
             $('#loadingdiv').hide()
+        }
+
+    });
+
+}
+
+function CustomerDetailsOpen(ctrl,AccountId) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/Registration/GetCustomer?id=" + AccountId,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialassociated').html(result);
+            $("#exampleModalLabel").text("View [" + $("#FirstName").val() + "]");
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+
+            $("#fildset").attr("disabled", "disabled");
+            $("#ProvinceId").val($("#hfProvinceId").val());
+            $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
+            GetCityList();
+            if ($("#hfBirthPlace").val() || '' != '') {
+                $('#BirthPlace option').each(function (index, option) {
+                    if (option.text == $("#hfBirthPlace").val()) {
+                        $(this).attr("selected", "selected");
+                    }
+                    // option will contain your item
+                });
+                //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
+            }
+
+            $("#btnSave").hide();
+            $("#btnpopupClose").text("Close");
+            $("#btnSaveNew").hide();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
         }
 
     });
