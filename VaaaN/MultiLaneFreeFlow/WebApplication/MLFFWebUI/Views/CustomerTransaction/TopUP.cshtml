@@ -1,8 +1,5 @@
-﻿@using System.Data
-@model DataTable
-@{ int rowNo = 0; }
-@{
-    ViewBag.Title = "TopUP";
+﻿@{
+    ViewBag.Title = "TopUp Transcation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -14,7 +11,7 @@
         margin-left: auto;
     }
 
-    .table > thead > tr > th {
+    /*.table > thead > tr > th {
         vertical-align: middle !important;
         text-align: center !important;
     }
@@ -25,6 +22,13 @@
 
     .rt-border {
         border-right: 1px solid #dee2e6;
+    }*/
+
+    .form-group {
+        padding-left: 8px;
+        padding-right: 10px;
+        /*padding-top:1px;*/
+        /*padding-bottom:1px;*/
     }
 </style>
 <div class="container-fluid">
@@ -32,206 +36,77 @@
         <div class="col-md-12">
             <div class="bgc-white bd bdrs-3 p-10 mB-10">
                 <div class="form-row">
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         <div class="mT-10">
-                            <h4 class="c-grey-900 mB-20">Top-UP Transcation</h4>
+                            <h4 class="c-grey-900 mB-20">TOP-UP Transcation</h4>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="mT-10">
                             <div class="gap-5 peers" style="float:right;overflow: visible !important;">
                                 <div class="peer">
-                                    <div class="dropleft">
-                                        <span class="btn cur-p btn-light icon-holder" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class='c-blue-500 ti-angle-down'></i>
+                                    <a class="btn cur-p btn-light" href='javascript:void(0);' onclick="reloadTopUpData();">
+                                        <span class='icon-holder'>
+                                            <i class='c-blue-500 ti-reload'></i>
                                         </span>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href='javascript:void(0);'>
-                                                <span class='icon-holder'>
-                                                    <i class='c-blue-500 ti-pencil'></i>
-                                                </span>
-                                                <span class='title'>Edit</span>
-                                            </a>
-                                            <a class="dropdown-item" href='javascript:void(0);'>
-                                                <span class='icon-holder'>
-                                                    <i class='c-blue-500 ti-exchange-vertical'></i>
-                                                </span>
-                                                <span class='title'>History</span>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    </a>
+
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <table id="dataTable" class="table  table-bordered" cellspacing="0" width="100%">
+                <table id="tblTopUpData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
                     <thead>
-                        <tr style="background-color: #f9fafb;">
-                            <th>
-                                #
+                        <tr>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                                <div class="th-inner sortable both">#</div>
+                                <div class="fht-cell"></div>
                             </th>
-                            <th>
-                                Id
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                                <div class="th-inner sortable both">ID</div>
+                                <div class="fht-cell"></div>
                             </th>
-                            <th>
-                                Date Time
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                <div class="th-inner sortable both">Date Time</div>
+                                <div class="fht-cell"></div>
                             </th>
-                            <th>
-                                Gantry
+                            <th style="text-align: center; " colspan="2">
+                                <div class="th-inner ">EVI</div>
+                                <div class="fht-cell"></div>
                             </th>
-                            <th>
-                                <div class="row text-center">
-                                    <div class="col-sm-12 bot-border">
-                                        EVI
-                                    </div>
-                                    <div class="col-sm-6">
-                                        VRN
-                                    </div>
-                                    <div class="col-sm-6">
-                                        Class
-                                    </div>
-                                </div>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                <div class="th-inner sortable both">Name</div>
+                                <div class="fht-cell"></div>
                             </th>
-                            <th>
-                                <div class="row text-center">
-                                    <div class="col-sm-12 bot-border">
-                                        ANPR Front
-                                    </div>
-                                    <div class="col-sm-3">
-                                        VRN
-                                    </div>
-                                    <div class="col-sm-3">
-                                        Class
-                                    </div>
-                                    <div class="col-sm-3">
-                                        Image
-                                    </div>
-                                    <div class="col-sm-3">
-                                        Video
-                                    </div>
-                                </div>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
+                                <div class="th-inner sortable both">Amount</div>
+                                <div class="fht-cell"></div>
                             </th>
-                            <th>
-                                <div class="row text-center">
-                                    <div class="col-sm-12 bot-border">
-                                        ANPR Rear
-                                    </div>
-                                    <div class="col-sm-3">
-                                        VRN
-                                    </div>
-                                    <div class="col-sm-3">
-                                        Class
-                                    </div>
-                                    <div class="col-sm-3">
-                                        Image
-                                    </div>
-                                    <div class="col-sm-3">
-                                        Video
-                                    </div>
-                                </div>
+
+                        </tr>
+                        <tr>
+                            <th style="text-align: center; " data-field="price">
+                                <div class="th-inner sortable both">VRN</div>
+                                <div class="fht-cell"></div>
                             </th>
-                            <th>
-                                Speed
+                            <th style="text-align: center; " data-field="operate">
+                                <div class="th-inner sortable both">Class</div>
+                                <div class="fht-cell"></div>
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach (DataRow item in Model.Rows)
-                        {
-                            <tr>
-                                <td>
-                                    @(rowNo += 1)
-                                </td>
-                                <td>
-                                    @item["TRANSACTION_ID"].ToString()
-                                </td>
-                                <td>
-                                    @item["TRANSACTION_DATETIME"].ToString()
-                                </td>
-                                <td>
-                                    @item["PLAZA_NAME"].ToString()
-                                </td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-md-6 text-center">
-                                            @item["CTP_VRN"].ToString()
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            @item["CTP_VEHICLE_CLASS_NAME"].ToString()
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-sm-3 text-center">
-                                            @item["FRONT_VRN"].ToString()
-                                        </div>
-                                        <div class="col-sm-3 text-center">
-                                            @item["NFP_VEHICLE_CLASS_NAME_FRONT"].ToString()
-                                        </div>
-                                        <div class="col-sm-3 text-center">
-                                            @if (item["FRONT_IMAGE"].ToString() != "")
-                                            {
-                                                string path = @"\" + item["FRONT_IMAGE"].ToString();
-                                                string path1 = path.Replace('/', '^');
-                                                <span onclick="openimage(this);" path="@path1">
-                                                    <img src="@path" height="40" width="60" />
-                                                </span>
-
-                                            }
-                                        </div>
-                                        <div class="col-sm-3 text-center">
-                                            @if (item["FRONT_VIDEO_URL"].ToString() != "")
-                                            {
-                                                string path = item["FRONT_VIDEO_URL"].ToString();
-                                                path = path.Replace('/', '^');
-                                                <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
-                                            }
-
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-sm-3 text-center">
-                                            @item["REAR_VRN"].ToString()
-                                        </div>
-                                        <div class="col-sm-3 text-center">
-                                            @item["NFP_VEHICLE_CLASS_NAME_REAR"].ToString()
-                                        </div>
-                                        <div class="col-sm-3 text-center">
-                                            @if (item["REAR_IMAGE"].ToString() != "")
-                                            {
-                                                string path = @"\" + item["REAR_IMAGE"].ToString();
-                                                string path1 = path.Replace('/', '^');
-                                                <span onclick="openimage(this);" path="@path1">
-                                                    <img src="@path" height="40" width="60" />
-                                                </span>
-
-                                            }
-                                        </div>
-                                        <div class="col-sm-3 text-center">
-                                            @if (item["REAR_VIDEO_URL"].ToString() != "")
-                                            {
-                                                string path = item["REAR_VIDEO_URL"].ToString();
-                                                path = path.Replace('/', '^');
-                                                <a onclick="openVideo(this);" class="edit" path="@path"><i class="fa fa-file-video-o" aria-hidden="true" title="click to view" style="font-size: 18px;"></i></a>
-                                            }
-
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    @item["VEHICLESPEED"].ToString() Km/h
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        BindTopUpFirstLoad();
+    });
+</script>
 <script src="~/js/CustomerTranscation.js"></script>
 
