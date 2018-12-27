@@ -1,4 +1,4 @@
-/* Formatted on 20/12/2018 09:45:42 (QP5 v5.215.12089.38647) */
+/* Formatted on 25/12/2018 17:57:22 (QP5 v5.215.12089.38647) */
 CREATE VIEW TRANS_UNREVIEWED
 AS
      SELECT T.TMS_ID,
@@ -44,24 +44,29 @@ AS
             T.CT_ENTRY_ID,
             T.NF_ENTRY_ID_FRONT,
             T.NF_ENTRY_ID_REAR,
-            T.IS_BALANCE_UPDATED,
-            T.IS_TRANSFERED,
-            T.IS_VIOLATION,
             T.IS_REGISTERED,
-            T.AUDIT_STATUS,
+            T.VEHICLESPEED,
             T.AUDITOR_ID,
             T.AUDIT_DATE,
             T.AUDITED_VEHICLE_CLASS_ID,
             T.AUDITED_VRN,
-            T.VEHICLESPEED,
-            T.MEARGED_TRAN_ID
+            T.MEARGED_TRAN_ID,
+            T.TRANS_STATUS,
+            (CASE TRANS_STATUS
+                WHEN 1 THEN 'Charged'
+                WHEN 2 THEN 'Mearged'
+                WHEN 3 THEN 'Violation'
+                WHEN 4 THEN 'Unidentified'
+                ELSE 'Unknown'
+             END)
+               TRANS_STATUS_NAME
        FROM TBL_TRANSACTION T
             LEFT OUTER JOIN TBL_PLAZA P
                ON T.PLAZA_ID = P.PLAZA_ID
             LEFT OUTER JOIN TBL_LANE L
                ON T.LANE_ID = L.LANE_ID
       WHERE NVL (T.AUDIT_STATUS, 2) = 1
-   ORDER BY T.TRANSACTION_ID DESC;
+   ORDER BY T.AUDIT_DATE DESC;
 
 
 CREATE VIEW TRANS_CHARGED
@@ -158,3 +163,14 @@ AS
       WHERE     NVL (T.AUDIT_STATUS, 2) = 1
             AND NVL (T.AUDITED_VEHICLE_CLASS_ID, 0) = 0
    ORDER BY T.AUDIT_DATE DESC;
+
+
+CREATE VIEW TRANS_TOPUP
+AS
+   SELECT ENTRY_ID,
+          ACCOUNT_ID,
+          CUSTOMER_VEHICLE_ENTRY_ID,
+          AMOUNT,
+          CREATION_DATE
+     FROM TBL_ACCOUNT_HISTORY
+    WHERE TRANSACTION_TYPE = 2 AND NVL (CUSTOMER_VEHICLE_ENTRY_ID, 0) <> 0
