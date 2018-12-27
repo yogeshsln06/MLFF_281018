@@ -514,7 +514,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
 
             //-------------------------------------------------------------------------------------------
 
-            ////////RandomVehicleNumberGenerator(); //<=========================== important for creating 20,000 vehicles inside the database
+            //RandomVehicleNumberGenerator(); //<=========================== important for creating 20,000 vehicles inside the database
 
             //-------------------------------------------------------------------------------------------
 
@@ -614,7 +614,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle = new Libraries.CommonLibrary.CBE.CustomerVehicleCBE();
                     vehicle.TMSId = 1;
                     //vehicle.EntryId = i;
-                    vehicle.AccountId = randomAccount.Next(1, 18);
+                    vehicle.AccountId = randomAccount.Next(1, 10); //<========== check number of accounts in the cutomer table
                     vehicle.VehRegNo = strvrn;
                     vehicle.TagId = VRNToByte(classString, strvrn);
                     vehicle.VehicleClassId = Convert.ToInt32(classString);
@@ -713,7 +713,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
 
     public class MLFFSimulator
     {
-        bool isToSendPacket = false; //switch to link/ delink the API
+        bool isToSendPacket = true; //switch to link/ delink the API
         int gantryId = 0;
         string apiIPAddress = string.Empty;
 
@@ -1111,7 +1111,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 finally
                 {
 
-                    int msRandom = randomWait.Next(500, 1000); //10 to 100 <===== this will determine traffic density
+                    int msRandom = randomWait.Next(100, 500); //10 to 100 <===== this will determine traffic density
                     Thread.Sleep(msRandom);
                 }
             }
