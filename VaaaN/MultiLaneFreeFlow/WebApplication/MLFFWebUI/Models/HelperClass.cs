@@ -31,7 +31,7 @@ namespace MLFFWebUI.Models
                 {
                     modules = VaaaN.MLFF.Libraries.CommonLibrary.DAL.ModuleDAL.GetByUserId(userId);
                 }
-
+                int i = 0;
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ModuleCBE module in modules)
                 {
                     string link = "";
@@ -55,11 +55,21 @@ namespace MLFFWebUI.Models
                     {
                         if (MenuName.ToLower() == module.ModuleName.ToLower())
                         {
-                            sb.Append("<li class='nav-item mT-30 active'>");
+                            if (i == 0)
+                            {
+                                sb.Append("<li class='nav-item  mT-30 dropdown'>");
+                            }
+                            else
+                                sb.Append("<li class='nav-item active'>");
                         }
                         else
                         {
-                            sb.Append("<li class='nav-item'>");
+                            if (i == 0)
+                            {
+                                sb.Append("<li class='nav-item mT-30'>");
+                            }
+                            else
+                                sb.Append("<li class='nav-item'>");
                         }
                         sb.Append(" <a class='sidebar-link' href='" + module.ModuleUrl.ToLower() + "'>");
                         sb.Append("  <span class='icon-holder'>");
@@ -74,11 +84,17 @@ namespace MLFFWebUI.Models
                         {
                             if (MenuName.ToLower() == module.ModuleName.ToLower())
                             {
+                                if (i == 0)
+                                {
+                                    sb.Append("<li class='nav-item dropdown'>");
+                                }
+                                else
                                 sb.Append("<li class='nav-item dropdown open'>");
                             }
                             else
                             {
-                                sb.Append("<li class='nav-item dropdown'>");
+                                
+                                    sb.Append("<li class='nav-item dropdown'>");
                             }
 
                             sb.Append(" <a class='dropdown-toggle' href='javascript:void(0);'>");
@@ -96,7 +112,9 @@ namespace MLFFWebUI.Models
                             }
                             else
                             {
-                                sb.Append(" <ul class='dropdown-menu'>");
+                               
+                                    sb.Append(" <ul class='dropdown-menu'>");
+                               
                             }
 
                             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.SubmoduleCBE submodule in subModules)
@@ -113,9 +131,9 @@ namespace MLFFWebUI.Models
                                 }
 
                                 sb.Append(" <a class='dropdown-toggle' href='" + submodule.SubmoduleUrl.ToLower() + "'>");
-                                sb.Append("  <span class='icon-holder'>");
-                                sb.Append("   <i class='c-indigo-500 " + submodule.Icon + "'></i>");
-                                sb.Append("  </span>");
+                                //sb.Append("  <span class='icon-holder'>");
+                                //sb.Append("   <i class='c-indigo-500 " + submodule.Icon + "'></i>");
+                                //sb.Append("  </span>");
                                 sb.Append("   <span class='title'>" + someString + "</span>");
                                 sb.Append(" </a>");
                                 sb.Append("</li>");
@@ -124,7 +142,7 @@ namespace MLFFWebUI.Models
                             sb.Append("</li>");
                         }
                     }
-
+                    i++;
 
                 }
 

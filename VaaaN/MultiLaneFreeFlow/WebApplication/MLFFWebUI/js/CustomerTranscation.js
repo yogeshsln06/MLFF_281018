@@ -1,5 +1,5 @@
-﻿var Transcationcol;
-var TranscationId;
+﻿var Transactioncol;
+var TransactionId;
 var pageload = 1;
 var pagesize = 10;
 var NoMoredata = false;
@@ -199,13 +199,13 @@ function AppendUnreviewedData() {
 }
 
 function GetAssociatedTranscation(ctrl, Id) {
-    Transcationcol = ctrl;
-    TranscationId = Id;
+    Transactioncol = ctrl;
+    TransactionId = Id;
 
     $(".animationload").show();
     $.ajax({
         type: "POST",
-        url: "AssociatedTransaction?TranscationId=" + TranscationId,
+        url: "AssociatedTransaction?TransactionId=" + TransactionId,
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
@@ -363,7 +363,7 @@ function SaveUnidentified() {
     $(".animationload").show();
     $.ajax({
         type: "POST",
-        url: "SaveUnidentified?TranscationId=" + TranscationId,
+        url: "SaveUnidentified?TransactionId=" + TransactionId,
         async: true,
         dataType: "JSON",
         contentType: "application/json; charset=utf-8",
@@ -373,7 +373,7 @@ function SaveUnidentified() {
             for (var i = 0; i < resultData.length; i++) {
                 if (resultData[i].ErrorMessage == "success") {
                     closePopup();
-                    $(Transcationcol).parent().parent().remove();
+                    $(Transactioncol).parent().parent().remove();
                 }
                 else if (resultData[i].ErrorMessage == 'logout') {
                     location.href = "../Login/Logout";
@@ -419,7 +419,7 @@ function Complete() {
     if (confirm('Are you sure you want to reviewed ?')) {
         var InputData = {
             AssociatedTransactionIds: selectedIDs,
-            TransactionId: TranscationId,
+            TransactionId: TransactionId,
             VehRegNo: $('#txtVRN').val(),
             vehicleClassID: $('#ddlAuditedVehicleClass').val()
         }
@@ -433,7 +433,7 @@ function Complete() {
             contentType: "application/json; charset=utf-8",
             success: function (resultData) {
                 $(".animationload").hide();
-                var Msg;
+                var Msg = '';
                 var close = false;
                 for (var i = 0; i < resultData.length; i++) {
                     if (resultData[i].ErrorMessage.toLowerCase().indexOf('success') > -1) {
@@ -447,7 +447,7 @@ function Complete() {
                 if (close) {
                     alert("Reviewed successfully !")
                     closePopup();
-                    $(Transcationcol).parent().parent().remove();
+                    $(Transactioncol).parent().parent().remove();
                 }
                 else {
                     alert(Msg);
@@ -463,6 +463,170 @@ function Complete() {
         // Do nothing!
     }
 }
+
+
+function BindReviewedFirstLoad() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ReviewedListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $("#tblReviewedData").removeClass('my-table-bordered').addClass('table-bordered');
+            $(".animationload").hide();
+            NoMoredata = data.length < pagesize
+            pageload++;
+            datatableVariable = $('#tblReviewedData').DataTable({
+                data: data,
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                scrollY: '48vh',
+                scroller: {
+                    loadingIndicator: true
+                },
+                scrollX: true,
+                processing: true,
+                scrollCollapse: true,
+                stateSave: true,
+                autoWidth: true,
+                paging: false,
+                info: false,
+                columns: [
+                    { 'data': 'ROWNUMBER' },
+                    { 'data': 'TRANSACTION_ID' },
+                    {
+                        'data': 'TRANSACTION_DATETIME',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
+                                oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
+                                $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                            }
+                        }
+
+                    },
+                    { 'data': 'CTP_VRN' },
+                    { 'data': 'CTP_VEHICLE_CLASS_NAME' },
+                    { 'data': 'FRONT_VRN' },
+                    { 'data': 'NFP_VEHICLE_CLASS_NAME_FRONT' },
+                    {
+                        'data': 'FRONT_IMAGE',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
+                                oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                                $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'FRONT_VIDEO_URL',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
+
+                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                            }
+                        }
+                    },
+                    { 'data': 'REAR_VRN' },
+                    { 'data': 'NFP_VEHICLE_CLASS_NAME_REAR' },
+                    {
+                        'data': 'REAR_IMAGE',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
+                                oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                                $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'REAR_VIDEO_URL',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
+
+                                $(nTd).html("<span class='cur-p btn-light icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-clapper'></i></span>");
+                            }
+                        }
+                    },
+                    {'data': 'VEHICLESPEED',},
+                    { 'data': 'AUDITED_VRN' },
+                    { 'data': 'AUDIT_VEHICLE_CLASS_NAME' },
+                    { 'data': 'AUDITOR_ID' },
+                    { 'data': 'MEARGED_TRAN_ID' },
+                    { 'data': 'TRANS_STATUS_NAME' },
+                ],
+                width: "100%"
+            });
+            $('.dataTable').css('width', '1200px !important');
+            inProgress = false;
+            $('.dataTables_scrollBody').on('scroll', function () {
+                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblReviewedData").height()) && !NoMoredata && !inProgress) {
+                    AppendReviewedData();
+                }
+            });
+
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function reloadReviewedData() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ReviewedListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}
+
+function AppendReviewedData() {
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ReviewedListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}
+
 
 function BindChargedFirstLoad() {
     pageload = 1;
@@ -947,6 +1111,124 @@ function AppendViolationData() {
         dataType: "json",
         data: JSON.stringify(Inputdata),
         url: "ViolationListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}
+
+
+function BindTopUpFirstLoad() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "TopUpListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $("#tblTopUpData").removeClass('my-table-bordered').addClass('table-bordered');
+            $(".animationload").hide();
+            NoMoredata = data.length < pagesize
+            pageload++;
+            datatableVariable = $('#tblTopUpData').DataTable({
+                data: data,
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                scrollY: 230,
+                scroller: {
+                    loadingIndicator: true
+                },
+                processing: true,
+                scrollCollapse: true,
+                stateSave: true,
+                autoWidth: false,
+                paging: false,
+                info: false,
+                columns: [
+                    { 'data': 'ROWNUMBER' },
+                    { 'data': 'ENTRY_ID' },
+                    {
+                        'data': 'CREATION_DATE',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.CREATION_DATE != '' && oData.CREATION_DATE != null) {
+                                oData.CREATION_DATE = oData.CREATION_DATE.replace('T', ' ');
+                                $(nTd).html("" + oData.CREATION_DATE + "");
+                            }
+                        }
+
+                    },
+                    { 'data': 'VEH_REG_NO' },
+                    { 'data': 'VEHICLE_CLASS_NAME' },
+                    { 'data': 'FIRST_NAME' },
+                    { 'data': 'AMOUNT' },
+                ],
+                width: "100%"
+            });
+            $('.dataTable').css('width', '1200px !important');
+            inProgress = false;
+            $('.dataTables_scrollBody').on('scroll', function () {
+                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblTopUpData").height()) && !NoMoredata && !inProgress) {
+                    AppendTopUpData();
+                }
+            });
+
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function reloadTopUpData() {
+    pageload = 1;
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "TopUpListScroll",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $(".animationload").hide();
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}
+
+function AppendTopUpData() {
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "TopUpListScroll",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $(".animationload").hide();

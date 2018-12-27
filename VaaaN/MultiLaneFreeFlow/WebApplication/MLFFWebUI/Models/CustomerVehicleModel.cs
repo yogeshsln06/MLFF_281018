@@ -25,7 +25,8 @@ namespace MLFFWebUI.Models
         }
 
         [Required]
-        [Display(Name = "MobileNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Mobile Phone")]
+        // [Display(Name = "MobileNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Mobile Number must be numeric")]
         public String MobileNo
         {
@@ -34,7 +35,8 @@ namespace MLFFWebUI.Models
         }
 
         [Required]
-        [Display(Name = "EmailId", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        //[Display(Name = "EmailId", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Email")]
         public String EmailId
         {
             get { return this.emailId; }
@@ -49,7 +51,7 @@ namespace MLFFWebUI.Models
             set { this.address = value; }
         }
 
-        [Display(Name = "Identity Number")]//Resident Identity Number
+        [Display(Name = "Resident ID")]//Resident Identity Number
         [Required]
         public string ResidentId
         {

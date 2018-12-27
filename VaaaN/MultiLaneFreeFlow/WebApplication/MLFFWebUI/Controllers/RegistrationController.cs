@@ -1,4 +1,5 @@
 ﻿using MLFFWebUI.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -503,6 +504,9 @@ namespace MLFFWebUI.Controllers
                         if (string.IsNullOrEmpty(customerAccount.RW))
                             customerAccount.RW = customer.RW.Trim();
 
+                        if (string.IsNullOrEmpty(customerAccount.Occupation))
+                            customerAccount.Occupation = string.Empty;
+
                         customerAccount.Address = customerAccount.Address.Trim();
                         customerAccount.AccountStatus = 1;
                         customerAccount.TransferStatus = 1;
@@ -531,6 +535,52 @@ namespace MLFFWebUI.Controllers
             }
             return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public string GetTranscationHistoryByCustomer(int AccountId, int pageindex, int pagesize)
+        {
+            string Det="";
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+            }
+            else
+            {
+                dt = AccountHistoryBLL.AccountHistoryBYAccountIdLazyLoad(AccountId, pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+            }
+
+            return Det;
+        }
+
+        [HttpPost]
+        public JsonResult GetVehicleListByAccount(int AccountId)
+        {
+            List<CustomerVehicleCBE> customerDataList = new List<CustomerVehicleCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+            }
+            else
+            {
+                customerDataList = CustomerVehicleBLL.GetCustomerVehicleByAccountId(AccountId);
+                result.Data = customerDataList;
+              
+            }
+
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult VehicleListData()
+        {
+            return PartialView("VihicleList");
+        }
         #endregion
 
         #region Customer Vehicle
@@ -549,9 +599,9 @@ namespace MLFFWebUI.Controllers
         }
 
         [HttpPost]
-        public JsonResult CustomerVehicleListScroll(int pageindex,int pagesize)
+        public JsonResult CustomerVehicleListScroll(int pageindex, int pagesize)
         {
-           
+
             List<CustomerVehicleCBE> customerDataList = new List<CustomerVehicleCBE>();
             JsonResult result = new JsonResult();
             customerDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.CustomerVehicleAccountLazyLoad(pageindex, pagesize);
@@ -1594,6 +1644,12 @@ namespace MLFFWebUI.Controllers
 
         }
         #endregion
+
+
+        public ActionResult TransactionHistory()
+        {
+            return PartialView("TransactionHistory");
+        }
 
     }
 }

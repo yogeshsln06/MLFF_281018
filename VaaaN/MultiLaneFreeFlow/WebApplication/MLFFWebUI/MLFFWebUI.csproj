@@ -153,6 +153,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Controllers\SetUpController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -228,6 +229,7 @@
     <Content Include="js\CustomerTranscation.js" />
     <Content Include="js\CustomerVehicle.js" />
     <Content Include="js\liveEvents.js" />
+    <Content Include="js\SetUp.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
@@ -318,6 +320,10 @@
     <Content Include="Views\CustomerTransaction\Charged.cshtml" />
     <Content Include="Views\CustomerTransaction\Reviewed.cshtml" />
     <Content Include="Views\Dashboard\LiveEvent.cshtml" />
+    <Content Include="Views\SetUp\UsersList.cshtml" />
+    <Content Include="Views\SetUp\UserMaster.cshtml" />
+    <Content Include="Views\Registration\TransactionHistory.cshtml" />
+    <Content Include="Views\Registration\VihicleList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

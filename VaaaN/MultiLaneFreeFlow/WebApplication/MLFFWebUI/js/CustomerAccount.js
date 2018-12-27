@@ -1,8 +1,12 @@
 ﻿var pageload = 1;
+var Transload = 1;
 var pagesize = 30;
+var CustomerAccountId = 0;
+var CustomerName = '';
 var NoMoredata = false;
+var HNoMoredata = false;
 var inProgress = false;
-
+var CurrentData = [];
 
 $(document).ready(function () {
     BindCustmerAccount();
@@ -47,6 +51,7 @@ function BindCustmerAccount() {
     $(".animationload").show();
     inProgress = true;
     var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    var count = 0;
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -57,16 +62,23 @@ function BindCustmerAccount() {
             $(".animationload").hide();
             NoMoredata = data.length < pagesize
             pageload++;
+
             datatableVariable = $('#tblCustomerData').DataTable({
                 data: data,
-                scrollY: 230,
-                scrollCollapse: true,
+                "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                scrollY: "48vh",
+                pageResize: true,
                 scroller: {
                     loadingIndicator: true
                 },
-                bJQueryUI: true,
+                processing: true,
+                scrollCollapse: true,
                 stateSave: true,
+                autoWidth: false,
                 paging: false,
+                info: false,
                 columns: [
                      { 'data': 'AccountId', "autowidth": true },
                     {
@@ -83,24 +95,24 @@ function BindCustmerAccount() {
                    {
                        'data': 'AccountId', "autowidth": true,
                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                           $(nTd).html("<div class='dropdown'>" +
+                           $(nTd).html("<div class='dropdown' style='padding-left: 14px;'>" +
                               "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
                    "<span class='icon-holder'>" +
-                        "<i class='c-blue-500 ti-angle-down'></i>" +
+                        "<i class='c-blue-500 ti-menu-alt'></i>" +
                     "</span>" +
                 "</a>" +
                 " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
                 "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditOpen(this," + oData.AccountId + ")'>" +
-                "        <span class='icon-holder'>" +
-                "            <i class='c-blue-500 ti-pencil'></i>" +
-                "        </span>" +
-                "        <span class='title'>Edit</span>" +
+
+                "        <span class='title'>Update</span>" +
                 "    </a>" +
-                "    <a class='dropdown-item' href='javascript:void(0);' onclick='HistoryRecords(this," + oData.AccountId + ")'>" +
-                "        <span class='icon-holder'>" +
-                "            <i class='c-blue-500 ti-exchange-vertical'></i>" +
-                "        </span>" +
-                "        <span class='title'>History</span>" +
+                "    <a class='dropdown-item ' href='javascript:void(0);' onclick='HistoryRecords(this," + oData.AccountId + ")'>" +
+
+                "        <span class='title'>Transactions</span>" +
+                "    </a>" +
+                 "    <a class='dropdown-item ' href='javascript:void(0);' onclick='VehicleRecords(this," + oData.AccountId + ")'>" +
+
+                "        <span class='title'>Vehicle</span>" +
                 "    </a>" +
                 "</div>" +
             "</div>");
@@ -109,6 +121,7 @@ function BindCustmerAccount() {
                 ],
                 columnDefs: [{ "orderable": false, "targets": 7 }],
                 order: [[1, 'asc']]
+
             });
             datatableVariable.on('order.dt search.dt', function () {
                 datatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -116,6 +129,7 @@ function BindCustmerAccount() {
                 });
             }).draw();
             inProgress = false;
+            $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
                 if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerData").height()) && !NoMoredata && !inProgress) {
                     AppendCustomerData();
@@ -153,7 +167,9 @@ function AppendCustomerData() {
 
 }
 
+function HistoryRecords(ctrl, AccountId) {
 
+}
 
 function GetCityList() {
     var ProvinceId = $("#ProvinceId").val();
@@ -273,16 +289,6 @@ function GetZip(ctrl) {
     $('#PostalCode').val(option || '');
 }
 
-function validEmail(str) {
-    var pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return String(str).match(pattern);
-}
-
-function validMobile(str) {
-    var pattern = /^\d+$/;
-    return String(str).match(pattern);
-}
-
 function validateCustomer() {
     var valid = true;
     if ($("#ResidentId").val() == '') {
@@ -339,16 +345,10 @@ function validateCustomer() {
     return valid;
 }
 
-function showError(ctrlid, errorMsg) {
-    $(ctrlid).next().text(errorMsg);
-}
-
 function openpopup() {
     $("#warning").hide();
     $('#customerModal').modal('show');
 }
-
-
 
 function OpenCustmerRegistration() {
     $.ajax({
@@ -387,9 +387,13 @@ function NewCustomer() {
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
-            
+
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
+            $("#btnSave").show();
+            $("#btnSave").text("Save");
+            $("#btnpopupClose").text("Cancel");
+            $("#btnSaveNew").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -412,7 +416,7 @@ function DetailsOpen(ctrl, id) {
             $("#exampleModalLabel").text("View [" + $("#FirstName").val() + "]");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
-           
+
             $("#fildset").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
@@ -426,6 +430,10 @@ function DetailsOpen(ctrl, id) {
                 });
                 //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
             }
+
+            $("#btnSave").hide();
+            $("#btnpopupClose").text("Close");
+            $("#btnSaveNew").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -453,7 +461,7 @@ function EditOpen(ctrl, id) {
             $("#ProvinceId").val($("#hfProvinceId").val());
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             GetCityList();
-          
+
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
             if ($("#hfBirthPlace").val() || '' != '') {
@@ -465,6 +473,11 @@ function EditOpen(ctrl, id) {
                 });
                 //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
             }
+
+            $("#btnSave").show();
+            $("#btnSave").text("Update");
+            $("#btnpopupClose").text("Close");
+            $("#btnSaveNew").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -541,12 +554,13 @@ function SaveData(action) {
                     var meassage = '';
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
-                            if (action == 'close')
+                            if (action == 'close') {
+                                reloadData();
                                 closePopup();
-
+                            }
                             else {
                                 $("#warning").hide();
-                                $('#needs-validation')[0].reset();
+                                ResetFildes();
                             }
                             break;
                         }
@@ -572,6 +586,10 @@ function SaveData(action) {
         }
 
     }
+    else {
+        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+        $("#warning").show();
+    }
 }
 
 function DateFormat(newDate) {
@@ -582,4 +600,232 @@ function DateFormat(newDate) {
     mm = mm > 9 ? mm : '0' + mm;
     yy = d.getFullYear();
     return dd + '-' + mm + '-' + +yy
+}
+
+function HistoryRecords(ctrl, AccountId) {
+    Transload = 1;
+    CustomerAccountId = AccountId;
+    CustomerName = $(ctrl).parent().parent().parent().parent().find('td:eq(3)').text().trim();
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "TransactionHistory",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialHistory').html(result);
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+            closePopup();
+        }
+
+    });
+
+}
+
+function BindHistoryRecords() {
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { AccountId: CustomerAccountId, pageindex: Transload, pagesize: 10 }
+    var count = 0;
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "GetTranscationHistoryByCustomer",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            CurrentData = data;
+            $(".animationload").hide();
+            $('#customerHistoryModal').modal('show');
+            $("#HistoryModalLabel").text('View [' + CustomerName + '] Transaction')
+            HNoMoredata = data.length < 10
+            Transload++;
+            $("#tblCustomerHistoryData").removeClass('my-table-bordered').addClass('table-bordered');
+            HdatatableVariable = $('#tblCustomerHistoryData').DataTable({
+                data: data,
+                paging: false,
+                info: false,
+                pageResize: true,
+                autoWidth: false,
+                searching: false,
+                scrollCollapse: true,
+                stateSave: true,
+                "bScrollCollapse": true,
+                "bScrollInfinite": true,
+                "bAutoWidth": false,
+                columns: [
+                    { 'data': 'ROWNUMBER' },
+                    {
+                        'data': 'ENTRY_ID'
+                    },
+                    {
+                        'data': 'CREATION_DATE',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.CREATION_DATE != '' && oData.CREATION_DATE != null) {
+                                oData.CREATION_DATE = oData.CREATION_DATE.replace('T', ' ');
+                                $(nTd).html("" + oData.CREATION_DATE + "");
+                            }
+                        }
+
+                    },
+
+                    { 'data': 'TRANSACTION_TYPE_NAME' },
+                    { 'data': 'VEH_REG_NO' },
+                    { 'data': 'VEHICLE_CLASS_NAME' },
+                    { 'data': 'PLAZA_NAME' },
+                    { 'data': 'AMOUNT' },
+
+                ],
+                width: "100%",
+                scrollY: "48vh",
+            });
+            HdatatableVariable.on('order.dt search.dt', function () {
+                HdatatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+            //$('.modal-body').find('.dataTables_scrollBody').on('scroll', function () {
+            //    if (($('.modal-body').find('.dataTables_scrollBody').scrollTop() + $('.modal-body').find('.dataTables_scrollBody').height() >= $("#tblCustomerHistoryData").height()) && !HNoMoredata) {
+            //        AppendHistoryRecords();
+            //    }
+            //});
+            HdatatableVariable.columns.adjust().draw();
+
+            HdatatableVariable.clear().draw();
+            HdatatableVariable.rows.add(CurrentData); // Add new data
+            HdatatableVariable.columns.adjust().draw();
+
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+
+}
+
+function AppendHistoryRecords() {
+    $('#loadingdiv').show()
+    var Inputdata = { AccountId: CustomerAccountId, pageindex: Transload, pagesize: 10 }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "GetTranscationHistoryByCustomer",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $('#loadingdiv').hide()
+            HNoMoredata = data.length < 10
+            //datatableVariable.clear().draw();
+            HdatatableVariable.rows.add(data); // Add new data
+            HdatatableVariable.columns.adjust().draw();
+            Transload++;
+        },
+        error: function (ex) {
+            $('#loadingdiv').hide()
+        }
+
+    });
+
+}
+
+function VehicleRecords(ctrl, AccountId) {
+    Transload = 1;
+    CustomerAccountId = AccountId;
+    CustomerName = $(ctrl).parent().parent().parent().parent().find('td:eq(3)').text().trim();
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "VehicleListData",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialHistory').html(result);
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+            closePopup();
+        }
+
+    });
+
+}
+
+function BindCustmerVehicleAccount() {
+    $(".animationload").show();
+    inProgress = true;
+    var Inputdata = { AccountId: CustomerAccountId }
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "GetVehicleListByAccount",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $("#tblVehicleList").removeClass('my-table-bordered').addClass('table-bordered');
+            $(".animationload").hide();
+            $('#customerHistoryModal').modal('show');
+            $("#HistoryModalLabel").text('View [' + CustomerName + '] Vehicle')
+            datatableVariableVehicle = $('#tblVehicleList').DataTable({
+                data: data,
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                scrollY: "48vh",
+                pageResize: true,
+                searching: false,
+                scrollCollapse: true,
+                stateSave: true,
+                autoWidth: false,
+                paging: false,
+                info: false,
+                columns: [
+                    { 'data': 'EntryId' },
+                    {
+                        'data': 'EntryId',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).html("<a href='javascript:void(0);' onclick='DetailsOpen(this," + oData.EntryId + ")'>" + oData.EntryId + "</a>");
+                        }
+                    },
+                    { 'data': 'VehRegNo' },
+                    { 'data': 'VehicleClassName' },
+                    {
+                        'data': 'VehicleImageFront', "className": "dt-center",
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.VehicleImageFront != '' && oData.VehicleImageFront != null) {
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImagePreview(this);' style='font-size: 18px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-blue-500 ti-camera'></i></span>");
+                            }
+                        }
+                    },
+                    {
+                        'data': 'VehicleImageRear', "className": "dt-center",
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.VehicleImageRear != '' && oData.VehicleImageRear != null) {
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImagePreview(this);' style='font-size: 18px;' src=../Attachment/VehicleImage/" + oData.VehicleImageRear + "><i class='c-blue-500 ti-camera'></i></span>");
+                            }
+                        }
+                    },
+                    { 'data': 'CustomerQueueStatusName' },
+                    { 'data': 'ExceptionFlagName' },
+                    { 'data': 'AccountBalance' },
+
+                ],
+                columnDefs: [{ "orderable": false, "targets": 6 }],
+                order: [[1, 'asc']],
+                width: "100%"
+            });
+            $('.dataTable').css('width', '1200px !important');
+            datatableVariableVehicle.on('order.dt search.dt', function () {
+                datatableVariableVehicle.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
 }

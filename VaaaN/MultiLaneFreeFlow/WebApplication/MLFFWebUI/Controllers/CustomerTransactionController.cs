@@ -84,12 +84,12 @@ namespace MLFFWebUI.Controllers
             return Det.Replace("\r", "").Replace("\n", "");
         }
 
-        public ActionResult AssociatedTransaction(int TranscationId)
+        public ActionResult AssociatedTransaction(int TransactionId)
         {
             try
             {
-                dt = TransactionBLL.GetUnReviewedDataTableById(TranscationId);
-                Session["CurrentTranscation"] = dt;
+                dt = TransactionBLL.GetUnReviewedDataTableById(TransactionId);
+                Session["CurrentTransaction"] = dt;
 
             }
             catch (Exception ex)
@@ -105,16 +105,16 @@ namespace MLFFWebUI.Controllers
         public string GetAssociated()
         {
             string Det = "No Record Found";
-            dt = (DataTable)Session["CurrentTranscation"];
+            dt = (DataTable)Session["CurrentTransaction"];
             int IKEEntryId = 0;
             int ANPRFrontEntryId = 0;
             int ANPRRearEntryId = 0;
-            DateTime TranscationDateTime;
-            int TranscationId;
+            DateTime TransactionDateTime;
+            int TransactionId;
             if (dt.Rows.Count > 0)
             {
-                TranscationDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"]);
-                TranscationId = Convert.ToInt32(dt.Rows[0]["TRANSACTION_ID"]);
+                TransactionDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"]);
+                TransactionId = Convert.ToInt32(dt.Rows[0]["TRANSACTION_ID"]);
                 if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString()))
                 {
                     IKEEntryId = Convert.ToInt32(dt.Rows[0]["CT_ENTRY_ID"]);
@@ -133,8 +133,9 @@ namespace MLFFWebUI.Controllers
                     Det = "No Record Found";
 
                 }
-                else {
-                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TranscationDateTime.AddMinutes(-1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TranscationDateTime.AddMinutes(1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TranscationId;
+                else
+                {
+                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TransactionDateTime.AddMinutes(-1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TransactionDateTime.AddMinutes(1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId;
 
                     if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId == 0)
                     {
@@ -170,28 +171,42 @@ namespace MLFFWebUI.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveUnidentified(int TranscationId)
+        public JsonResult SaveUnidentified(int TransactionId)
         {
             JsonResult result = new JsonResult();
             try
             {
-                dt = TransactionBLL.GetUnReviewedDataTableById(TranscationId);
+                dt = TransactionBLL.GetUnReviewedDataTableById(TransactionId);
                 if (dt.Rows.Count > 0)
                 {
-                    TransactionBLL.JoinAuditTransaction(TranscationId, 0, 0, "", 0, Convert.ToInt32(Session["LoggedUserId"].ToString()));
+                    TransactionCBE objtransaction = new TransactionCBE();
+                    objtransaction.TransactionId = TransactionId;
+                    objtransaction.TMSId = Constants.GetCurrentTMSId();
+                    objtransaction.PlazaId = Constants.GetCurrentPlazaId();
+                    objtransaction.ModifierId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+                    objtransaction.ModificationDate = DateTime.Now;
+                    objtransaction.TransactionDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"].ToString());
+                    objtransaction.LaneId = Convert.ToInt32(dt.Rows[0]["LANE_ID"].ToString());
+                    objtransaction.AuditDate = DateTime.Now;
+                    objtransaction.AuditStatus = 1;
+                    objtransaction.AuditorId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+                    objtransaction.AuditedVRN = "";
+                    objtransaction.AuditedVehicleClassId = 0;
+                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Unidentified;
+                    TransactionBLL.UpdateAuditSection(objtransaction);
                     ModelStateList objModelState = new ModelStateList();
                     objModelState.ErrorMessage = "success";
                     objResponseMessage.Add(objModelState);
                 }
                 else {
                     ModelStateList objModelState = new ModelStateList();
-                    objModelState.ErrorMessage = "This transcation already reviewed.";
+                    objModelState.ErrorMessage = "This transaction already reviewed.";
                     objResponseMessage.Add(objModelState);
                 }
             }
             catch (Exception ex)
             {
-                HelperClass.LogMessage("Failed to Save Unidentified Transcation in Customer Transaction Controller" + ex);
+                HelperClass.LogMessage("Failed to Save Unidentified transaction in Customer Transaction Controller" + ex);
                 ModelStateList objModelState = new ModelStateList();
                 objModelState.ErrorMessage = "Something went wrong";
                 objResponseMessage.Add(objModelState);
@@ -205,100 +220,100 @@ namespace MLFFWebUI.Controllers
         {
             JsonResult result = new JsonResult();
 
-            Int32 AuditvehicleClassId = Convert.ToInt32(vehicleClassID);
+            Int32 AuditedVehicleClassId = Convert.ToInt32(vehicleClassID);
             Int32 ParentTransactionId = TransactionId;
-            Int32 ParentIKEVehicleClassId = 0;
-            Int32 ParentANPRFrontVehicleClassId = 0;
-            Int32 ParentANPRRearVehicleClassId = 0;
+            String AuditedVRN = VehRegNo;
+            bool IsAuditedVRNExists = false;
+
+            Int16 AssociatedTransactionCount = 0;
+            Int32 FirstChildTranasactionId = 0;
+            Int32 SecondChildTranasactionId = 0;
+
+            Int16 ParentPacketCount = 0;
             Int32 ParentIKEEntryId = 0;
             Int32 ParentANPRFrontEntryId = 0;
+            Int32 ParentIKEVehicleClassId = 0;
+            Int32 ParentANPRFrontVehicleClassId = 0;
             Int32 ParentANPRRearEntryId = 0;
-            Int32 ParentPacketCount = 0;
-            bool ParentBalanceAlreadyUpdated = false;
-            bool ParentAuditied = false;
+            Int32 ParentANPRRearVehicleClassId = 0;
 
-            Int32 childOneTranasactionId = 0;
-            Int32 childTwoTranasactionId = 0;
+            bool ParentBalanceAlreadyDeducated = false;
+            bool ParentViolation = false;
+            bool ParentAuditied = false;
+            bool FirstChildAuditied = false;
+            bool SecondChildAuditied = false;
+            bool ChildViolation = false;
+            bool ValidTransactionsProcess = true;
+            bool FirstChildBalanceAlreadyDeducated = false;
+            bool SecondChildBalanceAlreadyDeducated = false;
 
             Int32 ChildIKEEntryId = 0;
-            Int32 ChildAnprFrontEntryId = 0;
-            Int32 ChildAnprRearEntryId = 0;
             Int32 ChildIKEVehicleClassId = 0;
+            Int32 ChildAnprFrontEntryId = 0;
             Int32 ChildANPRFrontVehicleClassId = 0;
+            Int32 ChildAnprRearEntryId = 0;
             Int32 ChildANPRRearVehicleClassId = 0;
             Int32 ChildPacketCount = 0;
-            bool isChildViolation = false;
 
-            bool VRNisExists = false;
-            bool isChildBalanceUpdated = false;
-            bool isViolation = false;
 
-            bool Process = true;
-            Int32 VehicleClassForBalanceDecucation = vehicleClassID;
-            Int32 ChildVehicleClassForBalanceDecucation = vehicleClassID;
 
-            Int32 AssociatedTransactionCount = 0;
-            TransactionCBE objtransaction = new TransactionCBE();
-            objtransaction.TMSId = Constants.GetCurrentTMSId();
-            objtransaction.PlazaId = Constants.GetCurrentPlazaId();
-            objtransaction.ModifierId = Convert.ToInt32(Session["LoggedUserId"].ToString());
-            objtransaction.ModificationDate = DateTime.Now;
-            try
+            if (string.IsNullOrEmpty(AuditedVRN))
             {
-                #region Check Vrn is blank or not
-                if (string.IsNullOrEmpty(VehRegNo))
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "VRN is required for reviewing transaction.";
+                objResponseMessage.Add(objModelState);
+            }
+            else
+            {
+                try
                 {
-                    ModelStateList objModelState = new ModelStateList();
-                    objModelState.ErrorMessage = "VRN is required.";
-                    objResponseMessage.Add(objModelState);
-                }
-                else
-                {
-                    #region Customer Vehicle Info by VRN
-                    CustomerVehicleCBE CustomerVehicleDetails = new CustomerVehicleCBE();
-                    CustomerVehicleDetails.VehRegNo = VehRegNo;
-                    CustomerVehicleDetails = CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(CustomerVehicleDetails);
-                    #endregion
-
-                    #region Customer Inforamtion by VRN
-                    CustomerAccountCBE customerAccountInfo = new CustomerAccountCBE();
-                    customerAccountInfo.AccountId = CustomerVehicleDetails.AccountId;
-                    customerAccountInfo.TmsId = 1;
-                    customerAccountInfo = CustomerAccountBLL.GetCustomerById(customerAccountInfo);
-                    #endregion
+                    #region Get transaction Data  by id
 
                     dt = TransactionBLL.GetDataTableFilteredRecordById(TransactionId);
-
-                    #region Check auditied VRN Exists or not
-                    if (!string.IsNullOrEmpty(CustomerVehicleDetails.VehRegNo))
+                    if (dt.Rows.Count > 0)
                     {
-                        VRNisExists = true;
-                    }
-                    #endregion
 
-                    #region Check Associated TransactionIds is avaliable or not 
-                    if (AssociatedTransactionIds != null)
-                    {
-                        if (AssociatedTransactionIds.Length > 0)
+                        TransactionCBE objtransaction = new TransactionCBE();
+                        objtransaction.TransactionId = ParentTransactionId;
+                        objtransaction.TMSId = Constants.GetCurrentTMSId();
+                        objtransaction.PlazaId = Constants.GetCurrentPlazaId();
+                        objtransaction.ModifierId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+                        objtransaction.ModificationDate = DateTime.Now;
+                        objtransaction.TransactionDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"].ToString());
+                        objtransaction.LaneId = Convert.ToInt32(dt.Rows[0]["LANE_ID"].ToString());
+                        objtransaction.AuditDate = DateTime.Now;
+                        objtransaction.AuditStatus = 1;
+                        objtransaction.AuditorId = Convert.ToInt32(Session["LoggedUserId"].ToString());
+                        objtransaction.AuditedVRN = AuditedVRN;
+                        objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+                        #region Customer Vehicle Info by VRN
+                        CustomerVehicleCBE CustomerVehicleDetails = new CustomerVehicleCBE();
+                        CustomerVehicleCBE objCustomerVehicleDetails = new CustomerVehicleCBE();
+                        CustomerAccountCBE customerAccountInfo = new CustomerAccountCBE();
+                        CustomerVehicleDetails.VehRegNo = VehRegNo;
+                        objCustomerVehicleDetails = CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(CustomerVehicleDetails);
+                        if (objCustomerVehicleDetails == null)
+                            CustomerVehicleDetails.VehRegNo = "";
+                        else
                         {
-                            AssociatedTransactionCount++;
-                            childOneTranasactionId = Convert.ToInt32(AssociatedTransactionIds[0]);
+                            CustomerVehicleDetails = objCustomerVehicleDetails;
+                            customerAccountInfo.AccountId = CustomerVehicleDetails.AccountId;
+                            customerAccountInfo.TmsId = 1;
+                            customerAccountInfo = CustomerAccountBLL.GetCustomerById(customerAccountInfo);
                         }
-                        if (AssociatedTransactionIds.Length > 1)
+                        #endregion
+
+
+
+                        #region Check auditied VRN Exists or not
+                        if (!string.IsNullOrEmpty(CustomerVehicleDetails.VehRegNo))
                         {
-                            AssociatedTransactionCount++;
-                            childTwoTranasactionId = Convert.ToInt32(AssociatedTransactionIds[1]);
+                            IsAuditedVRNExists = true;
                         }
-                    }
-                    #endregion
+                        #endregion
 
-                    if (VRNisExists)
-                    {
-                        if (dt.Rows.Count > 0)
+                        if (IsAuditedVRNExists)
                         {
-                            objtransaction.TransactionDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"].ToString());
-                            objtransaction.LaneId = Convert.ToInt32(dt.Rows[0]["LANE_ID"].ToString());
-
                             #region Check which pakcet is missing in parent
                             if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString())) //IKE is missing
                             {
@@ -323,685 +338,725 @@ namespace MLFFWebUI.Controllers
                             #region check Balance already deduct or not for parent
                             if (dt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
                             {
-                                ParentBalanceAlreadyUpdated = true;
+                                ParentBalanceAlreadyDeducated = true;
                             }
+                            #endregion
+
+                            #region check already Audited or not for parent
                             if (dt.Rows[0]["AUDIT_STATUS"].ToString() == "1")
                             {
                                 ParentAuditied = true;
                             }
                             #endregion
-
-                            #region Procees for already auditied or not
-                            if (!ParentAuditied)
+                            #region Check Associated TransactionIds is avaliable or not 
+                            if (AssociatedTransactionIds != null)
                             {
-                                if (ParentPacketCount == 3) // Parent Paket is full
+                                if (AssociatedTransactionIds.Length > 0)
                                 {
-                                    #region Transcation Process for Audit
-                                    if (!ParentBalanceAlreadyUpdated)
-                                    {
-                                        isViolation = CheckParentAsViolation(ParentPacketCount, ParentIKEEntryId, ParentIKEVehicleClassId, ParentANPRFrontEntryId, ParentANPRFrontVehicleClassId, ParentANPRRearEntryId, ParentANPRRearVehicleClassId, AuditvehicleClassId, out VehicleClassForBalanceDecucation);
-
-                                        if (isViolation)
-                                        {
-                                            MarkAsViolation(ParentTransactionId, objtransaction);
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationCharged);
-                                        }
-                                        else
-                                        {
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Charged);
-                                        }
-                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, ParentTransactionId);
-                                        ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "success-Yes Mearge-No";
-                                        objResponseMessage.Add(objModelState);
-                                        Process = false;
-                                    }
-                                    else
-                                    {
-                                        isViolation = CheckParentAsViolation(ParentPacketCount, ParentIKEEntryId, ParentIKEVehicleClassId, ParentANPRFrontEntryId, ParentANPRFrontVehicleClassId, ParentANPRRearEntryId, ParentANPRRearVehicleClassId, AuditvehicleClassId, out VehicleClassForBalanceDecucation);
-                                        if (isViolation)
-                                        {
-                                            MarkAsViolation(ParentTransactionId, objtransaction);
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Violation);
-                                        }
-                                        else
-                                        {
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Unknown);
-                                        }
-                                        ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "success-Yes Mearge-No";
-                                        objResponseMessage.Add(objModelState);
-                                        Process = false;
-                                    }
-                                    #endregion
+                                    AssociatedTransactionCount++;
+                                    FirstChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[0]);
                                 }
-                                else
+                                if (AssociatedTransactionIds.Length > 1)
                                 {
-                                    #region validate Associated Records 
-                                    if (AssociatedTransactionCount > 0)//Associated Transcation Found
-                                    {
-                                        #region Find 1st Associated Transcation releated pakcet id and is balance already deducated or not
-                                        if (childOneTranasactionId > 0)
-                                        {
-                                            DataTable childOnedt = TransactionBLL.GetDataTableFilteredRecordById(childOneTranasactionId);
-                                            if (childOnedt.Rows.Count > 0)
-                                            {
-                                                if (!string.IsNullOrEmpty(childOnedt.Rows[0]["CT_ENTRY_ID"].ToString()))
-                                                {
-                                                    if (ParentIKEEntryId == 0)
-                                                    {
-                                                        ChildIKEEntryId = Convert.ToInt32(childOnedt.Rows[0]["CT_ENTRY_ID"]);
-                                                        ChildIKEVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                        ChildPacketCount++;
-                                                    }
-                                                    else
-                                                    {
-                                                        Process = false;
-                                                    }
-                                                }
-                                                if (!string.IsNullOrEmpty(childOnedt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
-                                                {
-                                                    if (ParentANPRFrontEntryId == 0)
-                                                    {
-                                                        ChildAnprFrontEntryId = Convert.ToInt32(childOnedt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                                                        ChildANPRFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                        ChildPacketCount++;
-                                                    }
-                                                    else
-                                                    {
-                                                        Process = false;
-                                                    }
-                                                }
-                                                if (!string.IsNullOrEmpty(childOnedt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
-                                                {
-                                                    if (ParentANPRRearEntryId == 0)
-                                                    {
-                                                        ChildAnprRearEntryId = Convert.ToInt32(childOnedt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                                        ChildANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                        ChildPacketCount++;
-                                                    }
-                                                    else
-                                                    {
-                                                        Process = false;
-                                                    }
-
-                                                }
-                                                if (!string.IsNullOrEmpty(childOnedt.Rows[0]["IS_BALANCE_UPDATED"].ToString()))
-                                                {
-                                                    if (childOnedt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
-                                                    {
-                                                        isChildBalanceUpdated = true;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        #endregion
-
-                                        if (Process)
-                                        {
-                                            #region Find 2nd Associated Transcation reated pakcet id and is balance already deducated or not
-                                            if (childTwoTranasactionId > 0)
-                                            {
-                                                DataTable childTwodt = TransactionBLL.GetDataTableFilteredRecordById(childTwoTranasactionId);
-                                                if (childTwodt.Rows.Count > 0)
-                                                {
-                                                    if (!string.IsNullOrEmpty(childTwodt.Rows[0]["CT_ENTRY_ID"].ToString()))
-                                                    {
-                                                        if (ParentIKEEntryId == 0)
-                                                        {
-                                                            if (ChildIKEEntryId == 0)
-                                                            {
-                                                                ChildIKEEntryId = Convert.ToInt32(childTwodt.Rows[0]["CT_ENTRY_ID"]);
-                                                                ChildIKEVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                            }
-                                                            else
-                                                            {
-                                                                Process = false;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            Process = false;
-                                                        }
-                                                    }
-                                                    if (!string.IsNullOrEmpty(childTwodt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
-                                                    {
-                                                        if (ParentANPRRearEntryId == 0)
-                                                        {
-                                                            if (ChildAnprFrontEntryId == 0)
-                                                            {
-                                                                ChildAnprFrontEntryId = Convert.ToInt32(childTwodt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                                                                ChildANPRFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                            }
-                                                            else
-                                                            {
-                                                                Process = false;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            Process = false;
-                                                        }
-                                                    }
-                                                    if (!string.IsNullOrEmpty(childTwodt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
-                                                    {
-                                                        if (ParentANPRRearEntryId == 0)
-                                                        {
-                                                            if (ChildAnprRearEntryId == 0)
-                                                            {
-                                                                ChildAnprRearEntryId = Convert.ToInt32(childTwodt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                                                ChildANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                            }
-                                                            else
-                                                            {
-                                                                Process = false;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            Process = false;
-                                                        }
-                                                    }
-                                                    if (!string.IsNullOrEmpty(childTwodt.Rows[0]["IS_BALANCE_UPDATED"].ToString()))
-                                                    {
-                                                        if (childTwodt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
-                                                        {
-                                                            isChildBalanceUpdated = true;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            #endregion
-
-                                            if (Process)
-                                            {
-                                                isViolation = CheckParentAsViolation(ParentPacketCount, ParentIKEEntryId, ParentIKEVehicleClassId, ParentANPRFrontEntryId, ParentANPRFrontVehicleClassId, ParentANPRRearEntryId, ParentANPRRearVehicleClassId, AuditvehicleClassId, out VehicleClassForBalanceDecucation);
-                                                #region check volication for associated records
-                                                if (ChildPacketCount == 2)
-                                                {
-                                                    #region check child data for volication according to vehicle class 
-                                                    if (ChildIKEEntryId > 0)
-                                                    {
-                                                        if (ChildAnprFrontEntryId > 0)
-                                                        {
-                                                            if (ChildIKEVehicleClassId != AuditvehicleClassId || ChildIKEVehicleClassId != ChildANPRFrontVehicleClassId)
-                                                            {
-                                                                isChildViolation = true;
-                                                                ChildVehicleClassForBalanceDecucation = (ChildIKEVehicleClassId > AuditvehicleClassId) ? ChildIKEVehicleClassId : AuditvehicleClassId;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (ChildIKEVehicleClassId != AuditvehicleClassId || ChildIKEVehicleClassId != ChildANPRRearVehicleClassId)
-                                                            {
-                                                                isChildViolation = true;
-                                                                ChildVehicleClassForBalanceDecucation = (ChildIKEVehicleClassId > AuditvehicleClassId) ? ChildIKEVehicleClassId : AuditvehicleClassId;
-                                                            }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (ChildANPRFrontVehicleClassId != AuditvehicleClassId || ChildANPRRearVehicleClassId != AuditvehicleClassId || ChildANPRFrontVehicleClassId != ChildANPRRearVehicleClassId)
-                                                        {
-                                                            isChildViolation = true;
-                                                            ChildVehicleClassForBalanceDecucation = AuditvehicleClassId;
-                                                        }
-                                                    }
-                                                    #endregion
-                                                }
-                                                else
-                                                {
-                                                    #region check volication according to vehicle class 
-                                                    if (ChildIKEEntryId > 0)
-                                                    {
-                                                        if (ChildIKEVehicleClassId != AuditvehicleClassId)
-                                                        {
-                                                            isChildViolation = true;
-                                                            ChildVehicleClassForBalanceDecucation = (ChildIKEVehicleClassId > AuditvehicleClassId) ? ChildIKEVehicleClassId : AuditvehicleClassId;
-                                                        }
-                                                    }
-                                                    else if (ChildAnprFrontEntryId > 0)
-                                                    {
-                                                        if (ChildANPRFrontVehicleClassId != AuditvehicleClassId)
-                                                        {
-                                                            isChildViolation = true;
-                                                            ChildVehicleClassForBalanceDecucation = AuditvehicleClassId;
-                                                        }
-                                                    }
-                                                    else if (ChildAnprRearEntryId > 0)
-                                                    {
-                                                        if (ChildANPRRearVehicleClassId != AuditvehicleClassId)
-                                                        {
-                                                            isChildViolation = true;
-                                                            ChildVehicleClassForBalanceDecucation = AuditvehicleClassId;
-                                                        }
-                                                    }
-                                                    #endregion
-                                                }
-                                                #endregion
-
-                                                if (isViolation)
-                                                {
-                                                    MarkAsViolation(ParentTransactionId, objtransaction);
-                                                    #region Process for Balance Deduct of not for parent
-                                                    if (ParentBalanceAlreadyUpdated && isChildBalanceUpdated)
-                                                    {
-                                                        #region Balance already deducated 
-                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        if (isChildViolation)
-                                                        {
-                                                            MarkAsViolation(childOneTranasactionId, objtransaction);
-                                                            MarkAsViolation(childTwoTranasactionId, objtransaction);
-                                                            TransactionBLL.MeargedAuditTransaction(childOneTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                            TransactionBLL.MeargedAuditTransaction(childTwoTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        }
-                                                        else
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(childOneTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.MeargedCharged);
-                                                            TransactionBLL.MeargedAuditTransaction(childTwoTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.MeargedCharged);
-                                                        }
-
-
-
-                                                        FinancialProcessingWithoutNotification(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, ParentTransactionId);
-                                                        FinancialProcessingWithoutNotification(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, childOneTranasactionId);
-                                                        FinancialProcessingWithoutNotification(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, childTwoTranasactionId);
-
-                                                        ModelStateList objModelState = new ModelStateList();
-                                                        objModelState.ErrorMessage = "success-Yes Mearge-Yes";
-                                                        objResponseMessage.Add(objModelState);
-                                                        Process = false;
-                                                        #endregion
-                                                    }
-                                                    else
-                                                    {
-                                                        #region Deduct balance and send notification 
-                                                        if (ChildVehicleClassForBalanceDecucation > VehicleClassForBalanceDecucation)
-                                                            VehicleClassForBalanceDecucation = ChildVehicleClassForBalanceDecucation;
-                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        TransactionBLL.MeargedAuditTransaction(childOneTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        TransactionBLL.MeargedAuditTransaction(childTwoTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, ParentTransactionId);
-                                                        ModelStateList objModelState = new ModelStateList();
-                                                        objModelState.ErrorMessage = "success-Yes Mearge-Yes";
-                                                        objResponseMessage.Add(objModelState);
-                                                        #endregion
-
-                                                    }
-                                                    Process = false;
-                                                    #endregion
-                                                }
-                                                else
-                                                {
-                                                    #region Process for Balance Deduct of not for parent
-                                                    if (ParentBalanceAlreadyUpdated && isChildBalanceUpdated)
-                                                    {
-                                                        #region balance already deducated 
-                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        if (isChildViolation)
-                                                        {
-                                                            MarkAsViolation(childOneTranasactionId, objtransaction);
-                                                            MarkAsViolation(childTwoTranasactionId, objtransaction);
-                                                            TransactionBLL.MeargedAuditTransaction(childOneTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                            TransactionBLL.MeargedAuditTransaction(childTwoTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        }
-                                                        else
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(childOneTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.MeargedCharged);
-                                                            TransactionBLL.MeargedAuditTransaction(childTwoTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.MeargedCharged);
-                                                        }
-                                                        FinancialProcessingWithoutNotification(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, ParentTransactionId);
-                                                        FinancialProcessingWithoutNotification(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, childOneTranasactionId);
-                                                        FinancialProcessingWithoutNotification(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, childTwoTranasactionId);
-
-                                                        ModelStateList objModelState = new ModelStateList();
-                                                        objModelState.ErrorMessage = "success-Yes Mearge-Yes";
-                                                        objResponseMessage.Add(objModelState);
-                                                        Process = false;
-                                                        #endregion
-                                                    }
-                                                    else
-                                                    {
-                                                        #region Deduct balance and marked and send notification
-                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        TransactionBLL.MeargedAuditTransaction(childOneTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                                        TransactionBLL.MeargedAuditTransaction(childTwoTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-
-                                                        if (ChildVehicleClassForBalanceDecucation > VehicleClassForBalanceDecucation)
-                                                            VehicleClassForBalanceDecucation = ChildVehicleClassForBalanceDecucation;
-                                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, ParentTransactionId);
-                                                        FinancialProcessingWithoutNotification(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, childOneTranasactionId);
-                                                        FinancialProcessingWithoutNotification(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, childTwoTranasactionId);
-
-                                                        ModelStateList objModelState = new ModelStateList();
-                                                        objModelState.ErrorMessage = "success-Yes Mearge-Yes";
-                                                        objResponseMessage.Add(objModelState);
-                                                        #endregion
-                                                    }
-
-
-                                                    Process = false;
-                                                    #endregion
-                                                }
-
-                                            }
-                                            else
-                                            {
-                                                #region Invalid Associtated Selected
-                                                ModelStateList objModelState = new ModelStateList();
-                                                objModelState.ErrorMessage = "Please Select valid associated transcation.";
-                                                objResponseMessage.Add(objModelState);
-                                                Process = false;
-                                                #endregion
-                                            }
-                                        }
-                                        else
-                                        {
-                                            #region Invalid Associtated Selected
-                                            ModelStateList objModelState = new ModelStateList();
-                                            objModelState.ErrorMessage = "Please Select valid associated transcation.";
-                                            objResponseMessage.Add(objModelState);
-                                            Process = false;
-                                            #endregion
-                                        }
-
-                                    }
-                                    else {
-                                        // need to work
-                                    }
-                                    #endregion
+                                    AssociatedTransactionCount++;
+                                    SecondChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[1]);
                                 }
-                            }
-                            else
-                            {
-                                #region Transcation already Audited but looking for charged and mearged
-                                if (ParentPacketCount == 3) // Parent Paket is full
-                                {
-                                    if (!ParentBalanceAlreadyUpdated)
-                                    {
-                                        #region Balance deduct and send notification
-                                        isViolation = CheckParentAsViolation(ParentPacketCount, ParentIKEEntryId, ParentIKEVehicleClassId, ParentANPRFrontEntryId, ParentANPRFrontVehicleClassId, ParentANPRRearEntryId, ParentANPRRearVehicleClassId, AuditvehicleClassId, out VehicleClassForBalanceDecucation);
-                                        if (isViolation)
-                                        {
-                                            MarkAsViolation(ParentTransactionId, objtransaction);
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationCharged);
-                                        }
-                                        else
-                                        {
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Charged);
-                                        }
-                                        if (ChildVehicleClassForBalanceDecucation > VehicleClassForBalanceDecucation)
-                                            VehicleClassForBalanceDecucation = ChildVehicleClassForBalanceDecucation;
-                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, VehicleClassForBalanceDecucation, objtransaction, ParentTransactionId);
-                                        ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "success-Yes Mearge-No";
-                                        objResponseMessage.Add(objModelState);
-                                        Process = false;
-                                        #endregion
-                                    }
-                                    else
-                                    {
-                                        #region Balance already deducated 
-                                        isViolation = CheckParentAsViolation(ParentPacketCount, ParentIKEEntryId, ParentIKEVehicleClassId, ParentANPRFrontEntryId, ParentANPRFrontVehicleClassId, ParentANPRRearEntryId, ParentANPRRearVehicleClassId, AuditvehicleClassId, out VehicleClassForBalanceDecucation);
-                                        if (isViolation)
-                                        {
-                                            MarkAsViolation(ParentTransactionId, objtransaction);
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Violation);
-                                        }
-                                        ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "success-Yes Mearge-No";
-                                        objResponseMessage.Add(objModelState);
-                                        Process = false;
-                                        #endregion
-                                    }
-                                }
-                                else
-                                {
-                                    // need to work
-                                }
-                                #endregion
                             }
                             #endregion
-                        }
-                    }
-                    else
-                    {
-                        #region Customer account not exists balance cannot deduct
-                        if (dt.Rows.Count > 0)
-                        {
-                            objtransaction.TransactionDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"].ToString());
-                            objtransaction.LaneId = Convert.ToInt32(dt.Rows[0]["LANE_ID"].ToString());
-
-                            #region Check which pakcet is missing in parent
-                            if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString())) //IKE is missing
+                            if (AssociatedTransactionCount > 0)
                             {
-                                ParentPacketCount++;
-                                ParentIKEEntryId = Convert.ToInt32(dt.Rows[0]["CT_ENTRY_ID"]);
-                                ParentIKEVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                            }
-                            if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))//Front ANPR missing
-                            {
-                                ParentPacketCount++;
-                                ParentANPRFrontEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                                ParentANPRFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["NFP_VEHICLE_CLASS_ID_FRONT"]);
-                            }
-                            if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))// Rear ANPR missing
-                            {
-                                ParentPacketCount++;
-                                ParentANPRRearEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                ParentANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
-                            }
-                            #endregion
-                            if (AssociatedTransactionCount > 0)//Associated Transcation Found
-                            {
-                                #region Find 1st Associated Transcation releated pakcet id and is balance already deducated or not
-                                if (childOneTranasactionId > 0)
+                                #region Associated transaction Found Going to check its selection is valid or not
+                                #region Find 1st Associated transaction releated pakcet id and is balance already deducated or not
+                                if (FirstChildTranasactionId > 0)
                                 {
-                                    DataTable childOnedt = TransactionBLL.GetDataTableFilteredRecordById(childOneTranasactionId);
-                                    if (childOnedt.Rows.Count > 0)
+                                    #region First Child Pakcet Details
+                                    DataTable FirstChilddt = TransactionBLL.GetDataTableFilteredRecordById(FirstChildTranasactionId);
+                                    if (FirstChilddt.Rows.Count > 0)
                                     {
-                                        if (!string.IsNullOrEmpty(childOnedt.Rows[0]["CT_ENTRY_ID"].ToString()))
+                                        if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["CT_ENTRY_ID"].ToString()))
                                         {
                                             if (ParentIKEEntryId == 0)
                                             {
-                                                ChildIKEEntryId = Convert.ToInt32(childOnedt.Rows[0]["CT_ENTRY_ID"]);
-                                                ChildIKEVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
+                                                ChildIKEEntryId = Convert.ToInt32(FirstChilddt.Rows[0]["CT_ENTRY_ID"]);
+                                                ChildIKEVehicleClassId = Convert.ToInt32(FirstChilddt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
                                                 ChildPacketCount++;
                                             }
                                             else
                                             {
-                                                Process = false;
+                                                ValidTransactionsProcess = false;
                                             }
                                         }
-                                        if (!string.IsNullOrEmpty(childOnedt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
+                                        if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
                                         {
                                             if (ParentANPRFrontEntryId == 0)
                                             {
-                                                ChildAnprFrontEntryId = Convert.ToInt32(childOnedt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                                                ChildANPRFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
+                                                ChildAnprFrontEntryId = Convert.ToInt32(FirstChilddt.Rows[0]["NF_ENTRY_ID_FRONT"]);
+                                                ChildANPRFrontVehicleClassId = Convert.ToInt32(FirstChilddt.Rows[0]["NFP_VEHICLE_CLASS_ID_FRONT"]);
                                                 ChildPacketCount++;
                                             }
                                             else
                                             {
-                                                Process = false;
+                                                ValidTransactionsProcess = false;
                                             }
                                         }
-                                        if (!string.IsNullOrEmpty(childOnedt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
+                                        if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
                                         {
                                             if (ParentANPRRearEntryId == 0)
                                             {
-                                                ChildAnprRearEntryId = Convert.ToInt32(childOnedt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                                ChildANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
+                                                ChildAnprRearEntryId = Convert.ToInt32(FirstChilddt.Rows[0]["NF_ENTRY_ID_REAR"]);
+                                                ChildANPRRearVehicleClassId = Convert.ToInt32(FirstChilddt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
                                                 ChildPacketCount++;
                                             }
                                             else
                                             {
-                                                Process = false;
+                                                ValidTransactionsProcess = false;
                                             }
 
                                         }
-                                        if (!string.IsNullOrEmpty(childOnedt.Rows[0]["IS_BALANCE_UPDATED"].ToString()))
+                                        if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["IS_BALANCE_UPDATED"].ToString()))
                                         {
-                                            if (childOnedt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
+                                            if (FirstChilddt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
                                             {
-                                                isChildBalanceUpdated = true;
+                                                FirstChildBalanceAlreadyDeducated = true;
                                             }
                                         }
-                                    }
-                                }
-                                #endregion
-
-                                if (Process)
-                                {
-                                    #region Find 2nd Associated Transcation reated pakcet id and is balance already deducated or not
-                                    if (childTwoTranasactionId > 0)
-                                    {
-                                        DataTable childTwodt = TransactionBLL.GetDataTableFilteredRecordById(childTwoTranasactionId);
-                                        if (childTwodt.Rows.Count > 0)
+                                        if (FirstChilddt.Rows[0]["AUDIT_STATUS"].ToString() == "1")
                                         {
-                                            if (!string.IsNullOrEmpty(childTwodt.Rows[0]["CT_ENTRY_ID"].ToString()))
-                                            {
-                                                if (ParentIKEEntryId == 0)
-                                                {
-                                                    if (ChildIKEEntryId == 0)
-                                                    {
-                                                        ChildIKEEntryId = Convert.ToInt32(childTwodt.Rows[0]["CT_ENTRY_ID"]);
-                                                        ChildIKEVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                    }
-                                                    else
-                                                    {
-                                                        Process = false;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    Process = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(childTwodt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
-                                            {
-                                                if (ParentANPRRearEntryId == 0)
-                                                {
-                                                    if (ChildAnprFrontEntryId == 0)
-                                                    {
-                                                        ChildAnprFrontEntryId = Convert.ToInt32(childTwodt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                                                        ChildANPRFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                    }
-                                                    else
-                                                    {
-                                                        Process = false;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    Process = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(childTwodt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
-                                            {
-                                                if (ParentANPRRearEntryId == 0)
-                                                {
-                                                    if (ChildAnprRearEntryId == 0)
-                                                    {
-                                                        ChildAnprRearEntryId = Convert.ToInt32(childTwodt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                                        ChildANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                    }
-                                                    else
-                                                    {
-                                                        Process = false;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    Process = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(childTwodt.Rows[0]["IS_BALANCE_UPDATED"].ToString()))
-                                            {
-                                                if (childTwodt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
-                                                {
-                                                    isChildBalanceUpdated = true;
-                                                }
-                                            }
+                                            FirstChildAuditied = true;
                                         }
                                     }
                                     #endregion
-                                    if (Process)
-                                    {
-                                        MarkAsViolation(ParentTransactionId, objtransaction);
-                                        #region Process for mearged
-                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                        if (isChildViolation)
-                                        {
-                                            MarkAsViolation(childOneTranasactionId, objtransaction);
-                                            MarkAsViolation(childTwoTranasactionId, objtransaction);
-                                            TransactionBLL.MeargedAuditTransaction(childOneTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                            TransactionBLL.MeargedAuditTransaction(childTwoTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                        }
-                                        else
-                                        {
-                                            TransactionBLL.MeargedAuditTransaction(childOneTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.MeargedCharged);
-                                            TransactionBLL.MeargedAuditTransaction(childTwoTranasactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.MeargedCharged);
-                                        }
+                                }
+                                #endregion
 
+                                #region Find 2nd Associated transaction releated pakcet id and is balance already deducated or not
+                                if (SecondChildTranasactionId > 0)
+                                {
+                                    #region Second Child Pakcet Details
+                                    DataTable SecondChilddt = TransactionBLL.GetDataTableFilteredRecordById(SecondChildTranasactionId);
+                                    if (SecondChilddt.Rows.Count > 0)
+                                    {
+                                        if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["CT_ENTRY_ID"].ToString()))
+                                        {
+                                            if (ParentIKEEntryId == 0 && ChildIKEEntryId == 0)
+                                            {
+                                                ChildIKEEntryId = Convert.ToInt32(SecondChilddt.Rows[0]["CT_ENTRY_ID"]);
+                                                ChildIKEVehicleClassId = Convert.ToInt32(SecondChilddt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
+                                                ChildPacketCount++;
+                                            }
+                                            else
+                                            {
+                                                ValidTransactionsProcess = false;
+                                            }
+                                        }
+                                        if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
+                                        {
+                                            if (ParentANPRFrontEntryId == 0 && ChildAnprFrontEntryId == 0)
+                                            {
+                                                ChildAnprFrontEntryId = Convert.ToInt32(SecondChilddt.Rows[0]["NF_ENTRY_ID_FRONT"]);
+                                                ChildANPRFrontVehicleClassId = Convert.ToInt32(SecondChilddt.Rows[0]["NFP_VEHICLE_CLASS_ID_FRONT"]);
+                                                ChildPacketCount++;
+                                            }
+                                            else
+                                            {
+                                                ValidTransactionsProcess = false;
+                                            }
+                                        }
+                                        if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
+                                        {
+                                            if (ParentANPRRearEntryId == 0 && ChildAnprRearEntryId == 0)
+                                            {
+                                                ChildAnprRearEntryId = Convert.ToInt32(SecondChilddt.Rows[0]["NF_ENTRY_ID_REAR"]);
+                                                ChildANPRRearVehicleClassId = Convert.ToInt32(SecondChilddt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
+                                                ChildPacketCount++;
+                                            }
+                                            else
+                                            {
+                                                ValidTransactionsProcess = false;
+                                            }
+
+                                        }
+                                        if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["IS_BALANCE_UPDATED"].ToString()))
+                                        {
+                                            if (SecondChilddt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
+                                            {
+                                                SecondChildBalanceAlreadyDeducated = true;
+                                            }
+                                        }
+                                        if (SecondChilddt.Rows[0]["AUDIT_STATUS"].ToString() == "1")
+                                        {
+                                            SecondChildAuditied = true;
+                                        }
+                                    }
+                                    #endregion
+                                }
+                                #endregion
+
+                                #endregion
+
+                                if (ValidTransactionsProcess && (ParentPacketCount + ChildPacketCount) <= 3)
+                                {
+                                    if (ParentBalanceAlreadyDeducated || FirstChildBalanceAlreadyDeducated || SecondChildBalanceAlreadyDeducated)
+                                    {
+                                        #region Balance Already Deducated Only Need mearge
+                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                        objtransaction.TransactionId = ParentTransactionId;
+                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                        TransactionBLL.UpdateAuditSection(objtransaction);
                                         ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "success-Yes Mearge-Yes";
+                                        objModelState.ErrorMessage = "Reviewed Success! Balance already deducted, Transactions is mearged.";
                                         objResponseMessage.Add(objModelState);
-                                        Process = false;
                                         #endregion
                                     }
                                     else
                                     {
-                                        #region Invalid Associtated Selected
-                                        ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "Please Select valid associated transcation.";
-                                        objResponseMessage.Add(objModelState);
-                                        Process = false;
+                                        #region Deduct the balance
+                                        #region Check for voilation
+                                        if (ParentIKEVehicleClassId > 0)
+                                        {
+                                            if (ParentIKEVehicleClassId != AuditedVehicleClassId)
+                                            {
+                                                ParentViolation = true;
+                                            }
+
+                                        }
+                                        if (ChildIKEVehicleClassId > 0)
+                                        {
+                                            if (ChildIKEVehicleClassId != AuditedVehicleClassId)
+                                            {
+                                                ChildViolation = true;
+                                            }
+
+                                        }
+                                        if (!ParentViolation && !ChildViolation)
+                                        {
+                                            if (CustomerVehicleDetails.VehicleClassId != AuditedVehicleClassId)
+                                            {
+                                                ParentViolation = true;
+                                            }
+                                        }
+                                        #endregion
+                                        if (ParentViolation || ChildViolation)
+                                        {
+                                            #region Violation Occured
+                                            #region Status for Parent Only
+                                            objtransaction.TransactionId = ParentTransactionId;
+                                            if (ParentIKEVehicleClassId > ChildIKEVehicleClassId && ParentIKEVehicleClassId > AuditedVehicleClassId)
+                                            {
+                                                objtransaction.AuditedVehicleClassId = ParentIKEVehicleClassId;
+                                            }
+                                            else if (ChildIKEVehicleClassId > ParentIKEVehicleClassId && ChildIKEVehicleClassId > AuditedVehicleClassId)
+                                            {
+                                                objtransaction.AuditedVehicleClassId = ChildIKEVehicleClassId;
+                                            }
+                                            else
+                                            {
+                                                objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+                                            }
+
+                                            TransactionBLL.MarkAsViolation(objtransaction);
+                                            FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
+                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                            TransactionBLL.UpdateAuditSection(objtransaction);
+                                            #endregion
+
+                                            #region Status for Child Only
+                                            objtransaction.TransactionId = FirstChildTranasactionId;
+                                            TransactionBLL.MarkAsBalanceUpdated(objtransaction);
+                                            //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                            //TransactionBLL.UpdateAuditSection(objtransaction);
+
+                                            objtransaction.TransactionId = SecondChildTranasactionId;
+                                            TransactionBLL.MarkAsBalanceUpdated(objtransaction);
+                                            //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                            //TransactionBLL.UpdateAuditSection(objtransaction);
+                                            #endregion
+
+                                            TransactionBLL.UpdateAuditSection(objtransaction);
+                                            ModelStateList objModelState = new ModelStateList();
+                                            objModelState.ErrorMessage = "Reviewed Success! Balance deducted, Transactions is marked as violation.";
+                                            objResponseMessage.Add(objModelState);
+                                            #endregion
+                                        }
+                                        else
+                                        {
+                                            #region Only Mearged and Charged --Done
+                                            #region Status for Parent Only
+                                            objtransaction.TransactionId = ParentTransactionId;
+                                            if (ParentIKEVehicleClassId > ChildIKEVehicleClassId && ParentIKEVehicleClassId > AuditedVehicleClassId)
+                                            {
+                                                objtransaction.AuditedVehicleClassId = ParentIKEVehicleClassId;
+                                            }
+                                            else if (ChildIKEVehicleClassId > ParentIKEVehicleClassId && ChildIKEVehicleClassId > AuditedVehicleClassId)
+                                            {
+                                                objtransaction.AuditedVehicleClassId = ChildIKEVehicleClassId;
+                                            }
+                                            else
+                                            {
+                                                objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+                                            }
+
+                                            FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
+                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
+                                            TransactionBLL.UpdateAuditSection(objtransaction);
+                                            #endregion
+
+                                            #region Status for Child Only
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                            objtransaction.TransactionId = FirstChildTranasactionId;
+                                            TransactionBLL.MarkAsBalanceUpdated(objtransaction);
+                                            //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                            //TransactionBLL.UpdateAuditSection(objtransaction);
+
+                                            objtransaction.TransactionId = SecondChildTranasactionId;
+                                            TransactionBLL.MarkAsBalanceUpdated(objtransaction);
+                                            //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                            //TransactionBLL.UpdateAuditSection(objtransaction);
+                                            #endregion
+
+                                            ModelStateList objModelState = new ModelStateList();
+                                            objModelState.ErrorMessage = "Reviewed Success! Balance deducted.";
+                                            objResponseMessage.Add(objModelState);
+                                            #endregion
+                                        }
                                         #endregion
                                     }
                                 }
                                 else
                                 {
-                                    #region Invalid Associtated Selected
                                     ModelStateList objModelState = new ModelStateList();
-                                    objModelState.ErrorMessage = "Please Select valid associated transcation.";
+                                    objModelState.ErrorMessage = "Please select valid associate transactions!";
                                     objResponseMessage.Add(objModelState);
-                                    Process = false;
-                                    #endregion
                                 }
                             }
                             else
                             {
-                                MarkAsViolation(ParentTransactionId, objtransaction);
-                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, 0, 0, 0, VehRegNo, AuditvehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.ViolationMeargedCharged);
-                                ModelStateList objModelState = new ModelStateList();
-                                objModelState.ErrorMessage = "success-Yes Mearge-No";
-                                objResponseMessage.Add(objModelState);
-                                Process = false;
+                                if (ParentIKEEntryId > 0 && ParentANPRFrontEntryId > 0 && ParentANPRRearEntryId > 0)
+                                {
+                                    if (!ParentBalanceAlreadyDeducated)
+                                    {
+                                        #region Balance Deduct
+                                        if (ParentIKEVehicleClassId > 0)
+                                        {
+                                            if (ParentIKEVehicleClassId > AuditedVehicleClassId)
+                                            {
+                                                ParentViolation = true;
+                                                objtransaction.AuditedVehicleClassId = ParentIKEVehicleClassId;
+
+                                            }
+                                            else
+                                                objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+
+                                        }
+
+                                        objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
+                                        if (!ParentViolation)
+                                        {
+                                            if (CustomerVehicleDetails.VehicleClassId != AuditedVehicleClassId)
+                                            {
+                                                ParentViolation = true;
+                                            }
+                                        }
+                                        if (ParentViolation)
+                                        {
+                                            TransactionBLL.MarkAsViolation(objtransaction);
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                            ModelStateList objModelState = new ModelStateList();
+                                            objModelState.ErrorMessage = "Reviewed Success! Balance deducted, Transactions is marked as violation.";
+                                            objResponseMessage.Add(objModelState);
+                                        }
+                                        else
+                                        {
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
+                                            ModelStateList objModelState = new ModelStateList();
+                                            objModelState.ErrorMessage = "Reviewed Success! Balance deducted.";
+                                            objResponseMessage.Add(objModelState);
+                                        }
+                                        TransactionBLL.UpdateAuditSection(objtransaction);
+                                        #endregion
+                                    }
+                                    else
+                                    {
+                                        ModelStateList objModelState = new ModelStateList();
+                                        objModelState.ErrorMessage = "Reviewed failed! Unable to process this Transactions.";
+                                        objResponseMessage.Add(objModelState);
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(-1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId + " AND ( T.AUDITED_VRN='" + AuditedVRN + "' OR CTP.PLATE_NUMBER='" + AuditedVRN + "')";
+                                    DataTable Assodt = TransactionBLL.GetDataTableFilteredRecords(strfilter);
+                                    if (Assodt.Rows.Count > 0)
+                                    {
+                                        #region Looking for Associated
+                                        ValidTransactionsProcess = false;
+                                        if (ParentPacketCount == 1 && Assodt.Rows.Count <= 2)
+                                        {
+                                            ValidTransactionsProcess = true;
+                                        }
+                                        else if (ParentPacketCount == 2 && Assodt.Rows.Count == 1)
+                                        {
+                                            ValidTransactionsProcess = true;
+                                        }
+
+                                        if (ValidTransactionsProcess)
+                                        {
+                                            #region Mearged and Audit Transcation
+                                            FirstChildBalanceAlreadyDeducated = false;
+                                            SecondChildBalanceAlreadyDeducated = false;
+                                            ChildPacketCount = 0;
+                                            #region Get the Childs packets Details
+                                            for (int i = 0; i < Assodt.Rows.Count; i++)
+                                            {
+                                                if (i == 0)
+                                                {
+                                                    #region Get First child Details
+                                                    FirstChildTranasactionId = Convert.ToInt32(Assodt.Rows[0]["TRANSACTION_ID"].ToString());
+                                                    if (!string.IsNullOrEmpty(Assodt.Rows[0]["CT_ENTRY_ID"].ToString()))
+                                                    {
+                                                        if (ParentIKEEntryId == 0)
+                                                        {
+                                                            ChildIKEEntryId = Convert.ToInt32(Assodt.Rows[0]["CT_ENTRY_ID"]);
+                                                            ChildIKEVehicleClassId = Convert.ToInt32(Assodt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
+                                                            ChildPacketCount++;
+                                                        }
+                                                        else
+                                                        {
+                                                            ValidTransactionsProcess = false;
+                                                        }
+                                                    }
+                                                    if (!string.IsNullOrEmpty(Assodt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
+                                                    {
+                                                        if (ParentANPRFrontEntryId == 0)
+                                                        {
+                                                            ChildAnprFrontEntryId = Convert.ToInt32(Assodt.Rows[0]["NF_ENTRY_ID_FRONT"]);
+                                                            ChildANPRFrontVehicleClassId = Convert.ToInt32(Assodt.Rows[0]["NFP_VEHICLE_CLASS_ID_FRONT"]);
+                                                            ChildPacketCount++;
+                                                        }
+                                                        else
+                                                        {
+                                                            ValidTransactionsProcess = false;
+                                                        }
+                                                    }
+                                                    if (!string.IsNullOrEmpty(Assodt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
+                                                    {
+                                                        if (ParentANPRRearEntryId == 0)
+                                                        {
+                                                            ChildAnprRearEntryId = Convert.ToInt32(Assodt.Rows[0]["NF_ENTRY_ID_REAR"]);
+                                                            ChildANPRRearVehicleClassId = Convert.ToInt32(Assodt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
+                                                            ChildPacketCount++;
+                                                        }
+                                                        else
+                                                        {
+                                                            ValidTransactionsProcess = false;
+                                                        }
+                                                    }
+                                                    #endregion
+                                                }
+                                                else
+                                                {
+                                                    #region Get Second Child Pakcet Details
+                                                    SecondChildTranasactionId = Convert.ToInt32(Assodt.Rows[i]["TRANSACTION_ID"].ToString());
+                                                    if (!string.IsNullOrEmpty(Assodt.Rows[i]["CT_ENTRY_ID"].ToString()))
+                                                    {
+                                                        if (ParentIKEEntryId == 0 && ChildIKEEntryId == 0)
+                                                        {
+                                                            ChildIKEEntryId = Convert.ToInt32(Assodt.Rows[i]["CT_ENTRY_ID"]);
+                                                            ChildIKEVehicleClassId = Convert.ToInt32(Assodt.Rows[i]["CTP_VEHICLE_CLASS_ID"]);
+                                                            ChildPacketCount++;
+                                                        }
+                                                        else
+                                                        {
+                                                            ValidTransactionsProcess = false;
+                                                        }
+                                                    }
+                                                    if (!string.IsNullOrEmpty(Assodt.Rows[i]["NF_ENTRY_ID_FRONT"].ToString()))
+                                                    {
+                                                        if (ParentANPRFrontEntryId == 0 && ChildAnprFrontEntryId == 0)
+                                                        {
+                                                            ChildAnprFrontEntryId = Convert.ToInt32(Assodt.Rows[i]["NF_ENTRY_ID_FRONT"]);
+                                                            ChildANPRFrontVehicleClassId = Convert.ToInt32(Assodt.Rows[i]["NFP_VEHICLE_CLASS_ID_FRONT"]);
+                                                            ChildPacketCount++;
+                                                        }
+                                                        else
+                                                        {
+                                                            ValidTransactionsProcess = false;
+                                                        }
+                                                    }
+                                                    if (!string.IsNullOrEmpty(Assodt.Rows[i]["NF_ENTRY_ID_REAR"].ToString()))
+                                                    {
+                                                        if (ParentANPRRearEntryId == 0 && ChildAnprRearEntryId == 0)
+                                                        {
+                                                            ChildAnprRearEntryId = Convert.ToInt32(Assodt.Rows[i]["NF_ENTRY_ID_REAR"]);
+                                                            ChildANPRRearVehicleClassId = Convert.ToInt32(Assodt.Rows[i]["NFP_VEHICLE_CLASS_ID_REAR"]);
+                                                            ChildPacketCount++;
+                                                        }
+                                                        else
+                                                        {
+                                                            ValidTransactionsProcess = false;
+                                                        }
+
+                                                    }
+                                                    if (!string.IsNullOrEmpty(Assodt.Rows[i]["IS_BALANCE_UPDATED"].ToString()))
+                                                    {
+                                                        if (Assodt.Rows[i]["IS_BALANCE_UPDATED"].ToString() == "1")
+                                                        {
+                                                            SecondChildBalanceAlreadyDeducated = true;
+                                                        }
+                                                    }
+                                                    if (Assodt.Rows[i]["AUDIT_STATUS"].ToString() == "1")
+                                                    {
+                                                        SecondChildAuditied = true;
+                                                    }
+                                                    #endregion
+                                                }
+                                            }
+                                            #endregion
+
+                                            if (ValidTransactionsProcess)
+                                            {
+                                                if (ParentBalanceAlreadyDeducated || FirstChildBalanceAlreadyDeducated || SecondChildBalanceAlreadyDeducated)
+                                                {
+                                                    #region Balance Already Deducated Only Need mearge
+                                                    TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                                    objtransaction.TransactionId = ParentTransactionId;
+                                                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                                    ModelStateList objModelState = new ModelStateList();
+                                                    objModelState.ErrorMessage = "Reviewed Success! Balance already deducted, Transactions is mearged.";
+                                                    objResponseMessage.Add(objModelState);
+                                                    #endregion
+                                                }
+                                                else
+                                                {
+                                                    #region Deduct the balance
+                                                    #region Check for voilation
+                                                    if (ParentIKEEntryId > 0)
+                                                    {
+                                                        if (ParentIKEVehicleClassId != AuditedVehicleClassId)
+                                                        {
+                                                            ParentViolation = true;
+                                                        }
+
+                                                    }
+                                                    if (ChildIKEEntryId > 0)
+                                                    {
+                                                        if (ChildIKEVehicleClassId != AuditedVehicleClassId)
+                                                        {
+                                                            ChildViolation = true;
+                                                        }
+
+                                                    }
+                                                    #endregion
+                                                    if (!ParentViolation && !ChildViolation)
+                                                    {
+                                                        if (CustomerVehicleDetails.VehicleClassId != AuditedVehicleClassId)
+                                                        {
+                                                            ParentViolation = true;
+                                                        }
+                                                    }
+                                                    if (ParentViolation || ChildViolation)
+                                                    {
+                                                        #region Violation Occured
+                                                        #region Status for Parent Only
+                                                        objtransaction.TransactionId = ParentTransactionId;
+                                                        if (ParentIKEVehicleClassId > ChildIKEVehicleClassId && ParentIKEVehicleClassId > AuditedVehicleClassId)
+                                                        {
+                                                            objtransaction.AuditedVehicleClassId = ParentIKEVehicleClassId;
+                                                        }
+                                                        else if (ChildIKEVehicleClassId > ParentIKEVehicleClassId && ChildIKEVehicleClassId > AuditedVehicleClassId)
+                                                        {
+                                                            objtransaction.AuditedVehicleClassId = ChildIKEVehicleClassId;
+                                                        }
+                                                        else
+                                                        {
+                                                            objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+                                                        }
+
+                                                        TransactionBLL.MarkAsViolation(objtransaction);
+                                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
+                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                                        TransactionBLL.UpdateAuditSection(objtransaction);
+                                                        #endregion
+
+                                                        #region Status for Child Only
+                                                        objtransaction.TransactionId = FirstChildTranasactionId;
+                                                        TransactionBLL.MarkAsBalanceUpdated(objtransaction);
+                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                                        //TransactionBLL.UpdateAuditSection(objtransaction);
+
+                                                        objtransaction.TransactionId = SecondChildTranasactionId;
+                                                        TransactionBLL.MarkAsBalanceUpdated(objtransaction);
+                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                                        //TransactionBLL.UpdateAuditSection(objtransaction);
+                                                        #endregion
+
+                                                        TransactionBLL.UpdateAuditSection(objtransaction);
+                                                        ModelStateList objModelState = new ModelStateList();
+                                                        objModelState.ErrorMessage = "Reviewed Success! Balance deducted, Transactions is marked as violation.";
+                                                        objResponseMessage.Add(objModelState);
+                                                        #endregion
+                                                    }
+                                                    else
+                                                    {
+                                                        #region Only Mearged and Charged
+                                                        #region Status for Parent Only
+                                                        objtransaction.TransactionId = ParentTransactionId;
+                                                        if (ParentIKEVehicleClassId > ChildIKEVehicleClassId && ParentIKEVehicleClassId > AuditedVehicleClassId)
+                                                        {
+                                                            objtransaction.AuditedVehicleClassId = ParentIKEVehicleClassId;
+                                                        }
+                                                        else if (ChildIKEVehicleClassId > ParentIKEVehicleClassId && ChildIKEVehicleClassId > AuditedVehicleClassId)
+                                                        {
+                                                            objtransaction.AuditedVehicleClassId = ChildIKEVehicleClassId;
+                                                        }
+                                                        else
+                                                        {
+                                                            objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+                                                        }
+
+                                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
+                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
+                                                        TransactionBLL.UpdateAuditSection(objtransaction);
+                                                        #endregion
+
+                                                        #region Status for Child Only
+                                                        objtransaction.TransactionId = FirstChildTranasactionId;
+                                                        TransactionBLL.MarkAsBalanceUpdated(objtransaction);
+                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                                        //TransactionBLL.UpdateAuditSection(objtransaction);
+
+                                                        objtransaction.TransactionId = SecondChildTranasactionId;
+                                                        TransactionBLL.MarkAsBalanceUpdated(objtransaction);
+                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                                        //TransactionBLL.UpdateAuditSection(objtransaction);
+                                                        #endregion
+
+                                                        TransactionBLL.UpdateAuditSection(objtransaction);
+                                                        ModelStateList objModelState = new ModelStateList();
+                                                        objModelState.ErrorMessage = "Reviewed Success! Balance deducted.";
+                                                        objResponseMessage.Add(objModelState);
+                                                        #endregion
+                                                    }
+                                                    #endregion
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ModelStateList objModelState = new ModelStateList();
+                                                objModelState.ErrorMessage = "Reviewed failed! Unable to process this Transactions.";
+                                                objResponseMessage.Add(objModelState);
+
+                                            }
+                                            #endregion
+                                        }
+                                        else
+                                        {
+                                            ModelStateList objModelState = new ModelStateList();
+                                            objModelState.ErrorMessage = "Reviewed failed! Unable to process this Transactions.";
+                                            objResponseMessage.Add(objModelState);
+
+                                        }
+                                        #endregion
+                                    }
+                                    else
+                                    {
+                                        #region No Associated Found
+
+                                        if (!ParentBalanceAlreadyDeducated)
+                                        {
+                                            #region Balance Deduct
+                                            if (ParentIKEVehicleClassId > 0)
+                                            {
+                                                if (ParentIKEVehicleClassId > AuditedVehicleClassId)
+                                                {
+                                                    ParentViolation = true;
+                                                    objtransaction.AuditedVehicleClassId = ParentIKEVehicleClassId;
+
+                                                }
+                                                else
+                                                    objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+
+                                            }
+
+                                            objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+                                            FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
+                                            if (!ParentViolation)
+                                            {
+                                                if (CustomerVehicleDetails.VehicleClassId != AuditedVehicleClassId)
+                                                {
+                                                    ParentViolation = true;
+                                                }
+                                            }
+                                            if (ParentViolation)
+                                            {
+                                                TransactionBLL.MarkAsViolation(objtransaction);
+                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                                ModelStateList objModelState = new ModelStateList();
+                                                objModelState.ErrorMessage = "Reviewed Success! Balance deducted, Transactions is marked as violation.";
+                                                objResponseMessage.Add(objModelState);
+                                            }
+                                            else
+                                            {
+                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
+                                                ModelStateList objModelState = new ModelStateList();
+                                                objModelState.ErrorMessage = "Reviewed Success! Balance deducted.";
+                                                objResponseMessage.Add(objModelState);
+                                            }
+                                            TransactionBLL.UpdateAuditSection(objtransaction);
+                                            #endregion
+                                        }
+                                        #endregion
+                                    }
+                                }
                             }
                         }
                         else
                         {
-                            HelperClass.LogMessage("no transcation found to reviewed");
+                            #region VRN Not Exists Mark as Unregistred Violance and Auditied
+                            TransactionBLL.MarkAsUnregistred(objtransaction);
+                            TransactionBLL.MarkAsViolation(objtransaction);
+                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+
+
+                            TransactionBLL.UpdateAuditSection(objtransaction);
+
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Something went wrong";
+                            objModelState.ErrorMessage = "Reviewed success! VRN not exists it marekd as violance.";
                             objResponseMessage.Add(objModelState);
-                            Process = false;
+                            //objModelState.ErrorMessage = "Balnce cannot deducated due to vrn not exists. It marked as violance.";
+                            //objResponseMessage.Add(objModelState);
+                            //objModelState.ErrorMessage = "VRN not exists it marekd as violance.";
+                            //objResponseMessage.Add(objModelState);
+
+                            #endregion
                         }
-                        #endregion
+
                     }
+                    else
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Transaction not found please check for another.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    #endregion
                 }
-                #endregion
-            }
+                catch (Exception ex)
+                {
+                    HelperClass.LogMessage("Failed to review transaction" + ex);
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Something went wrong";
+                    objResponseMessage.Add(objModelState);
+                }
 
-            catch (Exception ex)
-            {
-                HelperClass.LogMessage("Failed to reviewedtTranscation" + ex);
-                ModelStateList objModelState = new ModelStateList();
-                objModelState.ErrorMessage = "Something went wrong";
-                objResponseMessage.Add(objModelState);
             }
-
             return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
 
@@ -1012,10 +1067,26 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Reviewed");
-            //AND TRANSACTION_DATETIME BETWEEN TO_DATE('" + DateTime.Now.AddMinutes(-30) + "', 'DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + DateTime.Now + "', 'DD/MM/YYYY HH24:MI:SS')
-            string strQuery = "WHERE 1=1";
-            dt = TransactionBLL.GetReviewedDataTableFilteredRecords(strQuery);
-            return View("Reviewed", dt);
+            return View();
+        }
+
+        [HttpPost]
+        public string ReviewedListScroll(int pageindex, int pagesize)
+        {
+            string Det = "";
+            try
+            {
+                JsonResult result = new JsonResult();
+                dt = TransactionBLL.GetReviewedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+            }
+            return Det;
         }
 
         public ActionResult Charged()
@@ -1037,7 +1108,7 @@ namespace MLFFWebUI.Controllers
                 JsonResult result = new JsonResult();
                 dt = TransactionBLL.GetChargedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
                 Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
-                Det= Det.Replace("\r", "").Replace("\n", "");
+                Det = Det.Replace("\r", "").Replace("\n", "");
             }
             catch (Exception ex)
             {
@@ -1047,18 +1118,7 @@ namespace MLFFWebUI.Controllers
             return Det;
         }
 
-        public ActionResult TopUP()
-        {
-            if (Session["LoggedUserId"] == null)
-            {
-                return RedirectToAction("Logout", "Login");
-            }
-            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "TopUP");
-            //AND TRANSACTION_DATETIME BETWEEN TO_DATE('" + DateTime.Now.AddMinutes(-30) + "', 'DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + DateTime.Now + "', 'DD/MM/YYYY HH24:MI:SS')
-            string strQuery = "WHERE 1=1";
-            dt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strQuery);
-            return View("TopUP", dt);
-        }
+
 
         public ActionResult Violation()
         {
@@ -1107,6 +1167,35 @@ namespace MLFFWebUI.Controllers
             {
                 JsonResult result = new JsonResult();
                 dt = TransactionBLL.GetUnidentifiedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+            }
+            return Det;
+        }
+
+        public ActionResult TopUP()
+        {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
+            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "TopUP");
+            return View();
+        }
+
+        [HttpPost]
+        public string TopUpListScroll(int pageindex, int pagesize)
+        {
+            string Det = "";
+            try
+            {
+                JsonResult result = new JsonResult();
+                dt = AccountHistoryBLL.GetTopUpDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
                 Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
                 Det = Det.Replace("\r", "").Replace("\n", "");
             }
@@ -1225,7 +1314,7 @@ namespace MLFFWebUI.Controllers
                     AFTERDEDUCTION = AFTERDEDUCTION.Replace("tid", transaction.TransactionId.ToString());
                     if (AFTERDEDUCTION.Length > 160)
                     {
-                        AFTERDEDUCTION = AFTERDEDUCTION.Substring(0, 149);
+                        AFTERDEDUCTION = AFTERDEDUCTION.Substring(0, 159);
                     }
                     smsDetail.SMSMessage = AFTERDEDUCTION;
                 }
@@ -1241,7 +1330,7 @@ namespace MLFFWebUI.Controllers
                     NOTIFICATION = NOTIFICATION.Replace("tid", transaction.TransactionId.ToString());
                     if (NOTIFICATION.Length > 160)
                     {
-                        NOTIFICATION = NOTIFICATION.Substring(0, 149);
+                        NOTIFICATION = NOTIFICATION.Substring(0, 159);
                     }
                     smsDetail.SMSMessage = NOTIFICATION;
                 }
@@ -1314,11 +1403,8 @@ namespace MLFFWebUI.Controllers
             try
             {
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection currentTimeTollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
-
-                lock (tollRates)
-                {
-                    currentTimeTollRates = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GetTollRateCollection(transactionTime, tollRates);
-                }
+                tollRates = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TollRateBLL.GetAll();
+                currentTimeTollRates = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GetTollRateCollection(transactionTime, tollRates);
 
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE tr in currentTimeTollRates)
                 {

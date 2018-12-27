@@ -47,7 +47,7 @@ namespace MLFFWebUI.Controllers
                     {
                         Session["LoggedUserId"] = user.UserId;
                         Session["RoleId"] = user.RoleId;
-                        Session["UserName"] = user.FirstName + " " + user.LastName;
+                        Session["UserName"] = user.FirstName;
                         Session["LastLogin"] = user.UserId;
                         Session["RoleName"] = user.RoleName;
                         Session["ProjectName"] = "MLFF";
