@@ -248,6 +248,22 @@ namespace VaaaN.MLFF.VehicleFlowSimulator {
         #line default
         #line hidden
         
+        
+        #line 51 "..\..\MainWindow.xaml"
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal System.Windows.Controls.Button buttonStartMLFF;
+        
+        #line default
+        #line hidden
+        
+        
+        #line 53 "..\..\MainWindow.xaml"
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal System.Windows.Controls.Button buttonStopMLFF;
+        
+        #line default
+        #line hidden
+        
         private bool _contentLoaded;
         
         /// <summary>
@@ -378,6 +394,24 @@ namespace VaaaN.MLFF.VehicleFlowSimulator {
             
             #line 49 "..\..\MainWindow.xaml"
             this.buttonGenerateNFHTML.Click += new System.Windows.RoutedEventHandler(this.buttonGenerateNFHTML_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 28:
+            this.buttonStartMLFF = ((System.Windows.Controls.Button)(target));
+            
+            #line 51 "..\..\MainWindow.xaml"
+            this.buttonStartMLFF.Click += new System.Windows.RoutedEventHandler(this.buttonStartMLFF_Click);
+            
+            #line default
+            #line hidden
+            return;
+            case 29:
+            this.buttonStopMLFF = ((System.Windows.Controls.Button)(target));
+            
+            #line 53 "..\..\MainWindow.xaml"
+            this.buttonStopMLFF.Click += new System.Windows.RoutedEventHandler(this.buttonStopMLFF_Click);
             
             #line default
             #line hidden
