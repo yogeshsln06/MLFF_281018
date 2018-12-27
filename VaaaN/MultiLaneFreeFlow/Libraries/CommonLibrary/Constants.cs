@@ -150,11 +150,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         {
             Charged = 1,
             Mearged,
-            MeargedCharged,
             Violation,
-            ViolationCharged,
-            ViolationMearged,
-            ViolationMeargedCharged,
+            Unidentified,
             Unknown,
         }
         public static string[] TranscationStatusName = new string[]
@@ -535,34 +532,34 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         {
             Male = 1,
             Female,
-            Other
 
         };
         public static string[] GenderName = new string[]
       {
-            "Male",
-            "Female",
-            "Other"
+            "LAKI-LAKI",
+            "PEREMPUAN",
       };
         public enum MaritalStatus
         {
-            Single = 1,
-            Married,
+            BELUM_KAWIN = 1,
+            KAWIN,
 
         };
         public static string[] MaritalStatusName = new string[]
       {
-            "Single",
-            "Married"
+            "BELUM KAWIN",
+            "KAWIN"
       };
         public enum Nationality
         {
-            Indonesia = 1
+            WNI = 1,
+            WNA
 
         };
         public static string[] NationalityName = new string[]
       {
-            "Indonesia"
+            "WNI",
+            "WNA"
       };
         public enum VehicleBrand
         {

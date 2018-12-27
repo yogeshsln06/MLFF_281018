@@ -49,6 +49,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 
         private int isRegistered = 0;//0=Unknown, 1=Registered, 2=Unregistered
         private double vehicleSpeed = 0;
+        private Int16 auditedTranscationStatus = 0;
         #endregion
 
         #region Properties
@@ -408,6 +409,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.vehicleSpeed = value;
+            }
+        }
+
+        public Int16 AuditedTranscationStatus
+        {
+            get
+            {
+                return this.auditedTranscationStatus;
+            }
+            set
+            {
+                this.auditedTranscationStatus = value;
             }
         }
         #endregion

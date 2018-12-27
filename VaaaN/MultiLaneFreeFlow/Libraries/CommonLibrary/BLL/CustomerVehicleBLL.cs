@@ -108,5 +108,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.CustomerVehicleAccountLazyLoad(PageIndex, PageSize);
         }
+
+        public static List<CustomerVehicleCBE> GetCustomerVehicleByAccountId(int AccountId)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleByAccountId(AccountId);
+        }
     }
 }

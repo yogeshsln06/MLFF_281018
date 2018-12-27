@@ -140,7 +140,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Required]
-        [Display(Name = "MobileNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Mobile Phone")]
+        // [Display(Name = "MobileNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Mobile Number must be numeric")]
         public String MobileNo
         {
@@ -149,13 +150,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Required]
-        [Display(Name = "EmailId", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        //[Display(Name = "EmailId", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Email")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public String EmailId
         {
             get { return this.emailId; }
             set { this.emailId = value; }
         }
-        
+
         public String Description
         {
             get { return this.description; }
@@ -243,7 +246,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
 
-        [Display(Name = "Identity Number")]//Resident Identity Number
+        [Display(Name = "Resident ID")]//Resident Identity Number
         [Required]
         public string ResidentId
         {
@@ -258,7 +261,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Birth Place")]
+        [Display(Name = "Birthplace")]
         public string BirthPlace
         {
             get
@@ -273,7 +276,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Birth Until")]
+        [Display(Name = "Birthdate")]
         public Nullable<DateTime> BirthDate
         {
             get
@@ -554,7 +557,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Identity Card Image")]
+        [Display(Name = "Resident Card Image")]
         public System.Web.HttpPostedFileBase ResidentidImage { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]

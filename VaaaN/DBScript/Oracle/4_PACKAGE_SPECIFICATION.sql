@@ -1,4 +1,4 @@
-/* Formatted on 23/12/2018 04:25:44 (QP5 v5.215.12089.38647) */
+/* Formatted on 27/12/2018 09:48:25 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -520,15 +520,16 @@ AS
                           P_MODIFICATION_DATE      IN DATE);
 
    PROCEDURE TRAN_UPDATE_AUDIT_SECTION (
-      P_TMS_ID                     IN NUMBER,
-      P_PLAZA_ID                   IN NUMBER,
-      P_LANE_ID                    IN NUMBER,
-      P_TRANSACTION_ID             IN NUMBER,
-      P_AUDIT_STATUS               IN NUMBER,
-      P_AUDITOR_ID                 IN NUMBER,
-      P_AUDIT_DATE                 IN DATE,
-      P_AUDITED_VEHICLE_CLASS_ID   IN NUMBER,
-      P_AUDITED_VRN                IN NVARCHAR2);
+      P_TMS_ID                       IN NUMBER,
+      P_PLAZA_ID                     IN NUMBER,
+      P_LANE_ID                      IN NUMBER,
+      P_TRANSACTION_ID               IN NUMBER,
+      P_AUDIT_STATUS                 IN NUMBER,
+      P_AUDITOR_ID                   IN NUMBER,
+      P_AUDIT_DATE                   IN DATE,
+      P_AUDITED_VEHICLE_CLASS_ID     IN NUMBER,
+      P_AUDITED_VRN                  IN NVARCHAR2,
+      P_AUDITED_TRANSCATION_STATUS   IN NUMBER);
 
    PROCEDURE TRAN_UPDATE_CTP (P_TMS_ID           IN NUMBER,
                               P_PLAZA_ID         IN NUMBER,
@@ -558,6 +559,8 @@ AS
                                    P_PLAZA_ID         IN NUMBER,
                                    P_LANE_ID          IN NUMBER,
                                    P_TRANSACTION_ID   IN NUMBER);
+
+   PROCEDURE TRAN_MARK_AS_UNREGISTRED (P_TRANSACTION_ID IN NUMBER);
 
    PROCEDURE TRAN_DELETE (P_TRANSACTION_ID IN NUMBER);
 
@@ -610,6 +613,10 @@ AS
 
    PROCEDURE TRAN_CHARGED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                     CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE TRAN_REVIEWED_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                     P_PAGE_SIZE    IN     NUMBER,
+                                     CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE CHARGED_TRANS_LAZYLOAD_TEST (P_PAGE_INDEX   IN     NUMBER,
                                           P_PAGE_SIZE    IN     NUMBER,
@@ -1010,6 +1017,9 @@ AS
    PROCEDURE CUSTOMERVEHICLE_GETBYID (P_ENTRY_ID   IN     NUMBER,
                                       CUR_OUT         OUT T_CURSOR);
 
+   PROCEDURE CUSTOMERVEHICLE_GETBYACCOUNTID (P_ACCOUNT_ID   IN     NUMBER,
+                                             CUR_OUT           OUT T_CURSOR);
+
    PROCEDURE CV_GET_BY_TRANCTPENTRYID (P_TRAN_CT_EN_ID   IN     NUMBER,
                                        CUR_OUT              OUT T_CURSOR);
 
@@ -1072,6 +1082,18 @@ AS
       P_ACCOUNT_ID         IN     NUMBER,
       P_TRANSACTION_TYPE   IN     NUMBER,
       CUR_OUT                 OUT T_CURSOR);
+
+   PROCEDURE ACCOUNTHISTORY_ACCOUNTID_LAZY (P_ACCOUNT_ID   IN     NUMBER,
+                                            P_PAGE_INDEX   IN     NUMBER,
+                                            P_PAGE_SIZE    IN     NUMBER,
+                                            CUR_OUT           OUT T_CURSOR);
+
+
+   PROCEDURE ACCOUNTHISTORY_VEHICLEID_LAZY (P_ACCOUNT_ID   IN     NUMBER,
+                                            P_VEHICLE_ID   IN     NUMBER,
+                                            P_PAGE_INDEX   IN     NUMBER,
+                                            P_PAGE_SIZE    IN     NUMBER,
+                                            CUR_OUT           OUT T_CURSOR);
 
    /*CSV*/
    PROCEDURE TRAN_CSV_GETNORMALTRAN (P_START_TIME   IN     DATE,
@@ -1212,5 +1234,9 @@ AS
       P_AUDITED_VEHICLE_CLASS_ID   IN NUMBER,
       P_AUDITOR_ID                 IN NUMBER,
       P_TRANS_STATUS               IN NUMBER);
+
+   PROCEDURE TOPUP_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                   P_PAGE_SIZE    IN     NUMBER,
+                                   CUR_OUT           OUT T_CURSOR);
 END MLFF_PACKAGE;
 /

@@ -795,7 +795,7 @@ namespace MLFFWebAPI.Controllers
                                             Topup = Topup.Replace("tid", entryId.ToString());
                                             if (Topup.Length > 160)
                                             {
-                                                Topup = Topup.Substring(0, 149);
+                                                Topup = Topup.Substring(0, 159);
                                             }
                                             smsOutgoing.MessageBody = Topup;
                                             //smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", "") + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ". Ref: [" + entryId + "]";// Update message content TO DO
@@ -851,7 +851,7 @@ namespace MLFFWebAPI.Controllers
                                         SALDO = SALDO.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
                                         if (SALDO.Length > 160)
                                         {
-                                            SALDO = SALDO.Substring(0, 149);
+                                            SALDO = SALDO.Substring(0, 159);
                                         }
                                         sms.MessageBody = SALDO;
                                         //sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ".";

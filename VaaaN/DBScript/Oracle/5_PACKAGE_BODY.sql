@@ -1,4 +1,4 @@
-/* Formatted on 12/23/2018 4:39:35 AM (QP5 v5.215.12089.38647) */
+/* Formatted on 27/12/2018 09:48:44 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2050,7 +2050,13 @@ AS
              AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_MARK_AS_BAL_UPD;
 
-
+   PROCEDURE TRAN_MARK_AS_UNREGISTRED (P_TRANSACTION_ID IN NUMBER)
+   AS
+   BEGIN
+      UPDATE TBL_TRANSACTION
+         SET IS_REGISTERED = 2
+       WHERE TRANSACTION_ID = P_TRANSACTION_ID;
+   END TRAN_MARK_AS_UNREGISTRED;
 
    PROCEDURE TRAN_DELETE (P_TRANSACTION_ID IN NUMBER)
    AS
@@ -2265,15 +2271,16 @@ AS
    END TRAN_LIVEDATABYID;
 
    PROCEDURE TRAN_UPDATE_AUDIT_SECTION (
-      P_TMS_ID                     IN NUMBER,
-      P_PLAZA_ID                   IN NUMBER,
-      P_LANE_ID                    IN NUMBER,
-      P_TRANSACTION_ID             IN NUMBER,
-      P_AUDIT_STATUS               IN NUMBER,
-      P_AUDITOR_ID                 IN NUMBER,
-      P_AUDIT_DATE                 IN DATE,
-      P_AUDITED_VEHICLE_CLASS_ID   IN NUMBER,
-      P_AUDITED_VRN                IN NVARCHAR2)
+      P_TMS_ID                       IN NUMBER,
+      P_PLAZA_ID                     IN NUMBER,
+      P_LANE_ID                      IN NUMBER,
+      P_TRANSACTION_ID               IN NUMBER,
+      P_AUDIT_STATUS                 IN NUMBER,
+      P_AUDITOR_ID                   IN NUMBER,
+      P_AUDIT_DATE                   IN DATE,
+      P_AUDITED_VEHICLE_CLASS_ID     IN NUMBER,
+      P_AUDITED_VRN                  IN NVARCHAR2,
+      P_AUDITED_TRANSCATION_STATUS   IN NUMBER)
    AS
    BEGIN
       UPDATE TBL_TRANSACTION
@@ -2281,7 +2288,8 @@ AS
              AUDITOR_ID = P_AUDITOR_ID,
              AUDIT_DATE = P_AUDIT_DATE,
              AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID,
-             AUDITED_VRN = P_AUDITED_VRN
+             AUDITED_VRN = P_AUDITED_VRN,
+             TRANS_STATUS = P_AUDITED_TRANSCATION_STATUS
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
@@ -2710,6 +2718,95 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_REVIEWED_FILTERED;
+
+
+   PROCEDURE TRAN_REVIEWED_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                     P_PAGE_SIZE    IN     NUMBER,
+                                     CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH CTE_TRANS_HISTORY
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY AUDIT_DATE DESC)
+                              AS ROWNUMBER,
+                           TMS_ID,
+                           PLAZA_ID,
+                           PLAZA_NAME,
+                           LANE_ID,
+                           LANE_NAME,
+                           TRANSACTION_ID,
+                           TRANSACTION_DATETIME,
+                           CT_ENTRY_ID,
+                           NF_ENTRY_ID_FRONT,
+                           NF_ENTRY_ID_REAR,
+                           IS_REGISTERED,
+                           VEHICLESPEED,
+                           AUDITOR_ID,
+                           AUDIT_DATE,
+                           AUDITED_VEHICLE_CLASS_ID,
+                           AUDITED_VRN,
+                           MEARGED_TRAN_ID,
+                           TRANS_STATUS,
+                           TRANS_STATUS_NAME
+                      FROM TRANS_REVIEWED T
+                     WHERE ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                  ORDER BY AUDIT_DATE DESC)
+           SELECT ROWNUMBER,
+                  T.TMS_ID,
+                  T.PLAZA_ID,
+                  T.PLAZA_NAME,
+                  T.LANE_ID,
+                  T.LANE_NAME,
+                  T.TRANSACTION_ID,
+                  T.TRANSACTION_DATETIME,
+                  T.CT_ENTRY_ID,
+                  CTP.OBJECT_ID AS TAG_ID,
+                  CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
+                  VC_CTP.VEHICLE_CLASS_NAME AS CTP_VEHICLE_CLASS_NAME,
+                  CTP.PLATE_NUMBER AS CTP_VRN,
+                  T.NF_ENTRY_ID_FRONT,
+                  NFPF.PLATE_NUMBER AS FRONT_VRN,
+                  NFPF.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_FRONT,
+                  VC_NFPF.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_FRONT,
+                  NFPF.PLATE_THUMBNAIL AS FRONT_IMAGE,
+                  NFPF.VIDEO_URL AS FRONT_VIDEO_URL,
+                  T.NF_ENTRY_ID_REAR,
+                  NFPR.PLATE_NUMBER AS REAR_VRN,
+                  NFPR.VEHICLE_CLASS_ID AS NFP_VEHICLE_CLASS_ID_REAR,
+                  VC_NFPR.VEHICLE_CLASS_NAME AS NFP_VEHICLE_CLASS_NAME_REAR,
+                  NFPR.PLATE_THUMBNAIL AS REAR_IMAGE,
+                  NFPR.VIDEO_URL AS REAR_VIDEO_URL,
+                  T.IS_REGISTERED,
+                  T.VEHICLESPEED,
+                  T.AUDITOR_ID,
+                  T.AUDIT_DATE,
+                  T.AUDITED_VEHICLE_CLASS_ID,
+                  VC_AUDIT.VEHICLE_CLASS_NAME AS AUDIT_VEHICLE_CLASS_NAME,
+                  T.AUDITED_VRN,
+                  T.MEARGED_TRAN_ID,
+                  T.TRANS_STATUS,
+                  T.TRANS_STATUS_NAME
+             FROM CTE_TRANS_HISTORY T
+                  LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                     ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
+                     ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
+                     ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
+                     ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
+                     ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
+                     ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_AUDIT
+                     ON T.AUDITED_VEHICLE_CLASS_ID = VC_AUDIT.VEHICLE_CLASS_ID
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END TRAN_REVIEWED_LAZYLOAD;
 
    PROCEDURE TRAN_CHARGED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                     CUR_OUT       OUT T_CURSOR)
@@ -4816,7 +4913,99 @@ ORDER BY TRANSACTION_DATETIME DESC';
           WHERE CV.ENTRY_ID = P_ENTRY_ID;
    END CUSTOMERVEHICLE_GETBYID;
 
-
+   PROCEDURE CUSTOMERVEHICLE_GETBYACCOUNTID (P_ACCOUNT_ID   IN     NUMBER,
+                                             CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                VC.VEHICLE_CLASS_NAME,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                CV.VEHICLE_RC_NO,
+                CV.OWNER_NAME,
+                CV.OWNER_ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                (CASE CV.FUEL_TYPE
+                    WHEN 1 THEN 'Diesel'
+                    WHEN 2 THEN 'Gasoline'
+                    WHEN 3 THEN 'Petrol'
+                    WHEN 4 THEN 'Electric'
+                    WHEN 5 THEN 'Solor'
+                    ELSE 'Unknown'
+                 END)
+                   FUEL_TYPE_NAME,
+                CV.LICENCE_PLATE_COLOR,
+                (CASE CV.LICENCE_PLATE_COLOR
+                    WHEN 1 THEN 'Black'
+                    WHEN 2 THEN 'White'
+                    WHEN 3 THEN 'Yellow'
+                    WHEN 4 THEN 'Red'
+                    WHEN 5 THEN 'Blue'
+                    WHEN 6 THEN 'Green'
+                    ELSE 'Unknown'
+                 END)
+                   LICENCE_PLATE_COLOR_NAME,
+                CV.REGISTRATION_YEAR,
+                CV.VEHICLE_OWNERSHIP_NO,
+                CV.LOCATION_CODE,
+                CV.REG_QUEUE_NO,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_RIGHT,
+                CV.VEHICLEIMAGE_LEFT,
+                CV.VEHICLE_RC_NO_PATH,
+                CV.EXCEPTION_FLAG,
+                (CASE CV.EXCEPTION_FLAG
+                    WHEN 1 THEN 'Charged'
+                    WHEN 2 THEN 'Not Charged'
+                    WHEN 3 THEN 'Blacklist'
+                    ELSE 'Unknown'
+                 END)
+                   EXCEPTION_FLAG_NAME,
+                CV.STATUS,
+                CV.VALID_UNTIL,
+                CV.TID_FRONT,
+                CV.TID_REAR,
+                CV.ACCOUNT_BALANCE,
+                CV.REGISTRATION_THROUGH,
+                CV.IS_DOC_VERIFIED,
+                CV.QUEUE_STATUS,
+                (CASE CV.QUEUE_STATUS
+                    WHEN 1 THEN 'Open'
+                    WHEN 2 THEN 'Postponded'
+                    WHEN 3 THEN 'Processed'
+                    ELSE 'Unknown'
+                 END)
+                   QUEUE_STATUS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CA.RESIDENT_ID,
+                CA.EMAIL_ID,
+                CA.MOB_NUMBER,
+                CA.ADDRESS
+           FROM TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                   ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                   ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+          WHERE CV.ACCOUNT_ID = P_ACCOUNT_ID;
+   END CUSTOMERVEHICLE_GETBYACCOUNTID;
 
    PROCEDURE CV_GET_BY_TRANCTPENTRYID (P_TRAN_CT_EN_ID   IN     NUMBER,
                                        CUR_OUT              OUT T_CURSOR)
@@ -5742,6 +5931,129 @@ ORDER BY TRANSACTION_DATETIME DESC';
          ORDER BY ENTRY_ID DESC;
    END ACCOUNT_HISTORY_BYACCOUNTID;
 
+
+   PROCEDURE ACCOUNTHISTORY_ACCOUNTID_LAZY (P_ACCOUNT_ID   IN     NUMBER,
+                                            P_PAGE_INDEX   IN     NUMBER,
+                                            P_PAGE_SIZE    IN     NUMBER,
+                                            CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH TRANS_HISTORY
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY CREATION_DATE DESC)
+                              AS ROWNUMBER,
+                           AH.TMS_ID,
+                           AH.ACCOUNT_ID,
+                           AH.ENTRY_ID,
+                           AH.CUSTOMER_VEHICLE_ENTRY_ID,
+                           (CASE AH.TRANSACTION_TYPE
+                               WHEN 1 THEN 'Sale'
+                               WHEN 2 THEN 'Recharge'
+                               WHEN 3 THEN 'Refund'
+                               WHEN 4 THEN 'Lane Debit'
+                            END)
+                              TRANSACTION_TYPE_NAME,
+                           AH.TRANSACTION_ID,
+                           AH.AMOUNT,
+                           AH.CREATION_DATE
+                      FROM TBL_ACCOUNT_HISTORY AH
+                     WHERE     AH.ACCOUNT_ID = P_ACCOUNT_ID
+                           AND ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                  ORDER BY CREATION_DATE DESC)
+           SELECT ROWNUMBER,
+                  AH.TRANSACTION_TYPE_NAME,
+                  AH.ENTRY_ID,
+                  AH.TRANSACTION_ID,
+                  (CASE AH.TRANSACTION_ID
+                      WHEN 0 THEN AH.ENTRY_ID
+                      ELSE AH.TRANSACTION_ID
+                   END)
+                     AS MYTRANID,
+                  AH.AMOUNT,
+                  AH.CREATION_DATE,
+                  P.PLAZA_NAME,
+                  CV.VEH_REG_NO,
+                  VC.VEHICLE_CLASS_NAME
+             FROM TRANS_HISTORY AH
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                     ON AH.ACCOUNT_ID = CA.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
+                     ON AH.CUSTOMER_VEHICLE_ENTRY_ID = CV.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                     ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_TRANSACTION T
+                     ON AH.TRANSACTION_ID = T.TRANSACTION_ID
+                  LEFT OUTER JOIN TBL_PLAZA P
+                     ON T.PLAZA_ID = P.PLAZA_ID
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END ACCOUNTHISTORY_ACCOUNTID_LAZY;
+
+   PROCEDURE ACCOUNTHISTORY_VEHICLEID_LAZY (P_ACCOUNT_ID   IN     NUMBER,
+                                            P_VEHICLE_ID   IN     NUMBER,
+                                            P_PAGE_INDEX   IN     NUMBER,
+                                            P_PAGE_SIZE    IN     NUMBER,
+                                            CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH TRANS_HISTORY
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY CREATION_DATE DESC)
+                              AS ROWNUMBER,
+                           AH.TMS_ID,
+                           AH.ACCOUNT_ID,
+                           AH.ENTRY_ID,
+                           AH.CUSTOMER_VEHICLE_ENTRY_ID,
+                           (CASE AH.TRANSACTION_TYPE
+                               WHEN 1 THEN 'Sale'
+                               WHEN 2 THEN 'Recharge'
+                               WHEN 3 THEN 'Refund'
+                               WHEN 4 THEN 'Lane Debit'
+                            END)
+                              TRANSACTION_TYPE_NAME,
+                           AH.TRANSACTION_ID,
+                           AH.AMOUNT,
+                           AH.CREATION_DATE
+                      FROM TBL_ACCOUNT_HISTORY AH
+                     WHERE     AH.ACCOUNT_ID = P_ACCOUNT_ID
+                           AND AH.CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
+                           AND ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                  ORDER BY CREATION_DATE DESC)
+           SELECT ROWNUMBER,
+                  AH.TRANSACTION_TYPE_NAME,
+                  AH.ENTRY_ID,
+                  AH.TRANSACTION_ID,
+                  (CASE AH.TRANSACTION_ID
+                      WHEN 0 THEN AH.ENTRY_ID
+                      ELSE AH.TRANSACTION_ID
+                   END)
+                     AS MYTRANID,
+                  AH.AMOUNT,
+                  AH.CREATION_DATE,
+                  P.PLAZA_NAME,
+                  CV.VEH_REG_NO,
+                  VC.VEHICLE_CLASS_NAME
+             FROM TRANS_HISTORY AH
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                     ON AH.ACCOUNT_ID = CA.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
+                     ON AH.CUSTOMER_VEHICLE_ENTRY_ID = CV.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                     ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_TRANSACTION T
+                     ON AH.TRANSACTION_ID = T.TRANSACTION_ID
+                  LEFT OUTER JOIN TBL_PLAZA P
+                     ON T.PLAZA_ID = P.PLAZA_ID
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END ACCOUNTHISTORY_VEHICLEID_LAZY;
+
    /*CSV*/
 
    PROCEDURE TRAN_CSV_GETNORMALTRAN (P_START_TIME   IN     DATE,
@@ -6425,16 +6737,16 @@ ORDER BY TRANSACTION_DATETIME DESC';
       --Update Child 1 Transaction
       IF (P_IKEENTRYID != 0)
       THEN
-         UPDATE TBL_TRANSACTION
-            SET AUDITOR_ID = P_AUDITOR_ID,
-                AUDIT_STATUS = 1,
-                AUDIT_DATE = SYSDATE,
-                AUDITED_VRN = P_AUDITED_VRN,
-                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID,
-                TRANS_STATUS = P_TRANS_STATUS,
-                CT_ENTRY_ID = P_IKEENTRYID
-          WHERE     TRANSACTION_ID = P_PARENT_TRANSACTION_ID
-                AND NVL (AUDIT_STATUS, 0) <> 1;
+         -- UPDATE TBL_TRANSACTION
+         -- SET AUDITOR_ID = P_AUDITOR_ID,
+         -- AUDIT_STATUS = 1,
+         -- AUDIT_DATE = SYSDATE,
+         -- AUDITED_VRN = P_AUDITED_VRN,
+         -- AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID,
+         -- TRANS_STATUS = P_TRANS_STATUS,
+         -- CT_ENTRY_ID = P_IKEENTRYID
+         -- WHERE     TRANSACTION_ID = P_PARENT_TRANSACTION_ID
+         -- AND NVL (CT_ENTRY_ID, 0) = 0;
 
          UPDATE TBL_TRANSACTION
             SET AUDITOR_ID = P_AUDITOR_ID,
@@ -6450,16 +6762,16 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
       IF (P_ANPRFRONTENTRYID != 0)
       THEN
-         UPDATE TBL_TRANSACTION
-            SET AUDITOR_ID = P_AUDITOR_ID,
-                AUDIT_STATUS = 1,
-                AUDIT_DATE = SYSDATE,
-                AUDITED_VRN = P_AUDITED_VRN,
-                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID,
-                TRANS_STATUS = P_TRANS_STATUS,
-                NF_ENTRY_ID_FRONT = P_ANPRFRONTENTRYID
-          WHERE     TRANSACTION_ID = P_PARENT_TRANSACTION_ID
-                AND NVL (AUDIT_STATUS, 0) <> 1;
+         -- UPDATE TBL_TRANSACTION
+         -- SET AUDITOR_ID = P_AUDITOR_ID,
+         -- AUDIT_STATUS = 1,
+         -- AUDIT_DATE = SYSDATE,
+         -- AUDITED_VRN = P_AUDITED_VRN,
+         -- AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID,
+         -- TRANS_STATUS = P_TRANS_STATUS,
+         -- NF_ENTRY_ID_FRONT = P_ANPRFRONTENTRYID
+         -- WHERE     TRANSACTION_ID = P_PARENT_TRANSACTION_ID
+         -- AND NVL (NF_ENTRY_ID_FRONT, 0) = 0;
 
          UPDATE TBL_TRANSACTION
             SET AUDITOR_ID = P_AUDITOR_ID,
@@ -6475,16 +6787,16 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
       IF (P_ANPRREARENTRYID != 0)
       THEN
-         UPDATE TBL_TRANSACTION
-            SET AUDITOR_ID = P_AUDITOR_ID,
-                AUDIT_STATUS = 1,
-                AUDIT_DATE = SYSDATE,
-                AUDITED_VRN = P_AUDITED_VRN,
-                AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID,
-                TRANS_STATUS = P_TRANS_STATUS,
-                NF_ENTRY_ID_REAR = P_ANPRREARENTRYID
-          WHERE     TRANSACTION_ID = P_PARENT_TRANSACTION_ID
-                AND NVL (AUDIT_STATUS, 0) <> 1;
+         -- UPDATE TBL_TRANSACTION
+         -- SET AUDITOR_ID = P_AUDITOR_ID,
+         -- AUDIT_STATUS = 1,
+         -- AUDIT_DATE = SYSDATE,
+         -- AUDITED_VRN = P_AUDITED_VRN,
+         -- AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID,
+         -- TRANS_STATUS = P_TRANS_STATUS,
+         -- NF_ENTRY_ID_REAR = P_ANPRREARENTRYID
+         -- WHERE     TRANSACTION_ID = P_PARENT_TRANSACTION_ID
+         -- AND NVL (NF_ENTRY_ID_REAR, 0) = 0;
 
          UPDATE TBL_TRANSACTION
             SET AUDITOR_ID = P_AUDITOR_ID,
@@ -6494,18 +6806,50 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID,
                 TRANS_STATUS = P_TRANS_STATUS,
                 MEARGED_TRAN_ID = P_PARENT_TRANSACTION_ID
-          WHERE     NF_ENTRY_ID_FRONT = P_ANPRREARENTRYID
+          WHERE     NF_ENTRY_ID_REAR = P_ANPRREARENTRYID
                 AND TRANSACTION_ID <> P_PARENT_TRANSACTION_ID;
       END IF;
-
-
-      UPDATE TBL_TRANSACTION
-         SET AUDITOR_ID = P_AUDITOR_ID,
-             AUDIT_STATUS = 1,
-             AUDIT_DATE = SYSDATE,
-             AUDITED_VRN = P_AUDITED_VRN,
-             AUDITED_VEHICLE_CLASS_ID = P_AUDITED_VEHICLE_CLASS_ID
-       WHERE TRANSACTION_ID = P_PARENT_TRANSACTION_ID;
    END MEARGED_AUDIT_TRANSACTIONS;
+
+
+   PROCEDURE TOPUP_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
+                                   P_PAGE_SIZE    IN     NUMBER,
+                                   CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         WITH TRANS_TOPUP
+              AS (  SELECT ROW_NUMBER () OVER (ORDER BY CREATION_DATE DESC)
+                              AS ROWNUMBER,
+                           ENTRY_ID,
+                           ACCOUNT_ID,
+                           CUSTOMER_VEHICLE_ENTRY_ID,
+                           AMOUNT,
+                           CREATION_DATE
+                      FROM TBL_ACCOUNT_HISTORY
+                     WHERE     TRANSACTION_TYPE = 2
+                           AND NVL (CUSTOMER_VEHICLE_ENTRY_ID, 0) <> 0
+                           AND ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                  ORDER BY CREATION_DATE DESC)
+           SELECT ROWNUMBER,
+                  T.ENTRY_ID,
+                  T.CREATION_DATE,
+                  CV.VEH_REG_NO,
+                  VC.VEHICLE_CLASS_NAME,
+                  CA.FIRST_NAME,
+                  T.AMOUNT
+             FROM TRANS_TOPUP T
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                     ON T.ACCOUNT_ID = CA.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
+                     ON T.CUSTOMER_VEHICLE_ENTRY_ID = CV.ENTRY_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                     ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
+            WHERE ROWNUMBER BETWEEN (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1
+                                AND   (  ( (P_PAGE_INDEX - 1) * P_PAGE_SIZE + 1)
+                                       + P_PAGE_SIZE)
+                                    - 1
+         ORDER BY ROWNUMBER ASC;
+   END TOPUP_TRANS_LAZYLOAD;
 END MLFF_PACKAGE;
 /

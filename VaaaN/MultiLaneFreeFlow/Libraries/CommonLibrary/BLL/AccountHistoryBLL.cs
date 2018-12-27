@@ -37,6 +37,16 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryBYAccountId(AccountId, TranactionType);
         }
 
+        public static DataTable AccountHistoryBYAccountIdLazyLoad(int AccountId, int pageIndex, int pageSize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryBYAccountIdLazyLoad(AccountId, pageIndex, pageSize);
+        }
+
+        public static DataTable AccountHistoryBYVehicleIdLazyLoad(int AccountId, int Vehicleid, int pageIndex, int pageSize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryBYVehicleIdLazyLoad(AccountId, Vehicleid, pageIndex, pageSize);
+        }
+
         public static DataTable AccountHistoryByVehicle(string ResidentIdentityNumber, string VehicleRegistrationCertificateNumber, string VehicleRegistrationNumber)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryByVehicle(ResidentIdentityNumber, VehicleRegistrationCertificateNumber, VehicleRegistrationNumber);
@@ -45,6 +55,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static DataTable AccountHistoryByVehicleWithPaging(string ResidentIdentityNumber, string VehicleRegistrationCertificateNumber, string VehicleRegistrationNumber, int PageIndex, int PageSize)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.AccountHistoryByVehicleWithPaging(ResidentIdentityNumber, VehicleRegistrationCertificateNumber, VehicleRegistrationNumber, PageIndex, PageSize);
+        }
+        public static DataTable GetTopUpDataTableFilteredRecordsLazyLoad(int pageIndex, int pageSize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.GetTopUpDataTableFilteredRecordsLazyLoad(pageIndex, pageSize);
         }
     }
 }

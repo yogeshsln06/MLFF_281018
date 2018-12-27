@@ -81,7 +81,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return entryId;
         }
 
-       
+
 
         public static void Update(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vehicle)
         {
@@ -385,6 +385,25 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ENTRY_ID", DbType.Int32, vehicle.EntryId, ParameterDirection.Input));
                 return VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static List<CustomerVehicleCBE> GetCustomerVehicleByAccountId(int AccountId)
+        {
+            try
+            {
+
+                List<CustomerVehicleCBE> vehicles = new List<CustomerVehicleCBE>();
+
+                string spName = Constants.oraclePackagePrefix + "CUSTOMERVEHICLE_GETBYACCOUNTID";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ACCOUNT_ID", DbType.Int32, AccountId, ParameterDirection.Input));
+                vehicles = ConvertDataTableToList(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
+                return vehicles;
             }
             catch (Exception ex)
             {

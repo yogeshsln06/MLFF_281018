@@ -611,7 +611,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.transferStatus = value; }
         }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
+       // [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
         [Display(Name = "AccountBalance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [Required]
         public Decimal AccountBalance

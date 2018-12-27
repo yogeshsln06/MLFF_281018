@@ -226,6 +226,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             TransactionDAL.MarkAsBalanceUpdated(transaction);
         }
 
+        public static void MarkAsUnregistred(CBE.TransactionCBE transaction)
+        {
+            TransactionDAL.MarkAsUnregistred(transaction);
+        }
+
         public static void UpdateAuditSection(CBE.TransactionCBE transaction)
         {
             TransactionDAL.UpdateAuditSection(transaction);
@@ -281,6 +286,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static DataTable GetReviewedDataTableFilteredRecords(string filter)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetReviewedDataTableFilteredRecords(filter);
+        }
+
+        public static DataTable GetReviewedDataTableFilteredRecordsLazyLoad(int PageIndex, int PageSize)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetReviewedDataTableFilteredRecordsLazyLoad(PageIndex, PageSize);
         }
 
         public static DataTable GetUnReviewedDataTableFilteredRecords(string filter)

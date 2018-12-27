@@ -72,12 +72,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.user_dob = value; }
         }
         [Display(Name = "MobileNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Mobile Number must be numeric")]
         public String MobileNo
         {
             get { return this.mobile_no; }
             set { this.mobile_no = value; }
         }
         [Display(Name = "EmailId", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        //[EmailAddress(ErrorMessage = "Invalid Email Address")]
         public String EmailId
         {
             get { return this.email_id; }
@@ -91,7 +93,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.loginName; }
             set { this.loginName = value; }
         }
-        [Display(Name = "FirstName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        //[Display(Name = "FirstName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Name")]
         public String FirstName
         {
             get { return this.firstName; }
