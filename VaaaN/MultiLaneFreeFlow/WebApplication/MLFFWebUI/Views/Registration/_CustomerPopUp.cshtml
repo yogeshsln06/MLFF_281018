@@ -1,0 +1,226 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE
+@{
+    Layout = null;
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+@using (Html.BeginForm("Customer", "Registration", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <fieldset id="fildset">
+        <input type="hidden" id="hfCustomerDocumentPath" value="@ViewBag.CustomerDocumentPath" />
+        <input type="hidden" id="hfProvinceId" value="@ViewBag.hfProvinceId" />
+        <input type="hidden" id="hfCityId" value="@ViewBag.hfCityId" />
+        <input type="hidden" id="hfDistrictId" value="@ViewBag.hfDistrictId" />
+        <input type="hidden" id="hfSubDistrictId" value="@ViewBag.hfSubDistrictId" />
+        <input type="hidden" id="hfPostalCode" value="@ViewBag.PostalCode" />
+        <input type="hidden" id="hfNationality" value="@ViewBag.Nationality" />
+        <input type="hidden" id="hfMaritalStatus" value="@ViewBag.MaritalStatus" />
+        <input type="hidden" id="hfGender" value="@ViewBag.Gender" />
+        <input type="hidden" id="hfBirthPlace" value="@ViewBag.BirthPlace" />
+        <div class="modal-body" style="height:400px; overflow-y:scroll;">
+            <h5 class="c-mygrey-900 heading"><strong>Personal </strong>Information<span></span></h5>
+            <div class="mT-5">
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(model => model.AccountId, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.EditorFor(model => model.AccountId, new { htmlAttributes = new { @class = "form-control", } })
+                    </div>
+                    <div class="form-group required col-md-2">
+                        @Html.LabelFor(model => model.ResidentId, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.EditorFor(model => model.ResidentId, new { htmlAttributes = new { @class = "form-control", } })
+                        @Html.ValidationMessageFor(model => model.ResidentId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-2">
+                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label required" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control required", onkeyup = "this.value = this.value.toUpperCase();" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(model => model.BirthPlace, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.DropDownList("BirthPlace", (IEnumerable<SelectListItem>)ViewBag.Provinces, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BirthPlace, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control ", @readonly = true } })
+                        @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(model => model.Nationality, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.DropDownList("Nationality", (IEnumerable<SelectListItem>)ViewBag.nationalityName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Nationality, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.DropDownList("Gender", (IEnumerable<SelectListItem>)ViewBag.genderName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(model => model.MaritalStatus, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.DropDownList("MaritalStatus", (IEnumerable<SelectListItem>)ViewBag.maritalstatusName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MaritalStatus, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(model => model.Occupation, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.EditorFor(model => model.Occupation, new { htmlAttributes = new { @class = "form-control ", onkeyup = "this.value = this.value.toUpperCase();" } })
+                        @Html.ValidationMessageFor(model => model.Occupation, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(model => model.ValidUntil, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="timepicker-input form-group col-md-4">
+                        @Html.EditorFor(model => model.ValidUntil, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                        @Html.ValidationMessageFor(model => model.ValidUntil, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-2">
+                        @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label required" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control", } })
+                        @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group required col-md-2">
+                        @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "control-label required" })
+                    </div>
+                    <div class="form-group required col-md-4">
+                        @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control", } })
+                        @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-3">
+                        @Html.LabelFor(model => model.ResidentidImage, htmlAttributes: new { @class = "control-label required" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        <input name="ResidentidImage" id="ResidentidImage" type="file" onchange="encodeImagetoBase64(this)" accept="image/x-png,image/gif,image/jpeg" />
+                        @Html.ValidationMessageFor(model => model.ResidentidImage, "", new { @class = "text-danger" })
+                        <a href="" style="display:none" id="ResidentidImagePath"></a>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class=""></label>
+                        <img onclick="zoomImage(this);" style="height: 65px; width:130px" src=""
+                             data-high-res-src="" alt="" class="gallery-items" id="imgPreview">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <h5 class="c-mygrey-900 heading"><strong>Address </strong> Information <span></span></h5>
+            <div class="mT-5">
+                <div class="form-row">
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(model => model.ProvinceId, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.DropDownList("ProvinceId", (IEnumerable<SelectListItem>)ViewBag.Provinces, new { @class = "form-control", onchange = "GetCityList();" })
+                    </div>
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(model => model.CityId, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="timepicker-input form-group col-md-4">
+                        <select id="CityId" name="CityId" class="form-control" onchange="GetDistrictList();">
+                            <option value="0">--Select Kabupaten/Kota--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(model => model.DistrictId, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group col-md-4">
+                        <select id="DistrictId" name="DistrictId" class="form-control" onchange="GetSubDistrictList();">
+                            <option value="0">--Select Kecamatan--</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(model => model.SubDistrictId, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group col-md-4">
+                        <select id="SubDistrictId" name="SubDistrictId" class="form-control" onchange="GetZip(this);">
+                            <option value="0">--Select Kelurahan/Desa--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(model => model.RT, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.EditorFor(model => model.RT, new { htmlAttributes = new { @class = "form-control " } })
+                    </div>
+                    <div class="form-group  col-md-2">
+                        @Html.LabelFor(model => model.RW, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.EditorFor(model => model.RW, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group required col-md-2">
+                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label required" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control ", onkeyup = "this.value = this.value.toUpperCase();" } })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @class = "form-control " } })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </fieldset>
+}
+<div class="modal-footer">
+    <div class="alert alert-warning" role="alert" id="warning">
+    </div>
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
+    <button type="button" class="btn btn-outline-danger" id="btnpopupCancel" onclick="ResetFildes();">Cancel</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="SaveData('new')" id="btnSaveNew">Save & New</button>
+    <button type="button" class="btn btn-outline-primary" onclick="SaveData('close')" id="btnSave">Save</button>
+</div>
+
+
+
+

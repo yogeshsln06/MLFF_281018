@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.Title = "Customer Vehicle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="mT-10">
+                            <h4 class="c-mygrey-900 mB-20">Customer Vehicle Workbench</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mT-10">
+                            <div class="gap-5 peers" style="float:right;overflow: visible !important;">
+                                <div class="peer">
+                                    <button type="button" class="btn cur-p btn-outline-primary" id="btnNewCustomer" onclick="NewCustomerVehicle();">New</button>
+                                </div>
+                                <div class="peer">
+                                    <span class="btn cur-p  btn-outline-primary">
+                                        <i class='c-black-500 ti-download'></i>
+                                    </span>
+                                </div>
+                                <div class="peer">
+                                    <a class="btn cur-p btn-outline-primary" href='javascript:void(0);' onclick="refreshData();">
+                                        <span class='icon-holder'>
+                                            <i class='c-black-500 ti-reload'></i>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="peer">
+                                    <span class="btn cur-p btn-outline-primary icon-holder" data-toggle="dropdown" aria-expanded="true" onclick="openFilter(this)">
+                                        <i class='c-black-500 ti-filter'></i>
+                                    </span>
+                                    <div class="dropdown-menu dropdown-menu-right myfilter" role="menu" id="ddlFilter" style="width:250px; left:-50px!important;">
+                                        <div class="mT-5">
+                                            <form class="form-horizontal">
+                                                <div class="form-group" style="padding: 4px;">
+                                                    <label for="filter">Filter by</label>
+                                                    <select class="form-control">
+                                                        <option value="0" selected>EPC</option>
+                                                        <option value="1">VRN</option>
+                                                        <option value="2">Class</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" style="padding: 4px;">
+                                                    <label for="contain">filter text</label>
+                                                    <input class="form-control" type="text" />
+                                                </div>
+                                                <button type="button" class="btn btn-primary icon-holde" style="float: right;margin-right: 5px;">
+                                                    <i class='c-grey-900 ti-search'></i>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="tblCustomerVehicle" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                                @*<div class="th-inner sortable both">No</div>
+                                <div class="fht-cell"></div>*@
+                                No
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                                @*<div class="th-inner sortable both">Vehicle ID</div>
+                                <div class="fht-cell"></div>*@
+                                Vehicle ID
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                @*<div class="th-inner sortable both">Registration Num</div>
+                                <div class="fht-cell"></div>*@
+                                Registration Num
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                @*<div class="th-inner sortable both">Class</div>
+                                <div class="fht-cell"></div>*@
+                                Class
+                            </th>
+                            <th style="text-align: center;" colspan="2">
+                                @*<div class="th-inner ">Image</div>
+                                <div class="fht-cell"></div>*@
+                                Image
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                @*<div class="th-inner ">Status</div>
+                                <div class="fht-cell"></div>*@
+                                Status
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                @*<div class="th-inner ">Exception</div>
+                                <div class="fht-cell"></div>*@
+                                Exception
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                @*<div class="th-inner ">Balance</div>
+                                <div class="fht-cell"></div>*@
+                                Balance
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
+                                <div class="th-inner sortable both"></div>
+                                <div class="fht-cell"></div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="text-align: center; " data-field="price">
+                                @*<div class="th-inner sortable both">Front</div>
+                                <div class="fht-cell"></div>*@
+                                Front
+                            </th>
+                            <th style="text-align: center; " data-field="operate">
+                                @*<div class="th-inner sortable both">Rear</div>
+                                <div class="fht-cell"></div>*@
+                                Rear
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div id="loadingdiv" style="text-align:center;display:none;margin-bottom:20px;">
+                    <img src="~/images/ajax-loader.gif" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#customerModal" style="display:none" id="btnpopupOpen">Launch demo modal</button>
+<div class="modal fade bd-example-modal-md" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Register Customer Vehicle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div id="partialassociated">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/CustomerVehicle.js"></script>

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE>
+@{ int rowNo = 0; }
+@if (ViewBag.RowNo != null)
+{
+    rowNo = ViewBag.RowNo;
+}
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @(rowNo += 1)
+        </td>
+        <td>
+            <a href='javascript:void(0);' onclick="DetailsOpen(this,@item.EntryId)">
+                @Html.DisplayFor(modelItem => item.EntryId)
+            </a>
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.VehRegNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VehicleClassName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TagId)
+        </td>
+        <td>
+            @*@Decimal.Parse(@item["ACCOUNT_BALANCE"].ToString()).ToString("C").Replace("$", "Rp").Replace(",", ".")*@
+            @Html.DisplayFor(modelItem => item.AccountBalance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CustomerQueueStatusName)
+        </td>
+        <td>
+
+            <div class="dropleft">
+                <span class="cur-p btn-light icon-holder" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class='c-blue-500 ti-angle-down'></i>
+                </span>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href='javascript:void(0);' onclick="EditOpen(this,@item.EntryId)">
+                        <span class='icon-holder'>
+                            <i class='c-blue-500 ti-pencil'></i>
+                        </span>
+                        <span class='title'>Edit</span>
+                    </a>
+                    <a class="dropdown-item" href='javascript:void(0);' onclick="HistoryRecords(this,@item.EntryId)">
+                        <span class='icon-holder'>
+                            <i class='c-blue-500 ti-exchange-vertical'></i>
+                        </span>
+                        <span class='title'>History</span>
+                    </a>
+                </div>
+            </div>
+
+
+        </td>
+    </tr>
+}

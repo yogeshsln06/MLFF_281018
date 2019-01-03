@@ -1,0 +1,46 @@
+﻿<div class="modal-body">
+    <table id="tblVehicleList" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" id="tblVehicleListTR">
+                    No
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                    Vehicle ID
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Registration Num
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Class
+                </th>
+                <th style="text-align: center;" colspan="2">
+                    Image
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Status
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Exception
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border" >
+                    Balance
+                </th>
+            </tr>
+            <tr>
+                <th style="text-align: center; " data-field="price">
+                    Front
+                </th>
+                <th style="text-align: center; " data-field="operate">
+                    Rear
+                </th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        BindCustmerVehicleAccount();
+    });
+</script>

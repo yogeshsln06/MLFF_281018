@@ -1,0 +1,90 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.UserCBE>
+@{
+    ViewBag.Title = "Users List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="mT-10">
+                            <h4 class="c-mygrey-900 mB-20">System User Workbench</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mT-10">
+                            <div class="gap-5 peers" style="float:right;overflow: visible !important;">
+                                <div class="peer">
+                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewUser();">New</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="dataTable" class="table table-striped my-table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="width:20%">
+                                @Html.DisplayNameFor(model => model.LoginName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirstName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.LastName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.RoleName)
+                            </th>
+                            <th style="width:10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr style="display: table-row">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LoginName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FirstName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LastName)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RoleName)
+                                </td>
+                                <td style="@ViewBag.Visibility">
+                                    <span class='cur-p icon-holder' aria-expanded='false' onclick='EditUser(this,@item.UserId);' style='font-size: 18px;'>
+                                        <i class='c-blue-500 ti-slice'></i>
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-md" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Register Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div id="partialassociated">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/SetUp.js"></script>
+

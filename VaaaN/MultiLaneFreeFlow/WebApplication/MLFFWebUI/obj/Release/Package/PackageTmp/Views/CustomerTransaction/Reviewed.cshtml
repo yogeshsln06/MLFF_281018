@@ -1,0 +1,128 @@
+﻿@{
+    ViewBag.Title = "Reviewed Transcation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-group {
+        padding-left: 8px;
+        padding-right: 10px;
+        /*padding-top:1px;*/
+        /*padding-bottom:1px;*/
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-10 mB-10">
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="mT-10">
+                            <h4 class="c-grey-900 mB-20">Reviewed Transcation</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mT-10">
+                            <div class="gap-5 peers" style="float:right;overflow: visible !important;">
+                                <div class="peer">
+                                    <a class="btn cur-p  btn-outline-primary" href='javascript:void(0);' onclick="reloadReviewedData();">
+                                        <span class='icon-holder'>
+                                            <i class='c-blue-500 ti-reload'></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="tblReviewedData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                                No
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                                ID
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                Date Time
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                Gantry
+                            </th>
+                            <th style="text-align: center; " colspan="2">
+                                EVI
+                            </th>
+                            <th style="text-align: center; " colspan="4">
+                                ANPR Front
+                            </th>
+                            <th style="text-align: center; " colspan="4">
+                                ANPR Rear
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                Speed <br />(Km/h)
+                            </th>
+                            <th style="text-align: center; " colspan="3">
+                                Reviewed
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                                Reviewer
+                            </th>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
+                                Status
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="text-align: center; " data-field="price">
+                                VRN
+                            </th>
+                            <th style="text-align: center; " data-field="operate">
+                                Class
+                            </th>
+                            <th style="text-align: center; " data-field="price">
+                                VRN
+                            </th>
+                            <th style="text-align: center; " data-field="operate">
+                                Class
+                            </th>
+                            <th style="text-align: center; " data-field="price">
+                                Image
+                            </th>
+                            <th style="text-align: center; " data-field="operate">
+                                Video
+                            </th>
+                            <th style="text-align: center; " data-field="price">
+                                VRN
+                            </th>
+                            <th style="text-align: center; " data-field="operate">
+                                Class
+                            </th>
+                            <th style="text-align: center; " data-field="price">
+                                Image
+                            </th>
+                            <th style="text-align: center; " data-field="operate">
+                                Video
+                            </th>
+                            <th style="text-align: center; " data-field="price">
+                                VRN
+                            </th>
+                            <th style="text-align: center; " data-field="operate">
+                                Class
+                            </th>
+                            <th style="text-align: center; " data-field="operate">
+                                Parent ID
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        BindReviewedFirstLoad();
+    });
+</script>
+<script src="~/js/CustomerTranscation.js"></script>
+

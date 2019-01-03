@@ -4,20 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
     <title>@ViewBag.Title</title>
-    <link href="~/assets/admin/style.css" rel="stylesheet">
-    <link href="~/Content/imageviewer.css" rel="stylesheet" />
-    <link href="~/assets/custom/custom.css" rel="stylesheet">
+    
+    <script src="~/assets/jqueryslims/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="~/assets/jqueryslims/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="~/assets/jqueryslims/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 
+    <link href="~/assets/admin/style.css" rel="stylesheet">
+    <link href="~/assets/custom/custom.css" rel="stylesheet">
     <link href="~/assets/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/imageviewer.css" rel="stylesheet" />
+    <link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+
     <script src="~/assets/bootstrap/jquery.min.js"></script>
+    <script src="~/Scripts/imageviewer.min.js"></script>
     <script src="~/assets/bootstrap/popper.min.js"></script>
     <script src="~/assets/bootstrap/bootstrap.min.js"></script>
-    
-    <link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
-    <script src="~/Scripts/imageviewer.min.js"></script>
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
 </head>
-<body class="app" style="overflow:hidden;">
+<body class="app" style="overflow:hidden">
     <div id='loader'>
         <div class="spinner"></div>
     </div>
@@ -40,14 +46,14 @@
                             <a class="sidebar-link td-n" href="index.html">
                                 <div class="peers ai-c fxw-nw">
                                     <div class="peer">
-                                        <div class="logo"  style="width:70px; height:64px;">
+                                        <div class="logo" style="width:70px; height:64px;">
                                             <img src="~/assets/static/images/SMlogo.png" alt="" style="width: 69px;">
                                         </div>
                                     </div>
                                     <div class="peer peer-greed">
-                                        <h5 class="lh-1 mB-0 logo-text">SMARTERP</h5>
+                                        <h5 class="lh-1 mB-0 logo-text">@Session["RoleName"]</h5>
                                     </div>
-                                 
+
                                 </div>
                             </a>
                         </div>
@@ -79,181 +85,12 @@
                                 <i class="ti-menu c-mygrey"></i>
                             </a>
                         </li>
-                        @*<li class="search-box">
-                            <a class="search-toggle no-pdd-right" href="javascript:void(0);">
-                                <img src="~/assets/static/images/SmartERP.png" alt="" height="64">
-                            </a>
-                        </li>*@
                     </ul>
                     <ul class="nav-right">
-                        @*<li class="notifications dropdown">
-                            <span class="counter bgc-red">3</span>
-                            <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
-                                <i class="ti-bell"></i>
-                            </a>
-
-                            <ul class="dropdown-menu">
-                                <li class="pX-20 pY-15 bdB">
-                                    <i class="ti-bell pR-10"></i>
-                                    <span class="fsz-sm fw-600 c-grey-900">Notifications</span>
-                                </li>
-                                <li>
-                                    <ul class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <span>
-                                                        <span class="fw-500">John Doe</span>
-                                                        <span class="c-grey-600">
-                                                            liked your <span class="text-dark">post</span>
-                                                        </span>
-                                                    </span>
-                                                    <p class="m-0">
-                                                        <small class="fsz-xs">5 mins ago</small>
-                                                    </p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <span>
-                                                        <span class="fw-500">Moo Doe</span>
-                                                        <span class="c-grey-600">
-                                                            liked your <span class="text-dark">cover image</span>
-                                                        </span>
-                                                    </span>
-                                                    <p class="m-0">
-                                                        <small class="fsz-xs">7 mins ago</small>
-                                                    </p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/3.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <span>
-                                                        <span class="fw-500">Lee Doe</span>
-                                                        <span class="c-grey-600">
-                                                            commented on your <span class="text-dark">video</span>
-                                                        </span>
-                                                    </span>
-                                                    <p class="m-0">
-                                                        <small class="fsz-xs">10 mins ago</small>
-                                                    </p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="pX-20 pY-15 ta-c bdT">
-                                    <span>
-                                        <a href="" class="c-grey-600 cH-blue fsz-sm td-n">View All Notifications <i class="ti-angle-right fsz-xs mL-10"></i></a>
-                                    </span>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="notifications dropdown">
-                            <span class="counter bgc-blue">3</span>
-                            <a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
-                                <i class="ti-email"></i>
-                            </a>
-
-                            <ul class="dropdown-menu">
-                                <li class="pX-20 pY-15 bdB">
-                                    <i class="ti-email pR-10"></i>
-                                    <span class="fsz-sm fw-600 c-grey-900">Emails</span>
-                                </li>
-                                <li>
-                                    <ul class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <div>
-                                                        <div class="peers jc-sb fxw-nw mB-5">
-                                                            <div class="peer">
-                                                                <p class="fw-500 mB-0">John Doe</p>
-                                                            </div>
-                                                            <div class="peer">
-                                                                <small class="fsz-xs">5 mins ago</small>
-                                                            </div>
-                                                        </div>
-                                                        <span class="c-grey-600 fsz-sm">
-                                                            Want to create your own customized data generator for your app...
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <div>
-                                                        <div class="peers jc-sb fxw-nw mB-5">
-                                                            <div class="peer">
-                                                                <p class="fw-500 mB-0">Moo Doe</p>
-                                                            </div>
-                                                            <div class="peer">
-                                                                <small class="fsz-xs">15 mins ago</small>
-                                                            </div>
-                                                        </div>
-                                                        <span class="c-grey-600 fsz-sm">
-                                                            Want to create your own customized data generator for your app...
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" class='peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100'>
-                                                <div class="peer mR-15">
-                                                    <img class="w-3r bdrs-50p" src="https://randomuser.me/api/portraits/men/3.jpg" alt="">
-                                                </div>
-                                                <div class="peer peer-greed">
-                                                    <div>
-                                                        <div class="peers jc-sb fxw-nw mB-5">
-                                                            <div class="peer">
-                                                                <p class="fw-500 mB-0">Lee Doe</p>
-                                                            </div>
-                                                            <div class="peer">
-                                                                <small class="fsz-xs">25 mins ago</small>
-                                                            </div>
-                                                        </div>
-                                                        <span class="c-grey-600 fsz-sm">
-                                                            Want to create your own customized data generator for your app...
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="pX-20 pY-15 ta-c bdT">
-                                    <span>
-                                        <a href="email.html" class="c-grey-600 cH-blue fsz-sm td-n">View All Email <i class="fs-xs ti-angle-right mL-10"></i></a>
-                                    </span>
-                                </li>
-                            </ul>
-                        </li>*@
                         <li class="dropdown">
-                            <a href="" class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown" onclick="openFilter(this)">
+                           
+                            <a href="" class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown">
                                 <div class="peer mR-10">
-                                    @*<img class="w-2r bdrs-50p" src="https://randomuser.me/api/portraits/men/10.jpg" alt="">*@
                                     <span class='icon-holder'>
                                         <i class='c-blue-500 ti-user'></i>
                                     </span>
@@ -262,56 +99,54 @@
                                     <span class="fsz-sm c-mygrey-900">@Session["UserName"]</span>
                                 </div>
                             </a>
-                            <ul class="dropdown-menu fsz-sm myfilter">
-                                <li>
-                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                                        <i class="ti-settings mR-10"></i>
-                                        <span>Setting</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                                        <i class="ti-user mR-10"></i>
-                                        <span>Profile</span>
-                                    </a>
-                                </li>
-                                @*<li>
-                                        <a href="email.html" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                                            <i class="ti-email mR-10"></i>
-                                            <span>Messages</span>
+                            <ul class="dropdown-menu fsz-sm">
+                              
+                                    <li>
+                                        <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href='javascript:void(0);' onclick="ChnagePasswordOpen();">
+                                            <i class="ti-settings mR-10"></i>
+                                            <span>Setting</span>
                                         </a>
-                                    </li>*@
-                                <li role="separator" class="divider"></li>
-                                <li>
-                                    <a href="/Login/Logout" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                                        <i class="ti-power-off mR-10"></i>
-                                        <span>Logout</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                                    </li>
+                                    <li>
+                                        <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                            <i class="ti-user mR-10"></i>
+                                            <span>Profile</span>
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        <a href="/Login/Logout" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                            <i class="ti-power-off mR-10"></i>
+                                            <span>Logout</span>
+                                        </a>
+                                    </li>
+                                </ul>
+</li>
                     </ul>
                 </div>
             </div>
-
+            
             <!-- ### $App Screen Content ### -->
             <main class='main-content bgc-grey-100'>
                 <div id='mainContent'>
+                   
                     @RenderBody()
                 </div>
             </main>
 
             <!-- ### $App Screen Footer ### -->
-            @*<footer class="bdT ta-c p-10 lh-0 fsz-sm c-grey-600">
+            <footer class="bdT ta-c p-10 lh-0 fsz-sm c-grey-600">
                 <span>Copyright &copy VaaaN Infra @DateTime.Now.Year</span>
-            </footer>*@
+            </footer>
         </div>
     </div>
+
     <div class="animationload">
         <div class="osahanloading"></div>
     </div>
+
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ImageModal" id="btnImageModalOpen" style="display:none;">Launch demo modal</button>
-    <div class="modal fade bd-example-modal-sm" id="ImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-sm imgmodal" id="ImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -321,10 +156,10 @@
                 <div class="modal-body">
                     <img class="modal-content" id="img01">
                 </div>
-
             </div>
         </div>
     </div>
+
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#VideoModal" id="btnVideoModalOpen" style="display:none;">Launch demo modal</button>
     <div class="modal fade bd-example-modal-md" id="VideoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
@@ -344,26 +179,83 @@
             </div>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-md" id="customerHistoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal fade bd-example-modal-md" id="customerHistoryModal" tabindex="-1" role="dialog" aria-labelledby="HistoryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="HistoryModalLabel">View [Customer Name] Transaction</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+
+                            </div>
+                            <div class="col-md-4" style="text-align: center;">
+                                <h5 class="modal-title" id="HistoryModalLabel">View [Customer Name] Transaction</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="partialHistory">
 
                 </div>
 
                 <div class="modal-footer">
-                    @*<button type="button" class="btn btn-secondry-danger" data-dismiss="modal" id="btnpopupClose">Cancel</button>*@
-                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal" id="btnpopupClose">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
                 </div>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="~/assets/admin/vendor.js"></script>
-    <script type="text/javascript" src="~/assets/admin/bundle.js"></script>
-    <script src="~/js/Common.js"></script>
+    <div id="password_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4" style="text-align: center;">
+                        <h5 class="modal-title">Chnage Password</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="text-center">
+                                    <div class="panel-body">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <input class="form-control required input-lg" data-val="true" data-val-required="The current password is required." placeholder="Current Password" name="CurrentPassword" type="password" id="CurrentPassword">
+                                                <span class="field-validation-valid text-danger" data-valmsg-for="CurrentPassword" data-valmsg-replace="true"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <input class="form-control required input-lg" data-val="true" data-val-required="The new password is required." placeholder="New Password" name="NewPassword" type="password" id="NewPassword">
+                                                <span class="field-validation-valid text-danger" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
+                                            </div>
+                                            <input type="button" class="btn btn-lg btn-outline-primary btn-block" onclick="ChnagePassword()" value="Update Password"/>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script type="text/javascript" src="~/assets/admin/vendor.js"></script>
+        <script type="text/javascript" src="~/assets/admin/bundle.js"></script>
+        <script src="~/js/Common.js"></script>
+
 </body>
 </html>

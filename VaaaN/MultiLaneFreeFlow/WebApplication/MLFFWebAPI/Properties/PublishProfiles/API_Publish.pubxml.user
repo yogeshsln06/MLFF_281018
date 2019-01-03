@@ -82,7 +82,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/19/2018 00:56:59</publishTime>
     </File>
     <File Include="bin/en/VaaaN.MLFF.CommonLibrary.resources.dll">
-      <publishTime>12/19/2018 17:24:27</publishTime>
+      <publishTime>12/27/2018 14:37:56</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>12/19/2018 00:56:59</publishTime>
@@ -91,7 +91,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/19/2018 00:56:59</publishTime>
     </File>
     <File Include="bin/id/VaaaN.MLFF.CommonLibrary.resources.dll">
-      <publishTime>12/19/2018 17:24:27</publishTime>
+      <publishTime>12/27/2018 14:37:56</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.Agent.Intercept.dll">
       <publishTime>12/19/2018 00:56:59</publishTime>
@@ -166,7 +166,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/19/2018 00:56:59</publishTime>
     </File>
     <File Include="bin/MLFFWebAPI.dll">
-      <publishTime>12/19/2018 18:00:21</publishTime>
+      <publishTime>12/27/2018 14:38:24</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>12/19/2018 00:56:59</publishTime>
@@ -364,7 +364,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/19/2018 00:56:59</publishTime>
     </File>
     <File Include="bin/VaaaN.MLFF.CommonLibrary.dll">
-      <publishTime>12/19/2018 17:24:27</publishTime>
+      <publishTime>12/27/2018 14:37:56</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>12/19/2018 00:56:59</publishTime>

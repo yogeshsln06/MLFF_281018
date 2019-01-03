@@ -1,0 +1,16 @@
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\SMSService.exe.config
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\SMSService.exe
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\SMSService.pdb
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\VaaaN.MLFF.CommonLibrary.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\Newtonsoft.Json.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\VaaaN.MLFF.CommonLibrary.pdb
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\Newtonsoft.Json.xml
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\en\VaaaN.MLFF.CommonLibrary.resources.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\bin\Debug\id\VaaaN.MLFF.CommonLibrary.resources.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.ProjectInstaller.resources
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.csproj.GenerateResource.Cache
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.exe
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.pdb
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.csprojResolveAssemblyReference.cache

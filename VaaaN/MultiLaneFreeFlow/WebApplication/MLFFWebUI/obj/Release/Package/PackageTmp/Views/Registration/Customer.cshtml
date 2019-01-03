@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<link href="~/assets/custom/reset.css" rel="stylesheet" />
+<link href="~/assets/custom/style.css" rel="stylesheet" />*@
+@*<script src="~/Scripts/modernizr.js"></script>*@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="mT-10">
+                            <h4 class="c-mygrey-900 mB-20">Customer</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mT-10">
+                            <div class="gap-5 peers" style="float:right;overflow: visible !important;">
+                                <div class="peer">
+                                    <button type="button" class="btn cur-p btn-outline-primary" id="btnNewCustomer" onclick="NewCustomer();">New</button>
+                                </div>
+                                <div class="peer">
+                                    <span class="btn cur-p  btn-outline-primary" onclick="MakeCSV();">
+                                        <i class='c-black-500 ti-download'></i>
+                                    </span>
+                                </div>
+                                <div class="peer">
+                                    <a class="btn cur-p btn-outline-primary" href='javascript:void(0);' onclick="reloadData();">
+                                        <span class='icon-holder'>
+                                            <i class='c-black-500 ti-reload'></i>
+                                        </span>
+                                    </a>
+
+                                </div>
+                                <div class="peer">
+                                    <a class="btn cur-p btn-outline-primary cd-filter-trigger" href='javascript:void(0);'  onclick="openFilterpopup();" >
+                                        <span class='icon-holder'>
+                                            <i class='c-black-500 ti-filter'></i>
+                                        </span>
+                                    </a>
+                                    <div class="modal right fade" id="filterModel" tabindex="-1" role="dialog" aria-labelledby="filterModelLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body" style="max-height:440px; overflow-y:scroll;">
+                                                    <form>
+                                                        <div class="form-group">
+                                                            <label for="txtCustomerID">Customer ID</label>
+                                                            <input type="text" class="form-control" id="txtCustomerID" aria-describedby="CustomerID" placeholder="Customer ID">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtResidentID">Resident ID</label>
+                                                            <input type="text" class="form-control" id="txtResidentID" placeholder="Resident ID">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtName">Name</label>
+                                                            <input type="text" class="form-control" id="txtName" placeholder="Name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtMobile">Mobile</label>
+                                                            <input type="text" class="form-control" id="txtMobile" placeholder="Mobile">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtEmail">Email</label>
+                                                            <input type="text" class="form-control" id="txtEmail" placeholder="Email">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtVRN">Registration Num (VRN)</label>
+                                                            <input type="text" class="form-control" id="txtVRN" placeholder="VRN">
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary" onclick="FilteCustomerData()">Search
+                                                            <i class='c-black-500 ti-search'></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tblCustomerData" class="table table-striped table-bordered table-condensed table-hover" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th id="tblCustomerDataTR">No</th>
+                                <th>Customer ID</th>
+                                <th>Resident ID</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
+                                <th class="no-rt-border"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#customerModal" style="display:none;" id="btncustomerModal">Launch demo modal</button>
+    <div class="modal fade bd-example-modal-md" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+
+                            </div>
+                            <div class="col-md-4" style="text-align: center;">
+                                <h5 class="modal-title" id="exampleModalLabel">Register Customer</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="partialassociated">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="~/js/CustomerAccount.js"></script>
+
+
+
+@*<script src="~/Scripts/jquery.mixitup.min.js"></script>
+<script src="~/Scripts/main.js"></script>*@
