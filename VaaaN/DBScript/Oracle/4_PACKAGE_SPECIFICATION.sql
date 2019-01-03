@@ -1,4 +1,4 @@
-/* Formatted on 27/12/2018 09:48:25 (QP5 v5.215.12089.38647) */
+/* Formatted on 03/01/2019 15:47:07 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -895,6 +895,8 @@ AS
 
    PROCEDURE ACCOUNT_GETALL (CUR_OUT OUT T_CURSOR);
 
+   PROCEDURE ACCOUNT_GETALLCSV (CUR_OUT OUT T_CURSOR);
+
    PROCEDURE ACCOUNT_GETBYID (P_TMS_ID       IN     NUMBER,
                               P_ACCOUNT_ID   IN     NUMBER,
                               CUR_OUT           OUT T_CURSOR);
@@ -1238,5 +1240,11 @@ AS
    PROCEDURE TOPUP_TRANS_LAZYLOAD (P_PAGE_INDEX   IN     NUMBER,
                                    P_PAGE_SIZE    IN     NUMBER,
                                    CUR_OUT           OUT T_CURSOR);
+
+   PROCEDURE CUSTOMERACCOUNT_FILTERED (P_FILTER   IN     NVARCHAR2,
+                                       CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE CUSTOMERVEHICLE_FILTERED (P_FILTER   IN     NVARCHAR2,
+                                       CUR_OUT       OUT T_CURSOR);
 END MLFF_PACKAGE;
 /

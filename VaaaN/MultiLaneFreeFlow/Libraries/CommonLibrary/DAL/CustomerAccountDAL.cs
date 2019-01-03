@@ -285,6 +285,30 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static List<CBE.CustomerAccountCBE> GetCustomerAccountFiltered(string filter)
+        {
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE> accounts = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE>();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "CUSTOMERACCOUNT_FILTERED";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                accounts = ConvertDataTableToListDirect(ds.Tables[0]);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return accounts;
+        }
+
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetById(Int32 CustomerId, Int32 tmsId)
         {
@@ -379,6 +403,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return accounts;
         }
+
+        public static DataTable GetAllAsCSV()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "ACCOUNT_GETALLCSV";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
         #endregion
 
         #region Helper Methods
@@ -392,7 +439,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 {
                     accounts.Add(ConvertDataTableToCBE(dr));
                 }
-                
+
                 return accounts;
             }
             catch (Exception ex)

@@ -90,5 +90,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.CustomerAccountLazyLoad(PageIndex, PageSize);
         }
+
+        public static List<CBE.CustomerAccountCBE> GetCustomerAccountFiltered(string filtere)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetCustomerAccountFiltered(filtere);
+        }
+
+        public static DataTable GetAllAsCSV()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetAllAsCSV();
+        }
     }
 }

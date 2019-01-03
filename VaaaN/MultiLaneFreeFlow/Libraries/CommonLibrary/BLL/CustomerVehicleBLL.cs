@@ -113,5 +113,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleByAccountId(AccountId);
         }
+
+        public static List<CBE.CustomerVehicleCBE> GetCustomerVehicleFiltered(string filtere)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleFiltered(filtere);
+        }
     }
 }

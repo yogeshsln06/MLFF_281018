@@ -452,6 +452,30 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return vehicles;
         }
+
+        public static List<CBE.CustomerVehicleCBE> GetCustomerVehicleFiltered(string filter)
+        {
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE> vehicles = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE>();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "CUSTOMERVEHICLE_FILTERED";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                vehicles = ConvertDataTableToList(ds.Tables[0]);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return vehicles;
+        }
         #endregion
 
         #region Helper Methods
@@ -527,7 +551,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return customerVehicleList;
         }
-
 
         private static CBE.CustomerVehicleCBE ConvertDataTableToCBE(DataRow row)
         {
