@@ -554,8 +554,9 @@ namespace MLFFWebUI.Controllers
                                                 objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
                                             }
 
-                                            TransactionBLL.MarkAsViolation(objtransaction);
+                                            
                                             FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
+                                            TransactionBLL.MarkAsViolation(objtransaction);
                                             TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
                                             objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                             TransactionBLL.UpdateAuditSection(objtransaction);
@@ -878,8 +879,9 @@ namespace MLFFWebUI.Controllers
                                                             objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
                                                         }
 
-                                                        TransactionBLL.MarkAsViolation(objtransaction);
+                                                       
                                                         FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
+                                                        TransactionBLL.MarkAsViolation(objtransaction);
                                                         TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
                                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                                         TransactionBLL.UpdateAuditSection(objtransaction);

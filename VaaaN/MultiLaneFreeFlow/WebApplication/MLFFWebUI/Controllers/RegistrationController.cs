@@ -221,7 +221,7 @@ namespace MLFFWebUI.Controllers
                     if (Registrationfiltered.Count > 0)
                     {
                         ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "Identity Id already exists";
+                        objModelState.ErrorMessage = "Resident Id already exists";
                         objResponseMessage.Add(objModelState);
                     }
                     if (Mobilefiltered.Count > 0)
@@ -251,7 +251,7 @@ namespace MLFFWebUI.Controllers
                     if (string.IsNullOrEmpty(customerAccount.ResidentidcardImagePath))
                     {
                         ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "Identity Card Image is required";
+                        objModelState.ErrorMessage = "Resident Card Image is required";
                         objResponseMessage.Add(objModelState);
                     }
                     else
@@ -394,7 +394,7 @@ namespace MLFFWebUI.Controllers
                     if (ResidentIdfiltered.Count > 0)
                     {
                         ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "Identity Id already exists";
+                        objModelState.ErrorMessage = "Resident Id already exists";
                         objResponseMessage.Add(objModelState);
                     }
                     if (Mobilefiltered.Count > 0)
@@ -426,7 +426,7 @@ namespace MLFFWebUI.Controllers
                         if (string.IsNullOrEmpty(customerAccount.ResidentidcardImagePath))
                         {
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Identity Card Image is required";
+                            objModelState.ErrorMessage = "Resident Card Image is required";
                             objResponseMessage.Add(objModelState);
                         }
                         else
@@ -581,6 +581,60 @@ namespace MLFFWebUI.Controllers
         {
             return PartialView("VihicleList");
         }
+
+        [HttpPost]
+        public JsonResult CustomerAccountFilter(CustomerVehicleModel objCustomerVehicleModel)
+        {
+            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+            }
+            else
+            {
+                try
+                {
+                    string strQuery = " WHERE 1=1 AND (";
+                    if (objCustomerVehicleModel.AccountId > 0)
+                    {
+                        strQuery += " OR (LOWER(CA.ACCOUNT_ID) LIKE '%" + objCustomerVehicleModel.AccountId + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
+                    {
+                        strQuery += " OR (LOWER(CA.RESIDENT_ID) LIKE '%" + objCustomerVehicleModel.ResidentId.ToLower() + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
+                    {
+                        strQuery += " OR (LOWER(CA.MOB_NUMBER) LIKE '%" + objCustomerVehicleModel.MobileNo.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
+                    {
+                        strQuery += " OR (LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
+                    {
+                        strQuery += " OR (LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
+                    {
+                        strQuery += " OR (LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "% ')";
+                    }
+                    strQuery += ")";
+                    customerDataList = CustomerAccountBLL.GetCustomerAccountFiltered(strQuery.Replace("( OR", "("));
+                    result.Data = customerDataList;
+                }
+                catch (Exception)
+                {
+
+                    result.Data = "failed";
+                }
+
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
         #region Customer Vehicle
@@ -592,6 +646,44 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "CustomerVehicle");
+
+            #region Vehicle Class Dropdown
+            List<SelectListItem> vehicleclassList = new List<SelectListItem>();
+            List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
+            vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
+
+            vehicleclassList.Add(new SelectListItem() { Text = "--Select Vehicle Class--", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
+            {
+                vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
+            }
+            ViewBag.VehicleClassList = vehicleclassList;
+
+            #endregion
+
+            #region Queue Status
+            List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
+            Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
+            customerQueueStatus.Add(new SelectListItem() { Text = "--Select Status--", Value = "0" });
+            for (int i = 0; i < arStatus.Length; i++)
+            {
+                customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
+            }
+            ViewBag.QueueStatusList = customerQueueStatus;
+
+            #endregion
+
+            #region Exception Flag
+            List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
+            Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
+            ExceptionFlagList.Add(new SelectListItem() { Text = "--Select Exception--", Value = "0" });
+            for (int i = 0; i < ExceptionFlagListart.Length; i++)
+            {
+                ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
+            }
+            ViewBag.ExceptionFlagList = ExceptionFlagList;
+
+            #endregion
 
             //customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
             return View();
@@ -1199,7 +1291,7 @@ namespace MLFFWebUI.Controllers
                 if (Registrationfiltered.Count > 0)
                 {
                     ModelStateList objModelState = new ModelStateList();
-                    objModelState.ErrorMessage = "Identity Card already exists.";
+                    objModelState.ErrorMessage = "Resident Card already exists.";
                     objResponseMessage.Add(objModelState);
                 }
                 if (Mobilefiltered.Count > 0)
@@ -1624,6 +1716,77 @@ namespace MLFFWebUI.Controllers
 
             return Det;
         }
+
+        [HttpPost]
+        public JsonResult CustomerVehicleFilter(CustomerVehicleModel objCustomerVehicleModel)
+        {
+            List<CustomerVehicleCBE> customerDataList = new List<CustomerVehicleCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+            }
+            else
+            {
+                try
+                {
+                    string strQuery = " WHERE 1=1 AND (";
+                    if (objCustomerVehicleModel.AccountId > 0)
+                    {
+                        strQuery += " OR (LOWER(CA.ACCOUNT_ID) LIKE '%" + objCustomerVehicleModel.AccountId + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
+                    {
+                        strQuery += " OR (LOWER(CA.RESIDENT_ID) LIKE '%" + objCustomerVehicleModel.ResidentId.ToLower() + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
+                    {
+                        strQuery += " OR (LOWER(CA.MOB_NUMBER) LIKE '%" + objCustomerVehicleModel.MobileNo.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
+                    {
+                        strQuery += " OR (LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
+                    {
+                        strQuery += " OR (LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
+                    {
+                        strQuery += " OR (LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "% ')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehicleRCNumber))
+                    {
+                        strQuery += " OR (LOWER(CV.VEHICLE_RC_NO) LIKE '%" + objCustomerVehicleModel.VehicleRCNumber.ToLower() + "% ')";
+                    }
+                    if (objCustomerVehicleModel.VehicleClassId > 0)
+                    {
+                        strQuery += " OR (CV.VEHICLE_CLASS_ID = " + objCustomerVehicleModel.VehicleClassId + ")";
+                    }
+                    if (objCustomerVehicleModel.QueueStatus > 0)
+                    {
+                        strQuery += " OR (CV.QUEUE_STATUS = " + objCustomerVehicleModel.QueueStatus + ")";
+                    }
+                    if (objCustomerVehicleModel.ExceptionFlag > 0)
+                    {
+                        strQuery += " OR (CV.EXCEPTION_FLAG = " + objCustomerVehicleModel.ExceptionFlag + ")";
+                    }
+                    strQuery += ")";
+                    customerDataList = CustomerVehicleBLL.GetCustomerVehicleFiltered(strQuery.Replace("( OR", "("));
+                    result.Data = customerDataList;
+                }
+                catch (Exception)
+                {
+
+                    result.Data = "failed";
+                }
+
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
 
         #region Customer Address Dropdown Lists

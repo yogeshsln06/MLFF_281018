@@ -24,12 +24,13 @@ function refreshData() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $(".animationload").hide();
-            datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
             pageload++;
             NoMoredata = data.length < pagesize;
             inProgress = false;
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+
 
         },
         error: function (ex) {
@@ -60,15 +61,15 @@ function BindCustmerVehicleAccount() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             NoMoredata = data.length < pagesize
-            $("#tblCustomerVehicle").removeClass('my-table-bordered').addClass('table-bordered');
-            $(".animationload").hide();
             pageload++;
+            inProgress = false;
+            $("#tblCustomerVehicle").removeClass('my-table-bordered').addClass('table-bordered');
             datatableVariable = $('#tblCustomerVehicle').DataTable({
                 data: data,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: "48vh",
+                scrollY: "39.5vh",
                 pageResize: true,
                 scroller: {
                     loadingIndicator: true
@@ -142,13 +143,15 @@ function BindCustmerVehicleAccount() {
                     cell.innerHTML = i + 1;
                 });
             }).draw();
-            inProgress = false;
+
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
                 if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerVehicle").height()) && !NoMoredata && !inProgress) {
                     AppendCustomerData();
                 }
             });
+            thId = 'tblCustomerDataTR';
+            myVar = setInterval("myclick()", 500);
         },
         error: function (ex) {
             $(".animationload").hide();
@@ -167,12 +170,13 @@ function AppendCustomerData() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $('#loadingdiv').hide()
-            //datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
             pageload++;
             NoMoredata = data.length < pagesize;
             inProgress = false;
+            //datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+
         },
         error: function (ex) {
             $('#loadingdiv').hide()
@@ -409,7 +413,7 @@ function NewCustomerVehicle() {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
-            $("#exampleModalLabel").text("New Vehicle");
+            $("#exampleModalLabel").text("Register New Vehicle");
             $('#partialassociated').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
@@ -431,7 +435,8 @@ function NewCustomerVehicle() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnpopupClose").text("Cancel");
+            $("#btnpopupClose").hide();
+            $("#btnpopupCancel").show();
             $("#btnSaveNew").show();
         },
         error: function (x, e) {
@@ -451,10 +456,11 @@ function DetailsOpen(ctrl, id) {
         dataType: "html",
         success: function (result) {
             $('#partialassociated').html(result);
-            $("#exampleModalLabel").text("View [" + $('#VehRegNo').val() + "]");
+            $("#exampleModalLabel").text("View " + $('#VehRegNo').val() + "");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $(".animationload").hide();
+            $("#ValidUntil").attr("readonly", false);
             $("#fildset").attr("disabled", "disabled");
             $("#VehicleImageFront").hide();
             $("#VehicleImageRear").hide();
@@ -475,7 +481,8 @@ function DetailsOpen(ctrl, id) {
             $("#imgVehicleRCNumberImagePath").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleRCNumberImage").val());
 
             $("#btnSave").hide();
-            $("#btnpopupClose").text("Close");
+            $("#btnpopupClose").show();
+            $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
         },
         error: function (x, e) {
@@ -495,8 +502,9 @@ function EditOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
+            $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialassociated').html(result);
-            $("#exampleModalLabel").text("Update [" + $('#VehRegNo').val() + "]");
+            $("#exampleModalLabel").text("Update " + $('#VehRegNo').val() + "");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
@@ -517,7 +525,8 @@ function EditOpen(ctrl, id) {
 
             $("#btnSave").show();
             $("#btnSave").text("Update");
-            $("#btnpopupClose").text("Close");
+            $("#btnpopupClose").show();
+            $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
         },
         error: function (x, e) {
@@ -673,10 +682,11 @@ function SaveData(action) {
 }
 
 function HistoryRecords(ctrl, Vechileid, AccountId) {
+
     Transload = 1;
     CustomerVehicleId = Vechileid;
     CustomerAccountId = AccountId;
-    CustomerRegistrationNumber = $(ctrl).parent().parent().parent().parent().find('td:eq(3)').text().trim();
+    CustomerRegistrationNumber = $(ctrl).parent().parent().parent().parent().find('td:eq(2)').text().trim();
     $(".animationload").show();
     $.ajax({
         type: "GET",
@@ -686,6 +696,7 @@ function HistoryRecords(ctrl, Vechileid, AccountId) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
+            $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialHistory').html(result);
         },
         error: function (x, e) {
@@ -710,9 +721,8 @@ function BindHistoryRecords() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             CurrentData = data;
-            $(".animationload").hide();
             $('#customerHistoryModal').modal('show');
-            $("#HistoryModalLabel").text('View [' + CustomerRegistrationNumber + '] Transaction')
+            $("#HistoryModalLabel").text('View ' + CustomerRegistrationNumber + ' Transaction')
             HNoMoredata = data.length < 10
             Transload++;
             $("#tblCustomerHistoryData").removeClass('my-table-bordered').addClass('table-bordered');
@@ -759,16 +769,15 @@ function BindHistoryRecords() {
                     cell.innerHTML = i + 1;
                 });
             }).draw();
-            //$('.modal-body').find('.dataTables_scrollBody').on('scroll', function () {
-            //    if (($('.modal-body').find('.dataTables_scrollBody').scrollTop() + $('.modal-body').find('.dataTables_scrollBody').height() >= $("#tblCustomerHistoryData").height()) && !HNoMoredata) {
-            //        AppendHistoryRecords();
-            //    }
-            //});
+            $('.modal-body').find('.dataTables_scrollBody').on('scroll', function () {
+                if (($('.modal-body').find('.dataTables_scrollBody').scrollTop() + $('.modal-body').find('.dataTables_scrollBody').height() >= $("#tblCustomerHistoryData").height()) && !HNoMoredata) {
+                    AppendHistoryRecords();
+                }
+            });
             HdatatableVariable.columns.adjust().draw();
 
-            HdatatableVariable.clear().draw();
-            HdatatableVariable.rows.add(CurrentData); // Add new data
-            HdatatableVariable.columns.adjust().draw();
+            thId = 'tblCustomerHistoryDataTR';
+            myVar = setInterval("myclick()", 500);
 
         },
         error: function (ex) {
@@ -789,10 +798,11 @@ function AppendHistoryRecords() {
         success: function (data) {
             $('#loadingdiv').hide()
             HNoMoredata = data.length < 10
+            Transload++;
             //datatableVariable.clear().draw();
             HdatatableVariable.rows.add(data); // Add new data
             HdatatableVariable.columns.adjust().draw();
-            Transload++;
+
         },
         error: function (ex) {
             $('#loadingdiv').hide()
@@ -802,7 +812,7 @@ function AppendHistoryRecords() {
 
 }
 
-function CustomerDetailsOpen(ctrl,AccountId) {
+function CustomerDetailsOpen(ctrl, AccountId) {
     $(".animationload").show();
     $.ajax({
         type: "POST",
@@ -811,9 +821,10 @@ function CustomerDetailsOpen(ctrl,AccountId) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
+            $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $(".animationload").hide();
             $('#partialassociated').html(result);
-            $("#exampleModalLabel").text("View [" + $("#FirstName").val() + "]");
+            $("#exampleModalLabel").text("View " + $("#FirstName").val() + "");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
 
@@ -832,7 +843,7 @@ function CustomerDetailsOpen(ctrl,AccountId) {
             }
 
             $("#btnSave").hide();
-            $("#btnpopupClose").text("Close");
+            $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
         },
         error: function (x, e) {
@@ -841,4 +852,137 @@ function CustomerDetailsOpen(ctrl,AccountId) {
 
     });
 
+}
+
+function myclick() {
+    document.getElementById(thId).click();
+    document.getElementById(thId).click();
+    clearTimeout(myVar);
+    $(".animationload").hide();
+}
+
+function FilteCustomerData() {
+    var CutomerId = 0;
+
+    var ResidentID = '';
+    var Name = '';
+    var Mobile = '';
+    var EmailId = '';
+    var VRN = '';
+    var VRCN = '';
+    var VehicleClassId = 0;
+    var QueueStatus = 0;
+    var ExceptionFlag = 0;
+    var boolfliter = false;
+    if ($("#txtCustomerID").val() != '') {
+        boolfliter = true;
+        CutomerId = $("#txtCustomerID").val();
+    }
+    if ($("#txtResidentID").val() != '') {
+        boolfliter = true;
+        ResidentID = $("#txtResidentID").val();
+    }
+    if ($("#txtName").val() != '') {
+        boolfliter = true;
+        Name = $("#txtName").val();
+    }
+    if ($("#txtMobile").val() != '') {
+        boolfliter = true;
+        Mobile = $("#txtMobile").val();
+    }
+    if ($("#txtEmail").val() != '') {
+        boolfliter = true;
+        EmailId = $("#txtEmail").val();
+    }
+    if ($("#txtVRN").val() != '') {
+        boolfliter = true;
+        VRN = $("#txtVRN").val();
+    }
+    if ($("#txtVRCN").val() != '') {
+        boolfliter = true;
+        VRCN = $("#txtVRCN").val();
+    }
+    if ($("#ddlVehicleClassId").val() != 0) {
+        boolfliter = true;
+        VehicleClassId = $("#ddlVehicleClassId").val();
+    }
+    if ($("#ddlQueueStatus").val() != 0) {
+        boolfliter = true;
+        QueueStatus = $("#ddlQueueStatus").val();
+    }
+    if ($("#ddlExceptionFlag").val() != 0) {
+        boolfliter = true;
+        ExceptionFlag = $("#ddlExceptionFlag").val();
+    }
+    if (boolfliter) {
+        var Inputdata = {
+            ResidentId: ResidentID,
+            MobileNo: Mobile,
+            EmailId: EmailId,
+            FirstName: Name,
+            VehRegNo: VRN,
+            AccountId: CutomerId,
+            VehicleRCNumber: VRCN,
+            VehicleClassId: VehicleClassId,
+            QueueStatus: QueueStatus,
+            ExceptionFlag: ExceptionFlag,
+        }
+        $(".animationload").show();
+        $.ajax({
+            type: "POST",
+            url: "CustomerVehicleFilter",
+            dataType: "JSON",
+            async: true,
+            data: JSON.stringify(Inputdata),
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".animationload").hide();
+                if (data == 'logout') {
+                    location.href = "../Login/Logout";
+                }
+                else if (data == 'failed') {
+                    alert("somthing went wrong!");
+                }
+                else {
+                    $('#filterModel').modal('hide');
+                    datatableVariable.clear().draw();
+                    datatableVariable.rows.add(data); // Add new data
+                    datatableVariable.columns.adjust().draw();
+                    NoMoredata = false;
+                }
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+
+        });
+    }
+    else {
+        alert('At least one option must be fill for search !');
+    }
+}
+
+function MakeCSV() {
+    $(".animationload").show();
+    $.ajax({
+        url: '/CSV/ExportCSVCustomer',
+        dataType: "JSON",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        success: function (Path) {
+
+            $('.animationload').hide();
+            if (Path.toLowerCase() == "no data to export." || Path.toLowerCase() == "file exported successfully") {
+                alert(Path)
+                return;
+            }
+            if (Path.toLowerCase().search(".csv") > -1 || Path.toLowerCase().search(".pdf") > -1 || Path.toLowerCase().search(".zip") > -1)
+                window.location.href = "../Attachment/ExportFiles/" + Path;
+            else
+                alert(Path);
+        },
+        error: function (x, e) {
+            $('.animationload').hide();
+        }
+    });
 }

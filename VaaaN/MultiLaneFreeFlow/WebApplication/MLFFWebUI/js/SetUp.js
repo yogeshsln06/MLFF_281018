@@ -220,7 +220,7 @@ function validateUser() {
         showError($("#Address"), '');
     }
     if ($('#ResidentidImage')[0].files.length === 0 && $('#hfCustomerDocumentPath').val() == "") {
-        showError($('#ResidentidImage'), "Identity Card Image Required");
+        showError($('#ResidentidImage'), "Resident Card Image Required");
         valid = false;
     }
     else {

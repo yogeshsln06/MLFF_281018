@@ -49,7 +49,7 @@ function BindUnreviewedFirstLoad() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: 230,
+                scrollY: "42vh",
                 scroller: {
                     loadingIndicator: true
                 },
@@ -480,7 +480,7 @@ function BindReviewedFirstLoad() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: '48vh',
+                scrollY: "40vh",
                 scroller: {
                     loadingIndicator: true
                 },
@@ -661,7 +661,7 @@ function BindChargedFirstLoad() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: 230,
+                scrollY: "42vh",
                 scroller: {
                     loadingIndicator: true
                 },
@@ -1157,7 +1157,7 @@ function BindTopUpFirstLoad() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: 230,
+                scrollY: "42vh",
                 scroller: {
                     loadingIndicator: true
                 },

@@ -74,14 +74,14 @@ namespace MLFFWebUI.Controllers
                 }
                 else
                 {
-                    TempData["Message"] = "Invalid User Id or Password or User not found";
-                    HelperClass.LogMessage("Invalid User Id or Password or User not found.");
+                    TempData["Message"] = "Invalid Username or Password";
+                    HelperClass.LogMessage("Invalid Username or Password.");
                     return View();
                 }
 
             }
             else {
-                TempData["Message"] = "Indicates a warning that might need attention.";
+                TempData["Message"] = "Username & Password are required.";
                 return View();
             }
         }

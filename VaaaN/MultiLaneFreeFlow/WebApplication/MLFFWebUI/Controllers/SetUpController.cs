@@ -7,11 +7,13 @@ using System.Web.Configuration;
 using System.Web.Mvc;
 using VaaaN.MLFF.Libraries.CommonLibrary.BLL;
 using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
+using static MLFFWebUI.Models.HelperClass;
 
 namespace MLFFWebUI.Controllers
 {
     public class SetUpController : Controller
     {
+        List<ModelStateList> objResponseMessage = new List<ModelStateList>();
         // GET: SetUp
         public ActionResult Index()
         {
@@ -58,7 +60,7 @@ namespace MLFFWebUI.Controllers
         [HttpGet]
         public ActionResult NewUserMaster()
         {
-           
+
             ViewBag.RoleId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.RoleBLL.GetAll().Select(x => new SelectListItem { Text = x.RoleName, Value = x.RoleId.ToString() });
 
             return View("UserMaster");
@@ -66,5 +68,37 @@ namespace MLFFWebUI.Controllers
 
         #endregion
 
+
+        #region Chnage Password
+        [HttpPost]
+        public JsonResult ChnagePassword(string CurrentPassword, string NewPassword)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+
+                }
+                else
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = UserBLL.UpdatePassword(CurrentPassword, NewPassword, Convert.ToInt32(Session["LoggedUserId"]), "");
+                    objResponseMessage.Add(objModelState);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed Chnage Password in Setup Controller" + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 }

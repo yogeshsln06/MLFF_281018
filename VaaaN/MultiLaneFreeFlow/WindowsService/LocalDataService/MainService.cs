@@ -69,7 +69,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
         }
 

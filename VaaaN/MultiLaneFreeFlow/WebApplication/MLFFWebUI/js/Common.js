@@ -25,7 +25,6 @@ function zoomImage(ctrl) {
     viewer.show(imgSrc, highResolutionImage);
 }
 
-
 function validEmail(str) {
     var pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return String(str).match(pattern);
@@ -222,4 +221,68 @@ function GetSubDistrictList() {
 function GetZip(ctrl) {
     var option = $('option:selected', ctrl).attr('zipcode');
     $('#PostalCode').val(option || '');
+}
+
+function ChnagePasswordOpen() {
+    $("#CurrentPassword").val('')
+    showError($("#CurrentPassword"), '');
+    $("#NewPassword").val('')
+    showError($("#NewPassword"), '');
+    $('#password_modal').modal('show');
+}
+
+function ChnagePassword() {
+    var validate = true;
+    if ($("#CurrentPassword").val() == '') {
+        showError($("#CurrentPassword"), $("#CurrentPassword").attr('data-val-required'));
+        validate = false;
+    }
+    else {
+        showError($("#CurrentPassword"), '');
+    }
+    if ($("#NewPassword").val() == '') {
+        showError($("#NewPassword"), $("#NewPassword").attr('data-val-required'));
+        validate = false;
+    }
+    else {
+        showError($("#NewPassword"), '');
+    }
+    if (validate) {
+        var Inputdata = {
+            CurrentPassword: $("#CurrentPassword").val(),
+            NewPassword: $("#NewPassword").val(),
+        }
+
+        $(".animationload").show();
+        $.ajax({
+            type: "POST",
+            url: "/SetUp/ChnagePassword",
+            dataType: "JSON",
+            async: true,
+            data: JSON.stringify(Inputdata),
+            contentType: "application/json; charset=utf-8",
+            success: function (resultData) {
+
+                $(".animationload").hide();
+                if (resultData[0].ErrorMessage == 'changed') {
+                    $('#password_modal').modal('hide');
+                }
+                else
+                {
+                    alert("unable to chnage password")
+                }
+
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+
+        });
+    }
+
+}
+
+function openFilterpopup() {
+    $('#filterModel').modal('show');
+    $(".modal-backdrop.show").hide();
 }

@@ -1,62 +1,44 @@
-﻿<table id="tblVehicleList" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
-    <thead>
-        <tr>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2">
-                @*<div class="th-inner sortable both">No</div>
-                <div class="fht-cell"></div>*@
-                No
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2">
-                @*<div class="th-inner sortable both">Vehicle ID</div>
-                <div class="fht-cell"></div>*@
-                Vehicle ID
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                @*<div class="th-inner sortable both">Registration Num</div>
-                <div class="fht-cell"></div>*@
-                Registration Num
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                @*<div class="th-inner sortable both">Class</div>
-                <div class="fht-cell"></div>*@
-                Class
-            </th>
-            <th style="text-align: center;" colspan="2">
-                @*<div class="th-inner ">Image</div>
-                <div class="fht-cell"></div>*@
-                Image
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                @*<div class="th-inner ">Status</div>
-                <div class="fht-cell"></div>*@
-                Status
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                @*<div class="th-inner ">Exception</div>
-                <div class="fht-cell"></div>*@
-                Exception
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
-                @*<div class="th-inner ">Balance</div>
-                <div class="fht-cell"></div>*@
-                Balance
-            </th>
-        </tr>
-        <tr>
-            <th style="text-align: center; " data-field="price">
-                @*<div class="th-inner sortable both">Front</div>
-                <div class="fht-cell"></div>*@
-                Front
-            </th>
-            <th style="text-align: center; " data-field="operate">
-                @*<div class="th-inner sortable both">Rear</div>
-                <div class="fht-cell"></div>*@
-                Rear
-            </th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+﻿<div class="modal-body">
+    <table id="tblVehicleList" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" id="tblVehicleListTR">
+                    No
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                    Vehicle ID
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Registration Num
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Class
+                </th>
+                <th style="text-align: center;" colspan="2">
+                    Image
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Status
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Exception
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border" >
+                    Balance
+                </th>
+            </tr>
+            <tr>
+                <th style="text-align: center; " data-field="price">
+                    Front
+                </th>
+                <th style="text-align: center; " data-field="operate">
+                    Rear
+                </th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 <script>
     $(document).ready(function () {
         BindCustmerVehicleAccount();

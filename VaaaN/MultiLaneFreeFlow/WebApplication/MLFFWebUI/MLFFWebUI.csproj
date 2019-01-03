@@ -149,6 +149,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CSVController.cs" />
     <Compile Include="Controllers\CustomerTransactionController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -157,12 +158,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CSVUtility.cs" />
     <Compile Include="Models\CustomerVehicleModel.cs" />
     <Compile Include="Models\HelperClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\admin\bundle.js" />
+    <Content Include="assets\admin\reset.css" />
     <Content Include="assets\admin\style.css" />
     <Content Include="assets\admin\vendor.js" />
     <Content Include="assets\bootstrap\bootstrap.min.css" />
@@ -170,6 +173,16 @@
     <Content Include="assets\bootstrap\jquery.min.js" />
     <Content Include="assets\bootstrap\popper.min.js" />
     <Content Include="assets\custom\custom.css" />
+    <Content Include="assets\custom\reset.css" />
+    <Content Include="assets\custom\style.css" />
+    <Content Include="assets\datatable\bootstrap.min.css" />
+    <Content Include="assets\datatable\bootstrap.min.js" />
+    <Content Include="assets\datatable\dataTables.bootstrap.min.js" />
+    <Content Include="assets\datatable\jquery.dataTables.min.css" />
+    <Content Include="assets\datatable\jquery.dataTables.min.js" />
+    <Content Include="assets\jqueryslims\bootstrap.min.js" />
+    <Content Include="assets\jqueryslims\jquery-3.2.1.slim.min.js" />
+    <Content Include="assets\jqueryslims\popper.min.js" />
     <Content Include="assets\static\fonts\icons\fontawesome\fontawesome-webfont.svg" />
     <Content Include="assets\static\fonts\icons\themify\themify.svg" />
     <Content Include="assets\static\images\404.png" />
@@ -180,6 +193,7 @@
     <Content Include="assets\static\images\datatables\sort_both.png" />
     <Content Include="assets\static\images\datatables\sort_desc.png" />
     <Content Include="assets\static\images\datatables\sort_desc_disabled.png" />
+    <Content Include="assets\static\images\SmartERPtext.png" />
     <Content Include="assets\static\images\SMlogo.png" />
     <Content Include="assets\static\images\logo.png" />
     <Content Include="assets\static\images\logo.svg" />
@@ -282,6 +296,7 @@
     <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.datetimepicker.full.min.js" />
     <Content Include="Scripts\jquery.freezeheader.js" />
+    <Content Include="Scripts\jquery.mixitup.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />

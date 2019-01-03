@@ -31,7 +31,7 @@ namespace SMSService
         {
             InitializeComponent();
 
-            //OnStart(new string[] { "" });
+            OnStart(new string[] { "" });
         }
 
         static void Main()

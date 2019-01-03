@@ -209,7 +209,7 @@ namespace MobileWebAPI.Controllers
                         if (Registrationfiltered.Count > 0)
                         {
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Identity Card already exists.";
+                            objModelState.ErrorMessage = "Resident Card already exists.";
                             objResponseMessage.Add(objModelState);
                         }
                         if (Mobilefiltered.Count > 0)
@@ -239,9 +239,9 @@ namespace MobileWebAPI.Controllers
                         }
                         catch (Exception ex)
                         {
-                            Log("Unable to save resident identity card image of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
+                            Log("Unable to save resident Resident card image of Resident Id : " + objVehicleRegistration.ResidentIdentityNumber + " with Exception: " + ex);
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Invalid identity card image.";
+                            objModelState.ErrorMessage = "Invalid Resident card image.";
                             objResponseMessage.Add(objModelState);
 
                         }
