@@ -38,6 +38,8 @@ namespace MLFFWebUI.Controllers
                     return RedirectToAction("Logout", "Login");
                 }
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Registration", "Customer");
+
+
                 return View();
 
             }
@@ -55,6 +57,16 @@ namespace MLFFWebUI.Controllers
             List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
             JsonResult result = new JsonResult();
             customerDataList = CustomerAccountBLL.CustomerAccountLazyLoad(pageindex, pagesize);
+            result.Data = customerDataList;
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult CustomerAccountListAll()
+        {
+            List<CustomerAccountCBE> customerDataList = new List<CustomerAccountCBE>();
+            JsonResult result = new JsonResult();
+            customerDataList = CustomerAccountBLL.GetAllAsList();
             result.Data = customerDataList;
             return Json(result.Data, JsonRequestBehavior.AllowGet);
         }
@@ -685,7 +697,7 @@ namespace MLFFWebUI.Controllers
 
             #endregion
 
-            //customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
+            ViewData["CustomerAccount"] = CustomerAccountBLL.GetAllAsList();
             return View();
 
         }

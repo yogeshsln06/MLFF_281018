@@ -9,7 +9,7 @@
                 <div class="form-row">
                     <div class="col-md-8">
                         <div class="mT-10">
-                            <h4 class="c-mygrey-900 mB-20">Customer Vehicle Workbench</h4>
+                            <h4 class="c-mygrey-900 mB-20">Customer Vehicle</h4>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -19,7 +19,7 @@
                                     <button type="button" class="btn cur-p btn-outline-primary" id="btnNewCustomer" onclick="NewCustomerVehicle();">New</button>
                                 </div>
                                 <div class="peer">
-                                    <span class="btn cur-p  btn-outline-primary">
+                                    <span class="btn cur-p  btn-outline-primary" onclick="MakeCSV();">
                                         <i class='c-black-500 ti-download'></i>
                                     </span>
                                 </div>
@@ -39,8 +39,8 @@
                                     <div class="modal right fade" id="filterModel" tabindex="-1" role="dialog" aria-labelledby="filterModelLabel">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
-                                                <div class="modal-body" style="max-height:440px; overflow-y:scroll;">
-                                                    <form>
+                                                <div class="modal-body" style="max-height:375px; overflow-y:scroll;">
+                                                    <form id="filterbox">
                                                         <div class="form-group">
                                                             <label for="txtCustomerID">Customer ID</label>
                                                             <input type="text" class="form-control" id="txtCustomerID" aria-describedby="CustomerID" placeholder="Customer ID">
@@ -81,13 +81,12 @@
                                                             <label for="ExceptionFlag">Exception</label>
                                                             @Html.DropDownList("ddlExceptionFlag", (IEnumerable<SelectListItem>)ViewBag.ExceptionFlagList, new { @class = "form-control" })
                                                         </div>
-                                                        <button type="button" class="btn btn-primary" onclick="FilteCustomerData()">
-                                                            Search
-                                                            <i class='c-black-500 ti-search'></i>
-                                                        </button>
                                                     </form>
                                                 </div>
-
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="ResetFilter();" id="btnFilterCancel">Clear</button>
+                                                    <button type="button" class="btn btn-outline-primary" onclick="FilteCustomerData()" id="btnFilterSearch">Search</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -180,3 +179,8 @@
     </div>
 </div>
 <script src="~/js/CustomerVehicle.js"></script>
+<script>
+    $(document).ready(function () {
+        CustomerAccountJson = @Html.Raw(Json.Encode(ViewData["CustomerAccount"]));
+    });
+</script>

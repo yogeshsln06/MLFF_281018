@@ -43,11 +43,11 @@
 }
 
 .container-fluid {
-    width: 100%;
-    padding-right: 0px !important;
-    padding-left: 0px !important;
-    margin-right: auto;
-    margin-left: auto;
+width: 100%;
+padding-right: 0px !important;
+padding-left: 0px !important;
+margin-right: auto;
+margin-left: auto;
 }
 
 .sidebar-menu > li > a {
@@ -547,4 +547,15 @@ right: 0;
 
 .form-control[readonly] {
     background-color: #fff!important;
+}
+
+.close {
+float: right;
+font-size: 21px;
+font-size: 1.3125rem;
+font-weight: 700;
+line-height: 1;
+color: #6c757d !important;
+text-shadow: 0 1px 0 #fff;
+opacity: .5;
 }

@@ -1,4 +1,4 @@
-/* Formatted on 03/01/2019 17:17:29 (QP5 v5.215.12089.38647) */
+/* Formatted on 04/01/2019 10:32:36 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -4904,31 +4904,31 @@ ORDER BY TRANSACTION_DATETIME DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT CA.ACCOUNT_ID AS Customer_ID,
-                  CA.RESIDENT_ID AS Resident_ID,
-                  CA.FIRST_NAME AS My_Name,
-                  CA.BIRTH_PLACE AS Birthplace,
-                  CA.BIRTH_DATE AS Birthdate,
+           SELECT CA.ACCOUNT_ID AS "Customer ID",
+                  CA.RESIDENT_ID AS "Resident ID",
+                  CA.FIRST_NAME AS "Name",
+                  CA.BIRTH_PLACE AS "Birthplace",
+                  CA.BIRTH_DATE AS "Birthdate",
                   (CASE CA.NATIONALITY WHEN 2 THEN 'WNA' ELSE 'WNI' END)
-                     AS Nationality,
+                     AS "Nationality",
                   (CASE CA.GENDER WHEN 2 THEN 'PEREMPUAN' ELSE 'LAKI-LAKI' END)
-                     AS Gender,
+                     AS "Gender",
                   (CASE CA.MARITAL_STATUS
                       WHEN 2 THEN 'KAWIN'
                       ELSE 'BELUM KAWIN'
                    END)
-                     AS Marital_Status,
-                  CA.OCCUPATION AS Occupation,
-                  CA.VALID_UNTIL AS Valid_Until,
-                  CA.MOB_NUMBER AS Mobile_Phone,
-                  CA.EMAIL_ID AS Email,
-                  P.PROVINCE_NAME AS Province,
-                  C.CITY_NAME AS Kabupaten999Kota,
-                  D.DISTRICT_NAME AS Kecamatan,
-                  SD.SUB_DISTRICT_NAME AS Kelurahan999Desa,
-                  CA.RT_RW AS RT999RW,
-                  CA.ADDRESS AS Address,
-                  CA.POSTAL_CODE AS Postal_Code
+                     AS "Marital Status",
+                  CA.OCCUPATION AS "Occupation",
+                  CA.VALID_UNTIL AS "Valid Until",
+                  CA.MOB_NUMBER AS "Mobile Phone",
+                  CA.EMAIL_ID AS "Email",
+                  P.PROVINCE_NAME AS "Province",
+                  C.CITY_NAME AS "Kabupaten/Kota",
+                  D.DISTRICT_NAME AS "Kecamatan",
+                  SD.SUB_DISTRICT_NAME AS "Kelurahan/Desa",
+                  CA.RT_RW AS "RT/RW",
+                  CA.ADDRESS AS "Address",
+                  CA.POSTAL_CODE AS "Postal Code"
              FROM TBL_CUSTOMER_ACCOUNT CA
                   LEFT OUTER JOIN TBL_PROVINCE P
                      ON CA.PROVINCE_ID = P.PROVINCE_ID
@@ -5727,6 +5727,80 @@ ORDER BY TRANSACTION_DATETIME DESC';
    END CUSTOMERVEHICLE_GETBYACCOUNTID;
 
 
+   PROCEDURE VEHICLE_GETALLCSV (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT CA.ACCOUNT_ID AS "Customer ID",
+                  CA.FIRST_NAME AS "Name",
+                  CA.MOB_NUMBER AS "Mobile Phone",
+                  CA.RESIDENT_ID AS "Resident ID",
+                  CA.ADDRESS AS "Address",
+                  CA.EMAIL_ID AS "Email",
+                  CV.ENTRY_ID AS "Vehicle ID",
+                  CV.VEH_REG_NO AS "Registration_Num",
+                  CV.OWNER_ADDRESS AS "Owner Address",
+                  CV.VEHICLE_TYPE AS "Type",
+                  CV.MODEL_NO AS "Model",
+                  CV.CYCLINDER_CAPACITY AS "Cylinder Capacity",
+                  CV.ENGINE_NUMBER AS "Engine Number",
+                  (CASE CV.FUEL_TYPE
+                      WHEN 1 THEN 'Diesel'
+                      WHEN 2 THEN 'Gasoline'
+                      WHEN 3 THEN 'Petrol'
+                      WHEN 4 THEN 'Electric'
+                      WHEN 5 THEN 'Solor'
+                      ELSE 'Unknown'
+                   END)
+                     AS "Fuel Type",
+                  CV.REGISTRATION_YEAR AS "Registration Year",
+                  CV.LOCATION_CODE AS "Location Code",
+                  CV.VALID_UNTIL AS "Valid Until",
+                  CV.VEHICLE_RC_NO AS "Certificate Number",
+                  CV.OWNER_NAME AS "Owner Name",
+                  CV.BRAND AS "Brand",
+                  CV.VEHICLE_CATEGORY AS "Category",
+                  CV.MANUFACTURING_YEAR AS "Manufacturing Year",
+                  CV.FRAME_NUMBER AS "Frame Number",
+                  CV.VEHICLE_COLOR AS "Color",
+                  (CASE CV.LICENCE_PLATE_COLOR
+                      WHEN 1 THEN 'Black'
+                      WHEN 2 THEN 'White'
+                      WHEN 3 THEN 'Yellow'
+                      WHEN 4 THEN 'Red'
+                      WHEN 5 THEN 'Blue'
+                      WHEN 6 THEN 'Green'
+                      ELSE 'Unknown'
+                   END)
+                     AS "Licence Plate Color",
+                  CV.VEHICLE_OWNERSHIP_NO AS "Ownership Document Number",
+                  CV.REG_QUEUE_NO AS "Registration Queue Number",
+                  (CASE CV.EXCEPTION_FLAG
+                      WHEN 1 THEN 'Charged'
+                      WHEN 2 THEN 'Not Charged'
+                      WHEN 3 THEN 'Blacklist'
+                      ELSE 'Unknown'
+                   END)
+                     AS "Exception Flag",
+                  CV.TID_FRONT AS "TID Front",
+                  CV.TID_REAR AS "TID Rear",
+                  CV.TAG_ID AS "EPC",
+                  (CASE CV.QUEUE_STATUS
+                      WHEN 1 THEN 'Open'
+                      WHEN 2 THEN 'Postponded'
+                      WHEN 3 THEN 'Processed'
+                      ELSE 'Unknown'
+                   END)
+                     AS "Status",
+                  VC.VEHICLE_CLASS_NAME AS "Vehicle Class",
+                  CV.ACCOUNT_BALANCE AS "Account Balance"
+             FROM TBL_CUSTOMER_VEHICLE CV
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                     ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                     ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+         ORDER BY CV.CREATION_DATE DESC, CV.MODIFICATION_DATE DESC;
+   END VEHICLE_GETALLCSV;
 
    PROCEDURE CV_GET_BY_TRANCTPENTRYID (P_TRAN_CT_EN_ID   IN     NUMBER,
                                        CUR_OUT              OUT T_CURSOR)

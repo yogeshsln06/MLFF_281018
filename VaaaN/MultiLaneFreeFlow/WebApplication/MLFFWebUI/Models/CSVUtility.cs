@@ -90,7 +90,8 @@ namespace MLFFWebUI.Models
                 int iColCount = dt.Columns.Count;
                 for (int i = 0; i < iColCount; i++)
                 {
-                    sw.Write(dt.Columns[i].ToString().Replace("_"," ").Replace("999","/"));
+                    //sw.Write(dt.Columns[i].ToString().Replace("_"," ").Replace("999","/").Replace("My_", ""));
+                    sw.Write(dt.Columns[i].ToString());
                     if (i < iColCount)
                     {
                         sw.Write(",");

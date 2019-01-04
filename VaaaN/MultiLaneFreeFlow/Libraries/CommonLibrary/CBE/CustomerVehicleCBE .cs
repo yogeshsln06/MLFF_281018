@@ -126,7 +126,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.entryId = value; }
         }
 
-        [Display(Name = "Certificate Number")]
+        [Display(Name = "Certificate Num")]
         [Required]
         public String VehicleRCNumber
         {
@@ -159,10 +159,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         [Display(Name = "Registration Certificate Image")]
         public System.Web.HttpPostedFileBase VehicleRCNumberImage { get; set; }
 
-        [Display(Name = "Registration Number")]
+        [Display(Name = "Registration Num")]
         //[Display(Name = "VehicleRegNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [Required]
-        [StringLength(10, ErrorMessage = "Vehicle Registration Number max length is 10")]
+        [StringLength(10, ErrorMessage = "Vehicle Registration Num max length is 10")]
         public String VehRegNo
         {
             get { return this.vehRegNo; }
@@ -268,7 +268,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Frame Number")]
+        [Display(Name = "Frame Num")]
         public String FrameNumber
         {
             get
@@ -282,7 +282,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Engine Number")]
+        [Display(Name = "Engine Num")]
         public String EngineNumber
         {
             get
@@ -378,7 +378,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Ownership Document Number")]
+        [Display(Name = "Ownership Document Num")]
         public String VehicleOwnershipDocumentNumber
         {
             get
@@ -406,7 +406,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Registration Queue Number")]
+        [Display(Name = "Registration Queue Num")]
         public String RegistrationQueueNumber
         {
             get
@@ -435,10 +435,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Front Image")]
+        [Display(Name = "Image Front")]
         public System.Web.HttpPostedFileBase FrontImage { get; set; }
 
-        [Display(Name = "Rear Image")]
+        [Display(Name = "Image Rear")]
         [Required]
         public String VehicleImageRear
         {
@@ -453,10 +453,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Rear Image")]
+        [Display(Name = "Image Rear")]
         public System.Web.HttpPostedFileBase RearImage { get; set; }
 
-        [Display(Name = "Right Image")]
+        [Display(Name = "Image Right")]
         [Required]
         public String VehicleImageRight
         {
@@ -471,10 +471,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Right Image")]
+        [Display(Name = "Image Right")]
         public System.Web.HttpPostedFileBase RightImage { get; set; }
 
-        [Display(Name = "Left Image")]
+        [Display(Name = "Image Left")]
         [Required]
         public String VehicleImageLeft
         {
@@ -489,7 +489,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Left Image")]
+        [Display(Name = "Image Left")]
         public System.Web.HttpPostedFileBase LeftImage { get; set; }
 
         [Display(Name = "Exception Flag")]
@@ -565,7 +565,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.tagId = value; }
         }
 
-        [Display(Name = "VehicleClass", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        //[Display(Name = "VehicleClass", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Classification")]
         [Required]
         public Int32 VehicleClassId
         {
@@ -611,8 +612,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.transferStatus = value; }
         }
 
-       // [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
-        [Display(Name = "AccountBalance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        // [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
+        //[Display(Name = "AccountBalance", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Balance")]
         [Required]
         public Decimal AccountBalance
         {

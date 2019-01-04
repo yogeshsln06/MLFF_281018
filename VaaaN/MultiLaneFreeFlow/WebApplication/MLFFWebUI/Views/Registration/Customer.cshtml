@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @*<link href="~/assets/custom/reset.css" rel="stylesheet" />
-<link href="~/assets/custom/style.css" rel="stylesheet" />*@
+    <link href="~/assets/custom/style.css" rel="stylesheet" />*@
 @*<script src="~/Scripts/modernizr.js"></script>*@
 <div class="container-fluid">
     <div class="row">
@@ -34,7 +34,7 @@
                                     </a>
                                 </div>
                                 <div class="peer">
-                                    <a class="btn cur-p btn-outline-primary cd-filter-trigger" href='javascript:void(0);'  onclick="openFilterpopup();" >
+                                    <a class="btn cur-p btn-outline-primary cd-filter-trigger" href='javascript:void(0);' onclick="openFilterpopup();">
                                         <span class='icon-holder'>
                                             <i class='c-black-500 ti-filter'></i>
                                         </span>
@@ -42,8 +42,8 @@
                                     <div class="modal right fade" id="filterModel" tabindex="-1" role="dialog" aria-labelledby="filterModelLabel">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
-                                                <div class="modal-body" style="max-height:440px; overflow-y:scroll;">
-                                                    <form>
+                                                <div class="modal-body" style="max-height:375px; overflow-y:scroll;">
+                                                    <form id="filterbox">
                                                         <div class="form-group">
                                                             <label for="txtCustomerID">Customer ID</label>
                                                             <input type="text" class="form-control" id="txtCustomerID" aria-describedby="CustomerID" placeholder="Customer ID">
@@ -68,12 +68,13 @@
                                                             <label for="txtVRN">Registration Num (VRN)</label>
                                                             <input type="text" class="form-control" id="txtVRN" placeholder="VRN">
                                                         </div>
-                                                        <button type="button" class="btn btn-primary" onclick="FilteCustomerData()">Search
-                                                            <i class='c-black-500 ti-search'></i>
-                                                        </button>
+                                                      
                                                     </form>
                                                 </div>
-
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="ResetFilter();" id="btnFilterCancel" >Clear</button>
+                                                    <button type="button" class="btn btn-outline-primary" onclick="FilteCustomerData()" id="btnFilterSearch">Search</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -134,4 +135,4 @@
 
 
 @*<script src="~/Scripts/jquery.mixitup.min.js"></script>
-<script src="~/Scripts/main.js"></script>*@
+    <script src="~/Scripts/main.js"></script>*@
