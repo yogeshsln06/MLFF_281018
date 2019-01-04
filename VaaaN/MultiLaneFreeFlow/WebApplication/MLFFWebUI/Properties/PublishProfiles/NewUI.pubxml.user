@@ -45,7 +45,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 10:06:48</publishTime>
     </File>
     <File Include="assets/custom/custom.css">
-      <publishTime>01/03/2019 12:11:43</publishTime>
+      <publishTime>01/04/2019 12:11:16</publishTime>
     </File>
     <File Include="assets/custom/reset.css">
       <publishTime>12/27/2018 15:02:28</publishTime>
@@ -153,10 +153,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/11/2018 22:04:00</publishTime>
     </File>
     <File Include="bin/en/VaaaN.MLFF.CommonLibrary.resources.dll">
-      <publishTime>01/03/2019 13:01:40</publishTime>
+      <publishTime>01/04/2019 14:27:54</publishTime>
     </File>
     <File Include="bin/id/VaaaN.MLFF.CommonLibrary.resources.dll">
-      <publishTime>01/03/2019 13:01:40</publishTime>
+      <publishTime>01/04/2019 14:27:54</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.Agent.Intercept.dll">
       <publishTime>12/27/2018 13:31:57</publishTime>
@@ -192,7 +192,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 13:31:57</publishTime>
     </File>
     <File Include="bin/MLFFWebUI.dll">
-      <publishTime>01/03/2019 13:01:43</publishTime>
+      <publishTime>01/04/2019 14:27:58</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>12/27/2018 13:32:00</publishTime>
@@ -255,7 +255,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 13:31:55</publishTime>
     </File>
     <File Include="bin/VaaaN.MLFF.CommonLibrary.dll">
-      <publishTime>01/03/2019 13:01:40</publishTime>
+      <publishTime>01/04/2019 14:27:54</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>12/27/2018 13:31:55</publishTime>
@@ -453,16 +453,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/17/2018 23:46:42</publishTime>
     </File>
     <File Include="js/Common.js">
-      <publishTime>01/03/2019 11:59:09</publishTime>
+      <publishTime>01/04/2019 12:41:44</publishTime>
     </File>
     <File Include="js/CustomerAccount.js">
-      <publishTime>01/03/2019 12:59:42</publishTime>
+      <publishTime>01/04/2019 13:35:31</publishTime>
     </File>
     <File Include="js/CustomerTranscation.js">
       <publishTime>12/27/2018 14:24:01</publishTime>
     </File>
     <File Include="js/CustomerVehicle.js">
-      <publishTime>12/27/2018 13:47:25</publishTime>
+      <publishTime>01/04/2019 13:13:24</publishTime>
     </File>
     <File Include="js/liveEvents.js">
       <publishTime>12/27/2018 10:06:44</publishTime>
@@ -549,7 +549,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 10:06:46</publishTime>
     </File>
     <File Include="Scripts/_references.js">
-      <publishTime>01/03/2019 10:27:59</publishTime>
+      <publishTime>01/03/2019 14:29:47</publishTime>
     </File>
     <File Include="scss/style.scss">
       <publishTime>12/27/2018 15:00:46</publishTime>
@@ -588,16 +588,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 10:06:46</publishTime>
     </File>
     <File Include="Views/Login/Index.cshtml">
-      <publishTime>01/03/2019 10:36:48</publishTime>
+      <publishTime>01/03/2019 16:14:11</publishTime>
     </File>
     <File Include="Views/Registration/Customer.cshtml">
-      <publishTime>01/03/2019 11:41:29</publishTime>
+      <publishTime>01/04/2019 11:46:35</publishTime>
     </File>
     <File Include="Views/Registration/CustomerChildList.cshtml">
       <publishTime>12/27/2018 10:06:47</publishTime>
     </File>
     <File Include="Views/Registration/CustomerVehicle.cshtml">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/04/2019 12:44:03</publishTime>
     </File>
     <File Include="Views/Registration/CustomerVehicleChildList.cshtml">
       <publishTime>12/27/2018 10:06:47</publishTime>
@@ -612,10 +612,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/02/2019 17:49:37</publishTime>
     </File>
     <File Include="Views/Registration/_CustomerPopUp.cshtml">
-      <publishTime>01/03/2019 12:24:32</publishTime>
+      <publishTime>01/04/2019 13:32:11</publishTime>
     </File>
     <File Include="Views/Registration/_CustomerVehiclePopUp.cshtml">
-      <publishTime>12/27/2018 10:55:31</publishTime>
+      <publishTime>01/04/2019 13:29:02</publishTime>
     </File>
     <File Include="Views/SetUp/UserMaster.cshtml">
       <publishTime>12/27/2018 10:06:47</publishTime>
@@ -627,7 +627,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 10:06:47</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>01/03/2019 10:42:44</publishTime>
+      <publishTime>01/04/2019 12:08:46</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>12/27/2018 10:06:47</publishTime>

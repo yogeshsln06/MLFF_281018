@@ -92,6 +92,7 @@ function ResetFildes() {
     $("#fildset").find('input:text').val('');
     $("#fildset").find('input:file').val('');
     $("#fildset").find('input:number').val('');
+    $("#fildset").find('input:email').val('');
     $("#fildset").find('input:datetime').val('');
 }
 

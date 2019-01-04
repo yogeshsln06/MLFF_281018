@@ -9,7 +9,7 @@
                 <div class="form-row">
                     <div class="col-md-8">
                         <div class="mT-10">
-                            <h4 class="c-mygrey-900 mB-20">Customer Vehicle Workbench</h4>
+                            <h4 class="c-mygrey-900 mB-20">Customer Vehicle</h4>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -19,7 +19,7 @@
                                     <button type="button" class="btn cur-p btn-outline-primary" id="btnNewCustomer" onclick="NewCustomerVehicle();">New</button>
                                 </div>
                                 <div class="peer">
-                                    <span class="btn cur-p  btn-outline-primary">
+                                    <span class="btn cur-p  btn-outline-primary" onclick="MakeCSV();">
                                         <i class='c-black-500 ti-download'></i>
                                     </span>
                                 </div>
@@ -31,114 +31,146 @@
                                     </a>
                                 </div>
                                 <div class="peer">
-                                    <span class="btn cur-p btn-outline-primary icon-holder" data-toggle="dropdown" aria-expanded="true" onclick="openFilter(this)">
-                                        <i class='c-black-500 ti-filter'></i>
-                                    </span>
-                                    <div class="dropdown-menu dropdown-menu-right myfilter" role="menu" id="ddlFilter" style="width:250px; left:-50px!important;">
-                                        <div class="mT-5">
-                                            <form class="form-horizontal">
-                                                <div class="form-group" style="padding: 4px;">
-                                                    <label for="filter">Filter by</label>
-                                                    <select class="form-control">
-                                                        <option value="0" selected>EPC</option>
-                                                        <option value="1">VRN</option>
-                                                        <option value="2">Class</option>
-                                                    </select>
+                                    <a class="btn cur-p btn-outline-primary cd-filter-trigger" href='javascript:void(0);' onclick="openFilterpopup();">
+                                        <span class='icon-holder'>
+                                            <i class='c-black-500 ti-filter'></i>
+                                        </span>
+                                    </a>
+                                    <div class="modal right fade" id="filterModel" tabindex="-1" role="dialog" aria-labelledby="filterModelLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body" style="max-height:375px; overflow-y:scroll;">
+                                                    <form id="filterbox">
+                                                        <div class="form-group">
+                                                            <label for="txtCustomerID">Customer ID</label>
+                                                            <input type="text" class="form-control" id="txtCustomerID" aria-describedby="CustomerID" placeholder="Customer ID">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtResidentID">Resident ID</label>
+                                                            <input type="text" class="form-control" id="txtResidentID" placeholder="Resident ID">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtName">Name</label>
+                                                            <input type="text" class="form-control" id="txtName" placeholder="Name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtMobile">Mobile</label>
+                                                            <input type="text" class="form-control" id="txtMobile" placeholder="Mobile">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtEmail">Email</label>
+                                                            <input type="text" class="form-control" id="txtEmail" placeholder="Email">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtVRCN">Certificate Num (VRCN)</label>
+                                                            <input type="text" class="form-control" id="txtVRCN" placeholder="VRCN">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="txtVRN">Registration Num (VRN)</label>
+                                                            <input type="text" class="form-control" id="txtVRN" placeholder="VRN">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="VehicleClassId">Class</label>
+                                                            @Html.DropDownList("ddlVehicleClassId", (IEnumerable<SelectListItem>)ViewBag.VehicleClassList, new { @class = "form-control", onchange = "GetTagId();" })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="QueueStatus">Status</label>
+                                                            @Html.DropDownList("ddlQueueStatus", (IEnumerable<SelectListItem>)ViewBag.QueueStatusList, new { @class = "form-control" })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="ExceptionFlag">Exception</label>
+                                                            @Html.DropDownList("ddlExceptionFlag", (IEnumerable<SelectListItem>)ViewBag.ExceptionFlagList, new { @class = "form-control" })
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                                <div class="form-group" style="padding: 4px;">
-                                                    <label for="contain">filter text</label>
-                                                    <input class="form-control" type="text" />
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="ResetFilter();" id="btnFilterCancel">Clear</button>
+                                                    <button type="button" class="btn btn-outline-primary" onclick="FilteCustomerData()" id="btnFilterSearch">Search</button>
                                                 </div>
-                                                <button type="button" class="btn btn-primary icon-holde" style="float: right;margin-right: 5px;">
-                                                    <i class='c-grey-900 ti-search'></i>
-                                                </button>
-                                            </form>
+                                            </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <table id="tblCustomerVehicle" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
-                                @*<div class="th-inner sortable both">No</div>
-                                <div class="fht-cell"></div>*@
-                                No
-                            </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
-                                @*<div class="th-inner sortable both">Vehicle ID</div>
-                                <div class="fht-cell"></div>*@
-                                Vehicle ID
-                            </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                                @*<div class="th-inner sortable both">Registration Num</div>
-                                <div class="fht-cell"></div>*@
-                                Registration Num
-                            </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                                @*<div class="th-inner sortable both">Class</div>
-                                <div class="fht-cell"></div>*@
-                                Class
-                            </th>
-                            <th style="text-align: center;" colspan="2">
-                                @*<div class="th-inner ">Image</div>
-                                <div class="fht-cell"></div>*@
-                                Image
-                            </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                                @*<div class="th-inner ">Status</div>
-                                <div class="fht-cell"></div>*@
-                                Status
-                            </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                                @*<div class="th-inner ">Exception</div>
-                                <div class="fht-cell"></div>*@
-                                Exception
-                            </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                                @*<div class="th-inner ">Balance</div>
-                                <div class="fht-cell"></div>*@
-                                Balance
-                            </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
-                                <div class="th-inner sortable both"></div>
-                                <div class="fht-cell"></div>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th style="text-align: center; " data-field="price">
-                                @*<div class="th-inner sortable both">Front</div>
-                                <div class="fht-cell"></div>*@
-                                Front
-                            </th>
-                            <th style="text-align: center; " data-field="operate">
-                                @*<div class="th-inner sortable both">Rear</div>
-                                <div class="fht-cell"></div>*@
-                                Rear
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                <div id="loadingdiv" style="text-align:center;display:none;margin-bottom:20px;">
-                    <img src="~/images/ajax-loader.gif" />
+                <div class="table-responsive">
+                    <table id="tblCustomerVehicle" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; vertical-align: middle; " rowspan="2" id="tblCustomerDataTR">
+                                    No
+                                </th>
+                                <th style="text-align: center; vertical-align: middle; " rowspan="2">
+
+                                    Vehicle ID
+                                </th>
+                                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+
+                                    Registration Num
+                                </th>
+                                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+
+                                    Class
+                                </th>
+                                <th style="text-align: center;" colspan="2">
+
+                                    Image
+                                </th>
+                                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+
+                                    Status
+                                </th>
+                                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+
+                                    Exception
+                                </th>
+                                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+
+                                    Balance
+                                </th>
+                                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
+                                    <div class="th-inner sortable both"></div>
+                                    <div class="fht-cell"></div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="text-align: center; " data-field="price">
+
+                                    Front
+                                </th>
+                                <th style="text-align: center; " data-field="operate">
+
+                                    Rear
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#customerModal" style="display:none" id="btnpopupOpen">Launch demo modal</button>
 <div class="modal fade bd-example-modal-md" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Register Customer Vehicle</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4">
+
+                        </div>
+                        <div class="col-md-4" style="text-align: center;">
+                            <h5 class="modal-title" id="exampleModalLabel">Register Customer Vehicle</h5>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div id="partialassociated">
 
@@ -147,3 +179,8 @@
     </div>
 </div>
 <script src="~/js/CustomerVehicle.js"></script>
+<script>
+    $(document).ready(function () {
+        CustomerAccountJson = @Html.Raw(Json.Encode(ViewData["CustomerAccount"]));
+    });
+</script>

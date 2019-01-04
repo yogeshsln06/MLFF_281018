@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="peer">
-                                <button class="btn btn-primary" type="submit" >Login</button>
+                                <button class="btn btn-primary" type="submit">Login</button>
                             </div>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
             if (localStorage.chkbx && localStorage.chkbx != '') {
                 $('#remember_me').attr('checked', 'checked');
                 $('#LoginName').val(localStorage.usrname);
-                $('#Password').val('');
+                $('#Password').val('').focus();
             } else {
                 $('#remember_me').removeAttr('checked');
                 $('#LoginName').val('');

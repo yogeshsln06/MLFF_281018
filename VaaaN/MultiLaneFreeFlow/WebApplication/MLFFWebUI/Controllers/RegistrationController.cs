@@ -664,7 +664,7 @@ namespace MLFFWebUI.Controllers
             List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
             vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-            vehicleclassList.Add(new SelectListItem() { Text = "--Select Vehicle Class--", Value = "0" });
+            vehicleclassList.Add(new SelectListItem() { Text = "--Select Classification--", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
             {
                 vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -727,7 +727,7 @@ namespace MLFFWebUI.Controllers
             List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
             vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-            vehicleclassList.Add(new SelectListItem() { Text = "--Select Vehicle Class--", Value = "0" });
+            vehicleclassList.Add(new SelectListItem() { Text = "--Select Classification--", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
             {
                 vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -984,7 +984,7 @@ namespace MLFFWebUI.Controllers
                 List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
                 vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-                vehicleclassList.Add(new SelectListItem() { Text = "--Select Vehicle Class--", Value = "0" });
+                vehicleclassList.Add(new SelectListItem() { Text = "--Select Classification--", Value = "0" });
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
                 {
                     vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -1082,7 +1082,8 @@ namespace MLFFWebUI.Controllers
                             objCustomerVehicleCBE = UpdateVehicleCBE(objCustomerVehicleCBE, objCustomerVehicleModel);
                             objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
                             objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
-
+                            if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
+                                objCustomerVehicleCBE.TagId = string.Empty;
                             int customerVehicleEntryId = CustomerVehicleBLL.Insert(objCustomerVehicleCBE);
                             if (customerVehicleEntryId > 0)
                             {
@@ -1131,6 +1132,8 @@ namespace MLFFWebUI.Controllers
                                 objCustomerVehicleCBE = UpdateVehicleCBE(objCustomerVehicleCBE, objCustomerVehicleModel);
                                 objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
                                 objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
+                                if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
+                                    objCustomerVehicleCBE.TagId = string.Empty;
 
                                 int customerVehicleEntryId = CustomerVehicleBLL.Insert(objCustomerVehicleCBE);
                                 if (customerVehicleEntryId > 0)
@@ -1207,7 +1210,8 @@ namespace MLFFWebUI.Controllers
                             objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
                             objCustomerVehicleCBE.EntryId = objCustomerVehicleModel.EntryId;
                             objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
-
+                            if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
+                                objCustomerVehicleCBE.TagId = string.Empty;
                             CustomerVehicleBLL.Update(objCustomerVehicleCBE);
                             ModelStateList objModelState = new ModelStateList();
                             objModelState.ErrorMessage = "success";
@@ -1244,6 +1248,8 @@ namespace MLFFWebUI.Controllers
                                 objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
                                 objCustomerVehicleCBE.EntryId = objCustomerVehicleModel.EntryId;
                                 objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
+                                if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
+                                    objCustomerVehicleCBE.TagId = string.Empty;
                                 CustomerVehicleBLL.Update(objCustomerVehicleCBE);
                                 ModelStateList objModelState = new ModelStateList();
                                 objModelState.ErrorMessage = "success";

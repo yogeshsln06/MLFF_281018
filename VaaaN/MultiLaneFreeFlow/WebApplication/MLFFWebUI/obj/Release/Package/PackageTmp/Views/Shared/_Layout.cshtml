@@ -102,7 +102,7 @@
                             <ul class="dropdown-menu fsz-sm">
                               
                                     <li>
-                                        <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                        <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href='javascript:void(0);' onclick="ChnagePasswordOpen();">
                                             <i class="ti-settings mR-10"></i>
                                             <span>Setting</span>
                                         </a>
@@ -203,15 +203,59 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal" id="btnpopupClose">Close</button>
                 </div>
             </div>
         </div>
     </div>
+    <div id="password_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-4">
 
-    <script type="text/javascript" src="~/assets/admin/vendor.js"></script>
-    <script type="text/javascript" src="~/assets/admin/bundle.js"></script>
-    <script src="~/js/Common.js"></script>
- 
+                    </div>
+                    <div class="col-md-4" style="text-align: center;">
+                        <h5 class="modal-title">Chnage Password</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="text-center">
+                                    <div class="panel-body">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <input class="form-control required input-lg" data-val="true" data-val-required="The current password is required." placeholder="Current Password" name="CurrentPassword" type="password" id="CurrentPassword">
+                                                <span class="field-validation-valid text-danger" data-valmsg-for="CurrentPassword" data-valmsg-replace="true"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <input class="form-control required input-lg" data-val="true" data-val-required="The new password is required." placeholder="New Password" name="NewPassword" type="password" id="NewPassword">
+                                                <span class="field-validation-valid text-danger" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
+                                            </div>
+                                            <input type="button" class="btn btn-lg btn-outline-primary btn-block" onclick="ChnagePassword()" value="Update Password"/>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script type="text/javascript" src="~/assets/admin/vendor.js"></script>
+        <script type="text/javascript" src="~/assets/admin/bundle.js"></script>
+        <script src="~/js/Common.js"></script>
+
 </body>
 </html>

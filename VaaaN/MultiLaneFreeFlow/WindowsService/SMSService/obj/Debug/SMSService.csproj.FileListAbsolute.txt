@@ -13,4 +13,3 @@ E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debu
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.csproj.GenerateResource.Cache
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.exe
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.pdb
-E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\SMSService\obj\Debug\SMSService.csprojResolveAssemblyReference.cache

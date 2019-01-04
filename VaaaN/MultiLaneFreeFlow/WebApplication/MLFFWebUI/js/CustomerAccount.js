@@ -9,7 +9,7 @@ var NoMoredata = false;
 var HNoMoredata = false;
 var inProgress = false;
 var CurrentData = [];
-
+var CustomerId = 0;
 $(document).ready(function () {
     BindCustmerAccount();
 });
@@ -38,7 +38,7 @@ function reloadData() {
             datatableVariable.clear().draw();
             datatableVariable.rows.add(data); // Add new data
             datatableVariable.columns.adjust().draw();
-           
+
 
         },
         error: function (ex) {
@@ -153,7 +153,7 @@ function AppendCustomerData() {
             //datatableVariable.clear().draw();
             datatableVariable.rows.add(data); // Add new data
             datatableVariable.columns.adjust().draw();
-            
+
         },
         error: function (ex) {
             $(".animationload").hide()
@@ -279,7 +279,7 @@ function NewCustomer() {
 }
 
 function DetailsOpen(ctrl, id) {
-   
+
     $(".animationload").show();
     $.ajax({
         type: "POST",
@@ -311,10 +311,11 @@ function DetailsOpen(ctrl, id) {
             $("#lblResidentidImagePath").show();
             $("#ResidentidImage").hide();
             $("#btnSave").hide();
-           
+
             $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupClose").show();
             $("#btnpopupCancel").hide();
+            $("#btnpopupUpdate").show();
             $("#btnSaveNew").hide();
         },
         error: function (x, e) {
@@ -326,22 +327,31 @@ function DetailsOpen(ctrl, id) {
 }
 
 function EditOpen(ctrl, id) {
+    $(ctrl).parent().addClass('hide').removeClass('open').hide();
+    OpenUpdatepopUp(id)
+}
+
+function OpenUpdatepopUp(id) {
+    CustomerId = id || 0
+    if (CustomerId == 0)
+        CustomerId = $("#AccountId").val();
+    $('#partialassociated').html("");
     $(".animationload").show();
     $.ajax({
         type: "POST",
-        url: "/Registration/GetCustomer?id=" + id,
+        url: "/Registration/GetCustomer?id=" + CustomerId,
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialassociated').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#exampleModalLabel").text("Update " + $("#FirstName").val() + "");
             $("#lblResidentidImagePath").hide();
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
+            $("#ResidentId").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             GetCityList();
@@ -359,12 +369,12 @@ function EditOpen(ctrl, id) {
             }
 
             $("#btnSave").show();
-            $("#btnSave").text("Update");
+            //$("#btnSave").text("Update");
             $("#btnpopupClose").show();
-            $("#btnpopupClose").text("Cancel");
-            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
-            $("#btnpopupCancel").hide();
+            $("#btnpopupUpdateCancel").show();
             $("#btnSaveNew").hide();
+            $("#btnpopupCancel").hide();
+            $("#btnpopupClose").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -620,7 +630,7 @@ function AppendHistoryRecords() {
             //datatableVariable.clear().draw();
             HdatatableVariable.rows.add(data); // Add new data
             HdatatableVariable.columns.adjust().draw();
-         
+
         },
         error: function (ex) {
             $(".animationload").hide()
@@ -838,6 +848,7 @@ function MakeCSV() {
 
 function ResetFilter() {
     $("#filterbox").find('input:text').val('');
+    reloadData();
 }
 
 function openImg(ctrl) {

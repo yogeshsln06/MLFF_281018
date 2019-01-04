@@ -14,11 +14,6 @@ $(document).ready(function () {
     BindCustmerAccount();
 });
 
-function openFilterpopup() {
-    $('#filterModel').modal('show');
-    $(".modal-backdrop.show").hide();
-}
-
 function closePopup() {
     $("#btnpopupClose").trigger('click');
     $(".modal-backdrop").hide()
@@ -37,12 +32,13 @@ function reloadData() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $(".animationload").hide();
-            datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
             pageload++;
             NoMoredata = data.length < pagesize;
             inProgress = false;
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data); // Add new data
+            datatableVariable.columns.adjust().draw();
+           
 
         },
         error: function (ex) {
@@ -67,6 +63,9 @@ function BindCustmerAccount() {
         url: "CustomerAccountListScroll",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
+            NoMoredata = data.length < pagesize
+            pageload++;
+            inProgress = false;
             datatableVariable = $('#tblCustomerData').DataTable({
                 data: data,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
@@ -103,7 +102,7 @@ function BindCustmerAccount() {
                 "    </a>" +
                 "    <a class='dropdown-item ' href='javascript:void(0);' onclick='HistoryRecords(this," + oData.AccountId + ")'>" +
 
-                "        <span class='title'>Transactions</span>" +
+                "        <span class='title'>Transaction</span>" +
                 "    </a>" +
                  "    <a class='dropdown-item ' href='javascript:void(0);' onclick='VehicleRecords(this," + oData.AccountId + ")'>" +
 
@@ -128,9 +127,7 @@ function BindCustmerAccount() {
                 }
             });
             datatableVariable.columns.adjust();
-            NoMoredata = data.length < pagesize
-            pageload++;
-            inProgress = false;
+
             thId = 'tblCustomerDataTR';
             myVar = setInterval("myclick()", 500);
         },
@@ -149,23 +146,20 @@ function AppendCustomerData() {
         url: "CustomerAccountListScroll?pageIndex=" + pageload + "&pagesize=" + pagesize,
         contentType: "application/json; charset=utf-8",
         success: function (data) {
+            pageload++;
+            NoMoredata = data.length < pagesize;
+            inProgress = false;
             $(".animationload").hide()
             //datatableVariable.clear().draw();
             datatableVariable.rows.add(data); // Add new data
             datatableVariable.columns.adjust().draw();
-            pageload++;
-            NoMoredata = data.length < pagesize;
-            inProgress = false;
+            
         },
         error: function (ex) {
             $(".animationload").hide()
         }
 
     });
-
-}
-
-function HistoryRecords(ctrl, AccountId) {
 
 }
 
@@ -226,6 +220,7 @@ function validateCustomer() {
 }
 
 function openpopup() {
+    $("#warning").hide();
     $('#customerModal').modal('show');
 }
 
@@ -266,9 +261,10 @@ function NewCustomer() {
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
-
+            $("#lblResidentidImagePath").hide();
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
+
             $("#btnSave").show();
             $("#btnSave").text("Save");
             $("#btnpopupClose").hide();
@@ -283,6 +279,7 @@ function NewCustomer() {
 }
 
 function DetailsOpen(ctrl, id) {
+   
     $(".animationload").show();
     $.ajax({
         type: "POST",
@@ -311,8 +308,11 @@ function DetailsOpen(ctrl, id) {
                 });
                 //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
             }
-
+            $("#lblResidentidImagePath").show();
+            $("#ResidentidImage").hide();
             $("#btnSave").hide();
+           
+            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupClose").show();
             $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
@@ -334,12 +334,12 @@ function EditOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
-
             $(".animationload").hide();
-            closefliterPopup();
+            $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialassociated').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#exampleModalLabel").text("Update " + $("#FirstName").val() + "");
+            $("#lblResidentidImagePath").hide();
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
@@ -360,8 +360,10 @@ function EditOpen(ctrl, id) {
 
             $("#btnSave").show();
             $("#btnSave").text("Update");
-            $("#btnpopupClose").hide();
-            $("#btnpopupCancel").show();
+            $("#btnpopupClose").show();
+            $("#btnpopupClose").text("Cancel");
+            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
+            $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
         },
         error: function (x, e) {
@@ -477,6 +479,10 @@ function SaveData(action) {
             });
 
         }
+        else {
+            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").show();
+        }
 
     }
     else {
@@ -508,7 +514,7 @@ function HistoryRecords(ctrl, AccountId) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            closefliterPopup();
+            $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialHistory').html(result);
         },
         error: function (x, e) {
@@ -574,7 +580,7 @@ function BindHistoryRecords() {
                     { 'data': 'AMOUNT' },
 
                 ],
-               
+
             });
             HdatatableVariable.on('order.dt search.dt', function () {
                 HdatatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -582,6 +588,7 @@ function BindHistoryRecords() {
                 });
             }).draw();
             $('.modal-body').find('.dataTables_scrollBody').on('scroll', function () {
+                console.log($('.modal-body').find('.dataTables_scrollBody').length);
                 if (($('.modal-body').find('.dataTables_scrollBody').scrollTop() + $('.modal-body').find('.dataTables_scrollBody').height() >= $("#tblCustomerHistoryData").height()) && !HNoMoredata) {
                     AppendHistoryRecords();
                 }
@@ -603,15 +610,17 @@ function AppendHistoryRecords() {
     $.ajax({
         type: "POST",
         dataType: "json",
+        data: JSON.stringify(Inputdata),
         url: "GetTranscationHistoryByCustomer",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $(".animationload").hide()
             HNoMoredata = data.length < 10
+            Transload++;
             //datatableVariable.clear().draw();
             HdatatableVariable.rows.add(data); // Add new data
             HdatatableVariable.columns.adjust().draw();
-            Transload++;
+         
         },
         error: function (ex) {
             $(".animationload").hide()
@@ -634,7 +643,7 @@ function VehicleRecords(ctrl, AccountId) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            closefliterPopup();
+            $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialHistory').html(result);
         },
         error: function (x, e) {
@@ -825,5 +834,14 @@ function MakeCSV() {
             $('.animationload').hide();
         }
     });
+}
+
+function ResetFilter() {
+    $("#filterbox").find('input:text').val('');
+}
+
+function openImg(ctrl) {
+    var id = $(ctrl).attr('id')
+    $("#" + id.replace('lbl', 'img')).trigger('click');
 }
 

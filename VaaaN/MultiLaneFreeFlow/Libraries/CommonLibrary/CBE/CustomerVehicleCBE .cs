@@ -558,7 +558,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 
 
         [Display(Name = "EPC")]
-        [Required]
         public String TagId
         {
             get { return this.tagId; }

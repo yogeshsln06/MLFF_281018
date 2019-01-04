@@ -7,6 +7,7 @@ var CustomerVehicleId = 0;
 var CustomerAccountId = 0;
 var CustomerRegistrationNumber = '';
 var CustomerAccountJson = [];
+var VehicleId = 0;
 $(document).ready(function () {
 
     BindCustmerVehicleAccount();
@@ -358,20 +359,23 @@ function validateCustomerVehicle() {
         showError($("#VehicleClassId"), '');
     }
 
-    if ($("#TagId").val() == '') {
-        showError($("#TagId"), $("#TagId").attr('data-val-required'));
-        valid = false;
-    }
-    else if ($("#TagId").val().length != 24) {
-        showError($("#TagId"), 'Valid EPC Required');
-        valid = false;
-    }
-    else if (!validTAGId($("#TagId").val())) {
-        showError($("#TagId"), 'Valid EPC Required');
-        valid = false;
-    }
-    else {
-        showError($("#TagId"), '');
+    //if ($("#TagId").val() == '') {
+    //    showError($("#TagId"), $("#TagId").attr('data-val-required'));
+    //    valid = false;
+    //}
+
+    if ($("#TagId").val() != '') {
+        if ($("#TagId").val().length != 24) {
+            showError($("#TagId"), 'Valid EPC Required');
+            valid = false;
+        }
+        else if (!validTAGId($("#TagId").val())) {
+            showError($("#TagId"), 'Valid EPC Required');
+            valid = false;
+        }
+        else {
+            showError($("#TagId"), '');
+        }
     }
 
 
@@ -504,10 +508,11 @@ function DetailsOpen(ctrl, id) {
             $("#imgVehicleRCNumberImagePath").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleRCNumberImage").val());
 
             $("#btnSave").hide();
+
             $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupClose").show();
-
             $("#btnpopupCancel").hide();
+            $("#btnpopupUpdate").show();
             $("#btnSaveNew").hide();
 
             openpopup();
@@ -521,15 +526,23 @@ function DetailsOpen(ctrl, id) {
 }
 
 function EditOpen(ctrl, id) {
+    $(ctrl).parent().addClass('hide').removeClass('open').hide();
+    OpenUpdatepopUp(id)
+}
+
+function OpenUpdatepopUp(id) {
+    VehicleId = id || 0
+    if (VehicleId == 0)
+        VehicleId = $("#EntryId").val();
+    $('#partialassociated').html("");
     $(".animationload").show();
     $.ajax({
         type: "POST",
-        url: "/Registration/GetCustomerVehicle?id=" + id,
+        url: "/Registration/GetCustomerVehicle?id=" + VehicleId,
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
-            $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialassociated').html(result);
             $("#exampleModalLabel").text("Update " + $('#VehRegNo').val() + "");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
@@ -560,12 +573,12 @@ function EditOpen(ctrl, id) {
             $("#lblVehicleRCNumberImagePath").hide();
 
             $("#btnSave").show();
-            $("#btnSave").text("Update");
+            //$("#btnSave").text("Update");
             $("#btnpopupClose").show();
-            $("#btnpopupClose").text("Cancel");
-            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
-            $("#btnpopupCancel").hide();
+            $("#btnpopupUpdateCancel").show();
             $("#btnSaveNew").hide();
+            $("#btnpopupCancel").hide();
+            $("#btnpopupClose").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -574,6 +587,7 @@ function EditOpen(ctrl, id) {
     });
 
 }
+
 
 function SaveData(action) {
     if ($("#needs-validation").valid()) {
@@ -1038,6 +1052,7 @@ function ResetFilter() {
     $("#filterbox").find('input:text').val('');
     $("#filterbox").find('input:file').val('');
     $("#filterbox").find('select').val(0);
+    reloadData();
 }
 
 function GetCustomerDetails(ctrl) {
