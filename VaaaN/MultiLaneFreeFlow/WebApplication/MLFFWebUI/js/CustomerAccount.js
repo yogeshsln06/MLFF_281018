@@ -102,7 +102,7 @@ function BindCustmerAccount() {
                 "    </a>" +
                 "    <a class='dropdown-item ' href='javascript:void(0);' onclick='HistoryRecords(this," + oData.AccountId + ")'>" +
 
-                "        <span class='title'>Transactions</span>" +
+                "        <span class='title'>Transaction</span>" +
                 "    </a>" +
                  "    <a class='dropdown-item ' href='javascript:void(0);' onclick='VehicleRecords(this," + oData.AccountId + ")'>" +
 
@@ -220,6 +220,7 @@ function validateCustomer() {
 }
 
 function openpopup() {
+    $("#warning").hide();
     $('#customerModal').modal('show');
 }
 
@@ -260,7 +261,7 @@ function NewCustomer() {
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
-
+            $("#lblResidentidImagePath").hide();
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
 
@@ -278,6 +279,7 @@ function NewCustomer() {
 }
 
 function DetailsOpen(ctrl, id) {
+   
     $(".animationload").show();
     $.ajax({
         type: "POST",
@@ -306,8 +308,11 @@ function DetailsOpen(ctrl, id) {
                 });
                 //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
             }
-
+            $("#lblResidentidImagePath").show();
+            $("#ResidentidImage").hide();
             $("#btnSave").hide();
+           
+            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupClose").show();
             $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
@@ -329,12 +334,12 @@ function EditOpen(ctrl, id) {
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
-
             $(".animationload").hide();
             $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialassociated').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#exampleModalLabel").text("Update " + $("#FirstName").val() + "");
+            $("#lblResidentidImagePath").hide();
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
@@ -356,6 +361,8 @@ function EditOpen(ctrl, id) {
             $("#btnSave").show();
             $("#btnSave").text("Update");
             $("#btnpopupClose").show();
+            $("#btnpopupClose").text("Cancel");
+            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
         },
@@ -471,6 +478,10 @@ function SaveData(action) {
 
             });
 
+        }
+        else {
+            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").show();
         }
 
     }
@@ -823,5 +834,14 @@ function MakeCSV() {
             $('.animationload').hide();
         }
     });
+}
+
+function ResetFilter() {
+    $("#filterbox").find('input:text').val('');
+}
+
+function openImg(ctrl) {
+    var id = $(ctrl).attr('id')
+    $("#" + id.replace('lbl', 'img')).trigger('click');
 }
 

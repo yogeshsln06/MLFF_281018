@@ -6,8 +6,9 @@ var inProgress = false;
 var CustomerVehicleId = 0;
 var CustomerAccountId = 0;
 var CustomerRegistrationNumber = '';
-
+var CustomerAccountJson = [];
 $(document).ready(function () {
+
     BindCustmerVehicleAccount();
 });
 
@@ -123,7 +124,7 @@ function BindCustmerVehicleAccount() {
                 "        <span class='title'>Update</span>" +
                 "    </a>" +
                 "    <a class='dropdown-item ' href='javascript:void(0);' onclick='HistoryRecords(this," + oData.EntryId + "," + oData.AccountId + ")'>" +
-                "        <span class='title'>Transactions</span>" +
+                "        <span class='title'>Transaction</span>" +
                 "    </a>" +
                 "    <a class='dropdown-item ' href='javascript:void(0);' onclick='CustomerDetailsOpen(this," + oData.AccountId + ")'>" +
                 "        <span class='title'>Customer</span>" +
@@ -188,6 +189,21 @@ function AppendCustomerData() {
 function openpopup() {
     $("#warning").hide();
     $('#customerModal').modal('show');
+    if (CustomerAccountJson.length == null) {
+        alert("No Customer Account exists");
+    }
+    else if (CustomerAccountJson.length == 0) {
+        alert("No Customer Account exists");
+    }
+    else {
+        $.each((CustomerAccountJson), function (i, residentId) {
+            if (residentId.ResidentId != '') {
+                $("#ResidentId").append
+                ($('<option></option>').val(residentId.ResidentId).html(residentId.ResidentId))
+            }
+
+        })
+    }
 }
 
 function validTAGId(str) {
@@ -198,7 +214,7 @@ function validTAGId(str) {
 function validateCustomerVehicle() {
     var valid = true;
 
-    if ($("#ResidentId").val() == '') {
+    if ($("#ResidentId").val() == 0) {
         showError($("#ResidentId"), $("#ResidentId").attr('data-val-required'));
         valid = false;
     }
@@ -418,6 +434,10 @@ function NewCustomerVehicle() {
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
+            $("#FirstName").attr("disabled", "disabled");
+            $("#Address").attr("disabled", "disabled");
+            $("#MobileNo").attr("disabled", "disabled");
+            $("#EmailId").attr("disabled", "disabled");
             $("#EntryId").attr("disabled", "disabled");
             $(".animationload").hide();
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
@@ -448,6 +468,7 @@ function NewCustomerVehicle() {
 
 function DetailsOpen(ctrl, id) {
     $(".animationload").show();
+
     $.ajax({
         type: "POST",
         url: "/Registration/GetCustomerVehicle?id=" + id,
@@ -456,11 +477,13 @@ function DetailsOpen(ctrl, id) {
         dataType: "html",
         success: function (result) {
             $('#partialassociated').html(result);
+
             $("#exampleModalLabel").text("View " + $('#VehRegNo').val() + "");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
-            openpopup();
+
             $(".animationload").hide();
             $("#ValidUntil").attr("readonly", false);
+
             $("#fildset").attr("disabled", "disabled");
             $("#VehicleImageFront").hide();
             $("#VehicleImageRear").hide();
@@ -481,9 +504,13 @@ function DetailsOpen(ctrl, id) {
             $("#imgVehicleRCNumberImagePath").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleRCNumberImage").val());
 
             $("#btnSave").hide();
+            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupClose").show();
+
             $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
+
+            openpopup();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -509,6 +536,15 @@ function EditOpen(ctrl, id) {
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#EntryIdId").attr("disabled", "disabled");
+            $.grep(CustomerAccountJson, function (element, index) {
+                if (element.AccountId == $("#AccountId").val()) {
+                    if (element.ResidentId == '')
+                        alert("Resident Id not found please update customer acount first")
+                    else
+                        $("#ResidentId").val(element.ResidentId);
+
+                }
+            });
             $(".animationload").hide();
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
             $("#VehicleImageFront").show();
@@ -526,6 +562,8 @@ function EditOpen(ctrl, id) {
             $("#btnSave").show();
             $("#btnSave").text("Update");
             $("#btnpopupClose").show();
+            $("#btnpopupClose").text("Cancel");
+            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
         },
@@ -678,6 +716,14 @@ function SaveData(action) {
                 }
             });
         }
+        else {
+            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").show();
+        }
+    }
+    else {
+        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+        $("#warning").show();
     }
 }
 
@@ -965,7 +1011,7 @@ function FilteCustomerData() {
 function MakeCSV() {
     $(".animationload").show();
     $.ajax({
-        url: '/CSV/ExportCSVCustomer',
+        url: '/CSV/ExportCSVCustomerVehicle',
         dataType: "JSON",
         async: true,
         contentType: "application/json; charset=utf-8",
@@ -985,4 +1031,26 @@ function MakeCSV() {
             $('.animationload').hide();
         }
     });
+}
+
+
+function ResetFilter() {
+    $("#filterbox").find('input:text').val('');
+    $("#filterbox").find('input:file').val('');
+    $("#filterbox").find('select').val(0);
+}
+
+function GetCustomerDetails(ctrl) {
+    var ResidentId = $(ctrl).val()
+
+    var FilteredData = $.grep(CustomerAccountJson, function (element, index) {
+        if (element.ResidentId == ResidentId) {
+            $("#AccountId").val(element.AccountId);
+            $("#FirstName").val(element.FirstName);
+            $("#Address").val(element.Address);
+            $("#MobileNo").val(element.MobileNo);
+            $("#EmailId").val(element.EmailId);
+        }
+    });
+
 }
