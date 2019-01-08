@@ -89,17 +89,34 @@ function findAndReplace(string, target, replacement) {
 }
 
 function ResetFildes() {
-    $("#fildset").find('input:text').val('');
-    $("#fildset").find('input:file').val('');
-    $("#fildset").find('input:number').val('');
-    $("#fildset").find('input:email').val('');
-    $("#fildset").find('input:datetime').val('');
+    if ($("#fildset").find('input:text').length > 0)
+        $("#fildset").find('input:text').val('');
+    if ($("#fildset").find('input:file').length > 0)
+        $("#fildset").find('input:file').val('');
+    if ($("#fildset").find('input:number').length > 0)
+        $("#fildset").find('input:number').val('');
+    if ($("#fildset").find('input:email').length > 0)
+        $("#fildset").find('input:email').val('');
+    if ($("#fildset").find('input:datetime').length > 0)
+        $("#fildset").find('input:datetime').val('');
 }
 
 function openImagePreview(ctrl) {
     var modalImg = document.getElementById("img01");
     modalImg.src = $(ctrl).attr('src');
-    $("#btnImageModalOpen").trigger('click');
+    var modal = $("#ImageModal");
+    var body = $(window);
+    var w = modal.width();
+    var h = modal.height();
+    var bw = body.width();
+    var bh = body.height();
+    modal.css({
+        "position": "absolute",
+        "top": ((bh - h) / 2) + "px",
+        "left": ((bw - w) / 2) + "px"
+    })
+    $('#ImageModal').modal({ backdrop: 'static', keyboard: false })
+    $('#ImageModal').modal('show');
 }
 
 function showError(ctrlid, errorMsg) {
@@ -268,8 +285,7 @@ function ChnagePassword() {
                 if (resultData[0].ErrorMessage == 'changed') {
                     $('#password_modal').modal('hide');
                 }
-                else
-                {
+                else {
                     alert("unable to chnage password")
                 }
 
@@ -295,3 +311,4 @@ function isNumber(evt) {
 
     return true;
 }
+

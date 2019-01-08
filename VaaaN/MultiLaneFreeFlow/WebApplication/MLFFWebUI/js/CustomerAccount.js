@@ -10,7 +10,14 @@ var HNoMoredata = false;
 var inProgress = false;
 var CurrentData = [];
 var CustomerId = 0;
+var searchEnable = false;
+
 $(document).ready(function () {
+    $("#sidebar-toggle").bind("click", function () {
+        $(".animationload").show();
+        thId = 'tblCustomerDataTR';
+        myVar = setInterval("myclick()", 500);
+    });
     BindCustmerAccount();
 });
 
@@ -20,34 +27,40 @@ function closePopup() {
 }
 
 function reloadData() {
-    pageload = 1;
-    $(".animationload").show();
-    inProgress = true;
-    var Inputdata = { pageindex: pageload, pagesize: pagesize }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(Inputdata),
-        url: "CustomerAccountListScroll",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $(".animationload").hide();
-            pageload++;
-            NoMoredata = data.length < pagesize;
-            inProgress = false;
-            datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
+    if (searchEnable) {
+        FilteCustomerData();
+    }
+    else {
+        pageload = 1;
+        $(".animationload").show();
+        inProgress = true;
+        var Inputdata = { pageindex: pageload, pagesize: pagesize }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "CustomerAccountListScroll",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".animationload").hide();
+                pageload++;
+                NoMoredata = data.length < pagesize;
+                inProgress = false;
+                NoMoredata = false;
+                datatableVariable.clear().draw();
+                datatableVariable.rows.add(data); // Add new data
+                datatableVariable.columns.adjust().draw();
 
 
-        },
-        error: function (ex) {
-            $(".animationload").hide();
+            },
+            error: function (ex) {
+                $(".animationload").hide();
 
 
-        }
+            }
 
-    });
+        });
+    }
 }
 
 function BindCustmerAccount() {
@@ -69,8 +82,12 @@ function BindCustmerAccount() {
             datatableVariable = $('#tblCustomerData').DataTable({
                 data: data,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
-                scrollY: "45vh",
+                "bScrollInfinite": true,
+                "bScrollCollapse": true,
+                scrollY: "38.5vh",
                 scrollX: true,
+                scrollCollapse: true,
+                autoWidth: false,
                 paging: false,
                 info: false,
                 columns: [
@@ -221,7 +238,9 @@ function validateCustomer() {
 
 function openpopup() {
     $("#warning").hide();
+    $('#customerModal').modal({ backdrop: 'static', keyboard: false })
     $('#customerModal').modal('show');
+
 }
 
 function OpenCustmerRegistration() {
@@ -267,8 +286,8 @@ function NewCustomer() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnpopupClose").hide();
-            $("#btnpopupCancel").show();
+            $("#btnpopupClose").text('Cancel').show();
+            $("#btnpopupCancel").removeClass('btn-outline-danger').addClass('btn-outline-secondary').hide();
             $("#btnSaveNew").show();
         },
         error: function (x, e) {
@@ -279,7 +298,6 @@ function NewCustomer() {
 }
 
 function DetailsOpen(ctrl, id) {
-
     $(".animationload").show();
     $.ajax({
         type: "POST",
@@ -298,6 +316,8 @@ function DetailsOpen(ctrl, id) {
             $("#fildset").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
+            $("#imgResidentidImagePath").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
+            $("#ResidentidImage").hide();
             GetCityList();
             if ($("#hfBirthPlace").val() || '' != '') {
                 $('#BirthPlace option').each(function (index, option) {
@@ -309,11 +329,13 @@ function DetailsOpen(ctrl, id) {
                 //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
             }
             $("#lblResidentidImagePath").show();
-            $("#ResidentidImage").hide();
+            $("#imgPreview").hide();
+            $("#labelImage").hide();
+            
             $("#btnSave").hide();
 
-            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
-            $("#btnpopupClose").show();
+            //$("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
+            $("#btnpopupClose").hide();
             $("#btnpopupCancel").hide();
             $("#btnpopupUpdate").show();
             $("#btnSaveNew").hide();
@@ -348,12 +370,25 @@ function OpenUpdatepopUp(id) {
             $('#partialassociated').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#exampleModalLabel").text("Update " + $("#FirstName").val() + "");
-            $("#lblResidentidImagePath").hide();
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#ResidentId").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
-            $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
+            $("#imgPreview").hide();
+            if ($("#hfCustomerDocumentPath").val() == '') {
+                $("#ResidentidImage").show();
+                $("#lblResidentidImagePath").hide();
+
+
+            }
+            else {
+                $("#labelImage").hide();
+                $("#ResidentidImage").hide();
+                $("#lblResidentidImagePath").show();
+                $("#imgResidentidImagePath").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
+            }
+
+           // $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             GetCityList();
 
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
@@ -370,11 +405,10 @@ function OpenUpdatepopUp(id) {
 
             $("#btnSave").show();
             //$("#btnSave").text("Update");
-            $("#btnpopupClose").show();
-            $("#btnpopupUpdateCancel").show();
+            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger').addClass('').text('Cancel').show();
+            $("#btnpopupUpdateCancel").hide();
             $("#btnSaveNew").hide();
             $("#btnpopupCancel").hide();
-            $("#btnpopupClose").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -457,7 +491,7 @@ function SaveData(action) {
                             }
                             else {
                                 $("#warning").hide();
-                                ResetFildes();
+                                ResetCustomerFildes();
                             }
                             break;
                         }
@@ -469,7 +503,7 @@ function SaveData(action) {
                             if (resultData[i].ErrorMessage == "Resident Id already exists") {
                                 alert("Resident Id already exists");
                                 $("#warning").hide();
-                                ResetFildes();
+                                ResetCustomerFildes();
                                 break;
                             }
                             else {
@@ -490,13 +524,13 @@ function SaveData(action) {
 
         }
         else {
-            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").html("<ul><li>Please fill the mandarory fields</li></ul>");
             $("#warning").show();
         }
 
     }
     else {
-        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+        $("#warning").html("<ul><li>Please fill the mandarory fields</li></ul>");
         $("#warning").show();
     }
 }
@@ -550,6 +584,7 @@ function BindHistoryRecords() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             CurrentData = data;
+            $('#customerHistoryModal').modal({ backdrop: 'static', keyboard: false })
             $('#customerHistoryModal').modal('show');
             $("#HistoryModalLabel").text('View ' + CustomerName + ' Transaction')
             HNoMoredata = data.length < 10
@@ -655,6 +690,8 @@ function VehicleRecords(ctrl, AccountId) {
             $(".animationload").hide();
             $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialHistory').html(result);
+
+            //$('#customerHistoryModal').find("#btnpopupClose").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -677,8 +714,10 @@ function BindCustmerVehicleAccount() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $("#tblVehicleList").removeClass('my-table-bordered').addClass('table-bordered');
+            $('#customerHistoryModal').modal({ backdrop: 'static', keyboard: false })
             $('#customerHistoryModal').modal('show');
             $("#HistoryModalLabel").text('View ' + CustomerName + ' Vehicle')
+
             datatableVariableVehicle = $('#tblVehicleList').DataTable({
                 data: data,
                 "bScrollInfinite": true,
@@ -754,18 +793,35 @@ function FilteCustomerData() {
     var VRN = '';
     var boolfliter = false;
     if ($("#txtCustomerID").val() != '') {
+        var numbers = /^[0-9]+$/;
+        if (!$("#txtCustomerID").val().match(numbers)) {
+            alert('Customer Id should be numeric');
+            $("#txtCustomerID").focus();
+            return false;
+        }
         boolfliter = true;
         CutomerId = $("#txtCustomerID").val();
     }
     if ($("#txtResidentID").val() != '') {
+        if (!$("#txtResidentID").val().match(numbers)) {
+            alert('Resident Id should be numeric');
+            $("#txtResidentID").focus();
+            return false;
+        }
         boolfliter = true;
         ResidentID = $("#txtResidentID").val();
+
     }
     if ($("#txtName").val() != '') {
         boolfliter = true;
         Name = $("#txtName").val();
     }
     if ($("#txtMobile").val() != '') {
+        if (!$("#txtMobile").val().match(numbers)) {
+            alert('Mobile Phone should be numeric');
+            $("#txtMobile").focus();
+            return false;
+        }
         boolfliter = true;
         Mobile = $("#txtMobile").val();
     }
@@ -778,6 +834,7 @@ function FilteCustomerData() {
         VRN = $("#txtVRN").val();
     }
     if (boolfliter) {
+        NoMoredata = true;
         var Inputdata = {
             ResidentId: ResidentID,
             MobileNo: Mobile,
@@ -804,10 +861,10 @@ function FilteCustomerData() {
                 }
                 else {
                     $('#filterModel').modal('hide');
+                    searchEnable = true;
                     datatableVariable.clear().draw();
                     datatableVariable.rows.add(data); // Add new data
                     datatableVariable.columns.adjust().draw();
-                    NoMoredata = false;
                 }
             },
             error: function (ex) {
@@ -847,6 +904,7 @@ function MakeCSV() {
 }
 
 function ResetFilter() {
+    searchEnable = false;
     $("#filterbox").find('input:text').val('');
     reloadData();
 }
@@ -854,5 +912,11 @@ function ResetFilter() {
 function openImg(ctrl) {
     var id = $(ctrl).attr('id')
     $("#" + id.replace('lbl', 'img')).trigger('click');
+}
+
+function ResetCustomerFildes() {
+    $("#fildset").find('.text-box').val('');
+    $("#fildset").find('input:file').val('');
+    $("#imgPreview").attr('src', '');
 }
 

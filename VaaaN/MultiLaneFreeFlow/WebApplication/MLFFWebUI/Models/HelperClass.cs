@@ -386,6 +386,37 @@ namespace MLFFWebUI.Models
             return selectList;
         }
 
+        public static IEnumerable<SelectListItem> GetReviewerStatus()
+        {
+            var selectList = new List<SelectListItem>();
+
+            // Get all values of the Industry enum
+            var enumValues = Enum.GetValues(typeof(Constants.TranscationStatus)) as Constants.TranscationStatus[];
+            if (enumValues == null)
+                return null;
+            selectList.Add(new SelectListItem
+            {
+                Value = "0",
+                // GetIndustryName just returns the Display.Name value
+                // of the enum - check out the next chapter for the code of this function.
+                Text = "--Select All--"
+            });
+            foreach (var enumValue in enumValues)
+            {
+                // Create a new SelectListItem element and set its 
+                // Value and Text to the enum value and description.
+                selectList.Add(new SelectListItem
+                {
+                    Value = Convert.ToInt32(enumValue).ToString(),
+                    // GetIndustryName just returns the Display.Name value
+                    // of the enum - check out the next chapter for the code of this function.
+                    Text = enumValue.ToString()
+                });
+            }
+
+            return selectList;
+        }
+
         private static string GeLaneTypeName(Constants.LaneType value)
         {
             // Get the MemberInfo object for supplied enum value

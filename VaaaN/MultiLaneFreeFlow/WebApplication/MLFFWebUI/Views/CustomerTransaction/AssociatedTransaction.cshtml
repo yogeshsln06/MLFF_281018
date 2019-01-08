@@ -88,42 +88,44 @@
                 <td>
                     @item["NFP_VEHICLE_CLASS_NAME_FRONT"].ToString()
                 </td>
-                <td>
+                <td style="text-align:center;">
                     @if (item["FRONT_IMAGE"].ToString() != "")
                 {
                         <img src="\@item["REAR_IMAGE"].ToString()" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
-                <td>
+                <td style="text-align:center;">
                     @if (item["FRONT_VIDEO_URL"].ToString() != "")
                     {
                         string path = item["FRONT_VIDEO_URL"].ToString();
                         //path = path.Replace('/', '^');
-                        <span class="cur-p btn-light icon-holder" aria-expanded="false" onclick="openVideo(this);" style="font-size: 18px;" path="@path" data-toggle="tooltip" data-placement="top" title="Click to View">
-                            <i class='c-blue-500 ti-video-clapper'></i>
+
+                        <span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path="@path">
+                            <i class='c-blue-500 ti-video-camera'></i>
                         </span>
 
                     }
                 </td>
+
                 <td>
                     @item["REAR_VRN"].ToString()
                 </td>
                 <td>
                     @item["NFP_VEHICLE_CLASS_NAME_REAR"].ToString()
                 </td>
-                <td>
+                <td style="text-align:center;">
                     @if (item["REAR_IMAGE"].ToString() != "")
                 {
                         <img src="\@item["REAR_IMAGE"].ToString()" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
-                <td>
+                <td style="text-align:center;">
                     @if (item["REAR_VIDEO_URL"].ToString() != "")
                     {
                         string path = item["REAR_VIDEO_URL"].ToString();
                         //path = path.Replace('/', '^');
-                        <span class="cur-p btn-light icon-holder" aria-expanded="false" onclick="openVideo(this);" style="font-size: 18px;" path="@path" data-toggle="tooltip" data-placement="top" title="Click to View">
-                            <i class='c-blue-500 ti-video-clapper'></i>
+                        <span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path="@path">
+                            <i class='c-blue-500 ti-video-camera'></i>
                         </span>
 
                     }
@@ -137,75 +139,89 @@
 </table>
 
 <h5 class="c-grey-900 heading"><strong>Associate </strong>Transcation<span></span></h5>
-<table id="tblAssociatedData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
-    <thead>
-        <tr>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2">
+<div id="table-container">
+    <div id="ddlTime">
+        <div class="form-row col-md-12">
+            <div class="form-group col-md-3">
+                <label class="control-label" style="left: -7px;position: absolute;">Before & After (Seconds)</label>
+            </div>
+            <div class="form-group col-md-2">
+                <select id="filterSec" name="filterSec" class="form-control" onchange="FilterAssociatedData();"></select>
+            </div>
+        </div>
+    </div>
 
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2">
-                ID
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                Date Time
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
-                Gantry
-            </th>
-            <th style="text-align: center; " colspan="2">
-                EVI
-            </th>
-            <th style="text-align: center; " colspan="4">
-                ANPR Front
-            </th>
-            <th style="text-align: center; " colspan="4">
-                ANPR Rear
-            </th>
-            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
-                Speed
-                <br />
-                (km/h)
-            </th>
-        </tr>
-        <tr>
-            <th style="text-align: center; " data-field="price">
-                VRN
-            </th>
-            <th style="text-align: center; " data-field="operate">
-                Class
-            </th>
-            <th style="text-align: center; " data-field="price">
-                VRN
-            </th>
-            <th style="text-align: center; " data-field="operate">
-                Class
-            </th>
-            <th style="text-align: center; " data-field="price">
-                Image
-            </th>
-            <th style="text-align: center; " data-field="operate">
-                Video
-            </th>
-            <th style="text-align: center; " data-field="price">
-                VRN
-            </th>
-            <th style="text-align: center; " data-field="operate">
-                Class
-            </th>
-            <th style="text-align: center; " data-field="price">
-                Image
-            </th>
-            <th style="text-align: center; " data-field="operate">
-                Video
-            </th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+    <table id="tblAssociatedData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%" style="top:-52px!important">
+        <thead>
+            <tr>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" id="tblAssociatedDataTR">
+
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                    ID
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Date Time
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                    Gantry
+                </th>
+                <th style="text-align: center; " colspan="2">
+                    EVI
+                </th>
+                <th style="text-align: center; " colspan="4">
+                    ANPR Front
+                </th>
+                <th style="text-align: center; " colspan="4">
+                    ANPR Rear
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
+                    Speed
+                    <br />
+                    (km/h)
+                </th>
+            </tr>
+            <tr>
+                <th style="text-align: center; " data-field="price">
+                    VRN
+                </th>
+                <th style="text-align: center; " data-field="operate">
+                    Class
+                </th>
+                <th style="text-align: center; " data-field="price">
+                    VRN
+                </th>
+                <th style="text-align: center; " data-field="operate">
+                    Class
+                </th>
+                <th style="text-align: center; " data-field="price">
+                    Image
+                </th>
+                <th style="text-align: center; " data-field="operate">
+                    Video
+                </th>
+                <th style="text-align: center; " data-field="price">
+                    VRN
+                </th>
+                <th style="text-align: center; " data-field="operate">
+                    Class
+                </th>
+                <th style="text-align: center; " data-field="price">
+                    Image
+                </th>
+                <th style="text-align: center; " data-field="operate">
+                    Video
+                </th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
 <script>
     $(document).ready(function () {
-        BindAssociatedData();
+        bindSecond();
+        BindAssociatedData(30);
+       
     });
 </script>
-

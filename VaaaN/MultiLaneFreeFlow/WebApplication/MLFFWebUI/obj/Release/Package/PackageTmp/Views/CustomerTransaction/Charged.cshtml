@@ -1,34 +1,81 @@
-﻿@{
-    ViewBag.Title = "Charged Transcation";
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.ViewTransactionCBE
+@{
+    ViewBag.Title = "Charged Transaction";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style>
-    .form-group {
-        padding-left: 8px;
-        padding-right: 10px;
-        /*padding-top:1px;*/
-        /*padding-bottom:1px;*/
-    }
-</style>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div class="bgc-white bd bdrs-3 p-10 mB-10">
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
                 <div class="form-row">
                     <div class="col-md-8">
                         <div class="mT-10">
-                            <h4 class="c-grey-900 mB-20">Charged Transcation</h4>
+                            <h4 class="c-mygrey-900 mB-20">Charged Transaction</h4>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mT-10">
                             <div class="gap-5 peers" style="float:right;overflow: visible !important;">
                                 <div class="peer">
-                                    <a class="btn cur-p  btn-outline-primary" href='javascript:void(0);' onclick="reloadChargedData();">
+                                    <a class="btn cur-p btn-outline-primary" href='javascript:void(0);' onclick="reloadChargedData();">
                                         <span class='icon-holder'>
-                                            <i class='c-blue-500 ti-reload'></i>
+                                            <i class='c-black-500 ti-reload'></i>
                                         </span>
                                     </a>
+                                </div>
+                                <div class="peer">
+                                    <a class="btn cur-p btn-outline-primary cd-filter-trigger" href='javascript:void(0);' onclick="openFilterpopup();">
+                                        <span class='icon-holder'>
+                                            <i class='c-black-500 ti-filter'></i>
+                                        </span>
+                                    </a>
+                                    <div class="modal right fade" id="filterModel" tabindex="-1" role="dialog" aria-labelledby="filterModelLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body filterModel">
+                                                    <form id="filterbox">
+                                                        <div class="form-group">
+                                                            <label for="ddlGantry">Gantry</label>
+                                                            @Html.DropDownList("ddlGantry", (IEnumerable<SelectListItem>)ViewBag.Gantry, new { @class = "form-control" })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="StartDate">Date From</label>
+                                                            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control form_datetime", @readonly = true } })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="EndDate">Date To</label>
+                                                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control form_datetime", @readonly = true } })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="ResidentID">Resident ID</label>
+                                                            @Html.EditorFor(model => model.ResidentId, new { htmlAttributes = new { @class = "form-control" } })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="Name">Name</label>
+                                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="Email">Email</label>
+                                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="PlateNumber">VRN</label>
+                                                            @Html.EditorFor(model => model.PlateNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="VehicleClassId">Class</label>
+                                                            @Html.DropDownList("VehicleClassId", (IEnumerable<SelectListItem>)ViewBag.VehicleClass, new { @class = "form-control" })
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="ResetChargedFilter();" id="btnFilterCancel">Clear</button>
+                                                    <button type="button" class="btn btn-outline-primary" onclick="FilterChargedData()" id="btnFilterSearch">Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -37,7 +84,7 @@
                 <table id="tblChargedData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" id="tblChargedDataTR">
                                 No
                             </th>
                             <th style="text-align: center; vertical-align: middle; " rowspan="2">
@@ -106,10 +153,23 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
+        $(".form_datetime").datetimepicker({
+            format: "mm/dd/yyyy  hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            //startDate: "2018-12-06 10:00",
+            minuteStep: 15,
+
+        })
+        BindDateTime();
         BindChargedFirstLoad();
+        bindSecond();
     });
 </script>
 <script src="~/js/CustomerTranscation.js"></script>
+<link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
 

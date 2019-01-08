@@ -4,27 +4,54 @@ var pageload = 1;
 var pagesize = 10;
 var NoMoredata = false;
 var inProgress = false;
-function BindDateTime() {
-    var cdt = new Date();
-    var d = new Date(cdt.setMinutes(cdt.getMinutes() - 30));
-    dd = d.getDate();
-    dd = dd > 9 ? dd : '0' + dd;
-    mm = (d.getMonth() + 1);
-    mm = mm > 9 ? mm : '0' + mm;
-    yy = d.getFullYear();
-    hh = d.getHours();
-    hh = hh > 9 ? hh : '0' + hh;
-    mints = d.getMinutes();
-    mints = mints > 9 ? mints : '0' + mints;
-    var time1 = hh + ":" + mints;
-    var newd = new Date();
-    hh = newd.getHours();
-    hh = hh > 9 ? hh : '0' + hh;
-    mints = newd.getMinutes();
-    mints = mints > 9 ? mints : '0' + mints;
-    var time2 = hh + ":" + mints;
-    $("#StartDate").val(mm + '/' + dd + '/' + yy + " " + time1);
-    $("#EndDate").val(mm + '/' + dd + '/' + yy + " " + time2);
+var searchEnable = false;
+
+function ResetUnreviewedFilter() {
+    searchEnable = false;
+    $("#filterbox").find('input:text').val('');
+    $("#filterbox").find('select').val(0);
+    BindDateTime();
+    reloadUnreviewedData();
+}
+
+function FilteUnreviewedData() {
+
+    var StartDate = $('#StartDate').val() || ''
+    if (StartDate != '') {
+        StartDate = DateFormatTime(StartDate);
+    }
+
+    var EndDate = $('#EndDate').val() || ''
+    if (EndDate != '') {
+        EndDate = DateFormatTime(EndDate);
+    }
+    var Inputdata = {
+        StartDate: StartDate,
+        EndDate: EndDate,
+        GantryId: $("#ddlGantry").val(),
+        TransactionCategoryId: $("#ddlTransactionCategory").val()
+    }
+
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "UnreviewedFilter",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            searchEnable = true;
+            inProgress = true;
+            $(".animationload").hide();
+            datatableVariable.clear().draw();
+            datatableVariable.rows.add(data);
+            datatableVariable.columns.adjust().draw();
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
 }
 
 function BindUnreviewedFirstLoad() {
@@ -40,22 +67,16 @@ function BindUnreviewedFirstLoad() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $("#tblUnreviewedData").removeClass('my-table-bordered').addClass('table-bordered');
-            $(".animationload").hide();
             NoMoredata = data.length < pagesize
             pageload++;
-
             datatableVariable = $('#tblUnreviewedData').DataTable({
                 data: data,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: "42vh",
-                scroller: {
-                    loadingIndicator: true
-                },
-                processing: true,
+                scrollY: "38.5vh",
+                scrollX: true,
                 scrollCollapse: true,
-                stateSave: true,
                 autoWidth: false,
                 paging: false,
                 info: false,
@@ -124,17 +145,34 @@ function BindUnreviewedFirstLoad() {
                         'data': 'VEHICLESPEED',
                     }
                 ],
+                'columnDefs': [
+                {
+                    "targets": 8,
+                    "className": "text-center",
+                },
+                 {
+                     "targets": 9,
+                     "className": "text-center",
+                 },
+                  {
+                      "targets": 12,
+                      "className": "text-center",
+                  },
+                {
+                    "targets": 13,
+                    "className": "text-center",
+                }],
                 width: "100%"
             });
-            $('.dataTable').css('width', '1200px !important');
-            inProgress = false;
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
-                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblUnreviewedData").height()) && !NoMoredata && !inProgress) {
+                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= ($("#tblUnreviewedData").height())) && !NoMoredata && !inProgress) {
                     AppendUnreviewedData();
                 }
             });
-
+            thId = 'tblUnreviewedDataTR';
+            myVar = setInterval("myclick()", 500);
+            inProgress = false;
         },
         error: function (ex) {
             $(".animationload").hide();
@@ -142,30 +180,36 @@ function BindUnreviewedFirstLoad() {
     });
 }
 
-function reloadData() {
-    pageload = 1;
-    $(".animationload").show();
-    inProgress = true;
-    var Inputdata = { pageindex: pageload, pagesize: pagesize }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(Inputdata),
-        url: "UnreviewedListScroll",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $(".animationload").hide();
-            datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
-            pageload++;
-            NoMoredata = data.length < pagesize;
-            inProgress = false;
-        },
-        error: function (ex) {
-            $(".animationload").hide();
-        }
-    });
+function reloadUnreviewedData() {
+    if (searchEnable) {
+        FilteUnreviewedData();
+    }
+    else {
+        pageload = 1;
+        $(".animationload").show();
+        inProgress = true;
+        var Inputdata = { pageindex: pageload, pagesize: pagesize }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "UnreviewedListScroll",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".animationload").hide();
+                pageload++;
+                NoMoredata = data.length < pagesize;
+                inProgress = false;
+                datatableVariable.clear().draw();
+                datatableVariable.rows.add(data); // Add new data
+                datatableVariable.columns.adjust().draw();
+
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+        });
+    }
 
 }
 
@@ -181,11 +225,12 @@ function AppendUnreviewedData() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $(".animationload").hide();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
             pageload++;
             NoMoredata = data.length < pagesize;
+            datatableVariable.rows.add(data);
+            datatableVariable.columns.adjust().draw();
             inProgress = false;
+
         },
         error: function (ex) {
             $(".animationload").hide();
@@ -197,7 +242,6 @@ function AppendUnreviewedData() {
 function GetAssociatedTranscation(ctrl, Id) {
     Transactioncol = ctrl;
     TransactionId = Id;
-
     $(".animationload").show();
     $.ajax({
         type: "POST",
@@ -209,7 +253,7 @@ function GetAssociatedTranscation(ctrl, Id) {
             $(".animationload").hide();
             $('#partialassociated').html(result);
             openpopup();
-
+            $("#exampleModalLabel").text("Reviewing Transaction " + Id + "");
 
         },
         error: function (x, e) {
@@ -220,11 +264,11 @@ function GetAssociatedTranscation(ctrl, Id) {
     });
 }
 
-function BindAssociatedData() {
+function FilterAssociatedData() {
     $(".animationload").show();
     $.ajax({
-        type: "GET",
-        url: "GetAssociated",
+        type: "POST",
+        url: "GetAssociated?Seconds=" + $("#filterSec").val(),
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -232,7 +276,32 @@ function BindAssociatedData() {
             $(".animationload").hide();
             if (data != "No Record Found") {
                 $("#tblAssociatedData").removeClass('my-table-bordered').addClass('table-bordered');
-                datatableVariable = $('#tblAssociatedData').DataTable({
+                AssociateddatatableVariable.clear().draw();
+                AssociateddatatableVariable.rows.add(data); // Add new data
+                AssociateddatatableVariable.columns.adjust().draw();
+            }
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+
+    });
+}
+
+function BindAssociatedData(Seconds) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "GetAssociated?Seconds=" + Seconds,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $(".animationload").hide();
+            $("#filterSec").val(30);
+            if (data != "No Record Found") {
+                $("#tblAssociatedData").removeClass('my-table-bordered').addClass('table-bordered');
+                AssociateddatatableVariable = $('#tblAssociatedData').DataTable({
                     data: data,
                     "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                     "bScrollInfinite": true,
@@ -283,7 +352,6 @@ function BindAssociatedData() {
                             'data': 'FRONT_VIDEO_URL',
                             fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                 if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
-
                                     $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                                 }
                             }
@@ -303,7 +371,6 @@ function BindAssociatedData() {
                             'data': 'REAR_VIDEO_URL',
                             fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                 if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
-
                                     $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                                 }
                             }
@@ -312,9 +379,29 @@ function BindAssociatedData() {
                             'data': 'VEHICLESPEED',
                         }
                     ],
+                    'columnDefs': [
+                                    {
+                                        "targets": 8,
+                                        "className": "text-center",
+                                    },
+                                     {
+                                         "targets": 9,
+                                         "className": "text-center",
+                                     },
+                                      {
+                                          "targets": 12,
+                                          "className": "text-center",
+                                      },
+                                    {
+                                        "targets": 13,
+                                        "className": "text-center",
+                                    }],
                     width: "100%"
                 });
                 $('.dataTables_filter input').attr("placeholder", "Search this list…");
+                thId = 'tblAssociatedDataTR';
+                myVar = setInterval("myclick()", 500);
+                inProgress = false;
             }
         },
         error: function (x, e) {
@@ -326,31 +413,10 @@ function BindAssociatedData() {
 
 function openpopup() {
     $("#warning").hide();
-    //$("#btnAssociatedModalOpen").trigger('click');
+    $('#AssociatedModal').modal({ backdrop: 'static', keyboard: false })
     $('#AssociatedModal').modal('show');
     $("#txtVRN").val('');
     $("#ddlAuditedVehicleClass").val(0)
-}
-
-function closePopup() {
-    $("#btnpopupClose").trigger('click');
-    //$(".modal-backdrop").hide()
-    $('#AssociatedModal').modal('hide');
-}
-
-function openImagePreview(ctrl) {
-    var modalImg = document.getElementById("img01");
-    modalImg.src = $(ctrl).attr('src');
-    $("#btnImageModalOpen").trigger('click');
-}
-
-function openVideo(ctrl) {
-    var VideoPath = $(ctrl).attr('path');
-    var $video = $('#video video'),
-        videoSrc = $('source', $video).attr('src', VideoPath);
-    $video[0].load();
-    $("#video").show();
-    $("#btnVideoModalOpen").trigger('click');
 }
 
 function SaveUnidentified() {
@@ -415,7 +481,8 @@ function Complete() {
             AssociatedTransactionIds: selectedIDs,
             TransactionId: TransactionId,
             VehRegNo: $('#txtVRN').val(),
-            vehicleClassID: $('#ddlAuditedVehicleClass').val()
+            vehicleClassID: $('#ddlAuditedVehicleClass').val(),
+            Seconds: $("#filterSec").val(),
         }
         $('#loader').show('fadeOut');
         $.ajax({
@@ -475,20 +542,15 @@ function BindReviewedFirstLoad() {
             $(".animationload").hide();
             NoMoredata = data.length < pagesize
             pageload++;
-            datatableVariable = $('#tblReviewedData').DataTable({
+            RevieweddatatableVariable = $('#tblReviewedData').DataTable({
                 data: data,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: "40vh",
-                scroller: {
-                    loadingIndicator: true
-                },
+                scrollY: "38.5vh",
                 scrollX: true,
-                processing: true,
                 scrollCollapse: true,
-                stateSave: true,
-                autoWidth: true,
+                autoWidth: false,
                 paging: false,
                 info: false,
                 columns: [
@@ -554,16 +616,34 @@ function BindReviewedFirstLoad() {
                     { 'data': 'AUDITOR_NAME' },
                     { 'data': 'TRANS_STATUS_NAME' },
                 ],
+                'columnDefs': [
+               {
+                   "targets": 8,
+                   "className": "text-center",
+               },
+                {
+                    "targets": 9,
+                    "className": "text-center",
+                },
+                 {
+                     "targets": 12,
+                     "className": "text-center",
+                 },
+               {
+                   "targets": 13,
+                   "className": "text-center",
+               }],
                 width: "100%"
             });
-            $('.dataTable').css('width', '1200px !important');
-            inProgress = false;
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
-                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblReviewedData").height()) && !NoMoredata && !inProgress) {
+                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= ($("#tblUnreviewedData").height())) && !NoMoredata && !inProgress) {
                     AppendReviewedData();
                 }
             });
+            thId = 'tblReviewedDataTR';
+            myVar = setInterval("myclick()", 500);
+            inProgress = false;
 
         },
         error: function (ex) {
@@ -573,30 +653,35 @@ function BindReviewedFirstLoad() {
 }
 
 function reloadReviewedData() {
-    pageload = 1;
-    $(".animationload").show();
-    inProgress = true;
-    var Inputdata = { pageindex: pageload, pagesize: pagesize }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(Inputdata),
-        url: "ReviewedListScroll",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $(".animationload").hide();
-            datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
-            pageload++;
-            NoMoredata = data.length < pagesize;
-            inProgress = false;
-        },
-        error: function (ex) {
-            $(".animationload").hide();
-        }
-    });
+    if (searchEnable) {
+        FilteReviewedData();
+    }
+    else {
+        pageload = 1;
+        $(".animationload").show();
+        inProgress = true;
+        var Inputdata = { pageindex: pageload, pagesize: pagesize }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "ReviewedListScroll",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".animationload").hide();
+                pageload++;
+                NoMoredata = data.length < pagesize;
+                RevieweddatatableVariable.clear().draw();
+                RevieweddatatableVariable.rows.add(data); // Add new data
+                RevieweddatatableVariable.columns.adjust().draw();
 
+                inProgress = false;
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+        });
+    }
 }
 
 function AppendReviewedData() {
@@ -611,10 +696,11 @@ function AppendReviewedData() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $(".animationload").hide();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
             pageload++;
             NoMoredata = data.length < pagesize;
+            RevieweddatatableVariable.rows.add(data); // Add new data
+            RevieweddatatableVariable.columns.adjust().draw();
+
             inProgress = false;
         },
         error: function (ex) {
@@ -622,6 +708,57 @@ function AppendReviewedData() {
         }
     });
 
+}
+
+function ResetReviewedFilter() {
+    searchEnable = false;
+    $("#filterbox").find('input:text').val('');
+    $("#filterbox").find('select').val(0);
+    BindDateTime();
+    reloadReviewedData();
+}
+
+function FilteReviewedData() {
+    var StartDate = $('#StartDate').val() || ''
+    if (StartDate != '') {
+        StartDate = DateFormatTime(StartDate);
+    }
+
+    var EndDate = $('#EndDate').val() || ''
+    if (EndDate != '') {
+        EndDate = DateFormatTime(EndDate);
+    }
+    var Inputdata = {
+        GantryId: $("#ddlGantry").val(),
+        StartDate: StartDate,
+        EndDate: EndDate,
+        PlateNumber: $("#PlateNumber").val(),
+        VehicleClassId: $("#VehicleClassId").val(),
+        ParentTranscationId: $("#ParentTranscationId").val(),
+        ReviewerId: $("#ReviewerId").val(),
+        ReviewerStatus: $("#ReviewerStatus").val()
+
+    }
+    inProgress = true;
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ReviewedFilter",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            searchEnable = true;
+            $(".animationload").hide();
+            RevieweddatatableVariable.clear().draw();
+            RevieweddatatableVariable.rows.add(data);
+            RevieweddatatableVariable.columns.adjust().draw();
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
 }
 
 
@@ -641,33 +778,14 @@ function BindChargedFirstLoad() {
             $(".animationload").hide();
             NoMoredata = data.length < pagesize
             pageload++;
-
-            datatableVariable = $('#tblChargedData').DataTable({
-                //"oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
-                //"bScrollInfinite": true,
-                //"bScrollCollapse": true,
-                //scrollY: '48vh',
-                //scroller: {
-                //    loadingIndicator: true
-                //},
-                //scrollX: true,
-                //processing: true,
-                //scrollCollapse: true,
-                //stateSave: true,
-                //autoWidth: true,
-                //paging: false,
-                //info: false,
+            ChargeddatatableVariable = $('#tblChargedData').DataTable({
                 data: data,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: "42vh",
-                scroller: {
-                    loadingIndicator: true
-                },
-                processing: true,
+                scrollY: "38.5vh",
+                scrollX: true,
                 scrollCollapse: true,
-                stateSave: true,
                 autoWidth: false,
                 paging: false,
                 info: false,
@@ -733,17 +851,35 @@ function BindChargedFirstLoad() {
                     },
                     { 'data': 'AMOUNT' },
                 ],
+                'columnDefs': [
+               {
+                   "targets": 8,
+                   "className": "text-center",
+               },
+                {
+                    "targets": 9,
+                    "className": "text-center",
+                },
+                 {
+                     "targets": 12,
+                     "className": "text-center",
+                 },
+               {
+                   "targets": 13,
+                   "className": "text-center",
+               }],
                 width: "100%"
             });
             $('.dataTable').css('width', '1200px !important');
-            inProgress = false;
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
                 if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblChargedData").height()) && !NoMoredata && !inProgress) {
                     AppendChargedData();
                 }
             });
-
+            thId = 'tblChargedDataTR';
+            myVar = setInterval("myclick()", 500);
+            inProgress = false;
         },
         error: function (ex) {
             $(".animationload").hide();
@@ -752,29 +888,34 @@ function BindChargedFirstLoad() {
 }
 
 function reloadChargedData() {
-    pageload = 1;
-    $(".animationload").show();
-    inProgress = true;
-    var Inputdata = { pageindex: pageload, pagesize: pagesize }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(Inputdata),
-        url: "ChargedListScroll",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $(".animationload").hide();
-            datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
-            pageload++;
-            NoMoredata = data.length < pagesize;
-            inProgress = false;
-        },
-        error: function (ex) {
-            $(".animationload").hide();
-        }
-    });
+    if (searchEnable) {
+        FilterChargedData();
+    }
+    else {
+        pageload = 1;
+        $(".animationload").show();
+        inProgress = true;
+        var Inputdata = { pageindex: pageload, pagesize: pagesize }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "ChargedListScroll",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".animationload").hide();
+                pageload++;
+                NoMoredata = data.length < pagesize;
+                ChargeddatatableVariable.clear().draw();
+                ChargeddatatableVariable.rows.add(data); // Add new data
+                ChargeddatatableVariable.columns.adjust().draw();
+                inProgress = false;
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+        });
+    }
 
 }
 
@@ -790,10 +931,10 @@ function AppendChargedData() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $(".animationload").hide();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
             pageload++;
             NoMoredata = data.length < pagesize;
+            ChargeddatatableVariable.rows.add(data); // Add new data
+            ChargeddatatableVariable.columns.adjust().draw();
             inProgress = false;
         },
         error: function (ex) {
@@ -803,6 +944,55 @@ function AppendChargedData() {
 
 }
 
+function ResetChargedFilter() {
+    searchEnable = false;
+    $("#filterbox").find('input:text').val('');
+    $("#filterbox").find('select').val(0);
+    BindDateTime();
+    reloadChargedData();
+}
+
+function FilterChargedData() {
+    var StartDate = $('#StartDate').val() || ''
+    if (StartDate != '') {
+        StartDate = DateFormatTime(StartDate);
+    }
+
+    var EndDate = $('#EndDate').val() || ''
+    if (EndDate != '') {
+        EndDate = DateFormatTime(EndDate);
+    }
+    var Inputdata = {
+        GantryId: $("#ddlGantry").val(),
+        StartDate: StartDate,
+        EndDate: EndDate,
+        ResidentId: $("#ResidentId").val(),
+        Name: $("#Name").val(),
+        Email: $("#Email").val(),
+        PlateNumber: $("#PlateNumber").val(),
+        VehicleClassId: $("#VehicleClassId").val()
+    }
+    inProgress = true;
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ChargedFilter",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            searchEnable = true;
+            $(".animationload").hide();
+            ChargeddatatableVariable.clear().draw();
+            ChargeddatatableVariable.rows.add(data);
+            ChargeddatatableVariable.columns.adjust().draw();
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+}
 
 function BindUnIdentifiedFirstLoad() {
     pageload = 1;
@@ -1149,21 +1339,16 @@ function BindTopUpFirstLoad() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $("#tblTopUpData").removeClass('my-table-bordered').addClass('table-bordered');
-            $(".animationload").hide();
             NoMoredata = data.length < pagesize
             pageload++;
-            datatableVariable = $('#tblTopUpData').DataTable({
+            TopUpdatatableVariable = $('#tblTopUpData').DataTable({
                 data: data,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: "42vh",
-                scroller: {
-                    loadingIndicator: true
-                },
-                processing: true,
+                scrollY: "38.5vh",
+                scrollX: true,
                 scrollCollapse: true,
-                stateSave: true,
                 autoWidth: false,
                 paging: false,
                 info: false,
@@ -1189,13 +1374,14 @@ function BindTopUpFirstLoad() {
             });
             $('.dataTable').css('width', '1200px !important');
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
-            inProgress = false;
             $('.dataTables_scrollBody').on('scroll', function () {
                 if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblTopUpData").height()) && !NoMoredata && !inProgress) {
                     AppendTopUpData();
                 }
             });
-
+            thId = 'tblTopUpDataTR';
+            myVar = setInterval("myclick()", 500);
+            inProgress = false;
         },
         error: function (ex) {
             $(".animationload").hide();
@@ -1204,29 +1390,35 @@ function BindTopUpFirstLoad() {
 }
 
 function reloadTopUpData() {
-    pageload = 1;
-    $(".animationload").show();
-    inProgress = true;
-    var Inputdata = { pageindex: pageload, pagesize: pagesize }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(Inputdata),
-        url: "TopUpListScroll",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $(".animationload").hide();
-            datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
-            pageload++;
-            NoMoredata = data.length < pagesize;
-            inProgress = false;
-        },
-        error: function (ex) {
-            $(".animationload").hide();
-        }
-    });
+    if (searchEnable) {
+        FilterTopUpData();
+    }
+    else {
+        pageload = 1;
+        $(".animationload").show();
+        inProgress = true;
+        var Inputdata = { pageindex: pageload, pagesize: pagesize }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "TopUpListScroll",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".animationload").hide();
+                pageload++;
+                NoMoredata = data.length < pagesize;
+                TopUpdatatableVariable.clear().draw();
+                TopUpdatatableVariable.rows.add(data); // Add new data
+                TopUpdatatableVariable.columns.adjust().draw();
+
+                inProgress = false;
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+        });
+    }
 
 }
 
@@ -1242,10 +1434,10 @@ function AppendTopUpData() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $(".animationload").hide();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
             pageload++;
             NoMoredata = data.length < pagesize;
+            TopUpdatatableVariable.rows.add(data); // Add new data
+            TopUpdatatableVariable.columns.adjust().draw();
             inProgress = false;
         },
         error: function (ex) {
@@ -1253,4 +1445,171 @@ function AppendTopUpData() {
         }
     });
 
+}
+
+function ResetTopUpFilter() {
+    searchEnable = false;
+    $("#filterbox").find('input:text').val('');
+    $("#filterbox").find('select').val(0);
+    BindDateTime();
+    reloadTopUpData();
+}
+
+function FilterTopUpData() {
+    var StartDate = $('#StartDate').val() || ''
+    if (StartDate != '') {
+        StartDate = DateFormatTime(StartDate);
+    }
+
+    var EndDate = $('#EndDate').val() || ''
+    if (EndDate != '') {
+        EndDate = DateFormatTime(EndDate);
+    }
+    var Inputdata = {
+        StartDate: StartDate,
+        EndDate: EndDate,
+        ResidentId: $("#ResidentId").val(),
+        Name: $("#Name").val(),
+        Email: $("#Email").val(),
+        PlateNumber: $("#PlateNumber").val(),
+        VehicleClassId: $("#VehicleClassId").val()
+    }
+    inProgress = true;
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "TopUpFilter",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            searchEnable = true;
+            $(".animationload").hide();
+            TopUpdatatableVariable.clear().draw();
+            TopUpdatatableVariable.rows.add(data);
+            TopUpdatatableVariable.columns.adjust().draw();
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+
+function myclick() {
+    document.getElementById(thId).click();
+    document.getElementById(thId).click();
+    clearTimeout(myVar);
+    $(".animationload").hide();
+}
+
+function DateChnaged(ctrl, src) {
+    var cdt = new Date($(ctrl).val());
+    if (src == 1) {
+        var d = new Date(cdt.setMinutes(cdt.getMinutes() + 15));
+        dd = d.getDate();
+        dd = dd > 9 ? dd : '0' + dd;
+        mm = (d.getMonth() + 1);
+        mm = mm > 9 ? mm : '0' + mm;
+        yy = d.getFullYear();
+        hh = d.getHours();
+        hh = hh > 9 ? hh : '0' + hh;
+        mints = d.getMinutes();
+        mints = mints > 9 ? mints : '0' + mints;
+        var time1 = hh + ":" + mints;
+        $("#EndDate").val(mm + '/' + dd + '/' + yy + " " + time1);
+    }
+    else {
+        var d = new Date(cdt.setMinutes(cdt.getMinutes() - 15));
+        dd = d.getDate();
+        dd = dd > 9 ? dd : '0' + dd;
+        mm = (d.getMonth() + 1);
+        mm = mm > 9 ? mm : '0' + mm;
+        yy = d.getFullYear();
+        hh = d.getHours();
+        hh = hh > 9 ? hh : '0' + hh;
+        mints = d.getMinutes();
+        mints = mints > 9 ? mints : '0' + mints;
+        var time1 = hh + ":" + mints;
+        $("#StartDate").val(mm + '/' + dd + '/' + yy + " " + time1);
+    }
+}
+
+function DateFormatTime(newDate) {
+    var d = new Date(newDate);
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = (d.getMonth() + 1);
+    mm = mm > 9 ? mm : '0' + mm;
+    yy = d.getFullYear();
+    hh = d.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = d.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time1 = hh + ":" + mints;
+    return dd + '-' + mm + '-' + +yy + ' ' + time1
+}
+
+function bindSecond() {
+    for (var i = 1; i < 13; i++) {
+        $("#filterSec").append
+              ($('<option></option>').val(i * 5).html(i * 5))
+    }
+}
+
+function BindDateTime() {
+    var cdt = new Date();
+    var d = new Date(cdt.setMinutes(cdt.getMinutes() - 30));
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = (d.getMonth() + 1);
+    mm = mm > 9 ? mm : '0' + mm;
+    yy = d.getFullYear();
+    hh = d.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = d.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time1 = hh + ":" + mints;
+    var newd = new Date();
+    hh = newd.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = newd.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time2 = hh + ":" + mints;
+    $("#StartDate").val(mm + '/' + dd + '/' + yy + " " + time1);
+    $("#EndDate").val(mm + '/' + dd + '/' + yy + " " + time2);
+}
+
+function closePopup() {
+    $('#AssociatedModal').modal('hide');
+}
+
+function openImagePreview(ctrl) {
+    $('#ImageModal').modal({ backdrop: 'static', keyboard: false })
+    $("#ImageModal").modal('show');
+    var modalImg = document.getElementById("img01");
+    modalImg.src = $(ctrl).attr('src');
+
+}
+
+function openVideo(ctrl) {
+    var VideoPath = $(ctrl).attr('path');
+    var $video = $('#video video'),
+        videoSrc = $('source', $video).attr('src', VideoPath);
+    $video[0].load();
+    $("#video").show();
+    var modal = $("#VideoModal");
+    var body = $(window);
+    var w = modal.width();
+    var h = modal.height();
+    var bw = body.width();
+    var bh = body.height();
+    modal.css({
+        "position": "absolute",
+        "top": ((bh - h) / 2) + "px",
+        "left": ((bw - w) / 2) + "px"
+    })
+    $('#VideoModal').modal({ backdrop: 'static', keyboard: false })
+    $('#VideoModal').modal('show');
 }

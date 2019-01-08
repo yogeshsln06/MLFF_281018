@@ -123,22 +123,25 @@
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-row">
-                    <div class="form-group required col-md-3">
+                    <div class="form-group required col-md-2">
                         @Html.LabelFor(model => model.ResidentidImage, htmlAttributes: new { @class = "control-label required" })
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label id="lblResidentidImagePath" class="control-label btn-link" onclick="openImg(this);">Click to View Image</label>
-                        <input name="ResidentidImage" id="ResidentidImage" type="file" onchange="encodeImagetoBase64(this)" accept="image/x-png,image/gif,image/jpeg" />
+                        <input name="ResidentidImage" id="ResidentidImage" type="file" onchange="encodeImagetoBase64(this)" accept="image/x-png,image/gif,image/jpeg" class="inputfile" />
+                        <label for="ResidentidImage" class="control-label btn-link" id="labelImage"><span>Attach File</span></label>
                         @Html.ValidationMessageFor(model => model.ResidentidImage, "", new { @class = "text-danger" })
                         <a href="" style="display:none" id="ResidentidImagePath"></a>
                         <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
                              data-high-res-src="" alt="" class="gallery-items" id="imgResidentidImagePath">
                     </div>
+
                     <div class="form-group col-md-4">
                         <label class=""></label>
                         <img onclick="zoomImage(this);" style="height: 65px; width:130px" src=""
                              data-high-res-src="" alt="" class="gallery-items" id="imgPreview">
                     </div>
+
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -216,12 +219,12 @@
     </fieldset>
 }
 <div class="modal-footer">
-    <div class="alert alert-warning" role="alert" id="warning">
+    <div class="alert-warning" role="alert" id="warning">
     </div>
     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
-    <button type="button" class="btn btn-outline-danger" id="btnpopupCancel" onclick="ResetFildes();">Cancel</button>
+    <button type="button" class="btn btn-outline-danger" id="btnpopupCancel" onclick="ResetCustomerFildes();">Cancel</button>
     <button type="button" class="btn btn-outline-secondary" id="btnpopupUpdate" onclick="OpenUpdatepopUp();" style="display:none;">Update</button>
-    <button type="button" class="btn btn-outline-danger" id="btnpopupUpdateCancel" onclick="OpenUpdatepopUp();"  style="display:none;">Cancel</button>
+    <button type="button" class="btn btn-outline-danger" id="btnpopupUpdateCancel" onclick="OpenUpdatepopUp();" style="display:none;">Cancel</button>
     <button type="button" class="btn btn-outline-secondary" onclick="SaveData('new')" id="btnSaveNew">Save & New</button>
     <button type="button" class="btn btn-outline-primary" onclick="SaveData('close')" id="btnSave">Save</button>
 </div>

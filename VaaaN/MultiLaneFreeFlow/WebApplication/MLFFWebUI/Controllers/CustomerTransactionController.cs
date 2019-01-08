@@ -19,6 +19,7 @@ namespace MLFFWebUI.Controllers
 
     public class CustomerTransactionController : Controller
     {
+        #region Globle Valarible 
         LaneCollection lanes;
         TollRateCollection tollRates;
         PlazaCollection plazas;
@@ -26,6 +27,7 @@ namespace MLFFWebUI.Controllers
         List<ModelStateList> objResponseMessage = new List<ModelStateList>();
         VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration smsFileConfig;
         private MessageQueue smsMessageQueue;
+        #endregion
 
         // GET: CustomerTransaction
         public ActionResult Index()
@@ -33,6 +35,7 @@ namespace MLFFWebUI.Controllers
             return View();
         }
 
+        #region Unreviewed
         public ActionResult Unreviewed()
         {
             if (Session["LoggedUserId"] == null)
@@ -44,7 +47,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> gantryList = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
 
-            gantryList.Add(new SelectListItem() { Text = "--Sel Gantry--", Value = "0" });
+            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
             {
                 gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
@@ -56,7 +59,7 @@ namespace MLFFWebUI.Controllers
 
             #region Vehicle Class Dropdown
             List<SelectListItem> vehicleClass = new List<SelectListItem>();
-            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE> vehicle = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
+            List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
 
             vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
@@ -84,6 +87,55 @@ namespace MLFFWebUI.Controllers
             return Det.Replace("\r", "").Replace("\n", "");
         }
 
+        [HttpPost]
+        public string UnreviewedFilter(ViewTransactionCBE transaction)
+        {
+            JsonResult result = new JsonResult();
+            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strQuery = " WHERE 1=1 ";
+            if (strstarttime != null && strendtime != null)
+            {
+                strQuery += " AND  TRANSACTION_DATETIME BETWEEN TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS') AND  TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            else if (strstarttime != null)
+            {
+                strQuery += " AND  TRANSACTION_DATETIME >= TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            else if (strendtime != null)
+            {
+                strQuery += " AND  TRANSACTION_DATETIME <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            if (transaction.GantryId > 0)
+            {
+                strQuery += " AND T.PLAZA_ID = " + transaction.GantryId;
+            }
+            if (transaction.TransactionCategoryId == 1)// IKE Only
+            {
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0  AND NVL(T.NF_ENTRY_ID_REAR,0) = 0";
+            }
+            else if (transaction.TransactionCategoryId == 2)//IKE + Front/Rear ANPR
+            {
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected')) ";
+            }
+            else if (transaction.TransactionCategoryId == 3)//Front/Rear ANPR Only
+            {
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected')) ";
+            }
+            else if (transaction.TransactionCategoryId == 4)//Unidentified Front/Rear ANPR
+            {
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)='not detected')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)='not detected')) ";
+            }
+            else if (transaction.TransactionCategoryId == 5)//Front & Rear ANPR Only
+            {
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected'  AND NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' ";
+            }
+            dt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strQuery);
+            string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+
+        #region Associated Transcation
         public ActionResult AssociatedTransaction(int TransactionId)
         {
             try
@@ -101,8 +153,8 @@ namespace MLFFWebUI.Controllers
             return PartialView("AssociatedTransaction", dt);
         }
 
-        [HttpGet]
-        public string GetAssociated()
+        [HttpPost]
+        public string GetAssociated(int Seconds)
         {
             string Det = "No Record Found";
             dt = (DataTable)Session["CurrentTransaction"];
@@ -135,7 +187,7 @@ namespace MLFFWebUI.Controllers
                 }
                 else
                 {
-                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TransactionDateTime.AddMinutes(-1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TransactionDateTime.AddMinutes(1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId;
+                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TransactionDateTime.AddSeconds(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId;
 
                     if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId == 0)
                     {
@@ -169,7 +221,9 @@ namespace MLFFWebUI.Controllers
             }
             return Det;
         }
+        #endregion
 
+        #region Unidentified
         [HttpPost]
         public JsonResult SaveUnidentified(int TransactionId)
         {
@@ -214,9 +268,11 @@ namespace MLFFWebUI.Controllers
 
             return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
+        #endregion
 
+        #region Audited
         [HttpPost]
-        public JsonResult CompleteReviewed(string[] AssociatedTransactionIds, int TransactionId, string VehRegNo, int vehicleClassID)
+        public JsonResult CompleteReviewed(string[] AssociatedTransactionIds, int TransactionId, string VehRegNo, int vehicleClassID, int Seconds)
         {
             JsonResult result = new JsonResult();
 
@@ -499,12 +555,12 @@ namespace MLFFWebUI.Controllers
                                     if (ParentBalanceAlreadyDeducated || FirstChildBalanceAlreadyDeducated || SecondChildBalanceAlreadyDeducated)
                                     {
                                         #region Balance Already Deducated Only Need mearge
-                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Merged);
                                         objtransaction.TransactionId = ParentTransactionId;
-                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
                                         ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "Reviewed Success! Balance already deducted, Transactions is mearged.";
+                                        objModelState.ErrorMessage = "Reviewed Success! Balance already deducted, Transactions is merged.";
                                         objResponseMessage.Add(objModelState);
                                         #endregion
                                     }
@@ -554,10 +610,10 @@ namespace MLFFWebUI.Controllers
                                                 objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
                                             }
 
-                                            
+
                                             FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
                                             TransactionBLL.MarkAsViolation(objtransaction);
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Merged);
                                             objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                             TransactionBLL.UpdateAuditSection(objtransaction);
                                             #endregion
@@ -599,13 +655,13 @@ namespace MLFFWebUI.Controllers
                                             }
 
                                             FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
-                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Merged);
                                             objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
                                             TransactionBLL.UpdateAuditSection(objtransaction);
                                             #endregion
 
                                             #region Status for Child Only
-                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                             objtransaction.TransactionId = FirstChildTranasactionId;
                                             TransactionBLL.MarkAsBalanceUpdated(objtransaction);
                                             //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
@@ -690,7 +746,7 @@ namespace MLFFWebUI.Controllers
                                 }
                                 else
                                 {
-                                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(-1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(1).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId + " AND ( T.AUDITED_VRN='" + AuditedVRN + "' OR CTP.PLATE_NUMBER='" + AuditedVRN + "')";
+                                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId + " AND ( T.AUDITED_VRN='" + AuditedVRN + "' OR CTP.PLATE_NUMBER='" + AuditedVRN + "')";
                                     DataTable Assodt = TransactionBLL.GetDataTableFilteredRecords(strfilter);
                                     if (Assodt.Rows.Count > 0)
                                     {
@@ -824,12 +880,12 @@ namespace MLFFWebUI.Controllers
                                                 if (ParentBalanceAlreadyDeducated || FirstChildBalanceAlreadyDeducated || SecondChildBalanceAlreadyDeducated)
                                                 {
                                                     #region Balance Already Deducated Only Need mearge
-                                                    TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                                    TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Merged);
                                                     objtransaction.TransactionId = ParentTransactionId;
-                                                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                                     TransactionBLL.UpdateAuditSection(objtransaction);
                                                     ModelStateList objModelState = new ModelStateList();
-                                                    objModelState.ErrorMessage = "Reviewed Success! Balance already deducted, Transactions is mearged.";
+                                                    objModelState.ErrorMessage = "Reviewed Success! Balance already deducted, Transactions is merged.";
                                                     objResponseMessage.Add(objModelState);
                                                     #endregion
                                                 }
@@ -879,10 +935,10 @@ namespace MLFFWebUI.Controllers
                                                             objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
                                                         }
 
-                                                       
+
                                                         FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
                                                         TransactionBLL.MarkAsViolation(objtransaction);
-                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Merged);
                                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                                         TransactionBLL.UpdateAuditSection(objtransaction);
                                                         #endregion
@@ -924,7 +980,7 @@ namespace MLFFWebUI.Controllers
                                                         }
 
                                                         FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, objtransaction.AuditedVehicleClassId, objtransaction, ParentTransactionId);
-                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Mearged);
+                                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildIKEEntryId, ChildAnprFrontEntryId, ChildAnprRearEntryId, VehRegNo, AuditedVehicleClassId, Convert.ToInt32(Session["LoggedUserId"].ToString()), (int)Constants.TranscationStatus.Merged);
                                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
                                                         TransactionBLL.UpdateAuditSection(objtransaction);
                                                         #endregion
@@ -932,12 +988,12 @@ namespace MLFFWebUI.Controllers
                                                         #region Status for Child Only
                                                         objtransaction.TransactionId = FirstChildTranasactionId;
                                                         TransactionBLL.MarkAsBalanceUpdated(objtransaction);
-                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                                         //TransactionBLL.UpdateAuditSection(objtransaction);
 
                                                         objtransaction.TransactionId = SecondChildTranasactionId;
                                                         TransactionBLL.MarkAsBalanceUpdated(objtransaction);
-                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Mearged;
+                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                                         //TransactionBLL.UpdateAuditSection(objtransaction);
                                                         #endregion
 
@@ -1061,7 +1117,10 @@ namespace MLFFWebUI.Controllers
             }
             return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
+        #endregion
+        #endregion
 
+        #region Reviewed
         public ActionResult Reviewed()
         {
             if (Session["LoggedUserId"] == null)
@@ -1069,6 +1128,51 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Reviewed");
+            #region Gantry Class Dropdown
+            List<SelectListItem> gantryList = new List<SelectListItem>();
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
+
+            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
+            {
+                gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
+            }
+
+            ViewBag.Gantry = gantryList;
+
+            #endregion
+
+            #region Vehicle Class Dropdown
+            List<SelectListItem> vehicleClass = new List<SelectListItem>();
+            List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
+
+            vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
+            {
+                vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
+            }
+
+            ViewBag.VehicleClass = vehicleClass;
+
+            #endregion
+
+            #region Reviewer Dropdown
+            List<SelectListItem> ReviewerList = new List<SelectListItem>();
+            List<UserCBE> users = UserBLL.GetUserAll().Cast<UserCBE>().ToList();
+            ReviewerList.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            foreach (UserCBE u in users)
+            {
+                ReviewerList.Add(new SelectListItem() { Text = u.FirstName, Value = System.Convert.ToString(u.UserId) });
+            }
+
+            ViewBag.ReviewerList = ReviewerList;
+
+            #endregion
+
+            #region Reviewer Status
+            ViewBag.ReviewerStatus = HelperClass.GetReviewerStatus();
+            #endregion
+
             return View();
         }
 
@@ -1091,6 +1195,57 @@ namespace MLFFWebUI.Controllers
             return Det;
         }
 
+        [HttpPost]
+        public string ReviewedFilter(ViewTransactionCBE transaction)
+        {
+            JsonResult result = new JsonResult();
+            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strQuery = " WHERE 1=1 ";
+            if (strstarttime != null && strendtime != null)
+            {
+                strQuery += " AND  T.TRANSACTION_DATETIME BETWEEN TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS') AND  TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            else if (strstarttime != null)
+            {
+                strQuery += " AND  T.TRANSACTION_DATETIME >= TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            else if (strendtime != null)
+            {
+                strQuery += " AND  T.TRANSACTION_DATETIME <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            if (!string.IsNullOrEmpty(transaction.ParentTranscationId))
+            {
+                strQuery += " AND (T.MEARGED_TRAN_ID LIKE '%" + transaction.ParentTranscationId + ")";
+            }
+
+            if (!string.IsNullOrEmpty(transaction.PlateNumber))
+            {
+                strQuery += " AND (LOWER(T.AUDITED_VRN) LIKE '%" + transaction.PlateNumber.ToLower() + "%' )";
+            }
+            if (transaction.VehicleClassId > 0)
+            {
+                strQuery += " AND (T.AUDITED_VEHICLE_CLASS_ID  = " + transaction.VehicleClassId + " )";
+            }
+            if (transaction.GantryId > 0)
+            {
+                strQuery += " AND (T.PLAZA_ID = " + transaction.GantryId + ")";
+            }
+            if (transaction.ReviewerId > 0)
+            {
+                strQuery += " AND (T.AUDITOR_ID = " + transaction.ReviewerId + ")";
+            }
+            if (transaction.ReviewerStatus > 0)
+            {
+                strQuery += " AND (T.TRANS_STATUS = " + transaction.ReviewerStatus + ")";
+            }
+            dt = TransactionBLL.GetReviewedDataTableFilteredRecords(strQuery);
+            string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+        #endregion
+
+        #region Charged
         public ActionResult Charged()
         {
             if (Session["LoggedUserId"] == null)
@@ -1098,6 +1253,34 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Charged");
+
+            #region Vehicle Class Dropdown
+            List<SelectListItem> vehicleClass = new List<SelectListItem>();
+            List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
+
+            vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
+            {
+                vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
+            }
+
+            ViewBag.VehicleClass = vehicleClass;
+
+            #endregion
+
+            #region Gantry Class Dropdown
+            List<SelectListItem> gantryList = new List<SelectListItem>();
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
+
+            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
+            {
+                gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
+            }
+
+            ViewBag.Gantry = gantryList;
+
+            #endregion
             return View();
         }
 
@@ -1120,66 +1303,56 @@ namespace MLFFWebUI.Controllers
             return Det;
         }
 
-
-
-        public ActionResult Violation()
-        {
-            if (Session["LoggedUserId"] == null)
-            {
-                return RedirectToAction("Logout", "Login");
-            }
-            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Violation");
-            return View();
-        }
-
         [HttpPost]
-        public string ViolationListScroll(int pageindex, int pagesize)
+        public string ChargedFilter(ViewTransactionCBE transaction)
         {
-            string Det = "";
-            try
+            JsonResult result = new JsonResult();
+            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strQuery = " WHERE 1=1 ";
+            if (strstarttime != null && strendtime != null)
             {
-                JsonResult result = new JsonResult();
-                dt = TransactionBLL.GetVIOLATIONDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
-                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
-                Det = Det.Replace("\r", "").Replace("\n", "");
+                strQuery += " AND  T.TRANSACTION_DATETIME BETWEEN TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS') AND  TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
             }
-            catch (Exception ex)
+            else if (strstarttime != null)
             {
-
-                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+                strQuery += " AND  T.TRANSACTION_DATETIME >= TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS')";
             }
-            return Det;
+            else if (strendtime != null)
+            {
+                strQuery += " AND  T.TRANSACTION_DATETIME <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            if (!string.IsNullOrEmpty(transaction.ResidentId))
+            {
+                strQuery += " AND (LOWER(CA_CT.RESIDENT_ID) LIKE '%" + transaction.ResidentId.ToLower() + "%'  OR LOWER(CA_NFPF.RESIDENT_ID) LIKE '%" + transaction.ResidentId.ToLower() + "%' OR LOWER(CA_NFPR.RESIDENT_ID) LIKE '%" + transaction.ResidentId.ToLower() + "%')";
+            }
+            if (!string.IsNullOrEmpty(transaction.Name))
+            {
+                strQuery += " AND (LOWER(CA_CT.FIRST_NAME) LIKE '%" + transaction.Name.ToLower() + "%' OR LOWER(CA_NFPF.FIRST_NAME) LIKE '%" + transaction.Name.ToLower() + "%' OR LOWER(CA_NFPR.FIRST_NAME) LIKE '%" + transaction.Name.ToLower() + "%')";
+            }
+            if (!string.IsNullOrEmpty(transaction.Email))
+            {
+                strQuery += " AND (LOWER(CA_CT.EMAIL_ID) LIKE '%" + transaction.Email.ToLower() + "%' OR LOWER(CA_NFPF.EMAIL_ID) LIKE '%" + transaction.Email.ToLower() + "%' OR LOWER(CA_NFPR.EMAIL_ID) LIKE '%" + transaction.Email.ToLower() + "%')";
+            }
+            if (!string.IsNullOrEmpty(transaction.PlateNumber))
+            {
+                strQuery += " AND (LOWER(CTP.PLATE_NUMBER) LIKE '%" + transaction.PlateNumber.ToLower() + "%' OR LOWER(NFPF.PLATE_NUMBER) LIKE '%" + transaction.PlateNumber.ToLower() + "%' OR LOWER(NFPR.PLATE_NUMBER) LIKE '%" + transaction.PlateNumber.ToLower() + "%')";
+            }
+            if (transaction.VehicleClassId > 0)
+            {
+                strQuery += " AND (CTP.VEHICLE_CLASS_ID  = " + transaction.VehicleClassId + " OR NFPF.VEHICLE_CLASS_ID  = " + transaction.VehicleClassId + " OR NFPR.VEHICLE_CLASS_ID  = " + transaction.VehicleClassId + ")";
+            }
+            if (transaction.GantryId > 0)
+            {
+                strQuery += " AND (T.PLAZA_ID = " + transaction.GantryId + ")";
+            }
+            dt = TransactionBLL.GetChargedDataTableFilteredRecords(strQuery);
+            string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
         }
+        #endregion
 
-        public ActionResult Unidentified()
-        {
-            if (Session["LoggedUserId"] == null)
-            {
-                return RedirectToAction("Logout", "Login");
-            }
-            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "Unidentified");
-            return View();
-        }
-
-        [HttpPost]
-        public string UnidentifiedListScroll(int pageindex, int pagesize)
-        {
-            string Det = "";
-            try
-            {
-                JsonResult result = new JsonResult();
-                dt = TransactionBLL.GetUnidentifiedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
-                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
-                Det = Det.Replace("\r", "").Replace("\n", "");
-            }
-            catch (Exception ex)
-            {
-
-                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
-            }
-            return Det;
-        }
-
+        #region Top Up
         public ActionResult TopUP()
         {
             if (Session["LoggedUserId"] == null)
@@ -1187,6 +1360,19 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "TopUP");
+            #region Vehicle Class Dropdown
+            List<SelectListItem> vehicleClass = new List<SelectListItem>();
+            List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
+
+            vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
+            {
+                vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
+            }
+
+            ViewBag.VehicleClass = vehicleClass;
+
+            #endregion
             return View();
         }
 
@@ -1209,6 +1395,50 @@ namespace MLFFWebUI.Controllers
             return Det;
         }
 
+        [HttpPost]
+        public string TopUpFilter(ViewTransactionCBE transaction)
+        {
+            JsonResult result = new JsonResult();
+            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strQuery = " WHERE 1=1 ";
+            if (strstarttime != null && strendtime != null)
+            {
+                strQuery += " AND  T.CREATION_DATE BETWEEN TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS') AND  TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            else if (strstarttime != null)
+            {
+                strQuery += " AND  T.CREATION_DATE >= TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            else if (strendtime != null)
+            {
+                strQuery += " AND  T.CREATION_DATE <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+            }
+            if (!string.IsNullOrEmpty(transaction.ResidentId))
+            {
+                strQuery += " AND (LOWER(CA.RESIDENT_ID) LIKE '%" + transaction.ResidentId.ToLower() + "%')";
+            }
+            if (!string.IsNullOrEmpty(transaction.Name))
+            {
+                strQuery += " AND (LOWER(CA.FIRST_NAME) LIKE '%" + transaction.Name.ToLower() + "%')";
+            }
+            if (!string.IsNullOrEmpty(transaction.Email))
+            {
+                strQuery += " AND (LOWER(CA.EMAIL_ID) LIKE '%" + transaction.Email.ToLower() + "%')";
+            }
+            if (!string.IsNullOrEmpty(transaction.PlateNumber))
+            {
+                strQuery += " AND (LOWER(CV.VEH_REG_NO) LIKE '%" + transaction.PlateNumber.ToLower() + "%')";
+            }
+            if (transaction.VehicleClassId > 0)
+            {
+                strQuery += " AND (CV.VEHICLE_CLASS_ID = " + transaction.VehicleClassId + ")";
+            }
+            dt = AccountHistoryBLL.GetTopUpDataTableFilteredRecords(strQuery);
+            string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+        #endregion
 
         #region Helper Methord
         private static void MarkAsViolation(Int32 TranscationId, TransactionCBE transaction)
@@ -1504,5 +1734,67 @@ namespace MLFFWebUI.Controllers
         }
 
         #endregion
+
+        #region OLD Display
+        public ActionResult Violation()
+        {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
+            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Transaction", "Violation");
+            return View();
+        }
+
+        [HttpPost]
+        public string ViolationListScroll(int pageindex, int pagesize)
+        {
+            string Det = "";
+            try
+            {
+                JsonResult result = new JsonResult();
+                dt = TransactionBLL.GetVIOLATIONDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+            }
+            return Det;
+        }
+
+        public ActionResult Unidentified()
+        {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
+            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Transaction", "Unidentified");
+            return View();
+        }
+
+        [HttpPost]
+        public string UnidentifiedListScroll(int pageindex, int pagesize)
+        {
+            string Det = "";
+            try
+            {
+                JsonResult result = new JsonResult();
+                dt = TransactionBLL.GetUnidentifiedDataTableFilteredRecordsLazyLoad(pageindex, pagesize);
+                Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+            }
+            catch (Exception ex)
+            {
+
+                HelperClass.LogMessage("Failed To Load Customer in Registration Controller" + ex);
+            }
+            return Det;
+        }
+
+        #endregion
+
     }
 }

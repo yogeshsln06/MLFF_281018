@@ -8,40 +8,52 @@ var CustomerAccountId = 0;
 var CustomerRegistrationNumber = '';
 var CustomerAccountJson = [];
 var VehicleId = 0;
-$(document).ready(function () {
+var searchEnable = false;
 
+$(document).ready(function () {
+    $("#sidebar-toggle").bind("click", function () {
+        $(".animationload").show();
+        thId = 'tblCustomerDataTR';
+        myVar = setInterval("myclick()", 500);
+    });
     BindCustmerVehicleAccount();
 });
 
 function refreshData() {
-    pageload = 1;
-    $(".animationload").show();
-    inProgress = true;
-    var Inputdata = { pageindex: pageload, pagesize: pagesize }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(Inputdata),
-        url: "CustomerVehicleListScroll",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $(".animationload").hide();
-            pageload++;
-            NoMoredata = data.length < pagesize;
-            inProgress = false;
-            datatableVariable.clear().draw();
-            datatableVariable.rows.add(data); // Add new data
-            datatableVariable.columns.adjust().draw();
+    if (searchEnable) {
+        FilteCustomerData();
+    }
+    else {
+        pageload = 1;
+        $(".animationload").show();
+        inProgress = true;
+        NoMoredata = false;
+        var Inputdata = { pageindex: pageload, pagesize: pagesize }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "CustomerVehicleListScroll",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".animationload").hide();
+                pageload++;
+                NoMoredata = data.length < pagesize;
+                inProgress = false;
+                datatableVariable.clear().draw();
+                datatableVariable.rows.add(data); // Add new data
+                datatableVariable.columns.adjust().draw();
 
 
-        },
-        error: function (ex) {
-            $(".animationload").hide();
+            },
+            error: function (ex) {
+                $(".animationload").hide();
 
 
-        }
+            }
 
-    });
+        });
+    }
 
 }
 
@@ -71,14 +83,9 @@ function BindCustmerVehicleAccount() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": true,
-                scrollY: "39.5vh",
-                pageResize: true,
-                scroller: {
-                    loadingIndicator: true
-                },
-                processing: true,
+                scrollY: "38.5vh",
+                scrollX: true,
                 scrollCollapse: true,
-                stateSave: true,
                 autoWidth: false,
                 paging: false,
                 info: false,
@@ -189,7 +196,8 @@ function AppendCustomerData() {
 
 function openpopup() {
     $("#warning").hide();
-    $('#customerModal').modal('show');
+    $('#VehicleModal').modal({ backdrop: 'static', keyboard: false })
+    $('#VehicleModal').modal('show');
     if (CustomerAccountJson.length == null) {
         alert("No Customer Account exists");
     }
@@ -459,8 +467,8 @@ function NewCustomerVehicle() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnpopupClose").hide();
-            $("#btnpopupCancel").show();
+            $("#btnpopupClose").text('Cancel').show();
+            $("#btnpopupCancel").removeClass('btn-outline-danger').addClass('btn-outline-secondary').hide();
             $("#btnSaveNew").show();
         },
         error: function (x, e) {
@@ -495,6 +503,13 @@ function DetailsOpen(ctrl, id) {
             $("#VehicleImageLeft").hide();
             $("#VehicleRCNumberImagePath").hide();
 
+
+            $("#labelImageFront").hide();
+            $("#labelImageRear").hide();
+            $("#labelImageRight").hide();
+            $("#labelImageLeft").hide();
+            $("#labelImageRC").hide();
+
             $("#lblVehicleImageFront").show();
             $("#lblVehicleImageRear").show();
             $("#lblVehicleImageRight").show();
@@ -510,7 +525,7 @@ function DetailsOpen(ctrl, id) {
             $("#btnSave").hide();
 
             $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
-            $("#btnpopupClose").show();
+            $("#btnpopupClose").hide();
             $("#btnpopupCancel").hide();
             $("#btnpopupUpdate").show();
             $("#btnSaveNew").hide();
@@ -549,6 +564,11 @@ function OpenUpdatepopUp(id) {
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#EntryIdId").attr("disabled", "disabled");
+            $("#FirstName").attr("disabled", "disabled");
+            $("#Address").attr("disabled", "disabled");
+            $("#MobileNo").attr("disabled", "disabled");
+            $("#EmailId").attr("disabled", "disabled");
+            $("#EntryId").attr("disabled", "disabled");
             $.grep(CustomerAccountJson, function (element, index) {
                 if (element.AccountId == $("#AccountId").val()) {
                     if (element.ResidentId == '')
@@ -560,17 +580,73 @@ function OpenUpdatepopUp(id) {
             });
             $(".animationload").hide();
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
-            $("#VehicleImageFront").show();
-            $("#VehicleImageRear").show();
-            $("#VehicleImageRight").show();
-            $("#VehicleImageLeft").show();
-            $("#VehicleRCNumberImagePath").show();
 
-            $("#lblVehicleImageFront").hide();
-            $("#lblVehicleImageRear").hide();
-            $("#lblVehicleImageRight").hide();
-            $("#lblVehicleImageLeft").hide();
-            $("#lblVehicleRCNumberImagePath").hide();
+            $("#imgVehicleImageFront").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleImageFront").val());
+            $("#imgVehicleImageRear").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleImageRear").val());
+            $("#imgVehicleImageRight").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleImageRight").val());
+            $("#imgVehicleImageLeft").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleImageLeft").val());
+            $("#imgVehicleRCNumberImagePath").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleRCNumberImage").val());
+
+            if ($("#hfVehicleImageFront").val() == '') {
+                $("#VehicleImageFront").show();
+                $("#lblVehicleImageFront").hide();
+                $("#labelImageFront").show();
+
+            }
+            else {
+                $("#VehicleImageFront").hide();
+                $("#lblVehicleImageFront").show();
+                $("#labelImageFront").hide();
+
+            }
+
+            if ($("#hfVehicleImageRear").val() == '') {
+                $("#VehicleImageRear").show();
+                $("#lblVehicleImageRear").hide();
+                $("#labelImageRear").show();
+
+            }
+            else {
+                $("#VehicleImageRear").hide();
+                $("#lblVehicleImageRear").show();
+                $("#labelImageRear").hide()
+            }
+
+            if ($("#hfVehicleImageRight").val() == '') {
+                $("#VehicleImageRight").show();
+                $("#lblVehicleImageRight").hide();
+                $("#labelImageRight").show();
+
+            }
+            else {
+                $("#VehicleImageRight").hide();
+                $("#lblVehicleImageRight").show();
+                $("#labelImageRight").hide();
+
+            }
+            if ($("#hfVehicleImageLeft").val() == '') {
+                $("#VehicleImageLeft").show();
+                $("#lblVehicleImageLeft").hide();
+
+                $("#labelImageLeft").show();
+            }
+            else {
+                $("#VehicleImageLeft").hide();
+                $("#lblVehicleImageLeft").show();
+                $("#labelImageLeft").hide();
+
+            }
+            if ($("#hfVehicleRCNumberImage").val() == '') {
+                $("#VehicleRCNumberImagePath").show();
+                $("#lblVehicleRCNumberImagePath").hide();
+                $("#labelImageRC").show();
+
+            }
+            else {
+                $("#VehicleRCNumberImagePath").hide();
+                $("#lblVehicleRCNumberImagePath").show();
+                $("#labelImageRC").hide();
+            }
 
             $("#btnSave").show();
             //$("#btnSave").text("Update");
@@ -781,6 +857,7 @@ function BindHistoryRecords() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             CurrentData = data;
+            $('#customerHistoryModal').modal({ backdrop: 'static', keyboard: false })
             $('#customerHistoryModal').modal('show');
             $("#HistoryModalLabel").text('View ' + CustomerRegistrationNumber + ' Transaction')
             HNoMoredata = data.length < 10
@@ -887,7 +964,8 @@ function CustomerDetailsOpen(ctrl, AccountId) {
             $("#exampleModalLabel").text("View " + $("#FirstName").val() + "");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
-
+            $("#BirthDate").attr("readonly", false);
+            $("#ValidUntil").attr("readonly", false);
             $("#fildset").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
@@ -901,7 +979,8 @@ function CustomerDetailsOpen(ctrl, AccountId) {
                 });
                 //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
             }
-
+            $('#VehicleModal').find("#btnpopupClose").hide();
+            $("#ResidentidImage").hide();
             $("#btnSave").hide();
             $("#btnpopupCancel").hide();
             $("#btnSaveNew").hide();
@@ -935,18 +1014,35 @@ function FilteCustomerData() {
     var ExceptionFlag = 0;
     var boolfliter = false;
     if ($("#txtCustomerID").val() != '') {
+        var numbers = /^[0-9]+$/;
+        if (!$("#txtCustomerID").val().match(numbers)) {
+            alert('Customer Id should be numeric');
+            $("#txtCustomerID").focus();
+            return false;
+        }
         boolfliter = true;
         CutomerId = $("#txtCustomerID").val();
     }
     if ($("#txtResidentID").val() != '') {
+        if (!$("#txtResidentID").val().match(numbers)) {
+            alert('Resident Id should be numeric');
+            $("#txtResidentID").focus();
+            return false;
+        }
         boolfliter = true;
         ResidentID = $("#txtResidentID").val();
     }
     if ($("#txtName").val() != '') {
+
         boolfliter = true;
         Name = $("#txtName").val();
     }
     if ($("#txtMobile").val() != '') {
+        if (!$("#txtMobile").val().match(numbers)) {
+            alert('Mobile Phone should be numeric');
+            $("#txtMobile").focus();
+            return false;
+        }
         boolfliter = true;
         Mobile = $("#txtMobile").val();
     }
@@ -975,6 +1071,7 @@ function FilteCustomerData() {
         ExceptionFlag = $("#ddlExceptionFlag").val();
     }
     if (boolfliter) {
+        NoMoredata = true;
         var Inputdata = {
             ResidentId: ResidentID,
             MobileNo: Mobile,
@@ -1008,7 +1105,8 @@ function FilteCustomerData() {
                     datatableVariable.clear().draw();
                     datatableVariable.rows.add(data); // Add new data
                     datatableVariable.columns.adjust().draw();
-                    NoMoredata = false;
+
+                    searchEnable = true;
                 }
             },
             error: function (ex) {
@@ -1049,10 +1147,11 @@ function MakeCSV() {
 
 
 function ResetFilter() {
+    searchEnable = false;
     $("#filterbox").find('input:text').val('');
     $("#filterbox").find('input:file').val('');
     $("#filterbox").find('select').val(0);
-    reloadData();
+    refreshData();
 }
 
 function GetCustomerDetails(ctrl) {
