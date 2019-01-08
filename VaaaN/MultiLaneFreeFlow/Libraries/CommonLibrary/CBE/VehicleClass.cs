@@ -18,7 +18,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         DateTime modificationDate;
         Int32 transferStatus;
 
-        
         public VehicleClassCBE()
         {
             this.tmsId = 0;
@@ -41,6 +40,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.tmsId = value;
             }
         }
+
+        [Display(Name = "Classification Id")]
         public Int32 Id
         {
             get
@@ -52,7 +53,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.id = value;
             }
         }
-        [Display(Name = "Name", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+
+        [Display(Name = "Classification Name")]
+        [Required]
         public String Name
         {
             get
@@ -113,10 +116,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.transferStatus = value;
             }
         }
-
-        
-
-      
 
         public override string ToString()
         {

@@ -94,33 +94,23 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
         public enum ManualReviewTransactionCategory
         {
-            [Display(Name = "--Must Review--")]
-            AllTransaction = 0,
+            [Display(Name = "All Unreviewed")]
+            Unreviewed = 0,
 
-            [Display(Name = "IKE")]
+            [Display(Name = "IKE Only")]
             IKE = 1,
 
-            [Display(Name = "IKE + FRONT ALPR")]
-            IKE_FALPR = 2,
+            [Display(Name = "IKE + Front/Rear ANPR")]
+            IKE_FR_ALPR = 2,
 
-            [Display(Name = "IKE + REAR ALPR")]
-            IKE_RALPR = 3,
+            [Display(Name = "Front/Rear ANPR Only")]
+            FR_ALPR = 3,
 
-            [Display(Name = "FRONT ALPR")]
-            FALPR = 4,
+            [Display(Name = "Unidentified Front/Rear ANPR")]
+            U_ALPR = 4,
 
-            [Display(Name = "REAR ALPR")]
-            RALPR = 5,
-
-            [Display(Name = "FRONT + REAR ALPR")]
-            FANPR_RALPR = 6,
-
-            [Display(Name = "UNIDENTIFIED FRONT ALPR")]
-            Undefined_FALPR = 7,
-
-            [Display(Name = "UNIDENTIFIED REAR ALPR")]
-            Undefined_RALPR = 8,
-
+            [Display(Name = "Front & Rear ANPR Only")]
+            Only_ALPR = 5,
         }
 
 
@@ -149,7 +139,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         public enum TranscationStatus
         {
             Charged = 1,
-            Mearged,
+            Merged,
             Violation,
             Unidentified,
             Unknown,

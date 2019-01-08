@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
     <title>@ViewBag.Title</title>
-    
+
     <script src="~/assets/jqueryslims/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="~/assets/jqueryslims/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="~/assets/jqueryslims/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
@@ -88,7 +88,7 @@
                     </ul>
                     <ul class="nav-right">
                         <li class="dropdown">
-                           
+
                             <a href="" class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown">
                                 <div class="peer mR-10">
                                     <span class='icon-holder'>
@@ -100,36 +100,35 @@
                                 </div>
                             </a>
                             <ul class="dropdown-menu fsz-sm">
-                              
-                                    @*<li>
+
+                                @*<li>
                                         <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href='javascript:void(0);' onclick="ChnagePasswordOpen();">
                                             <i class="ti-settings mR-10"></i>
                                             <span>Setting</span>
                                         </a>
                                     </li>*@
-                                    @*<li>
+                                @*<li>
                                         <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
                                             <i class="ti-user mR-10"></i>
                                             <span>Profile</span>
                                         </a>
                                     </li>*@
-                                    <li role="separator" class="divider"></li>
-                                    <li>
-                                        <a href="/Login/Logout" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                                            <i class="ti-power-off mR-10"></i>
-                                            <span>Logout</span>
-                                        </a>
-                                    </li>
-                                </ul>
-</li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="/Login/Logout" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                        <i class="ti-power-off mR-10"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
-            
+
             <!-- ### $App Screen Content ### -->
             <main class='main-content bgc-grey-100'>
                 <div id='mainContent'>
-                   
                     @RenderBody()
                 </div>
             </main>
@@ -145,32 +144,30 @@
         <div class="osahanloading"></div>
     </div>
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ImageModal" id="btnImageModalOpen" style="display:none;">Launch demo modal</button>
-    <div class="modal fade bd-example-modal-sm imgmodal" id="ImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-sm imgmodal" id="ImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="height:403px">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnpopupClose"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body">
-                    <img class="modal-content" id="img01">
+                <div class="modal-body" style="text-align:center;">
+                    <img class="modal-content" id="img01" style="border:none;">
                 </div>
             </div>
         </div>
     </div>
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#VideoModal" id="btnVideoModalOpen" style="display:none;">Launch demo modal</button>
-    <div class="modal fade bd-example-modal-md" id="VideoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
+    <div class="modal fade " id="VideoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="height:403px">
+        <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnpopupClose"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="text-align:center">
                     <div id="video">
-                        <video width="470" height="250" controls>
+                        <video width="450" height="250" controls>
                             <source src="" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -203,11 +200,12 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal" id="btnpopupClose">Close</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
     <div id="password_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -237,7 +235,7 @@
                                                 <input class="form-control required input-lg" data-val="true" data-val-required="The new password is required." placeholder="New Password" name="NewPassword" type="password" id="NewPassword">
                                                 <span class="field-validation-valid text-danger" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
                                             </div>
-                                            <input type="button" class="btn btn-lg btn-outline-primary btn-block" onclick="ChnagePassword()" value="Update Password"/>
+                                            <input type="button" class="btn btn-lg btn-outline-primary btn-block" onclick="ChnagePassword()" value="Update Password" />
                                         </fieldset>
                                     </div>
                                 </div>
@@ -253,9 +251,35 @@
             </div>
         </div>
     </div>
-        <script type="text/javascript" src="~/assets/admin/vendor.js"></script>
-        <script type="text/javascript" src="~/assets/admin/bundle.js"></script>
-        <script src="~/js/Common.js"></script>
+
+    <div class="modal fade bd-example-modal-md" id="SetUp" tabindex="-1" role="dialog" aria-labelledby="SetUpLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+
+                            </div>
+                            <div class="col-md-4" style="text-align: center;">
+                                <h5 class="modal-title" id="SetUpLabel">Register Customer</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="partialModel">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/assets/admin/vendor.js"></script>
+    <script type="text/javascript" src="~/assets/admin/bundle.js"></script>
+    <script src="~/js/Common.js"></script>
 
 </body>
 </html>

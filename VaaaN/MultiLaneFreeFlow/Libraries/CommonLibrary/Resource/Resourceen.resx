@@ -135,8 +135,8 @@
   <data name="CustomerRegistration" xml:space="preserve">
     <value>Customer Registration</value>
   </data>
-  <data name="CustomerVehicle" xml:space="preserve">
-    <value>Customer Vehicle</value>
+  <data name="Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
@@ -187,7 +187,7 @@
     <value>Password</value>
   </data>
   <data name="Plaza" xml:space="preserve">
-    <value>Plaza</value>
+    <value>Gantry</value>
   </data>
   <data name="POS" xml:space="preserve">
     <value>POS</value>
@@ -208,7 +208,7 @@
     <value>Users</value>
   </data>
   <data name="VehicleClass" xml:space="preserve">
-    <value>Vehicle Class</value>
+    <value>Classification</value>
   </data>
   <data name="Amount" xml:space="preserve">
     <value>Amount</value>
@@ -301,7 +301,7 @@
     <value>SetUp</value>
   </data>
   <data name="CustomerTransaction" xml:space="preserve">
-    <value>Customer Transaction</value>
+    <value>Transaction</value>
   </data>
   <data name="Reviewed" xml:space="preserve">
     <value>Reviewed</value>

@@ -60,5 +60,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.GetTopUpDataTableFilteredRecordsLazyLoad(pageIndex, pageSize);
         }
+
+        public static DataTable GetTopUpDataTableFilteredRecords(string filter)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.GetTopUpDataTableFilteredRecords(filter);
+        }
     }
 }

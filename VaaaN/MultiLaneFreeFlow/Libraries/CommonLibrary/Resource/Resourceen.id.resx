@@ -135,11 +135,11 @@
   <data name="CustomerRegistration" xml:space="preserve">
     <value>Registrasi Pelanggan</value>
   </data>
-  <data name="CustomerVehicle" xml:space="preserve">
+  <data name="Vehicle" xml:space="preserve">
     <value>Kendaraan Pelanggan</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Dasbor</value>
+    <value>Dashboard</value>
   </data>
   <data name="EmailId" xml:space="preserve">
     <value>Id Email</value>
@@ -187,7 +187,7 @@
     <value>Kata sandi</value>
   </data>
   <data name="Plaza" xml:space="preserve">
-    <value>Plaza</value>
+    <value>Gantry</value>
   </data>
   <data name="POS" xml:space="preserve">
     <value>POS</value>
@@ -208,7 +208,7 @@
     <value>Pengguna</value>
   </data>
   <data name="VehicleClass" xml:space="preserve">
-    <value>Kelas Kendaraan</value>
+    <value>Classification</value>
   </data>
   <data name="Amount" xml:space="preserve">
     <value>Jumlah</value>
@@ -316,7 +316,7 @@
     <value>SetUp</value>
   </data>
   <data name="CustomerTransaction" xml:space="preserve">
-    <value>Customer Transaction</value>
+    <value>Transaction</value>
   </data>
   <data name="Charged" xml:space="preserve">
     <value>Charged</value>

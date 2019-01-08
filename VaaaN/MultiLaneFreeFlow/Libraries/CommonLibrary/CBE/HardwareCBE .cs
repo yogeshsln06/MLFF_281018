@@ -49,32 +49,38 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.tmsId = value; }
         }
 
+        [Display(Name = "Gantry")]
+        [Required]
         public Int32 PlazaId
         {
             get { return this.plazaId; }
             set { this.plazaId = value; }
         }
 
+        [Display(Name = "Hardware Id")]
         public Int32 HardwareId
         {
             get { return this.hardwareId; }
             set { this.hardwareId = value; }
         }
 
-        [Display(Name="HardwareName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name="Hardware Name")]
+        [Required]
         public String HardwareName
         {
             get { return this.hardwareName; }
             set { this.hardwareName = value; }
         }
 
-        [Display(Name = "HardwareType", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Hardware Type")]
+        [Required]
         public Int32 HardwareType
         {
             get { return this.hardwareType; }
             set { this.hardwareType = value; }
         }
-        [Display(Name = "HardwareType", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+
+        [Display(Name = "Hardware Type Name")]
         public string HardwareTypeName
         {
             get
@@ -88,6 +94,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
+        [Display(Name = "Hardware Position")]
+        [Required]
         public Int32 HardwarePosition
         {
             get
@@ -100,19 +108,21 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.hardwarePosition = value;
             }
         }
-        [Display(Name = "ManufacturerName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+
+        [Display(Name = "Manufacturer")]
         public String ManufacturerName
         {
             get { return this.manufacturerName; }
             set { this.manufacturerName = value; }
         }
-        [Display(Name = "ModelName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+
+        [Display(Name = "Model")]
         public String ModelName
         {
             get { return this.modelName; }
             set { this.modelName = value; }
         }
-        [Display(Name = "IPAddress", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "IP Address")]
         public String IpAddress
         {
             get { return this.ipAddress; }

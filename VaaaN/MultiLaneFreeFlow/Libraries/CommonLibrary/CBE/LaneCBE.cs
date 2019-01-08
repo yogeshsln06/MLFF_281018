@@ -136,7 +136,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.antennaIdRear = value; }
         }
 
-        [Display(Name = "ETCReaderName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        //[Display(Name = "ETCReaderNameFront", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "ETC Reader Name Front")]
         public string EtcAntennaNameFront
         {
             get
@@ -149,7 +150,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.etcAntennaNameFront = value;
             }
         }
-
+        //[Display(Name = "ETCReaderNameRear", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "ETC Reader Name Rear")]
         public string EtcAntennaNameRear
         {
             get
