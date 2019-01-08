@@ -32,6 +32,8 @@ AS
 
 
 
+DROP VIEW TRANS_REVIEWED;
+
 CREATE VIEW TRANS_REVIEWED
 AS
      SELECT T.TMS_ID,
@@ -54,7 +56,7 @@ AS
             T.TRANS_STATUS,
             (CASE TRANS_STATUS
                 WHEN 1 THEN 'Charged'
-                WHEN 2 THEN 'Mearged'
+                WHEN 2 THEN 'Merged'
                 WHEN 3 THEN 'Violation'
                 WHEN 4 THEN 'Unidentified'
                 ELSE 'Unknown'
