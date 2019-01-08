@@ -1,0 +1,88 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleCBE>
+@{
+    ViewBag.Title = "Role List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="mT-10">
+                            <h4 class="c-mygrey-900 mB-20">User Role</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mT-10">
+                            <div class="gap-5 peers" style="float:right;overflow: visible !important;">
+                                <div class="peer">
+                                    <button type="button" class="btn cur-p btn-outline-primary">New</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="dataTable" class="table table-striped my-table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>
+                                No.
+                            </th>
+                            <th style="width:20%">
+                                @Html.DisplayNameFor(model => model.RoleName)
+                            </th>
+                            <th style="width:20%">
+                                @Html.DisplayNameFor(model => model.ISActive)
+                            </th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int rowNo = 0; }
+                        @foreach (var item in Model)
+                        {
+                            <tr style="display: table-row">
+                                <td>
+                                    @(rowNo += 1)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RoleName)
+                                </td>
+                                <td>
+                                    @if (item.ISActive == 1)
+                                    {<span> Active</span>}
+                                    else
+                                    {<span> Inactive</span>}
+                                </td>
+                                <td style="@ViewBag.Visibility">
+                                    <a class="edit" href="@Url.Action("EditRole", "Home", new { id = item.RoleId,Rolename =item.RoleName})"><i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i></a>
+                                    <a class="delete" href="@Url.Action("RoleModuleRight", "Home", new { id = item.RoleId,Rolename =item.RoleName })"><i class="fa fa-lock" aria-hidden="true" style="@ViewBag.Visibility" title="set role -module right"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-md" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Register Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div id="partialassociated">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/SetUp.js"></script>
+
+

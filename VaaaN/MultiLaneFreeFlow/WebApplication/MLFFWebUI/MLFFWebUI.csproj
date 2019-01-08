@@ -339,6 +339,14 @@
     <Content Include="Views\SetUp\UserMaster.cshtml" />
     <Content Include="Views\Registration\TransactionHistory.cshtml" />
     <Content Include="Views\Registration\VihicleList.cshtml" />
+    <Content Include="Views\SetUp\RoleList.cshtml" />
+    <Content Include="Views\SetUp\PlazaList.cshtml" />
+    <Content Include="Views\SetUp\LaneList.cshtml" />
+    <Content Include="Views\SetUp\ClassificationList.cshtml" />
+    <Content Include="Views\SetUp\HardwareList.cshtml" />
+    <Content Include="Views\SetUp\FareList.cshtml" />
+    <Content Include="Views\SetUp\ClassificationPopUp.cshtml" />
+    <Content Include="Views\SetUp\HardwarePopUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,110 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE>
+@{
+    ViewBag.Title = "Gantry List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="mT-10">
+                            <h4 class="c-mygrey-900 mB-20">Gantry</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mT-10">
+                            <div class="gap-5 peers" style="float:right;overflow: visible !important;">
+                                <div class="peer">
+                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewUser();">New</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="dataTable" class="table table-striped my-table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>
+                                No.
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PlazaName)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Location)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IpAddress)
+                            </th>
+
+                            <th>
+                                Edit
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int rowNo = 0; }
+                        @foreach (var item in Model)
+            {
+                var token = "";
+                var token1 = "";
+
+                if (item.PlazaId > 0)
+                {
+                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "PlazaEdit", Convert.ToString(item.PlazaId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                    token1 = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "LanebyPlazaList", Convert.ToString(item.PlazaId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                }
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlazaName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IpAddress)
+                    </td>
+                    <td>
+                        <a class="edit" href="@Url.Action("PlazaEdit", "Home", new { id = item.PlazaId, urltoken = token })">
+                            <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
+                        </a>
+                        <a class="edit" href="@Url.Action("LanebyPlazaList", "Home", new { id = item.PlazaId, urltoken = token1 })">
+                            <i class="fa fa-info-circle" style="@ViewBag.Visibility" aria-hidden="true" title="Lajur List"></i>
+                        </a>
+
+                    </td>
+                </tr>
+
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-md" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Register Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div id="partialassociated">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/SetUp.js"></script>
+
+

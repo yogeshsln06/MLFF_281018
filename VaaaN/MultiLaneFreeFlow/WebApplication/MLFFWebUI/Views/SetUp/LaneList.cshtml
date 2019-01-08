@@ -1,0 +1,108 @@
+﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE>
+@{
+    ViewBag.Title = "Lane List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="mT-10">
+                            <h4 class="c-mygrey-900 mB-20">Lane</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mT-10">
+                            <div class="gap-5 peers" style="float:right;overflow: visible !important;">
+                                <div class="peer">
+                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewUser();">New</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @{ int rowNo = 0; }
+                <table id="dataTable" class="table table-striped my-table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>
+                                No.
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PlazaName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.LaneName)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.CameraNameFront)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CameraNameRear)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EtcAntennaNameFront)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EtcAntennaNameRear)
+                            </th>
+                            <th>
+                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+            {
+                var token = "";
+
+                if (item.LaneId > 0)
+                {
+                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "LaneEdit", Convert.ToString(item.LaneId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
+                }
+                <tr>
+                    <td>
+                        @(rowNo += 1)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlazaName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LaneName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CameraNameFront)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CameraNameRear)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EtcAntennaNameFront)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EtcAntennaNameRear)
+                    </td>
+                    <td>
+                        <a class="edit" href="@Url.Action("LaneEdit", "Home", new { id = item.LaneId, urltoken = token })">
+                            <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
+                        </a>
+                    </td>
+                </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/SetUp.js"></script>
+
+
