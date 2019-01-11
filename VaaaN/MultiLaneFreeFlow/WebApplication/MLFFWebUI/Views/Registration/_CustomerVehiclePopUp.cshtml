@@ -248,10 +248,8 @@
                     <div class="form-group col-md-4">
                         <label id="lblVehicleImageFront" class="control-label btn-link" onclick="openImg(this);">Click to View Image</label>
                         <input name="VehicleImageFront" id="VehicleImageFront" type="file" onchange="encodeImagetoBase64(this)" accept="image/x-png,image/gif,image/jpeg" class="inputfile" />
-                        <label for="VehicleImageFront" class="control-label btn-link" id="labelImageFront"><span>Attach File</span></label>
+                        <label for="VehicleImageFront" class="control-label btn-link" id="labelImageFront"><span class="filespan">Attach File</span></label>
                         @Html.ValidationMessageFor(model => model.VehicleImageFront, "", new { @class = "text-danger" })
-                        <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
-                             data-high-res-src="" alt="" class="gallery-items" id="imgVehicleImageFront">
                         <a href="" style="display:none" id="VehicleImageFrontPath"></a>
                         <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
                              data-high-res-src="" alt="" class="gallery-items" id="imgVehicleImageFront">
@@ -263,7 +261,7 @@
                     <div class="form-group col-md-4">
                         <label id="lblVehicleImageRear" class="control-label btn-link" onclick="openImg(this);">Click to View Image</label>
                         <input name="VehicleImageRear" id="VehicleImageRear" type="file" onchange="encodeImagetoBase64(this)" accept="image/x-png,image/gif,image/jpeg" class="inputfile" />
-                        <label for="VehicleImageRear" class="control-label btn-link" id="labelImageRear"><span>Attach File</span></label>
+                        <label for="VehicleImageRear" class="control-label btn-link" id="labelImageRear"><span class="filespan">Attach File</span></label>
                         @Html.ValidationMessageFor(model => model.VehicleImageRear, "", new { @class = "text-danger" })
                         <a href="" style="display:none" id="VehicleImageRearPath"></a>
                         <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
@@ -280,7 +278,7 @@
                     <div class="form-group col-md-4">
                         <label id="lblVehicleImageRight" class="control-label btn-link" onclick="openImg(this);">Click to View Image</label>
                         <input name="VehicleImageRight" id="VehicleImageRight" type="file" onchange="encodeImagetoBase64(this)" accept="image/x-png,image/gif,image/jpeg" class="inputfile" />
-                        <label for="VehicleImageRight" class="control-label btn-link" id="labelImageRight"><span>Attach File</span></label>
+                        <label for="VehicleImageRight" class="control-label btn-link" id="labelImageRight"><span class="filespan">Attach File</span></label>
                         @Html.ValidationMessageFor(model => model.VehicleImageRight, "", new { @class = "text-danger" })
                         <a href="" style="display:none" id="VehicleImageRightPath"></a>
                         <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
@@ -292,7 +290,7 @@
                     <div class="form-group col-md-4">
                         <label id="lblVehicleImageLeft" class="control-label btn-link" onclick="openImg(this);">Click to View Image</label>
                         <input name="VehicleImageLeft" id="VehicleImageLeft" type="file" onchange="encodeImagetoBase64(this)" accept="image/x-png,image/gif,image/jpeg" class="inputfile" />
-                        <label for="VehicleImageLeft" class="control-label btn-link" id="labelImageLeft"><span>Attach File</span></label>
+                        <label for="VehicleImageLeft" class="control-label btn-link" id="labelImageLeft"><span class="filespan">Attach File</span></label>
                         @Html.ValidationMessageFor(model => model.VehicleImageLeft, "", new { @class = "text-danger" })
                         <a href="" style="display:none" id="VehicleImageLeftPath"></a>
                         <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""
@@ -307,7 +305,7 @@
                     <div class="form-group col-md-4">
                         <label id="lblVehicleRCNumberImagePath" class="control-label btn-link" onclick="openImg(this);">Click to View Image</label>
                         <input name="VehicleRCNumberImagePath" id="VehicleRCNumberImagePath" type="file" onchange="encodeImagetoBase64(this)" accept="image/x-png,image/gif,image/jpeg" class="inputfile" />
-                        <label for="VehicleRCNumberImagePath" class="control-label btn-link" id="labelImageRC"><span>Attach File</span></label>
+                        <label for="VehicleRCNumberImagePath" class="control-label btn-link" id="labelImageRC"><span class="filespan">Attach File</span></label>
                         @Html.ValidationMessageFor(model => model.VehicleRCNumberImagePath, "", new { @class = "text-danger" })
                         <a href="" style="display:none" id="VehicleRCNumberImagePathPath"></a>
                         <img onclick="zoomImage(this);" style="display:none; height: 65px; width:130px" src=""

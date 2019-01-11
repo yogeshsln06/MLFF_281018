@@ -83,10 +83,10 @@ function BindCustmerAccount() {
                 data: data,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
-                "bScrollCollapse": true,
-                scrollY: "38.5vh",
+                "bScrollCollapse": false,
+                scrollY: "39.5vh",
                 scrollX: true,
-                scrollCollapse: true,
+                scrollCollapse: false,
                 autoWidth: false,
                 paging: false,
                 info: false,
@@ -131,6 +131,7 @@ function BindCustmerAccount() {
                    },
                 ],
                 columnDefs: [{ "orderable": false, "targets": 7 }],
+                order: [[1, 'asc']],
             });
             datatableVariable.on('order.dt search.dt', function () {
                 datatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -286,7 +287,7 @@ function NewCustomer() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnpopupClose").text('Cancel').show();
+            $("#btnpopupClose").text('Cancel').removeClass('btn-outline-secondary').addClass('btn-outline-danger').show();
             $("#btnpopupCancel").removeClass('btn-outline-danger').addClass('btn-outline-secondary').hide();
             $("#btnSaveNew").show();
         },
@@ -315,6 +316,13 @@ function DetailsOpen(ctrl, id) {
             $("#ValidUntil").attr("readonly", false);
             $("#fildset").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
+
+            if ($("#hfCustomerDocumentPath").val() == '') {
+                $("#lblResidentidImagePath").removeAttr('onclick').removeClass('btn-link').addClass('btn-link-disabled');
+                $("#lblResidentidImagePath").text('Attach File');
+            }
+
+            $("#labelImage").hide();
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             $("#imgResidentidImagePath").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             $("#ResidentidImage").hide();
@@ -330,8 +338,7 @@ function DetailsOpen(ctrl, id) {
             }
             $("#lblResidentidImagePath").show();
             $("#imgPreview").hide();
-            $("#labelImage").hide();
-            
+
             $("#btnSave").hide();
 
             //$("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
@@ -378,17 +385,17 @@ function OpenUpdatepopUp(id) {
             if ($("#hfCustomerDocumentPath").val() == '') {
                 $("#ResidentidImage").show();
                 $("#lblResidentidImagePath").hide();
-
-
             }
             else {
-                $("#labelImage").hide();
+                $("<br/>").insertBefore($("#labelImage"));
+                $("#labelImage").find('span').text('Update File');
+                //$("#labelImage").prepend("<br/>");
                 $("#ResidentidImage").hide();
                 $("#lblResidentidImagePath").show();
                 $("#imgResidentidImagePath").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             }
 
-           // $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
+            // $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             GetCityList();
 
             $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
@@ -524,13 +531,13 @@ function SaveData(action) {
 
         }
         else {
-            $("#warning").html("<ul><li>Please fill the mandarory fields</li></ul>");
+            $("#warning").html("<ul><li>Please fill the mandatory fields</li></ul>");
             $("#warning").show();
         }
 
     }
     else {
-        $("#warning").html("<ul><li>Please fill the mandarory fields</li></ul>");
+        $("#warning").html("<ul><li>Please fill the mandatory fields</li></ul>");
         $("#warning").show();
     }
 }
@@ -560,6 +567,7 @@ function HistoryRecords(ctrl, AccountId) {
             $(".animationload").hide();
             $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialHistory').html(result);
+            $("#customerHistoryModal").find("#btnpopupClose").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -592,17 +600,15 @@ function BindHistoryRecords() {
             $("#tblCustomerHistoryData").removeClass('my-table-bordered').addClass('table-bordered');
             HdatatableVariable = $('#tblCustomerHistoryData').DataTable({
                 data: data,
+                "bScrollInfinite": true,
+                "bScrollCollapse": false,
                 scrollY: "55vh",
+                scrollX: true,
+                scrollCollapse: false,
+                autoWidth: false,
                 paging: false,
                 info: false,
-                pageResize: true,
-                autoWidth: false,
                 searching: false,
-                scrollCollapse: true,
-                stateSave: true,
-                "bScrollCollapse": true,
-                "bScrollInfinite": true,
-                "bAutoWidth": false,
                 columns: [
                     { 'data': 'ROWNUMBER' },
                     {
@@ -690,8 +696,7 @@ function VehicleRecords(ctrl, AccountId) {
             $(".animationload").hide();
             $(ctrl).parent().addClass('hide').removeClass('open').hide();
             $('#partialHistory').html(result);
-
-            //$('#customerHistoryModal').find("#btnpopupClose").hide();
+            $("#customerHistoryModal").find("#btnpopupClose").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -721,15 +726,14 @@ function BindCustmerVehicleAccount() {
             datatableVariableVehicle = $('#tblVehicleList').DataTable({
                 data: data,
                 "bScrollInfinite": true,
-                "bScrollCollapse": true,
+                "bScrollCollapse": false,
                 scrollY: "55vh",
-                pageResize: true,
-                searching: false,
-                scrollCollapse: true,
-                stateSave: true,
+                scrollX: true,
+                scrollCollapse: false,
                 autoWidth: false,
                 paging: false,
                 info: false,
+                searching: false,
                 columns: [
                     { 'data': 'EntryId' },
                     {

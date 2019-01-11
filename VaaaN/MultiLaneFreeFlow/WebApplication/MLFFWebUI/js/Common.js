@@ -51,29 +51,43 @@ function DateFormat(newDate) {
 
 function encodeImagetoBase64(element) {
     var ParentDiv = $(element).parent();
-    var file = element.files[0];
-    var filesize = file.size;
-    if (filesize > 1500000) {
-        $(ParentDiv).find('input:file').val('');
-        alert("Please Select less than 1.5 MB.");
-        return false;
-    }
-
-    var ancoreTag = $(element).parent().find('a');
-    var ValidateFile = file;
-    var reader = new FileReader();
-    reader.onloadend = function () {
-        $(ancoreTag).attr("href", reader.result);
-        $(ancoreTag).text(reader.result);
-    }
-    reader.readAsDataURL(file);
-
-    if (element.files[0]) {
-        var Preader = new FileReader();
-        Preader.onload = function (e) {
-            $(ParentDiv).next().find('img').attr('src', e.target.result);
+    if (element.files.length > 0) {
+        var file = element.files[0];
+        var filesize = file.size;
+        var filename = file.name || '';
+        $(element).parent().find('.filespan').text('Update File');
+        if ($(element).parent().find('br').length == 0) {
+            $("<br/>").insertAfter($(element));
         }
-        Preader.readAsDataURL(element.files[0]);
+        $(element).prev().removeAttr('onclick').attr("onclick", "trigerImg(this)").show();
+        if (filesize > 1500000) {
+            $(ParentDiv).find('input:file').val('');
+            alert("Please Select less than 1.5 MB.");
+            return false;
+        }
+
+        var ancoreTag = $(element).parent().find('a');
+        var ValidateFile = file;
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            $(ancoreTag).attr("href", reader.result);
+            $(ancoreTag).text(reader.result);
+        }
+        reader.readAsDataURL(file);
+
+        if (element.files[0]) {
+            var Preader = new FileReader();
+            Preader.onload = function (e) {
+                $(element).parent().find('img').attr('src', e.target.result).hide();
+            }
+            Preader.readAsDataURL(element.files[0]);
+        }
+    }
+    else {
+        $(element).parent().find('br').remove();
+        $(element).prev().hide();
+        $(element).next().find('span').text('Attach File');
+        $(element).parent().find('img').attr('src', '');
     }
 
 
@@ -310,5 +324,9 @@ function isNumber(evt) {
         return false;
 
     return true;
+}
+
+function trigerImg(ctrl) {
+    $(ctrl).parent().find('img').trigger('click');
 }
 
