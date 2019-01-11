@@ -22,9 +22,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private DateTime messageReceiveTime;
         private Int32 messageDeliveryStatus;//UNKNOWN=0,DELIVERED=1,UNDELIVERED=2
         private Int32 attemptCount;
+        private Int32 operatorAttemptCount;
         private DateTime creationDate;
         private DateTime modificationDate;
         private Int32 modifiedBy;
+        private string transactionId;
+        private string gatewayResponse;
+        private Int32 responseCode;
+        private Int32 operatorResponseCode;
 
         public SMSCommunicationHistoryCBE()
         {
@@ -42,9 +47,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.messageReceiveTime = DateTime.Now;
             this.messageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
             this.attemptCount = 0;
+            this.operatorAttemptCount = 0;
             this.creationDate = DateTime.Now;
             this.modificationDate = DateTime.Now;
             this.modifiedBy = 0;
+            this.responseCode = 0;
+            this.operatorResponseCode = 0;
         }
         public Int32 EntryId
         {
@@ -128,6 +136,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.attemptCount = value; }
         }
 
+        public Int32 OperatorAttemptCount
+        {
+            get { return this.operatorAttemptCount; }
+            set { this.operatorAttemptCount = value; }
+        }
+
         public DateTime CreationDate
         {
             get { return this.creationDate; }
@@ -144,6 +158,30 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         {
             get { return this.modifiedBy; }
             set { this.modifiedBy = value; }
+        }
+
+        public string TransactionId
+        {
+            get { return this.transactionId; }
+            set { this.transactionId = value; }
+        }
+
+        public string GatewayResponse
+        {
+            get { return this.gatewayResponse; }
+            set { this.gatewayResponse = value; }
+        }
+
+        public Int32 ResponseCode
+        {
+            get { return this.responseCode; }
+            set { this.responseCode = value; }
+        }
+
+        public Int32 OperatorResponseCode
+        {
+            get { return this.operatorResponseCode; }
+            set { this.operatorResponseCode = value; }
         }
 
         public override string ToString()

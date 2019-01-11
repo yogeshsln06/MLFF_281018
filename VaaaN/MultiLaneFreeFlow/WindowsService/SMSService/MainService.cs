@@ -31,7 +31,7 @@ namespace SMSService
         {
             InitializeComponent();
 
-            OnStart(new string[] { "" });
+            //OnStart(new string[] { "" });
         }
 
         static void Main()
@@ -229,62 +229,82 @@ namespace SMSService
             try
             {
                 // Get unsent outgoing message from the database 
-                string query = " WHERE SENT_STATUS = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent + " AND MESSAGE_DIRECTION = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                string query = " WHERE NVL(ATTEMPT_COUNT,0) < 4 AND SENT_STATUS = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent + " AND MESSAGE_DIRECTION = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection unsentSMSes = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.GetFilteredRecords(query);
-
+                bool DataProcess = true;
                 // Send message to customer
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms in unsentSMSes)
                 {
+                    DataProcess = true;
                     // Send message via SMS Gateway
                     // Message will be sent if not older than 2 hours. attempt count should be less thyan equal to 5
 
                     if ((DateTime.Now - sms.CreationDate).TotalHours <= 2)
                     {
-                        if (sms.AttemptCount <= 5)
+                        if (sms.AttemptCount < 3)
                         {
-                            bool isSent = smsGatewayController.SendSMS(sms);
-
-                            #region Update SMS sent status in database
-                            try
+                            LogMessage("SMS sending attempt count is greater than 3 so will not be sent. SMS entry id: " + sms.EntryId + " Attempt: " + sms.AttemptCount + " ResponseCode :" + sms.ResponseCode);
+                            if (sms.ResponseCode != 0)
                             {
-                                if (isSent)
+
+
+                                if ((DateTime.Now - sms.MessageReceiveTime).TotalSeconds <= 60)
+                                {
+                                    DataProcess = false;
+                                }
+                            }
+
+                            if (DataProcess)
+                            {
+                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE smsResponse = smsGatewayController.SendSMS(sms);
+                                #region Update SMS sent status in database
+                                try
                                 {
                                     LogMessage("Trying to update sms sent status in database.");
-
+                                    sms.AttemptCount++;
                                     // Update status in database
-                                    sms.AttemptCount++;
-                                    sms.MessageSendDateTime = DateTime.Now;
-                                    sms.ModificationDate = DateTime.Now;
-                                    sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
+                                    smsResponse.AttemptCount = sms.AttemptCount;
+                                    smsResponse.MessageSendDateTime = DateTime.Now;
+                                    smsResponse.ModificationDate = DateTime.Now;
+                                    if (smsResponse.ResponseCode == 2200)
+                                    {
+                                        smsResponse.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
+                                        LogMessage("2200 status received.");
+                                    }
 
-                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Update(sms);
+                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.UpdateFirstResponse(smsResponse);
                                     LogMessage("SMS sent status updated successfully.");
+
+                                    //if (isSent)
+                                    //{
+
+                                    //}
+                                    //else
+                                    //{
+                                    //    LogMessage("Failed to send SMS. Updating attempt count in database.");
+
+                                    //    sms.AttemptCount++;
+                                    //    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Update(sms);
+
+                                    //    LogMessage("SMS attempt count updated successfully.");
+                                    //}
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    LogMessage("Failed to send SMS. Updating attempt count in database.");
-
-                                    sms.AttemptCount++;
-                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Update(sms);
-
-                                    LogMessage("SMS attempt count updated successfully.");
+                                    LogMessage("Failed tp update message sent status in database." + ex.Message);
                                 }
+                                #endregion
                             }
-                            catch (Exception ex)
-                            {
-                                LogMessage("Failed tp update message sent status in database." + ex.Message);
-                            }
-                            #endregion
                         }
                         else
                         {
                             LogMessage("SMS sending attempt count is greater than 5 so will not be sent. SMS entry id: " + sms.EntryId + " Attempt: " + sms.AttemptCount);
                         }
                     }
-                    else
-                    {
-                        LogMessage("Message is 2 hours older so will not be sent. Message Entry Id:" + sms.EntryId);
-                    }
+                    //else
+                    //{
+                    //    LogMessage("Message is 2 hours older so will not be sent. Message Entry Id:" + sms.EntryId);
+                    //}
                 }
             }
             catch (Exception ex)

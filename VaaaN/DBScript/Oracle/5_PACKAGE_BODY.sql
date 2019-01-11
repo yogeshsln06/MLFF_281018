@@ -1,4 +1,5 @@
-/* Formatted on 06/01/2019 14:59:18 (QP5 v5.215.12089.38647) */
+/* Formatted on 09-01-2019 17:36:36 (QP5 v5.215.12089.38647) */
+/* Formatted on 09-01-2019 17:36:36 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -4295,6 +4296,74 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
 
 
+   PROCEDURE SMS_HISTORY_UPDATE_FIRST (
+      P_ENTRY_ID                  IN NUMBER,
+      P_TMS_ID                    IN NUMBER,
+      P_CUSTOMER_ACCOUNT_ID       IN NUMBER,
+      P_CUSTOMER_NAME             IN NVARCHAR2,
+      P_MOBILE_NUMBER             IN NVARCHAR2,
+      P_MESSAGE_DIRECTION         IN NUMBER,
+      P_MESSAGE_BODY              IN NVARCHAR2,
+      P_SENT_STATUS               IN NUMBER,
+      P_RECEIVED_PROCESS_STATUS   IN NUMBER,
+      P_MESSAGE_SEND_TIME         IN DATE,
+      P_MESSAGE_RECEIVE_TIME      IN DATE,
+      P_MESSAGE_DELIVERY_STATUS   IN NUMBER,
+      P_ATTEMPT_COUNT             IN NUMBER,
+      P_CREATION_DATE             IN DATE,
+      P_MODIFICATION_DATE         IN DATE,
+      P_MODIFIED_BY               IN NUMBER,
+      P_TRANSACTION_ID            IN NVARCHAR2,
+      P_GATEWAY_RESPONSE          IN NVARCHAR2,
+      P_GATEWAY_RESPONSE_CODE     IN NVARCHAR2)
+   AS
+   BEGIN
+      UPDATE TBL_SMS_COMM_HISTORY
+         SET ENTRY_ID = P_ENTRY_ID,
+             TMS_ID = P_TMS_ID,
+             CUSTOMER_ACCOUNT_ID = P_CUSTOMER_ACCOUNT_ID,
+             CUSTOMER_NAME = P_CUSTOMER_NAME,
+             MOBILE_NUMBER = P_MOBILE_NUMBER,
+             MESSAGE_DIRECTION = P_MESSAGE_DIRECTION,
+             MESSAGE_BODY = P_MESSAGE_BODY,
+             SENT_STATUS = P_SENT_STATUS,
+             RECEIVED_PROCESS_STATUS = P_RECEIVED_PROCESS_STATUS,
+             MESSAGE_SEND_TIME = P_MESSAGE_SEND_TIME,
+             MESSAGE_RECEIVE_TIME = P_MESSAGE_RECEIVE_TIME,
+             MESSAGE_DELIVERY_STATUS = P_MESSAGE_DELIVERY_STATUS,
+             ATTEMPT_COUNT = P_ATTEMPT_COUNT,
+             CREATION_DATE = P_CREATION_DATE,
+             MODIFICATION_DATE = P_MODIFICATION_DATE,
+             MODIFIED_BY = P_MODIFIED_BY,
+             TRANSACTION_ID = P_TRANSACTION_ID,
+             GATEWAY_RESPONSE = P_GATEWAY_RESPONSE,
+             GATEWAY_RESPONSE_CODE = P_GATEWAY_RESPONSE_CODE
+       WHERE ENTRY_ID = P_ENTRY_ID AND TMS_ID = P_TMS_ID;
+   END SMS_HISTORY_UPDATE_FIRST;
+
+   PROCEDURE SMS_HISTORY_UPDATE_SECOND (
+      P_SENT_STATUS               IN NUMBER,
+      P_MESSAGE_RECEIVE_TIME      IN DATE,
+      P_MESSAGE_DELIVERY_STATUS   IN NUMBER,
+      P_OPERATOR_ATTEMPT_COUNT    IN NUMBER,
+      P_TRANSACTION_ID            IN NVARCHAR2,
+      P_OPERATOR_RESPONSE         IN NVARCHAR2,
+      P_OPERATOR_RESPONSE_CODE    IN NVARCHAR2)
+   AS
+   BEGIN
+      UPDATE TBL_SMS_COMM_HISTORY
+         SET SENT_STATUS = P_SENT_STATUS,
+             MESSAGE_RECEIVE_TIME = P_MESSAGE_RECEIVE_TIME,
+             MESSAGE_DELIVERY_STATUS = P_MESSAGE_DELIVERY_STATUS,
+             OPERATOR_ATTEMPT_COUNT =
+                NVL (OPERATOR_ATTEMPT_COUNT, 0) + P_OPERATOR_ATTEMPT_COUNT,
+             TRANSACTION_ID = P_TRANSACTION_ID,
+             OPERATOR_RESPONSE = P_OPERATOR_RESPONSE,
+             OPERATOR_RESPONSE_CODE = P_OPERATOR_RESPONSE_CODE
+       WHERE TRANSACTION_ID = P_TRANSACTION_ID;
+   END SMS_HISTORY_UPDATE_SECOND;
+
+
    PROCEDURE SMS_HISTORY_UPDATE (P_ENTRY_ID                  IN NUMBER,
                                  P_TMS_ID                    IN NUMBER,
                                  P_CUSTOMER_ACCOUNT_ID       IN NUMBER,
@@ -4341,71 +4410,25 @@ ORDER BY TRANSACTION_DATETIME DESC';
       SQLQUERY   VARCHAR2 (2000);
    BEGIN
       SQLQUERY :=
-            'SELECT ENTRY_ID,
-
-
-
-         TMS_ID,
-
-
-
-         CUSTOMER_ACCOUNT_ID,
-
-
-
-         CUSTOMER_NAME,
-
-
-
-         MOBILE_NUMBER,
-
-
-
-         MESSAGE_DIRECTION,
-
-
-
-         MESSAGE_BODY,
-
-
-
-         SENT_STATUS,
-
-
-
-         RECEIVED_PROCESS_STATUS,
-
-
-
-         MESSAGE_SEND_TIME,
-
-
-
-         MESSAGE_RECEIVE_TIME,
-
-
-
-         MESSAGE_DELIVERY_STATUS,
-
-
-
-         ATTEMPT_COUNT,
-
-
-
-         CREATION_DATE,
-
-
-
-         MODIFICATION_DATE,
-
-
-
-         MODIFIED_BY
-
-
-
-    FROM TBL_SMS_COMM_HISTORY '
+            ' SELECT ENTRY_ID,
+       TMS_ID,
+       CUSTOMER_ACCOUNT_ID,
+       CUSTOMER_NAME,
+       MOBILE_NUMBER,
+       MESSAGE_DIRECTION,
+       MESSAGE_BODY,
+       SENT_STATUS,
+       RECEIVED_PROCESS_STATUS,
+       MESSAGE_SEND_TIME,
+       MESSAGE_RECEIVE_TIME,
+       MESSAGE_DELIVERY_STATUS,
+       ATTEMPT_COUNT,
+       CREATION_DATE,
+       MODIFICATION_DATE,
+       MODIFIED_BY,
+	   GATEWAY_RESPONSE_CODE,
+	   OPERATOR_RESPONSE_CODE
+  FROM TBL_SMS_COMM_HISTORY '
          || P_FILTER
          || ' ORDER BY ENTRY_ID';
 
@@ -6416,7 +6439,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
       P_IS_SMS_SENT                 IN     NUMBER,
       P_IS_EMAIL_SENT               IN     NUMBER,
       P_CREATION_DATE               IN     DATE,
-      P_TRANSFER_STATUS             IN     NUMBER)
+      P_TRANSFER_STATUS             IN     NUMBER,
+      P_OPENING_BALANCE             IN     NUMBER,
+      P_CLOSING_BALANCE             IN     NUMBER)
    AS
    BEGIN
       INSERT INTO TBL_ACCOUNT_HISTORY (TMS_ID,
@@ -6429,7 +6454,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                        SMS_SENT,
                                        EMAIL_SENT,
                                        CREATION_DATE,
-                                       TRANSFER_STATUS)
+                                       TRANSFER_STATUS,
+                                       OPENING_BALANCE,
+                                       CLOSING_BALANCE)
            VALUES (P_TMS_ID,
                    P_ACCOUNT_ID,
                    ACCOUNT_HISTORY_SEQ.NEXTVAL,
@@ -6440,7 +6467,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                    P_IS_SMS_SENT,
                    P_IS_EMAIL_SENT,
                    P_CREATION_DATE,
-                   P_TRANSFER_STATUS);
+                   P_TRANSFER_STATUS,
+                   P_OPENING_BALANCE,
+                   P_CLOSING_BALANCE);
 
 
 
@@ -6519,9 +6548,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   AH.CUSTOMER_VEHICLE_ENTRY_ID,
                   (CASE AH.TRANSACTION_TYPE
                       WHEN 1 THEN 'Sale'
-                      WHEN 2 THEN 'Recharge'
+                      WHEN 2 THEN 'Top-Up'
                       WHEN 3 THEN 'Refund'
-                      WHEN 4 THEN 'Lane Debit'
+                      WHEN 4 THEN 'Charge'
                    END)
                      TRANSACTION_TYPE,
                   AH.TRANSACTION_ID,
@@ -6569,9 +6598,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AH.CUSTOMER_VEHICLE_ENTRY_ID,
                            (CASE AH.TRANSACTION_TYPE
                                WHEN 1 THEN 'Sale'
-                               WHEN 2 THEN 'Recharge'
+                               WHEN 2 THEN 'Top-Up'
                                WHEN 3 THEN 'Refund'
-                               WHEN 4 THEN 'Lane Debit'
+                               WHEN 4 THEN 'Charge'
                             END)
                               TRANSACTION_TYPE_NAME,
                            AH.TRANSACTION_ID,
@@ -6632,9 +6661,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AH.CUSTOMER_VEHICLE_ENTRY_ID,
                            (CASE AH.TRANSACTION_TYPE
                                WHEN 1 THEN 'Sale'
-                               WHEN 2 THEN 'Recharge'
+                               WHEN 2 THEN 'Top-Up'
                                WHEN 3 THEN 'Refund'
-                               WHEN 4 THEN 'Lane Debit'
+                               WHEN 4 THEN 'Charge'
                             END)
                               TRANSACTION_TYPE_NAME,
                            AH.TRANSACTION_ID,
@@ -7367,9 +7396,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 AH.TRANSACTION_TYPE,
                 (CASE AH.TRANSACTION_TYPE
                     WHEN 1 THEN 'Sale'
-                    WHEN 2 THEN 'Recharge'
+                    WHEN 2 THEN 'Top-Up'
                     WHEN 3 THEN 'Refund'
-                    WHEN 4 THEN 'Lane Debit'
+                    WHEN 4 THEN 'Charge'
                     ELSE 'Unknown'
                  END)
                    TRANSACTION_TYPE_NAME,
@@ -7421,9 +7450,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AH.TRANSACTION_TYPE,
                            (CASE AH.TRANSACTION_TYPE
                                WHEN 1 THEN 'Sale'
-                               WHEN 2 THEN 'Recharge'
+                               WHEN 2 THEN 'Top-Up'
                                WHEN 3 THEN 'Refund'
-                               WHEN 4 THEN 'Lane Debit'
+                               WHEN 4 THEN 'Charge'
                                ELSE 'Unknown'
                             END)
                               TRANSACTION_TYPE_NAME,

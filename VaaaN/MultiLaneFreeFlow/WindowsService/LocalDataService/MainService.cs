@@ -69,7 +69,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
 
         }
 
@@ -1343,6 +1343,8 @@ namespace VaaaN.MLFF.WindowsServices
                     accountHistory.CreationDate = DateTime.Now;
                     accountHistory.ModificationDate = DateTime.Now;
                     accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
+                    accountHistory.OpeningBalance = currentAccountBalance;
+                    accountHistory.ClosingBalance = afterDeduction;
                     VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
                     LogMessage("Recorded in account history table successfully.");
                 }

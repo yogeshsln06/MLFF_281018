@@ -330,4 +330,7 @@
   <data name="Charged" xml:space="preserve">
     <value>Charged</value>
   </data>
+  <data name="VehicleBalanceReport" xml:space="preserve">
+    <value>Vehicle Balance Report</value>
+  </data>
 </root>

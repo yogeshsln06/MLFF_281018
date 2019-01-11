@@ -24,7 +24,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private DateTime creationDate;
         private DateTime modificationDate;
         private Int32 transferStatus;
-        
+        private Decimal openingBalance;
+        private Decimal closingBalance;
+
 
         public AccountHistoryCBE()
         {
@@ -41,6 +43,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.creationDate = DateTime.Now;
             this.modificationDate = DateTime.Now;
             this.transferStatus = 0;
+            this.openingBalance = 0;
+            this.closingBalance = 0;
         }
 
         public Int32 TMSId
@@ -122,7 +126,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.transferStatus = value; }
         }
 
-       
+        public Decimal OpeningBalance
+        {
+            get { return this.openingBalance; }
+            set { this.openingBalance = value; }
+        }
+
+        public Decimal ClosingBalance
+        {
+            get { return this.closingBalance; }
+            set { this.closingBalance = value; }
+        }
 
         public override string ToString()
         {

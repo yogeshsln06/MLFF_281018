@@ -12,9 +12,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
 {
     class MobisuiteSMSGateway : SMSGatewayBase
     {
-        public override bool SendSMS(SMSCommunicationHistoryCBE sms)
+        public override SMSCommunicationHistoryCBE SendSMS(SMSCommunicationHistoryCBE sms)
         {
-            bool isSuccess = false;
 
             #region Variables
             string createdURL = "";
@@ -76,6 +75,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
                 System.Xml.XmlReader reader = System.Xml.XmlReader.Create(ms);
 
                 string statusCode = "";
+
                 while (reader.Read())
                 {
                     if (reader.NodeType == XmlNodeType.Element)
@@ -84,15 +84,32 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
                         {
                             reader.Read();
                             statusCode = Convert.ToString(reader.Value);
-                            LogMessage("Response status code is " + statusCode + ".");
+                            try
+                            {
+                                sms.ResponseCode = Convert.ToInt32(statusCode);
+                                LogMessage("Response status code is " + statusCode + ".");
+                            }
+                            catch (Exception ex)
+                            {
+                                LogMessage("error in convert status code is " + statusCode + ".");
+                            }
+
+                        }
+                        if (reader.Name == "transaction_id")
+                        {
+                            reader.Read();
+                            sms.TransactionId = Convert.ToString(reader.Value);
+                            LogMessage("Response transactionId is " + sms.TransactionId + ".");
                         }
                     }
                 }
 
                 if (statusCode == "2200")
                 {
-                    isSuccess = true;
+                    sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
                 }
+
+                sms.GatewayResponse = responseString;
 
                 LogMessage("Response:" + responseString);
                 LogMessage("Message sent successfully to mobile.");
@@ -104,7 +121,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
             }
             #endregion
 
-            return isSuccess;
+            return sms;
         }
 
         public override List<SMSDetail> ReadSMS()

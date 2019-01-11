@@ -18,7 +18,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
             smsGatewayBase = new MobisuiteSMSGateway();
         }
 
-        public bool SendSMS(SMSCommunicationHistoryCBE sms)
+        public SMSCommunicationHistoryCBE SendSMS(SMSCommunicationHistoryCBE sms)
         {
             return smsGatewayBase.SendSMS(sms);
         }

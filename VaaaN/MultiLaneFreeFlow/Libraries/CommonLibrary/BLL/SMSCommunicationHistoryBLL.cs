@@ -43,6 +43,16 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.Update(sms);
         }
 
+        public static void UpdateFirstResponse(VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.UpdateFirstResponse(sms);
+        }
+
+        public static void UpdateSecondResponse(VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.UpdateSecondResponse(sms);
+        }
+
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetFilteredRecords(string filter)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.GetFilteredRecords(filter);

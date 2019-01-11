@@ -336,4 +336,7 @@
   <data name="Violation" xml:space="preserve">
     <value>Violation</value>
   </data>
+  <data name="VehicleBalanceReport" xml:space="preserve">
+    <value>Vehicle Balance Report</value>
+  </data>
 </root>

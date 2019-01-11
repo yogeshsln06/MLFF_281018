@@ -605,20 +605,16 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
       };
         public enum FuelType
         {
-            Diesel = 1,
-            Gasoline,
-            Petrol,
+            Gasoline = 1,
+            Diesel,
             Electric,
-            Solor
         };
 
         public static string[] FuelTypeName = new string[]
       {
-          "Diesel",
           "Gasoline",
-          "Petrol",
+          "Diesel",
           "Electric",
-          "Solor"
       };
         public enum VehicleColor
         {
@@ -647,24 +643,23 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             //Blueonwhite,
             //Unknown
             Black = 1,
-            White,
-            Yellow,
-            Red,
             Blue,
             Green,
-            Unknown
+            Red,
+            White,
+            Yellow
+
 
         };
         public static string[] LicencePlateColorName = new string[]
       {
 
           "Black",
-          "White",
-          "Yellow",
-          "Red",
           "Blue",
           "Green",
-          "Unknown"
+          "Red",
+          "White",
+          "Yellow"
 
             //"White on Black",
             //"Red on White",

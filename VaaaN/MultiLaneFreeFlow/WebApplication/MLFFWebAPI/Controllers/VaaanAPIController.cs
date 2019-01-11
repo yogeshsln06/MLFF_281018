@@ -206,56 +206,56 @@ namespace MLFFWebAPI.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> ReciveDatafromNodeflux(NodeFluxPacketJSON objNodeFluxPacketJSON)
         {
-            if (ANPRName().ToLower() == "nodeflux")
+
+            try
             {
-                try
+                #region Serialize the nodeflux JSON Data
+                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                await Task.Delay(100);
+                #endregion
+
+                #region Create Physical Path to save nodeflux JSON Data as file
+                if (!Directory.Exists(rootpath))
                 {
-                    #region Serialize the nodeflux JSON Data
-                    string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
-                    await Task.Delay(100);
-                    #endregion
-
-                    #region Create Physical Path to save nodeflux JSON Data as file
-                    if (!Directory.Exists(rootpath))
-                    {
-                        Directory.CreateDirectory(rootpath);
-                    }
-                    filepath = rootpath + "NodeFlux/";
-                    if (!Directory.Exists(filepath))
-                    {
-                        Directory.CreateDirectory(filepath);
-                    }
-                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
-                    if (!File.Exists(filepath))
-                    {
-                        File.Create(filepath).Dispose();
-                        File.WriteAllText(filepath, jsonString);
-                    }
-                    else {
-                        var guid = Guid.NewGuid().ToString();
-                        filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
-                        File.Create(filepath).Dispose();
-                        File.WriteAllText(filepath, jsonString);
-                    }
-
-
-                    response = Request.CreateResponse(HttpStatusCode.OK);
-                    #endregion
+                    Directory.CreateDirectory(rootpath);
                 }
-                catch (IOException)
+                filepath = rootpath + "NodeFlux/";
+                if (!Directory.Exists(filepath))
                 {
-                    string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                    Directory.CreateDirectory(filepath);
+                }
+                filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Dispose();
+                    File.WriteAllText(filepath, jsonString);
+                }
+                else {
                     var guid = Guid.NewGuid().ToString();
                     filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
                     File.Create(filepath).Dispose();
                     File.WriteAllText(filepath, jsonString);
                 }
-                catch (Exception ex)
-                {
-                    ExceptionLogging.SendErrorToText(ex);
-                    Log("Error in API to save Nodeflux File : " + ex);
-                }
 
+
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                #endregion
+            }
+            catch (IOException)
+            {
+                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "NodeFlux/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, jsonString);
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogging.SendErrorToText(ex);
+                Log("Error in API to save Nodeflux File : " + ex);
+            }
+            if (ANPRName().ToLower() == "nodeflux")
+            {
                 try
                 {
                     #region Pass data to CBE Liberrary
@@ -348,6 +348,7 @@ namespace MLFFWebAPI.Controllers
                     Log("Error in API Nodeflux Send data to MSMQ : " + ex); ;
                 }
             }
+
             return response;
         }
         #endregion
@@ -357,57 +358,56 @@ namespace MLFFWebAPI.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> ReciveDatafromOpenAlpr(OpenALPRPacketJSON objOpenALPRPacketJSON)
         {
-            if (ANPRName().ToLower() == "openalpr")
+            try
             {
-                try
+
+                #region Serialize the OpenAlpr JSON Data
+                string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
+                await Task.Delay(100);
+                #endregion
+
+                #region Create Physical Path to save OpenAlpr JSON Data as file
+                if (!Directory.Exists(rootpath))
                 {
-
-                    #region Serialize the OpenAlpr JSON Data
-                    string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
-                    await Task.Delay(100);
-                    #endregion
-
-                    #region Create Physical Path to save OpenAlpr JSON Data as file
-                    if (!Directory.Exists(rootpath))
-                    {
-                        Directory.CreateDirectory(rootpath);
-                    }
-                    filepath = rootpath + "OpenAlpr/";
-                    if (!Directory.Exists(filepath))
-                    {
-                        Directory.CreateDirectory(filepath);
-                    }
-                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
-                    if (!File.Exists(filepath))
-                    {
-                        File.Create(filepath).Dispose();
-                        File.WriteAllText(filepath, jsonString);
-                    }
-                    else {
-                        var guid = Guid.NewGuid().ToString();
-                        filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
-                        File.Create(filepath).Dispose();
-                        File.WriteAllText(filepath, jsonString);
-                    }
-
-
-                    response = Request.CreateResponse(HttpStatusCode.OK);
-                    #endregion
+                    Directory.CreateDirectory(rootpath);
                 }
-                catch (IOException)
+                filepath = rootpath + "OpenAlpr/";
+                if (!Directory.Exists(filepath))
                 {
-                    string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
+                    Directory.CreateDirectory(filepath);
+                }
+                filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Dispose();
+                    File.WriteAllText(filepath, jsonString);
+                }
+                else {
                     var guid = Guid.NewGuid().ToString();
                     filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
                     File.Create(filepath).Dispose();
                     File.WriteAllText(filepath, jsonString);
                 }
-                catch (Exception ex)
-                {
-                    ExceptionLogging.SendErrorToText(ex);
-                    Log("Error in API to save OpenAlpr File : " + ex);
-                }
 
+
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                #endregion
+            }
+            catch (IOException)
+            {
+                string jsonString = JsonConvert.SerializeObject(objOpenALPRPacketJSON);
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "OpenAlpr/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, jsonString);
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogging.SendErrorToText(ex);
+                Log("Error in API to save OpenAlpr File : " + ex);
+            }
+            if (ANPRName().ToLower() == "openalpr")
+            {
                 try
                 {
                     #region Pass data to CBE Liberrary
@@ -482,6 +482,160 @@ namespace MLFFWebAPI.Controllers
                     Log("Error in API OpenAlpr Send data to MSMQ : " + ex); ;
                 }
             }
+            return response;
+        }
+        #endregion
+
+        #region Hikvision Data
+        [Route("VaaaN/IndonesiaMLFFApi/SendHikvisionEvent")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> ReciveDatafromHikvision(NodeFluxPacketJSON objNodeFluxPacketJSON)
+        {
+            try
+            {
+                #region Serialize the nodeflux JSON Data
+                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                await Task.Delay(100);
+                #endregion
+
+                #region Create Physical Path to save nodeflux JSON Data as file
+                if (!Directory.Exists(rootpath))
+                {
+                    Directory.CreateDirectory(rootpath);
+                }
+                filepath = rootpath + "Hikvision/";
+                if (!Directory.Exists(filepath))
+                {
+                    Directory.CreateDirectory(filepath);
+                }
+                filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Dispose();
+                    File.WriteAllText(filepath, jsonString);
+                }
+                else {
+                    var guid = Guid.NewGuid().ToString();
+                    filepath = rootpath + "Hikvision/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                    File.Create(filepath).Dispose();
+                    File.WriteAllText(filepath, jsonString);
+                }
+
+
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                #endregion
+            }
+            catch (IOException)
+            {
+                string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "Hikvision/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, jsonString);
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogging.SendErrorToText(ex);
+                Log("Error in API to save Hikvision File : " + ex);
+            }
+
+            #region Send TO MSMQ
+            try
+            {
+                if (ANPRName().ToLower() == "hikvision")
+                {
+                    #region Pass data to CBE Liberrary
+                    NodeFluxPacketCBE nodeFluxCBE = new NodeFluxPacketCBE();
+                    nodeFluxCBE.EventType = objNodeFluxPacketJSON.Event_Type;
+                    nodeFluxCBE.TimeStamp = Constants.ConversionDateTime(objNodeFluxPacketJSON.TimeStamp);
+                    nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
+                    nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
+                    nodeFluxCBE.Provider = 1;
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Camera_Position.ToString()))
+                        nodeFluxCBE.CameraPosition = string.Empty;
+                    else
+                        nodeFluxCBE.CameraPosition = objNodeFluxPacketJSON.Camera.Camera_Position.ToString();
+
+                    nodeFluxCBE.CameraId = objNodeFluxPacketJSON.Camera.Id;
+                    nodeFluxCBE.CameraName = objNodeFluxPacketJSON.Camera.Name;
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Address))
+                        nodeFluxCBE.CameraAddress = string.Empty;
+                    else
+                        nodeFluxCBE.CameraAddress = objNodeFluxPacketJSON.Camera.Address;
+                    if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 2)
+                    {
+                        nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString() + "," + objNodeFluxPacketJSON.Camera.Coordinate[1].ToString();
+                    }
+                    else if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 1)
+                    {
+                        nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString();
+                    }
+                    else {
+                        nodeFluxCBE.CamaraCoordinate = string.Empty;
+                    }
+                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
+                    nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
+                    nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
+
+                    #region Convert 64 bit String into PNG Image
+                    filepath = Constants.EventPath + @"Thumbnail\Plates\";
+                    //filepath = rootpath + @"Thumbnail\Plates\";
+                    if (!Directory.Exists(filepath))
+                    {
+                        Directory.CreateDirectory(filepath);
+                    }
+                    string imgfilepath = string.Empty;
+                    string FileName = string.Empty;
+                    FileName = "VRN_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                    imgfilepath = filepath + FileName;
+                    nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
+
+                    imgfilepath = string.Empty;
+                    FileName = string.Empty;
+                    filepath = Constants.EventPath + @"Thumbnail\Vehicle\";
+                    //filepath = rootpath + @"Thumbnail\Vehicle\";
+                    if (!Directory.Exists(filepath))
+                    {
+                        Directory.CreateDirectory(filepath);
+                    }
+                    FileName = "Vehicle_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                    imgfilepath = filepath + FileName;
+                    nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
+
+                    #endregion
+
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Video_URL))
+                        nodeFluxCBE.VideoURL = string.Empty;
+                    else if (objNodeFluxPacketJSON.Data.Video_URL.Contains("http"))
+                        nodeFluxCBE.VideoURL = objNodeFluxPacketJSON.Data.Video_URL;
+                    else
+                        nodeFluxCBE.VideoURL = "http://" + objNodeFluxPacketJSON.Data.Video_URL;
+                    #endregion
+
+                    #region Send data to MSMQ
+                    NodeFluxPacket nfp = new NodeFluxPacket();
+                    nfp.Source = "Source";
+                    nfp.Destination = "Destination";
+                    nfp.Payload = nodeFluxCBE;
+                    nfp.TimeStamp = DateTime.Now;
+
+                    Message m = new Message();
+                    m.Formatter = new BinaryMessageFormatter();
+                    m.Body = nfp;
+                    m.Recoverable = true;
+                    inBoxQueue = Queue.Create(Queue.inBoxQueueName);
+                    inBoxQueue.Send(m);
+                    #endregion
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ExceptionLogging.SendErrorToText(ex);
+                Log("Error in API Hikvision Send data to MSMQ : " + ex); ;
+            }
+            #endregion
+
             return response;
         }
         #endregion
@@ -764,6 +918,8 @@ namespace MLFFWebAPI.Controllers
                                             accountHistory.CreationDate = transcationDateTime;
                                             accountHistory.ModificationDate = transcationDateTime;
                                             accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
+                                            accountHistory.OpeningBalance = (customerVehicle.AccountBalance - rechargeAmount);
+                                            accountHistory.ClosingBalance = customerVehicle.AccountBalance;
                                             entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
                                             LogInboundSMS("Account history table updated successfully.");
                                         }
@@ -945,25 +1101,50 @@ namespace MLFFWebAPI.Controllers
                 LogInboundSMS("===========Responce SMS (Start)=======");
 
                 #region Variables
-                string mobileNumber = "";
-                string referenceid = "";
-                string statuscode = "";
-                string transactionid = "";
-                DateTime messageReceiveTime = DateTime.Now;
-
+                SMSCommunicationHistoryCBE sms = new SMSCommunicationHistoryCBE();
+                string data = "";
                 #endregion
 
                 #region Read Inbound SMS XML Data
                 var doc = new XmlDocument();
                 try
                 {
-                    LogInboundSMS("XML Raw data: " + request.Content.ReadAsStringAsync().Result);
-
-                    string data = WebUtility.UrlDecode(request.Content.ReadAsStringAsync().Result);
+                    data = WebUtility.UrlDecode(request.Content.ReadAsStringAsync().Result);
                     data = data.Replace("data=", "");
-
+                    System.IO.MemoryStream ms = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(data));
+                    System.Xml.XmlReader reader = System.Xml.XmlReader.Create(ms);
                     LogInboundSMS("XML response: " + data);
-                    doc.LoadXml(data);
+                    while (reader.Read())
+                    {
+                        if (reader.NodeType == XmlNodeType.Element)
+                        {
+                            if (reader.Name == "status_code")
+                            {
+                                reader.Read();
+                                try
+                                {
+                                    sms.ResponseCode = Convert.ToInt32(Convert.ToString(reader.Value));
+                                    LogInboundSMS("Response status code is " + sms.ResponseCode + ".");
+                                }
+                                catch (Exception)
+                                {
+                                    LogInboundSMS("error in convert status code is " + reader.Value + ".");
+                                }
+
+                            }
+                            if (reader.Name == "transaction_id")
+                            {
+                                reader.Read();
+                                sms.TransactionId = Convert.ToString(reader.Value);
+                                LogInboundSMS("Response transactionId is " + sms.TransactionId + ".");
+                            }
+                        }
+                    }
+                    //doc.Load(data);
+                    //xmlFile = new XmlNodeReader(doc);
+                    //ds.ReadXml(xmlFile);
+                    //LogInboundSMS("XML response: " + xmlFile.ToString());
+
                 }
                 catch (Exception ex)
                 {
@@ -971,35 +1152,36 @@ namespace MLFFWebAPI.Controllers
                 }
                 #endregion
 
-
-
                 #region Parse XML
-                //try
-                //{
-                //    LogInboundSMS("Parsing XML data.");
-
-                //    xmlFile = new XmlNodeReader(doc);
-                //    ds.ReadXml(xmlFile);
-                //    dt = ds.Tables["mo_data"];
-                //    if (dt.Rows.Count > 0)
-                //    {
-                //        mobileNumber = dt.Rows[0]["msisdn"].ToString();
-                //        referenceid = dt.Rows[0]["reference_id"].ToString();
-                //        statuscode = dt.Rows[0]["status_code"].ToString();
-                //        transactionid = dt.Rows[0]["transaction_id"].ToString();
-                //    }
-
-                //    LogInboundSMS("XML parsed successfully.");
-                //}
-                //catch (Exception ex)
-                //{
-                //    LogInboundSMS("Failed to parse xml. : " + ex.Message);
-                //}
-                #endregion
-
-                #region Update delivery ststaus
-
-                // TODO
+                try
+                {
+                    if (sms != null)
+                    {
+                        if (sms.ResponseCode == 3701)
+                        {
+                            sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.Delivered;
+                            sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
+                        }
+                        else
+                        {
+                            sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered;
+                            sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                        }
+                        sms.MessageReceiveTime = DateTime.Now;
+                        sms.OperatorAttemptCount = 1; 
+                        sms.GatewayResponse = data;
+                        SMSCommunicationHistoryBLL.UpdateSecondResponse(sms);
+                        LogInboundSMS("SMS sent status Second status updated successfully.");
+                    }
+                    else
+                    {
+                        LogInboundSMS("XML failed successfully.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogInboundSMS("Failed to parse xml. : " + ex.Message);
+                }
                 #endregion
 
                 LogInboundSMS("=========Responce message (Stop)=========");

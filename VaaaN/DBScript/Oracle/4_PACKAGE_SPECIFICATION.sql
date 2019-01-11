@@ -1,4 +1,4 @@
-/* Formatted on 06/01/2019 12:26:12 (QP5 v5.215.12089.38647) */
+/* Formatted on 09-01-2019 17:36:08 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -806,6 +806,36 @@ AS
                                  P_MODIFICATION_DATE         IN     DATE,
                                  P_MODIFIED_BY               IN     NUMBER);
 
+   PROCEDURE SMS_HISTORY_UPDATE_FIRST (
+      P_ENTRY_ID                  IN NUMBER,
+      P_TMS_ID                    IN NUMBER,
+      P_CUSTOMER_ACCOUNT_ID       IN NUMBER,
+      P_CUSTOMER_NAME             IN NVARCHAR2,
+      P_MOBILE_NUMBER             IN NVARCHAR2,
+      P_MESSAGE_DIRECTION         IN NUMBER,
+      P_MESSAGE_BODY              IN NVARCHAR2,
+      P_SENT_STATUS               IN NUMBER,
+      P_RECEIVED_PROCESS_STATUS   IN NUMBER,
+      P_MESSAGE_SEND_TIME         IN DATE,
+      P_MESSAGE_RECEIVE_TIME      IN DATE,
+      P_MESSAGE_DELIVERY_STATUS   IN NUMBER,
+      P_ATTEMPT_COUNT             IN NUMBER,
+      P_CREATION_DATE             IN DATE,
+      P_MODIFICATION_DATE         IN DATE,
+      P_MODIFIED_BY               IN NUMBER,
+      P_TRANSACTION_ID            IN NVARCHAR2,
+      P_GATEWAY_RESPONSE          IN NVARCHAR2,
+      P_GATEWAY_RESPONSE_CODE     IN NVARCHAR2);
+
+   PROCEDURE SMS_HISTORY_UPDATE_SECOND (
+      P_SENT_STATUS               IN NUMBER,
+      P_MESSAGE_RECEIVE_TIME      IN DATE,
+      P_MESSAGE_DELIVERY_STATUS   IN NUMBER,
+      P_OPERATOR_ATTEMPT_COUNT    IN NUMBER,
+      P_TRANSACTION_ID            IN NVARCHAR2,
+      P_OPERATOR_RESPONSE         IN NVARCHAR2,
+      P_OPERATOR_RESPONSE_CODE    IN NVARCHAR2);
+
    PROCEDURE SMS_HISTORY_UPDATE (P_ENTRY_ID                  IN NUMBER,
                                  P_TMS_ID                    IN NUMBER,
                                  P_CUSTOMER_ACCOUNT_ID       IN NUMBER,
@@ -1064,7 +1094,9 @@ AS
       P_IS_SMS_SENT                 IN     NUMBER,
       P_IS_EMAIL_SENT               IN     NUMBER,
       P_CREATION_DATE               IN     DATE,
-      P_TRANSFER_STATUS             IN     NUMBER);
+      P_TRANSFER_STATUS             IN     NUMBER,
+      P_OPENING_BALANCE             IN     NUMBER,
+      P_CLOSING_BALANCE             IN     NUMBER);
 
    PROCEDURE ACCOUNT_HISTORY_UPDATE (P_TMS_ID                      IN NUMBER,
                                      P_ACCOUNT_ID                  IN NUMBER,

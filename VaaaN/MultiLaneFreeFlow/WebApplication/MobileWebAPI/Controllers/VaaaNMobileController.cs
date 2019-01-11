@@ -533,8 +533,10 @@ namespace MobileWebAPI.Controllers
                             accountHistory.CreationDate = transcationDateTime;
                             accountHistory.ModificationDate = transcationDateTime;
                             accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
+                            accountHistory.OpeningBalance = (objCustomerVehicleCBE.AccountBalance - objCustomerVehicleInformation.TopUpAmount);
+                            accountHistory.ClosingBalance = objCustomerVehicleCBE.AccountBalance;
                             entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
-                            
+
                             #endregion
 
                             #region Save outgoing message in database
