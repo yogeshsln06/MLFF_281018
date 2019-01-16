@@ -499,6 +499,51 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return dt;
         }
+
+        public static DataSet GetVehicleBalanceReport(Int32 VehcileId, Int32 Month, Int32 Year)
+        {
+            DataSet ds = new DataSet();
+
+            try
+            {
+                string spName = Constants.oraclePackagePrefix + "CUSTOMERVEHICLE_GETBYID";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ENTRY_ID", DbType.Int32, VehcileId, ParameterDirection.Input));
+
+                DataSet dsVehcile = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt_copy = new DataTable();
+                dt_copy = dsVehcile.Tables[0].Copy();
+                ds.Tables.Add(dt_copy);
+
+                spName = Constants.oraclePackagePrefix + "VEHICLE_BALANCE_REPORT";
+                command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_ID", DbType.Int32, VehcileId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MONTH_ID", DbType.Int32, Month, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_YEAR_ID", DbType.Int32, Year, ParameterDirection.Input));
+                DataSet dsVehcileReport = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt_Transaction = new DataTable();
+                dsVehcileReport.Tables[0].TableName = "TranscationDeatils";
+                dt_Transaction = dsVehcileReport.Tables[0].Copy();
+                if (dt_Transaction.Rows.Count > 0)
+                {
+                    DataRow toTop = dt_Transaction.NewRow();
+                    toTop[2] = "Beginning";
+                    toTop[5] = dsVehcileReport.Tables[0].Rows[0]["OPENING_BALANCE"];
+                    dt_Transaction.Rows.InsertAt(toTop, 0);
+                    DataRow tobottom = dt_Transaction.NewRow();
+                    tobottom[2] = "Ending";
+                    tobottom[5] = dsVehcileReport.Tables[0].Rows[dsVehcileReport.Tables[0].Rows.Count - 1]["CLOSING_BALANCE"];
+                    dt_Transaction.Rows.InsertAt(tobottom, dsVehcileReport.Tables[0].Rows.Count + 1);
+                }
+                ds.Tables.Add(dt_Transaction);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return ds;
+        }
         #endregion
 
         #region Helper Methods
