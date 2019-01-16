@@ -189,7 +189,7 @@ namespace MobileWebAPI.Controllers
                             #region Save Customer Vehicle Data
                             objCustomerVehicleCBE.AccountId = CustomerentryId;
                             sJSONResponse = SaveVehicleData(objVehicleRegistration, objCustomerVehicleCBE);
-                            if (sJSONResponse.Contains("Somthing went wrong"))
+                            if (sJSONResponse.Contains("Something went wrong"))
                                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                             else
                                 return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
@@ -392,7 +392,7 @@ namespace MobileWebAPI.Controllers
                             #region Save Customer Vehicle Data
                             objCustomerVehicleCBE.AccountId = CustomerentryId;
                             sJSONResponse = SaveVehicleData(objVehicleRegistration, objCustomerVehicleCBE);
-                            if (sJSONResponse.Contains("Somthing went wrong"))
+                            if (sJSONResponse.Contains("Something went wrong"))
                                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
                             else
                                 return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
@@ -407,7 +407,7 @@ namespace MobileWebAPI.Controllers
                 {
                     Log("Exception in Transaction History Summary. : " + ex.ToString());
                     ModelStateList objModelState = new ModelStateList();
-                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objModelState.ErrorMessage = "Something went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
@@ -469,14 +469,14 @@ namespace MobileWebAPI.Controllers
                     }
                     else
                     {
-                        objModelState.ErrorMessage = "Somthing went wrong.";
+                        objModelState.ErrorMessage = "Something went wrong.";
                         objResponseMessage.Add(objModelState);
                         sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                     }
 
                 }
                 else {
-                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objModelState.ErrorMessage = "Something went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                 }
@@ -589,7 +589,7 @@ namespace MobileWebAPI.Controllers
                         {
                             Log("Exception in TOP Up. : " + ex.ToString());
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Somthing went wrong.";
+                            objModelState.ErrorMessage = "Something went wrong.";
                             objResponseMessage.Add(objModelState);
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
@@ -607,7 +607,7 @@ namespace MobileWebAPI.Controllers
                 {
                     Log("Exception in TOP Up. : " + ex.ToString());
                     ModelStateList objModelState = new ModelStateList();
-                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objModelState.ErrorMessage = "Something went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
@@ -682,7 +682,7 @@ namespace MobileWebAPI.Controllers
                         {
                             Log("Exception in Inquiry Customer Vehicle Detail. : " + ex.ToString());
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Somthing went wrong.";
+                            objModelState.ErrorMessage = "Something went wrong.";
                             objResponseMessage.Add(objModelState);
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
@@ -700,7 +700,7 @@ namespace MobileWebAPI.Controllers
                 {
                     Log("Exception in Inquiry Customer Vehicle Detail. : " + ex.ToString());
                     ModelStateList objModelState = new ModelStateList();
-                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objModelState.ErrorMessage = "Something went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
@@ -783,7 +783,7 @@ namespace MobileWebAPI.Controllers
                                 {
                                     Log("Exception in Transaction History Summary. : " + ex.ToString());
                                     ModelStateList objModelState = new ModelStateList();
-                                    objModelState.ErrorMessage = "Somthing went wrong.";
+                                    objModelState.ErrorMessage = "Something went wrong.";
                                     objResponseMessage.Add(objModelState);
                                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
@@ -801,7 +801,7 @@ namespace MobileWebAPI.Controllers
                         {
                             Log("Exception in Transaction History Summary. : " + ex.ToString());
                             ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Somthing went wrong.";
+                            objModelState.ErrorMessage = "Something went wrong.";
                             objResponseMessage.Add(objModelState);
                             sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
@@ -820,7 +820,7 @@ namespace MobileWebAPI.Controllers
                 {
                     Log("Exception in Transaction History Summary. : " + ex.ToString());
                     ModelStateList objModelState = new ModelStateList();
-                    objModelState.ErrorMessage = "Somthing went wrong.";
+                    objModelState.ErrorMessage = "Something went wrong.";
                     objResponseMessage.Add(objModelState);
                     sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
