@@ -126,9 +126,9 @@ namespace MLFFWebAPI.Controllers
                         CrossTalkPacketCBE crosstalkPacketCBE = new CrossTalkPacketCBE();
                         crosstalkPacketCBE.EventType = dr["type"].ToString();
                         crosstalkPacketCBE.TimeStamp = Constants.UTCtoDateTime(dr["timestamp"].ToString());
-                        crosstalkPacketCBE.UUID = dr["uuid"].ToString();
+                        //crosstalkPacketCBE.UUID = dr["uuid"].ToString();
                         crosstalkPacketCBE.LocationId = dr["locationId"].ToString();
-                        crosstalkPacketCBE.ParentUUID = dr["parentUUID"].ToString();
+                        //crosstalkPacketCBE.ParentUUID = dr["parentUUID"].ToString();
                         crosstalkPacketCBE.ObjectId = dr["objectId"].ToString();
 
                         #region Filter data according to Event Id and Event id is the common key of sub child
@@ -137,19 +137,19 @@ namespace MLFFWebAPI.Controllers
                         dt = dv.ToTable();
                         foreach (DataRow Childdr in dt.Rows)
                         {
-                            if (Childdr["id"].ToString() == "first-read")
-                            {
-                                crosstalkPacketCBE.FirstRead = Childdr["value"].ToString();
-                            }
-                            else if (Childdr["id"].ToString() == "last-read")
-                            {
-                                crosstalkPacketCBE.LastRead = Childdr["value"].ToString();
-                            }
-                            else if (Childdr["id"].ToString() == "observationUUID")
-                            {
-                                crosstalkPacketCBE.ObservationUUID = Childdr["value"].ToString();
-                            }
-                            else if (Childdr["id"].ToString() == "reads")
+                            //if (Childdr["id"].ToString() == "first-read")
+                            //{
+                            //    crosstalkPacketCBE.FirstRead = Childdr["value"].ToString();
+                            //}
+                            //else if (Childdr["id"].ToString() == "last-read")
+                            //{
+                            //    crosstalkPacketCBE.LastRead = Childdr["value"].ToString();
+                            //}
+                            //else if (Childdr["id"].ToString() == "observationUUID")
+                            //{
+                            //    crosstalkPacketCBE.ObservationUUID = Childdr["value"].ToString();
+                            //}
+                            if (Childdr["id"].ToString() == "reads")
                             {
                                 crosstalkPacketCBE.Reads = Childdr["value"].ToString();
                             }
@@ -286,6 +286,10 @@ namespace MLFFWebAPI.Controllers
                     }
                     else {
                         nodeFluxCBE.CamaraCoordinate = string.Empty;
+                    }
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Plate))
+                    {
+                        objNodeFluxPacketJSON.Data.Plate = "Not Detected";
                     }
                     nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
                     nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
@@ -573,7 +577,11 @@ namespace MLFFWebAPI.Controllers
                     else {
                         nodeFluxCBE.CamaraCoordinate = string.Empty;
                     }
-                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Plate))
+                    {
+                        objNodeFluxPacketJSON.Data.Plate = "Not Detected";
+                    }
+                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate.Replace("Unknown", "Not Detected");
                     nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
                     nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
 
@@ -586,7 +594,7 @@ namespace MLFFWebAPI.Controllers
                     }
                     string imgfilepath = string.Empty;
                     string FileName = string.Empty;
-                    FileName = "VRN_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                    FileName = "VRN_HV_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
                     imgfilepath = filepath + FileName;
                     nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
 
@@ -598,7 +606,7 @@ namespace MLFFWebAPI.Controllers
                     {
                         Directory.CreateDirectory(filepath);
                     }
-                    FileName = "Vehicle_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
+                    FileName = "Vehicle_HV_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
                     imgfilepath = filepath + FileName;
                     nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
 
@@ -1168,7 +1176,7 @@ namespace MLFFWebAPI.Controllers
                             sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                         }
                         sms.MessageReceiveTime = DateTime.Now;
-                        sms.OperatorAttemptCount = 1; 
+                        sms.OperatorAttemptCount = 1;
                         sms.GatewayResponse = data;
                         SMSCommunicationHistoryBLL.UpdateSecondResponse(sms);
                         LogInboundSMS("SMS sent status Second status updated successfully.");
@@ -1303,7 +1311,8 @@ namespace MLFFWebAPI.Controllers
         {
             try
             {
-                anprName = System.Configuration.ConfigurationManager.AppSettings["anprName"].ToString();
+                // anprName = System.Configuration.ConfigurationManager.AppSettings["anprName"].ToString();
+                anprName = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetActiveANPR();
             }
             catch (Exception)
             {
