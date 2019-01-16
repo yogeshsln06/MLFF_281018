@@ -1799,49 +1799,6 @@ namespace MLFFWebUI.Controllers
         #endregion
 
 
-        #region VehicleBalanceReport
-        public ActionResult VehicleBalanceReport()
-        {
-            if (Session["LoggedUserId"] == null)
-            {
-                return RedirectToAction("Logout", "Login");
-            }
-            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "CustomerTransaction", "VehicleBalanceReport");
-            #region Gantry Class Dropdown
-            List<SelectListItem> gantryList = new List<SelectListItem>();
-            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
-
-            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
-            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
-            {
-                gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
-            }
-
-            ViewBag.Gantry = gantryList;
-
-            #endregion
-
-            #region Vehicle Class Dropdown
-            List<SelectListItem> vehicleClass = new List<SelectListItem>();
-            List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
-
-            vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
-            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
-            {
-                vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
-            }
-
-            ViewBag.VehicleClass = vehicleClass;
-
-            #endregion
-
-            #region Transaction Category
-            ViewBag.TransactionCategory = HelperClass.GetManualReviewTransactionCategory();
-            #endregion
-
-            return View();
-        }
         
-        #endregion
     }
 }

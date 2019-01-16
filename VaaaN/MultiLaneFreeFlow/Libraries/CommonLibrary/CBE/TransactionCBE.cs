@@ -30,7 +30,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         //private string nodefluxVehicleClassIdRear;
         //private string nodefluxTimestampRear; //newly added
 
-        private int crosstalkEntryId = -1;
+        private int crosstalkEntryIdFront = -1;
+        private int crosstalkEntryIdRear = -1;
         private int nodefluxEntryIdFront = -1;
         private int nodefluxEntryIdRear = -1;
 
@@ -231,15 +232,26 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         //}
         #endregion
 
-        public int CrosstalkEntryId
+        public int CrosstalkEntryIdFront
         {
             get
             {
-                return this.crosstalkEntryId;
+                return this.crosstalkEntryIdFront;
             }
             set
             {
-                this.crosstalkEntryId = value;
+                this.crosstalkEntryIdFront = value;
+            }
+        }
+        public int CrosstalkEntryIdRear
+        {
+            get
+            {
+                return this.crosstalkEntryIdRear;
+            }
+            set
+            {
+                this.crosstalkEntryIdRear = value;
             }
         }
         public int NodefluxEntryIdFront

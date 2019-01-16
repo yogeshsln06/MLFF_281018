@@ -31,13 +31,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_entry_id", DbType.Int32, entryId, ParameterDirection.Output));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_event_type", DbType.String, crossTalkPacket.EventType, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_time_stamp", DbType.String, crossTalkPacket.TimeStamp, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_uuid", DbType.String, crossTalkPacket.UUID, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_location_id", DbType.String, crossTalkPacket.LocationId, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_parent_uuid", DbType.String, crossTalkPacket.ParentUUID, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_object_id", DbType.String, crossTalkPacket.ObjectId, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_first_read", DbType.String, crossTalkPacket.FirstRead, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_last_read", DbType.String, crossTalkPacket.LastRead, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_observation_uuid", DbType.String, crossTalkPacket.ObservationUUID, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_reads", DbType.String, crossTalkPacket.Reads, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_creation_date", DbType.DateTime, crossTalkPacket.CreationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_vehicle_class_id", DbType.Int32, crossTalkPacket.VehicleClassId, ParameterDirection.Input));
@@ -71,15 +66,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_entry_id", DbType.Int32, crossTalkPacket.EntryId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_event_type", DbType.String, crossTalkPacket.EventType, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_time_stamp", DbType.String, crossTalkPacket.TimeStamp, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_uuid", DbType.String, crossTalkPacket.UUID, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_location_id", DbType.String, crossTalkPacket.LocationId, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_parent_uuid", DbType.String, crossTalkPacket.ParentUUID, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_object_id", DbType.String, crossTalkPacket.ObjectId, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_first_read", DbType.String, crossTalkPacket.FirstRead, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_last_read", DbType.String, crossTalkPacket.LastRead, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_observation_uuid", DbType.String, crossTalkPacket.ObservationUUID, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_reads", DbType.String, crossTalkPacket.Reads, ParameterDirection.Input, 100));
-
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modifier_id", DbType.Int32, crossTalkPacket.ModifierId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modification_date", DbType.DateTime, crossTalkPacket.ModificationDate, ParameterDirection.Input));
 
@@ -238,59 +227,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["TIME_STAMP"] != DBNull.Value)
                         crossTalkPacket.TimeStamp = Convert.ToString(dt.Rows[i]["TIME_STAMP"]);
 
-                    if (dt.Rows[i]["UUID"] != DBNull.Value)
-                        crossTalkPacket.UUID = Convert.ToString(dt.Rows[i]["UUID"]);
+                    //if (dt.Rows[i]["UUID"] != DBNull.Value)
+                    //    crossTalkPacket.UUID = Convert.ToString(dt.Rows[i]["UUID"]);
 
                     if (dt.Rows[i]["LOCATION_ID"] != DBNull.Value)
                         crossTalkPacket.LocationId = Convert.ToString(dt.Rows[i]["LOCATION_ID"]);
 
-                    if (dt.Rows[i]["PARENT_UUID"] != DBNull.Value)
-                        crossTalkPacket.ParentUUID = Convert.ToString(dt.Rows[i]["PARENT_UUID"]);
+                    //if (dt.Rows[i]["PARENT_UUID"] != DBNull.Value)
+                    //    crossTalkPacket.ParentUUID = Convert.ToString(dt.Rows[i]["PARENT_UUID"]);
 
                     if (dt.Rows[i]["OBJECT_ID"] != DBNull.Value)
                         crossTalkPacket.ObjectId = Convert.ToString(dt.Rows[i]["OBJECT_ID"]);
 
-                    if (dt.Rows[i]["FIRST_READ"] != DBNull.Value)
-                        crossTalkPacket.FirstRead = Convert.ToString(dt.Rows[i]["FIRST_READ"]);
+                    //if (dt.Rows[i]["FIRST_READ"] != DBNull.Value)
+                    //    crossTalkPacket.FirstRead = Convert.ToString(dt.Rows[i]["FIRST_READ"]);
 
-                    if (dt.Rows[i]["LAST_READ"] != DBNull.Value)
-                        crossTalkPacket.LastRead = Convert.ToString(dt.Rows[i]["LAST_READ"]);
+                    //if (dt.Rows[i]["LAST_READ"] != DBNull.Value)
+                    //    crossTalkPacket.LastRead = Convert.ToString(dt.Rows[i]["LAST_READ"]);
 
-                    if (dt.Rows[i]["OBSERVATION_UUID"] != DBNull.Value)
-                        crossTalkPacket.ObservationUUID = Convert.ToString(dt.Rows[i]["OBSERVATION_UUID"]);
+                    //if (dt.Rows[i]["OBSERVATION_UUID"] != DBNull.Value)
+                    //    crossTalkPacket.ObservationUUID = Convert.ToString(dt.Rows[i]["OBSERVATION_UUID"]);
 
                     if (dt.Rows[i]["READS"] != DBNull.Value)
                         crossTalkPacket.Reads = Convert.ToString(dt.Rows[i]["READS"]);
-
-                    //if (dt.Rows[i]["REPORT_TIME_STAMP"] != DBNull.Value)
-                    //    crossTalkPacket.ReportTimeStamp = Convert.ToString(dt.Rows[i]["REPORT_TIME_STAMP"]);
-
-                    //if (dt.Rows[i]["REPORT_LOCATION_ID"] != DBNull.Value)
-                    //    crossTalkPacket.ReportLocationId = Convert.ToString(dt.Rows[i]["REPORT_LOCATION_ID"]);
-
-                    //if (dt.Rows[i]["REPORT_UUID"] != DBNull.Value)
-                    //    crossTalkPacket.ReportUUID = Convert.ToString(dt.Rows[i]["REPORT_UUID"]);
-
-                    //if (dt.Rows[i]["REPORT_OBJECT_ID"] != DBNull.Value)
-                    //    crossTalkPacket.ReportObjectId = Convert.ToString(dt.Rows[i]["REPORT_OBJECT_ID"]);
-
-                    //if (dt.Rows[i]["REPORT_START_TIME"] != DBNull.Value)
-                    //    crossTalkPacket.ReportStartTime = Convert.ToString(dt.Rows[i]["REPORT_START_TIME"]);
-
-                    //if (dt.Rows[i]["REPORT_STOP_TIME"] != DBNull.Value)
-                    //    crossTalkPacket.ReportStopTime = Convert.ToString(dt.Rows[i]["REPORT_STOP_TIME"]);
-
-                    //if (dt.Rows[i]["REPORT_START_EVENT"] != DBNull.Value)
-                    //    crossTalkPacket.ReportStartEvent = Convert.ToString(dt.Rows[i]["REPORT_START_EVENT"]);
-
-                    //if (dt.Rows[i]["REPORT_STOP_EVENT"] != DBNull.Value)
-                    //    crossTalkPacket.ReportStopEvent = Convert.ToString(dt.Rows[i]["REPORT_STOP_EVENT"]);
-
-                    //if (dt.Rows[i]["REPORT_CONDITION"] != DBNull.Value)
-                    //    crossTalkPacket.ReportCondition = Convert.ToString(dt.Rows[i]["REPORT_CONDITION"]);
-
-                    //if (dt.Rows[i]["REPORT_TAG_COUNT"] != DBNull.Value)
-                    //    crossTalkPacket.ReportTagCount = Convert.ToString(dt.Rows[i]["REPORT_TAG_COUNT"]);
 
                     if (dt.Rows[i]["MODIFIER_ID"] != DBNull.Value)
                         crossTalkPacket.ModifierId = Convert.ToInt32(dt.Rows[i]["MODIFIER_ID"]);

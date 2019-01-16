@@ -62,6 +62,11 @@ function closePopup() {
     $(".modal-backdrop").hide()
 }
 
+function openImgV(ctrl) {
+    $(ctrl).next().trigger('click');
+}
+
+
 function BindCustmerVehicleAccount() {
     pageload = 1;
     $(".animationload").show();
@@ -103,7 +108,11 @@ function BindCustmerVehicleAccount() {
                         'data': 'VehicleImageFront', "className": "dt-center",
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.VehicleImageFront != '' && oData.VehicleImageFront != null) {
-                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImagePreview(this);' style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-blue-500 ti-camera'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImgV(this);' style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-blue-500 ti-camera'></i></span><img onclick='zoomImage(this);' style='display:none;' src='../Attachment/VehicleImage/" + oData.VehicleImageFront + "' data-high-res-src='' alt='' class='gallery-items'>");
+                            }
+                            else
+                            {
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false'  style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-gray-500 ti-camera'></i></span>");
                             }
                         }
                     },
@@ -111,7 +120,10 @@ function BindCustmerVehicleAccount() {
                         'data': 'VehicleImageRear', "className": "dt-center",
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.VehicleImageRear != '' && oData.VehicleImageRear != null) {
-                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImagePreview(this);' style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageRear + "><i class='c-blue-500 ti-camera'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImgV(this);' style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageRear + "><i class='c-blue-500 ti-camera'></i></span><img onclick='zoomImage(this);' style='display:none;' src='../Attachment/VehicleImage/" + oData.VehicleImageFront + "' data-high-res-src='' alt='' class='gallery-items'>");
+                            }
+                            else {
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false'  style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-gray-500 ti-camera'></i></span>");
                             }
                         }
                     },
@@ -665,11 +677,10 @@ function OpenUpdatepopUp(id) {
 
             $("#btnSave").show();
             //$("#btnSave").text("Update");
-            $("#btnpopupClose").show();
-            $("#btnpopupUpdateCancel").show();
+            $("#btnpopupUpdateCancel").hide();
             $("#btnSaveNew").hide();
             $("#btnpopupCancel").hide();
-            $("#btnpopupClose").hide();
+            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger').addClass('').text('Cancel').show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -981,6 +992,7 @@ function CustomerDetailsOpen(ctrl, AccountId) {
             $("#ValidUntil").attr("readonly", false);
             $("#fildset").attr("disabled", "disabled");
             $("#ProvinceId").val($("#hfProvinceId").val());
+
             if ($("#hfCustomerDocumentPath").val() == '') {
                 $("#lblResidentidImagePath").removeAttr('onclick').removeClass('btn-link').addClass('btn-link-disabled');
                 $("#lblResidentidImagePath").text('Attach File');
@@ -988,6 +1000,8 @@ function CustomerDetailsOpen(ctrl, AccountId) {
 
             $("#labelImage").hide();
             $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
+            $("#imgResidentidImagePath").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
+            $("#ResidentidImage").hide();
             GetCityList();
             if ($("#hfBirthPlace").val() || '' != '') {
                 $('#BirthPlace option').each(function (index, option) {
@@ -998,6 +1012,10 @@ function CustomerDetailsOpen(ctrl, AccountId) {
                 });
                 //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
             }
+            $("#lblResidentidImagePath").show();
+            $("#imgPreview").hide();
+
+
             $('#VehicleModal').find("#btnpopupClose").hide();
             $("#ResidentidImage").hide();
             $("#btnSave").hide();

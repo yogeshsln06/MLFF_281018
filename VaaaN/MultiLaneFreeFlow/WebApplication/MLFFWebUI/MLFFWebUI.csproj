@@ -154,6 +154,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SetUpController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -243,6 +244,7 @@
     <Content Include="js\CustomerTranscation.js" />
     <Content Include="js\CustomerVehicle.js" />
     <Content Include="js\liveEvents.js" />
+    <Content Include="js\Report.js" />
     <Content Include="js\SetUp.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
@@ -348,6 +350,7 @@
     <Content Include="Views\SetUp\ClassificationPopUp.cshtml" />
     <Content Include="Views\SetUp\HardwarePopUp.cshtml" />
     <Content Include="Views\CustomerTransaction\VehicleBalanceReport.cshtml" />
+    <Content Include="Views\Report\VehicleBalanceReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

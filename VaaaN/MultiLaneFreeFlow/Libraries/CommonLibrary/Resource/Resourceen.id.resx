@@ -193,7 +193,7 @@
     <value>POS</value>
   </data>
   <data name="Report" xml:space="preserve">
-    <value>Melaporkan</value>
+    <value>Report</value>
   </data>
   <data name="RoleName" xml:space="preserve">
     <value>Nama peran</value>
@@ -337,6 +337,6 @@
     <value>Violation</value>
   </data>
   <data name="VehicleBalanceReport" xml:space="preserve">
-    <value>Vehicle Balance Report</value>
+    <value>Vehicle Balance</value>
   </data>
 </root>

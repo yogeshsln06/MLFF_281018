@@ -51,7 +51,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             //transaction.NodefluxVRN = ""; //will be updated when NFP arrives
             //transaction.NodefluxVehicleClassId = ""; //will be updated when NFP arrives
             //transaction.NodefluxTimestamp = ""; //will be updated when NFP arrives
-            transaction.CrosstalkEntryId = ctpEntryId;
+            transaction.CrosstalkEntryIdFront = ctpEntryId;
             //transaction.NodefluxEntryId = ; // will be updated when NFP arrives
 
             transaction.IsBalanceUpdated = -1; //this is important
@@ -65,6 +65,37 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             transaction.IsRegistered = 1; //it will be always 1 in this case
 
             return TransactionDAL.InsertByCTP(transaction);
+        }
+
+        public static Int64 InsertByCTPRear(CrossTalkPacketCBE ctp, int ctpEntryId)//, int eviVehicleClassId, string eviVRN)
+        {
+            TransactionCBE transaction = new TransactionCBE();
+            transaction.TMSId = 1;
+            transaction.PlazaId = ctp.PlazaId;
+            transaction.LaneId = ctp.LaneId;
+            //transaction.TransactionId = ; //auto increment
+            transaction.TransactionDateTime = Convert.ToDateTime(ctp.TimeStamp);
+            //transaction.CrosstalkTagId = ctp.FirstRead;
+            //transaction.CrosstalkVehicleClassId = eviVehicleClassId.ToString();
+            //transaction.CrosstalkVRN = eviVRN;
+            //transaction.CrosstalkTimestamp = ctp.TimeStamp;
+            //transaction.NodefluxVRN = ""; //will be updated when NFP arrives
+            //transaction.NodefluxVehicleClassId = ""; //will be updated when NFP arrives
+            //transaction.NodefluxTimestamp = ""; //will be updated when NFP arrives
+            transaction.CrosstalkEntryIdFront = ctpEntryId;
+            //transaction.NodefluxEntryId = ; // will be updated when NFP arrives
+
+            transaction.IsBalanceUpdated = -1; //this is important
+            transaction.IsTransfered = Convert.ToInt32(Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred);
+            transaction.IsViolation = -1; // this is important
+            //transaction.ModifierId = 0;//will be updated later
+
+            transaction.CreationDate = System.DateTime.Now;
+            transaction.ModificationDate = System.DateTime.Now;
+
+            transaction.IsRegistered = 1; //it will be always 1 in this case
+
+            return TransactionDAL.InsertByCTPRear(transaction);
         }
 
         public static Int64 InsertByNFPFront(NodeFluxPacketCBE nfp, int nfpEntryId, int isRegistered)
@@ -194,6 +225,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static void UpdateCrossTalkSection(CBE.TransactionCBE transaction, Int32 ctpEntryId)
         {
             TransactionDAL.UpdateCrossTalkSection(transaction, ctpEntryId);
+        }
+
+        public static void UpdateCrossTalkSectionRear(CBE.TransactionCBE transaction, Int32 ctpEntryId)
+        {
+            TransactionDAL.UpdateCrossTalkSectionRear(transaction, ctpEntryId);
         }
 
         public static void UpdateNodefluxSectionFront(CBE.TransactionCBE transaction, Int32 ntpEntryId)

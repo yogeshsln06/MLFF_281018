@@ -17,13 +17,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         int entryId;
         string eventType;
         string timeStamp;
-        string uuid;
+        //string uuid;
         string locationId;
-        string parentUUID;
+        //string parentUUID;
         string objectId;
-        string firstRead;
-        string lastRead;
-        string observationUUID;
+        //string firstRead;
+        //string lastRead;
+        //string observationUUID;
         string reads;
         int modifierId;
         DateTime creationDate;
@@ -31,6 +31,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         Int32 vehicleClassId;
         string vehicleClassName;
         string plateNumber;
+        int readerPosition { get; set; }
         #endregion
 
         #region Property
@@ -101,17 +102,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.timeStamp = value;
             }
         }
-        public string UUID
-        {
-            get
-            {
-                return this.uuid;
-            }
-            set
-            {
-                this.uuid = value;
-            }
-        }
+        //public string UUID
+        //{
+        //    get
+        //    {
+        //        return this.uuid;
+        //    }
+        //    set
+        //    {
+        //        this.uuid = value;
+        //    }
+        //}
         public string LocationId
         {
             get
@@ -123,17 +124,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.locationId = value;
             }
         }
-        public string ParentUUID
-        {
-            get
-            {
-                return this.parentUUID;
-            }
-            set
-            {
-                this.parentUUID = value;
-            }
-        }
+        //public string ParentUUID
+        //{
+        //    get
+        //    {
+        //        return this.parentUUID;
+        //    }
+        //    set
+        //    {
+        //        this.parentUUID = value;
+        //    }
+        //}
         public string ObjectId
         {
             get
@@ -145,39 +146,39 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.objectId = value;
             }
         }
-        public string FirstRead
-        {
-            get
-            {
-                return this.firstRead;
-            }
-            set
-            {
-                this.firstRead = value;
-            }
-        }
-        public string LastRead
-        {
-            get
-            {
-                return this.lastRead;
-            }
-            set
-            {
-                this.lastRead = value;
-            }
-        }
-        public string ObservationUUID
-        {
-            get
-            {
-                return this.observationUUID;
-            }
-            set
-            {
-                this.observationUUID = value;
-            }
-        }
+        //public string FirstRead
+        //{
+        //    get
+        //    {
+        //        return this.firstRead;
+        //    }
+        //    set
+        //    {
+        //        this.firstRead = value;
+        //    }
+        //}
+        //public string LastRead
+        //{
+        //    get
+        //    {
+        //        return this.lastRead;
+        //    }
+        //    set
+        //    {
+        //        this.lastRead = value;
+        //    }
+        //}
+        //public string ObservationUUID
+        //{
+        //    get
+        //    {
+        //        return this.observationUUID;
+        //    }
+        //    set
+        //    {
+        //        this.observationUUID = value;
+        //    }
+        //}
         public string Reads
         {
             get
@@ -259,6 +260,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.plateNumber = value;
             }
         }
+
+        public int ReaderPosition
+        {
+            get
+            {
+                return this.readerPosition;
+            }
+            set
+            {
+                this.readerPosition = value;
+            }
+        }
         #endregion
 
         public override string ToString()
@@ -266,7 +279,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             StringBuilder sb = new StringBuilder();
 
             sb.Append("EntryID = " + this.entryId.ToString() + Environment.NewLine);
-            
+
 
             return sb.ToString();
         }

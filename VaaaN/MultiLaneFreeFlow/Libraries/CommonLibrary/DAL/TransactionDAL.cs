@@ -34,7 +34,41 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //transaction time of CTP
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_DATETIME", DbType.DateTime, transaction.TransactionDateTime, ParameterDirection.Input));
                 //ctp entry id or nfp entry id
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CT_ENTRY_ID", DbType.Int32, transaction.CrosstalkEntryId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CT_ENTRY_ID", DbType.Int32, transaction.CrosstalkEntryIdFront, ParameterDirection.Input));
+                //common parts
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, transaction.CreationDate, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_REGISTERED", DbType.Int32, transaction.IsRegistered, ParameterDirection.Input));
+
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+
+                transactionId = Convert.ToInt64(command.Parameters["P_TRANSACTION_ID"].Value);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return transactionId;
+        }
+
+        public static Int64 InsertByCTPRear(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction)
+        {
+            Int64 transactionId = 0;
+            try
+            {
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_INSERT_BY_CTP_REAR";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                //common parts
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, transaction.TMSId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLAZA_ID", DbType.Int32, transaction.PlazaId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, transaction.LaneId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_ID", DbType.Int64, transaction.TransactionId, ParameterDirection.Output));
+                //transaction time of CTP
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_DATETIME", DbType.DateTime, transaction.TransactionDateTime, ParameterDirection.Input));
+                //ctp entry id or nfp entry id
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CT_ENTRY_ID", DbType.Int32, transaction.CrosstalkEntryIdFront, ParameterDirection.Input));
                 //common parts
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, transaction.CreationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_REGISTERED", DbType.Int32, transaction.IsRegistered, ParameterDirection.Input));
@@ -72,6 +106,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //common parts
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, transaction.CreationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_REGISTERED", DbType.Int32, transaction.IsRegistered, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLESPEED", DbType.Int32, transaction.VehicleSpeed, ParameterDirection.Input));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
 
@@ -107,7 +142,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //common parts
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, transaction.CreationDate, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IS_REGISTERED", DbType.Int32, transaction.IsRegistered, ParameterDirection.Input));
-
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLESPEED", DbType.Int32, transaction.VehicleSpeed, ParameterDirection.Input));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
 
                 transactionId = Convert.ToInt64(command.Parameters["P_TRANSACTION_ID"].Value);
@@ -194,7 +229,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transaction_id", DbType.Int32, transaction.TransactionId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transaction_DateTime", DbType.DateTime, transaction.TransactionDateTime, ParameterDirection.Input));
 
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_ct_entry_id", DbType.Int32, transaction.CrosstalkEntryId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_ct_entry_id", DbType.Int32, transaction.CrosstalkEntryIdFront, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_nf_entry_id_front", DbType.Int32, transaction.NodefluxEntryIdFront, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_nf_entry_id_rear", DbType.Int32, transaction.NodefluxEntryIdRear, ParameterDirection.Input));
 
@@ -429,25 +464,23 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             // Add header line
             if (dt.Rows.Count > 0)
             {
-                sb.Append("TIME_STAMP,");
-                sb.Append("IKE_PLATE_NUMBER,");
-                sb.Append("FRONT_PLATE_NUMBER,");
-                sb.Append("REAR_PLATE_NUMBER,");
-                sb.Append("IKE_VEHICLE_CLASS,");
-                sb.Append("ANPR_VEHICLE_CLASS,");
-                sb.Append("LANE_ID,");
-                sb.Append("IKE_ID,");
-                sb.Append("OWNER_ID,");
-                sb.Append("VEHICLE_OWNER,");
-                sb.Append("AMOUNT_CHARGED,");
-                sb.Append("BALANCE,");
-                //sb.Append("FRONT_PLATE_THUMBNAIL,");
-                //sb.Append("FRONT_VEHICLE_THUMBNAIL,");
-                //sb.Append("FRONT_VIDEO_URL,");
-                //sb.Append("REAR_PLATE_THUMBNAIL,");
-                //sb.Append("REAR_VEHICLE_THUMBNAIL,");
-                //sb.Append("REAR_VIDEO_URL,");
-                sb.Append("SMS_NOTIFICATION_STATUS");
+                sb.Append("Timestamp,");
+                sb.Append("VRN (Front EVI),");
+                sb.Append("VRN (Rear EVI),");
+                sb.Append("VRN (Front ANPR),");
+                sb.Append("VRN (Rear ANPR),");
+                sb.Append("Class (Front EVI),");
+                sb.Append("Class (Rear EVI),");
+                sb.Append("Class (Front ANPR),");
+                sb.Append("Class (Rear ANPR),");
+                sb.Append("Total Record,");
+                sb.Append("Lane,");
+                sb.Append("EVI ID,");
+                sb.Append("Resident ID,");
+                sb.Append("Name,");
+                sb.Append("Amount,");
+                sb.Append("Balance,");
+                sb.Append("Notification Status");
             }
 
             foreach (DataRow dr in dt.Rows)
@@ -463,10 +496,20 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(",");
                 }
 
-                //EVI_VEH_NO
-                if (dr["EVI_VEH_NO"] != DBNull.Value)
+                //EVI_VEH_NO FRONT
+                if (dr["EVI_VRN_FRONT"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["EVI_VEH_NO"]) + ",");
+                    sb.Append(Convert.ToString(dr["EVI_VRN_FRONT"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //EVI_VEH_NO REAR
+                if (dr["EVI_VRN_REAR"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["EVI_VRN_REAR"]) + ",");
                 }
                 else
                 {
@@ -493,27 +536,57 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(",");
                 }
 
-                //VEH_NAME_EVI
-                if (dr["VEH_NAME_EVI"] != DBNull.Value)
+                //Class (Front EVI)
+                if (dr["EVI_CLASS_FRONT"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["VEH_NAME_EVI"]) + ",");
+                    sb.Append(Convert.ToString(dr["EVI_CLASS_FRONT"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
 
-                //VEH_NAME_NODEFLUX
-                if (dr["VEH_NAME_NODEFLUX"] != DBNull.Value)
+                //Class (Rear EVI)
+                if (dr["EVI_CLASS_REAR"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["VEH_NAME_NODEFLUX"]) + ",");
+                    sb.Append(Convert.ToString(dr["EVI_CLASS_REAR"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
 
-                //LANE_ID
+                //Class (Front ANPR)
+                if (dr["ANPR_CLASS_FRONT"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["ANPR_CLASS_FRONT"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //Class (Rear ANPR)
+                if (dr["ANPR_CLASS_REAR"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["ANPR_CLASS_REAR"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //Total Record
+                if (dt.Rows.Count > 0)
+                {
+                    sb.Append(Convert.ToString(dt.Rows.Count) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //Lane
                 if (dr["LANE_ID"] != DBNull.Value)
                 {
                     sb.Append(Convert.ToString(dr["LANE_ID"]) + ",");
@@ -523,7 +596,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(",");
                 }
 
-                //EVI_ID
+                //EVI ID
                 if (dr["EVI_ID"] != DBNull.Value)
                 {
                     sb.Append(Convert.ToString(dr["EVI_ID"]) + ",");
@@ -533,17 +606,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(",");
                 }
 
-                //OWNER_ID
-                if (dr["OWNER_ID"] != DBNull.Value)
+                //Resident ID
+                if (dr["RESIDENT_ID"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["OWNER_ID"]) + ",");
+                    sb.Append(Convert.ToString(dr["RESIDENT_ID"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
 
-                //VEHICLE_OWNER
+                //Name
                 if (dr["VEHICLE_OWNER"] != DBNull.Value)
                 {
                     sb.Append(Convert.ToString(dr["VEHICLE_OWNER"]) + ",");
@@ -572,80 +645,19 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 {
                     sb.Append(",");
                 }
-
-                ////FRONT_PLATE_THUMBNAIL
-                //if (dr["FRONT_PLATE_THUMBNAIL"] != DBNull.Value)
-                //{
-                //    sb.Append(Convert.ToString(dr["FRONT_PLATE_THUMBNAIL"]) + ",");
-                //}
-                //else
-                //{
-                //    sb.Append(",");
-                //}
-
-                ////FRONT_VEHICLE_THUMBNAIL
-                //if (dr["FRONT_VEHICLE_THUMBNAIL"] != DBNull.Value)
-                //{
-                //    sb.Append(Convert.ToString(dr["FRONT_VEHICLE_THUMBNAIL"]) + ",");
-                //}
-                //else
-                //{
-                //    sb.Append(",");
-                //}
-
-                ////FRONT_VIDEO_URL
-                //if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
-                //{
-                //    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]) + ",");
-                //}
-                //else
-                //{
-                //    sb.Append(",");
-                //}
-
-                ////REAR_PLATE_THUMBNAIL
-                //if (dr["REAR_PLATE_THUMBNAIL"] != DBNull.Value)
-                //{
-                //    sb.Append(Convert.ToString(dr["REAR_PLATE_THUMBNAIL"]) + ",");
-                //}
-                //else
-                //{
-                //    sb.Append(",");
-                //}
-
-                ////REAR_VEHICLE_THUMBNAIL
-                //if (dr["REAR_VEHICLE_THUMBNAIL"] != DBNull.Value)
-                //{
-                //    sb.Append(Convert.ToString(dr["REAR_VEHICLE_THUMBNAIL"]) + ",");
-                //}
-                //else
-                //{
-                //    sb.Append(",");
-                //}
-
-                ////REAR_VIDEO_URL
-                //if (dr["REAR_VIDEO_URL"] != DBNull.Value)
-                //{
-                //    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]) + ",");
-                //}
-                //else
-                //{
-                //    sb.Append(",");
-                //}
-
                 //SMS_NOTIFICATION
                 if (dr["SMS_NOTIFICATION"] != DBNull.Value)
                 {
                     sb.Append(Convert.ToString(dr["SMS_NOTIFICATION"]));
                 }
             }
-            if (dt.Rows.Count > 0)
-            {
-                sb.AppendLine();
-                sb.AppendLine();
-                sb.AppendLine();
-                sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
-            }
+            //if (dt.Rows.Count > 0)
+            //{
+            //    sb.AppendLine();
+            //    sb.AppendLine();
+            //    sb.AppendLine();
+            //    sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
+            //}
 
             return sb;
         }
@@ -657,18 +669,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             // Add header line
             if (dt.Rows.Count > 0)
             {
-                sb.Append("TIME_STAMP,");
-                sb.Append("EVI_VEH_NO,");
-                sb.Append("FRONT_VRN,");
-                sb.Append("REAR_VRN,");
-                sb.Append("VEH_NAME_EVI,");
-                sb.Append("VEH_NAME_NODEFLUX,");
-                sb.Append("LANE_ID,");
-                sb.Append("EVI_ID,");
-                sb.Append("OWNER_ID,");
-                sb.Append("VEHICLE_OWNER");
-                sb.Append("AMOUNT_CHARGED");
-                sb.Append("SMS_NOTIFICATION");
+                sb.Append("Timestamp,");
+                sb.Append("VRN (Front ANPR),");
+                sb.Append("VRN (Rear ANPR),");
+                sb.Append("Class (Front ANPR),");
+                sb.Append("Class (Rear ANPR),");
+                sb.Append("Total Record,");
+                sb.Append("Lane,");
             }
 
             foreach (DataRow dr in dt.Rows)
@@ -679,16 +686,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 if (dr["TIME_STAMP"] != DBNull.Value)
                 {
                     sb.Append(Convert.ToDateTime(dr["TIME_STAMP"]).ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24HOracleQuery) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
-
-                //EVI_VEH_NO
-                if (dr["EVI_VEH_NO"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["EVI_VEH_NO"]) + ",");
                 }
                 else
                 {
@@ -716,9 +713,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 }
 
                 //VEH_NAME_EVI
-                if (dr["VEH_NAME_EVI"] != DBNull.Value)
+                if (dr["ANPR_CLASS_FRONT"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["VEH_NAME_EVI"]) + ",");
+                    sb.Append(Convert.ToString(dr["ANPR_CLASS_FRONT"]) + ",");
                 }
                 else
                 {
@@ -726,15 +723,23 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 }
 
                 //VEH_NAME_NODEFLUX
-                if (dr["VEH_NAME_NODEFLUX"] != DBNull.Value)
+                if (dr["ANPR_CLASS_REAR"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["VEH_NAME_NODEFLUX"]) + ",");
+                    sb.Append(Convert.ToString(dr["ANPR_CLASS_REAR"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
-
+                //Total Record
+                if (dt.Rows.Count > 0)
+                {
+                    sb.Append(Convert.ToString(dt.Rows.Count) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
                 //LANE_ID
                 if (dr["LANE_ID"] != DBNull.Value)
                 {
@@ -745,51 +750,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     sb.Append(",");
                 }
 
-                //REAR_PLATE_THUMBNAIL
-                if (dr["EVI_ID"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["EVI_ID"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
-
-                //OWNER_ID
-                if (dr["OWNER_ID"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["OWNER_ID"]) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
-
-                //VEHICLE_OWNER
-                if (dr["VEHICLE_OWNER"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["VEHICLE_OWNER"]));
-                }
-
-                //AMOUNT_CHARGED
-                if (dr["AMOUNT_CHARGED"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["AMOUNT_CHARGED"]));
-                }
-
-                //SMS_NOTIFICATION
-                if (dr["SMS_NOTIFICATION"] != DBNull.Value)
-                {
-                    sb.Append(Convert.ToString(dr["SMS_NOTIFICATION"]));
-                }
             }
-            if (dt.Rows.Count > 0)
-            {
-                sb.AppendLine();
-                sb.AppendLine();
-                sb.AppendLine();
-                sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
-            }
+            //if (dt.Rows.Count > 0)
+            //{
+            //    sb.AppendLine();
+            //    sb.AppendLine();
+            //    sb.AppendLine();
+            //    sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
+            //}
             return sb;
         }
         #endregion
@@ -954,6 +922,30 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Stored procedure must have cur_out parameter.
                 //There is no need to add ref cursor for oracle in code.
                 string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UPDATE_CTP";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                //where clause part
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, transaction.TMSId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLAZA_ID", DbType.Int32, transaction.PlazaId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, transaction.LaneId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_ID", DbType.Int32, transaction.TransactionId, ParameterDirection.Input));
+                //update part
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CT_ENTRY_ID", DbType.Int32, ctpEntryId, ParameterDirection.Input));
+
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static void UpdateCrossTalkSectionRear(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Int32 ctpEntryId)
+        {
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UPDATE_CTP_REAR";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 //where clause part
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, transaction.TMSId, ParameterDirection.Input));
@@ -1487,7 +1479,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     //    transaction.NodefluxTimestampFront = Convert.ToString(dt.Rows[i]["NODEFLUX_TIMESTAMP_FRONT"]);
 
                     if (dt.Rows[i]["CT_ENTRY_ID"] != DBNull.Value)
-                        transaction.CrosstalkEntryId = Convert.ToInt32(dt.Rows[i]["CT_ENTRY_ID"]);
+                        transaction.CrosstalkEntryIdFront = Convert.ToInt32(dt.Rows[i]["CT_ENTRY_ID"]);
 
                     if (dt.Rows[i]["NF_ENTRY_ID_FRONT"] != DBNull.Value)
                         transaction.NodefluxEntryIdFront = Convert.ToInt32(dt.Rows[i]["NF_ENTRY_ID_FRONT"]);

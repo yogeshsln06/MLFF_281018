@@ -206,6 +206,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
             return hardwares;
         }
+
+        public static string GetActiveANPR()
+        {
+            string CurrentANPR = string.Empty;
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "ACTIVE_ANPR_GET";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt = ds.Tables[tableName];
+                if (dt.Rows.Count > 0)
+                {
+                    CurrentANPR = dt.Rows[0]["ANPR_NAME"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return CurrentANPR;
+        }
         #endregion
 
         #region Helper Methods
@@ -233,7 +256,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                     if (dt.Rows[i]["HARDWARE_TYPE"] != DBNull.Value)
                         hardware.HardwareType = Convert.ToInt32(dt.Rows[i]["HARDWARE_TYPE"]);
-                        hardware.HardwareTypeName = GetEnumFieldName(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.HardwareType), VaaaN.MLFF.Libraries.CommonLibrary.Constants.HardwareTypeName, hardware.HardwareType - 1);
+                    hardware.HardwareTypeName = GetEnumFieldName(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.HardwareType), VaaaN.MLFF.Libraries.CommonLibrary.Constants.HardwareTypeName, hardware.HardwareType - 1);
 
                     if (dt.Rows[i]["HARDWARE_POSITION"] != DBNull.Value)
                         hardware.HardwarePosition = Convert.ToInt32(dt.Rows[i]["HARDWARE_POSITION"]);

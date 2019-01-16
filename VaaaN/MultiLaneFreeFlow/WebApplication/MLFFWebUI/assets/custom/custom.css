@@ -537,7 +537,7 @@ table.dataTable thead .sorting_desc {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1100 !important;
+    z-index: 1500 !important;
     display: none;
     overflow: hidden;
     outline: 0;
@@ -683,6 +683,6 @@ img {
 .btn-link-disabled:hover,
 .btn-link-disabled:focus {
   color: #777;
-  text-decoration: underline;
+  text-decoration: none;
   background-color: transparent;
 }

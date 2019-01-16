@@ -62,5 +62,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.HardwareDAL.GetLatestHardwares(lastCollectionUpdateTime);
         }
 
+
+        public static string GetActiveANPR()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.HardwareDAL.GetActiveANPR();
+        }
+
     }
 }

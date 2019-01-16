@@ -17,6 +17,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         string vehicleClassName;
         string vrn;
         string tagid;
+      
 
         public DateTime Timestamp
         {

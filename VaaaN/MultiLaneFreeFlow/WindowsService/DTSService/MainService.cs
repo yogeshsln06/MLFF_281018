@@ -125,7 +125,7 @@ namespace DTSService
             VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(message, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.DTSService);
         }
 
-        string nameOfBidder = "BaliTower";
+        string nameOfBidder = "SmartERP";
         string csvDirectory = "C:/MLFF/CSV/";
 
         #region Normal transaction
@@ -134,9 +134,9 @@ namespace DTSService
             try
             {
                 // Check previous day
-                GenerateFirstNormalTransactionCSV(DateTime.Now.AddDays(-1));
-                GenerateSecondNormalTransactionCSV(DateTime.Now.AddDays(-1));
-                GenerateThirdNormalTransactionCSV(DateTime.Now.AddDays(-1));
+                //GenerateFirstNormalTransactionCSV(DateTime.Now.AddDays(-1));
+                //GenerateSecondNormalTransactionCSV(DateTime.Now.AddDays(-1));
+                //GenerateThirdNormalTransactionCSV(DateTime.Now.AddDays(-1));
 
                 // Check current day
                 GenerateFirstNormalTransactionCSV(DateTime.Now);
@@ -153,8 +153,8 @@ namespace DTSService
         {
             try
             {
-                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 0, 0, 0, 0);
-                DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 7, 59, 59, 999);
+                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 6, 0, 0, 0);
+                DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 9, 59, 59, 999);
                 DateTime currentDateTime = DateTime.Now;
 
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
@@ -176,7 +176,7 @@ namespace DTSService
         {
             try
             {
-                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 8, 0, 0, 0);
+                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 10, 0, 0, 0);
                 DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 15, 59, 59, 999);
 
                 DateTime currentDateTime = DateTime.Now;
@@ -200,8 +200,9 @@ namespace DTSService
         {
             try
             {
-                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 16, 0, 0, 0);
-                DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 23, 59, 59, 999);
+                DateTime CrossDate = dateToCheck.AddDays(-1);
+                DateTime startDateTime = new DateTime(CrossDate.Year, CrossDate.Month, CrossDate.Day, 16, 0, 0, 0);
+                DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 5, 59, 59, 999);
                 DateTime currentDateTime = DateTime.Now;
 
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
@@ -269,9 +270,9 @@ namespace DTSService
             try
             {
                 // Check previous day
-                GenerateFirstViolationTransactionCSV(DateTime.Now.AddDays(-1));
-                GenerateSecondViolationTransactionCSV(DateTime.Now.AddDays(-1));
-                GenerateThirdViolationTransactionCSV(DateTime.Now.AddDays(-1));
+                //GenerateFirstViolationTransactionCSV(DateTime.Now.AddDays(-1));
+                //GenerateSecondViolationTransactionCSV(DateTime.Now.AddDays(-1));
+                //GenerateThirdViolationTransactionCSV(DateTime.Now.AddDays(-1));
 
                 // Check current day
                 GenerateFirstViolationTransactionCSV(DateTime.Now);
@@ -288,8 +289,8 @@ namespace DTSService
         {
             try
             {
-                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 0, 0, 0, 0);
-                DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 7, 59, 59, 999);
+                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 9, 0, 0, 0);
+                DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 9, 59, 59, 999);
                 DateTime currentDateTime = DateTime.Now;
 
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
@@ -311,7 +312,7 @@ namespace DTSService
         {
             try
             {
-                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 8, 0, 0, 0);
+                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 10, 0, 0, 0);
                 DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 15, 59, 59, 999);
                 DateTime currentDateTime = DateTime.Now;
 
@@ -333,8 +334,9 @@ namespace DTSService
         {
             try
             {
-                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 16, 0, 0, 0);
-                DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 23, 59, 59, 999);
+                DateTime CrossDate = dateToCheck.AddDays(-1);
+                DateTime startDateTime = new DateTime(CrossDate.Year, CrossDate.Month, CrossDate.Day, 16, 0, 0, 0);
+                DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 5, 59, 59, 999);
                 DateTime currentDateTime = DateTime.Now;
 
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift

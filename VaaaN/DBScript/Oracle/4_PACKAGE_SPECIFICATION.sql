@@ -1,4 +1,4 @@
-/* Formatted on 09-01-2019 17:36:08 (QP5 v5.215.12089.38647) */
+/* Formatted on 16/01/2019 15:11:23 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -371,13 +371,8 @@ AS
                                P_LANE_ID            IN     NUMBER,
                                P_EVENT_TYPE         IN     NVARCHAR2,
                                P_TIME_STAMP         IN     NVARCHAR2,
-                               P_UUID               IN     NVARCHAR2,
                                P_LOCATION_ID        IN     NVARCHAR2,
-                               P_PARENT_UUID        IN     NVARCHAR2,
                                P_OBJECT_ID          IN     NVARCHAR2,
-                               P_FIRST_READ         IN     NVARCHAR2,
-                               P_LAST_READ          IN     NVARCHAR2,
-                               P_OBSERVATION_UUID   IN     NVARCHAR2,
                                P_READS              IN     NVARCHAR2,
                                P_CREATION_DATE      IN     DATE,
                                P_VEHICLE_CLASS_ID   IN     NUMBER,
@@ -389,13 +384,8 @@ AS
                                P_LANE_ID             IN NUMBER,
                                P_EVENT_TYPE          IN NVARCHAR2,
                                P_TIME_STAMP          IN NVARCHAR2,
-                               P_UUID                IN NVARCHAR2,
                                P_LOCATION_ID         IN NVARCHAR2,
-                               P_PARENT_UUID         IN NVARCHAR2,
                                P_OBJECT_ID           IN NVARCHAR2,
-                               P_FIRST_READ          IN NVARCHAR2,
-                               P_LAST_READ           IN NVARCHAR2,
-                               P_OBSERVATION_UUID    IN NVARCHAR2,
                                P_READS               IN NVARCHAR2,
                                P_MODIFIER_ID         IN NUMBER,
                                P_MODIFICATION_DATE   IN DATE);
@@ -471,6 +461,15 @@ AS
                                  P_IS_REGISTERED          IN     NUMBER,
                                  P_CREATION_DATE          IN     DATE);
 
+   PROCEDURE TRAN_INSERT_BY_CTP_REAR (P_TMS_ID                 IN     NUMBER,
+                                      P_PLAZA_ID               IN     NUMBER,
+                                      P_LANE_ID                IN     NUMBER,
+                                      P_TRANSACTION_ID            OUT NUMBER,
+                                      P_TRANSACTION_DATETIME   IN     DATE,
+                                      P_CT_ENTRY_ID            IN     NUMBER,
+                                      P_IS_REGISTERED          IN     NUMBER,
+                                      P_CREATION_DATE          IN     DATE);
+
    PROCEDURE TRAN_INSERT_BY_NFP_FRONT (
       P_TMS_ID                 IN     NUMBER,
       P_PLAZA_ID               IN     NUMBER,
@@ -479,7 +478,8 @@ AS
       P_TRANSACTION_DATETIME   IN     DATE,
       P_NF_ENTRY_ID_FRONT      IN     NUMBER,
       P_IS_REGISTERED          IN     NUMBER,
-      P_CREATION_DATE          IN     DATE);
+      P_CREATION_DATE          IN     DATE,
+      P_VEHICLESPEED           IN     NUMBER);
 
    PROCEDURE TRAN_INSERT_BY_NFP_REAR (P_TMS_ID                 IN     NUMBER,
                                       P_PLAZA_ID               IN     NUMBER,
@@ -488,7 +488,8 @@ AS
                                       P_TRANSACTION_DATETIME   IN     DATE,
                                       P_NF_ENTRY_ID_REAR       IN     NUMBER,
                                       P_IS_REGISTERED          IN     NUMBER,
-                                      P_CREATION_DATE          IN     DATE);
+                                      P_CREATION_DATE          IN     DATE,
+                                      P_VEHICLESPEED           IN     NUMBER);
 
    PROCEDURE TRAN_UPDATE_BY_NFP_FRONT (P_TMS_ID              IN NUMBER,
                                        P_PLAZA_ID            IN NUMBER,
@@ -536,6 +537,12 @@ AS
                               P_LANE_ID          IN NUMBER,
                               P_TRANSACTION_ID   IN NUMBER,
                               P_CT_ENTRY_ID      IN NUMBER);
+
+   PROCEDURE TRAN_UPDATE_CTP_REAR (P_TMS_ID           IN NUMBER,
+                                   P_PLAZA_ID         IN NUMBER,
+                                   P_LANE_ID          IN NUMBER,
+                                   P_TRANSACTION_ID   IN NUMBER,
+                                   P_CT_ENTRY_ID      IN NUMBER);
 
 
    PROCEDURE TRAN_UPDATE_NF_FRONT (P_TMS_ID              IN NUMBER,
@@ -1282,5 +1289,7 @@ AS
 
    PROCEDURE CUSTOMERVEHICLE_FILTERED (P_FILTER   IN     NVARCHAR2,
                                        CUR_OUT       OUT T_CURSOR);
+
+   PROCEDURE ACTIVE_ANPR_GET (CUR_OUT OUT T_CURSOR);
 END MLFF_PACKAGE;
 /

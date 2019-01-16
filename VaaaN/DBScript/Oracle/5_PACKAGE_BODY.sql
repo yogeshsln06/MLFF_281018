@@ -1,5 +1,4 @@
-/* Formatted on 09-01-2019 17:36:36 (QP5 v5.215.12089.38647) */
-/* Formatted on 09-01-2019 17:36:36 (QP5 v5.215.12089.38647) */
+/* Formatted on 16/01/2019 17:29:33 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -1594,13 +1593,8 @@ AS
                   CTP.ENTRY_ID,
                   CTP.EVENT_TYPE,
                   CTP.TIME_STAMP,
-                  CTP.UUID,
                   CTP.LOCATION_ID,
-                  CTP.PARENT_UUID,
                   CTP.OBJECT_ID,
-                  CTP.FIRST_READ,
-                  CTP.LAST_READ,
-                  CTP.OBSERVATION_UUID,
                   CTP.READS,
                   CTP.MODIFIER_ID,
                   CTP.CREATION_DATE,
@@ -1624,13 +1618,8 @@ AS
                   CTP.LANE_ID,
                   CTP.EVENT_TYPE,
                   CTP.TIME_STAMP,
-                  CTP.UUID,
                   CTP.LOCATION_ID,
-                  CTP.PARENT_UUID,
                   CTP.OBJECT_ID,
-                  CTP.FIRST_READ,
-                  CTP.LAST_READ,
-                  CTP.OBSERVATION_UUID,
                   CTP.READS,
                   CTP.MODIFIER_ID,
                   CTP.CREATION_DATE,
@@ -1652,13 +1641,8 @@ AS
                                P_LANE_ID            IN     NUMBER,
                                P_EVENT_TYPE         IN     NVARCHAR2,
                                P_TIME_STAMP         IN     NVARCHAR2,
-                               P_UUID               IN     NVARCHAR2,
                                P_LOCATION_ID        IN     NVARCHAR2,
-                               P_PARENT_UUID        IN     NVARCHAR2,
                                P_OBJECT_ID          IN     NVARCHAR2,
-                               P_FIRST_READ         IN     NVARCHAR2,
-                               P_LAST_READ          IN     NVARCHAR2,
-                               P_OBSERVATION_UUID   IN     NVARCHAR2,
                                P_READS              IN     NVARCHAR2,
                                P_CREATION_DATE      IN     DATE,
                                P_VEHICLE_CLASS_ID   IN     NUMBER,
@@ -1671,13 +1655,8 @@ AS
                                         LANE_ID,
                                         EVENT_TYPE,
                                         TIME_STAMP,
-                                        UUID,
                                         LOCATION_ID,
-                                        PARENT_UUID,
                                         OBJECT_ID,
-                                        FIRST_READ,
-                                        LAST_READ,
-                                        OBSERVATION_UUID,
                                         READS,
                                         CREATION_DATE,
                                         VEHICLE_CLASS_ID,
@@ -1688,13 +1667,8 @@ AS
                    P_LANE_ID,
                    P_EVENT_TYPE,
                    P_TIME_STAMP,
-                   P_UUID,
                    P_LOCATION_ID,
-                   P_PARENT_UUID,
                    P_OBJECT_ID,
-                   P_FIRST_READ,
-                   P_LAST_READ,
-                   P_OBSERVATION_UUID,
                    P_READS,
                    P_CREATION_DATE,
                    P_VEHICLE_CLASS_ID,
@@ -1713,13 +1687,8 @@ AS
                                P_LANE_ID             IN NUMBER,
                                P_EVENT_TYPE          IN NVARCHAR2,
                                P_TIME_STAMP          IN NVARCHAR2,
-                               P_UUID                IN NVARCHAR2,
                                P_LOCATION_ID         IN NVARCHAR2,
-                               P_PARENT_UUID         IN NVARCHAR2,
                                P_OBJECT_ID           IN NVARCHAR2,
-                               P_FIRST_READ          IN NVARCHAR2,
-                               P_LAST_READ           IN NVARCHAR2,
-                               P_OBSERVATION_UUID    IN NVARCHAR2,
                                P_READS               IN NVARCHAR2,
                                P_MODIFIER_ID         IN NUMBER,
                                P_MODIFICATION_DATE   IN DATE)
@@ -1732,13 +1701,8 @@ AS
              LANE_ID = P_LANE_ID,
              EVENT_TYPE = P_EVENT_TYPE,
              TIME_STAMP = P_TIME_STAMP,
-             UUID = P_UUID,
              LOCATION_ID = P_LOCATION_ID,
-             PARENT_UUID = P_PARENT_UUID,
              OBJECT_ID = P_OBJECT_ID,
-             FIRST_READ = P_FIRST_READ,
-             LAST_READ = P_LAST_READ,
-             OBSERVATION_UUID = P_OBSERVATION_UUID,
              READS = P_READS,
              MODIFIER_ID = P_MODIFIER_ID,
              MODIFICATION_DATE = P_MODIFICATION_DATE
@@ -2042,6 +2006,37 @@ AS
    END TRAN_INSERT_BY_CTP;
 
 
+   PROCEDURE TRAN_INSERT_BY_CTP_REAR (P_TMS_ID                 IN     NUMBER,
+                                      P_PLAZA_ID               IN     NUMBER,
+                                      P_LANE_ID                IN     NUMBER,
+                                      P_TRANSACTION_ID            OUT NUMBER,
+                                      P_TRANSACTION_DATETIME   IN     DATE,
+                                      P_CT_ENTRY_ID            IN     NUMBER,
+                                      P_IS_REGISTERED          IN     NUMBER,
+                                      P_CREATION_DATE          IN     DATE)
+   AS
+   BEGIN
+      INSERT INTO TBL_TRANSACTION (TMS_ID,
+                                   PLAZA_ID,
+                                   LANE_ID,
+                                   TRANSACTION_ID,
+                                   TRANSACTION_DATETIME,
+                                   CT_ENTRY_ID_REAR,
+                                   IS_REGISTERED,
+                                   CREATION_DATE)
+           VALUES (P_TMS_ID,
+                   P_PLAZA_ID,
+                   P_LANE_ID,
+                   TRANSACTION_SEQ.NEXTVAL,
+                   P_TRANSACTION_DATETIME,
+                   P_CT_ENTRY_ID,
+                   P_IS_REGISTERED,
+                   P_CREATION_DATE);
+
+
+
+      P_TRANSACTION_ID := TRANSACTION_SEQ.CURRVAL;
+   END TRAN_INSERT_BY_CTP_REAR;
 
    /*TRAN_INSERT_BY_NFP_FRONT*/
 
@@ -2055,7 +2050,8 @@ AS
       P_TRANSACTION_DATETIME   IN     DATE,
       P_NF_ENTRY_ID_FRONT      IN     NUMBER,
       P_IS_REGISTERED          IN     NUMBER,
-      P_CREATION_DATE          IN     DATE)
+      P_CREATION_DATE          IN     DATE,
+      P_VEHICLESPEED           IN     NUMBER)
    AS
    BEGIN
       INSERT INTO TBL_TRANSACTION (TMS_ID,
@@ -2065,7 +2061,8 @@ AS
                                    TRANSACTION_DATETIME,
                                    NF_ENTRY_ID_FRONT,
                                    IS_REGISTERED,
-                                   CREATION_DATE)
+                                   CREATION_DATE,
+                                   VEHICLESPEED)
            VALUES (P_TMS_ID,
                    P_PLAZA_ID,
                    P_LANE_ID,
@@ -2073,7 +2070,8 @@ AS
                    P_TRANSACTION_DATETIME,
                    P_NF_ENTRY_ID_FRONT,
                    P_IS_REGISTERED,
-                   P_CREATION_DATE);
+                   P_CREATION_DATE,
+                   P_VEHICLESPEED);
 
 
 
@@ -2093,7 +2091,8 @@ AS
                                       P_TRANSACTION_DATETIME   IN     DATE,
                                       P_NF_ENTRY_ID_REAR       IN     NUMBER,
                                       P_IS_REGISTERED          IN     NUMBER,
-                                      P_CREATION_DATE          IN     DATE)
+                                      P_CREATION_DATE          IN     DATE,
+                                      P_VEHICLESPEED           IN     NUMBER)
    AS
    BEGIN
       INSERT INTO TBL_TRANSACTION (TMS_ID,
@@ -2103,7 +2102,8 @@ AS
                                    TRANSACTION_DATETIME,
                                    NF_ENTRY_ID_REAR,
                                    IS_REGISTERED,
-                                   CREATION_DATE)
+                                   CREATION_DATE,
+                                   VEHICLESPEED)
            VALUES (P_TMS_ID,
                    P_PLAZA_ID,
                    P_LANE_ID,
@@ -2111,7 +2111,8 @@ AS
                    P_TRANSACTION_DATETIME,
                    P_NF_ENTRY_ID_REAR,
                    P_IS_REGISTERED,
-                   P_CREATION_DATE);
+                   P_CREATION_DATE,
+                   P_VEHICLESPEED);
 
 
 
@@ -2131,25 +2132,35 @@ AS
                                        P_VEHICLESPEED        IN DECIMAL,
                                        P_NF_ENTRY_ID_FRONT   IN NUMBER)
    AS
+      LastSpeed   NUMBER;
    BEGIN
+      SELECT NVL (VEHICLESPEED, 0)
+        INTO LastSpeed
+        FROM TBL_TRANSACTION
+       WHERE TRANSACTION_ID = P_TRANSACTION_ID;
+
+      IF (P_VEHICLESPEED > LastSpeed)
+      THEN
+         LastSpeed := P_VEHICLESPEED;
+      END IF;
+
       UPDATE TBL_TRANSACTION
-         SET NF_ENTRY_ID_FRONT = P_NF_ENTRY_ID_FRONT, LANE_ID = P_LANE_ID
+         SET NF_ENTRY_ID_FRONT = P_NF_ENTRY_ID_FRONT,
+             LANE_ID = P_LANE_ID,
+             VEHICLESPEED = LastSpeed
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
-
-
-
-      IF (P_VEHICLESPEED > 0)
-      THEN
-         UPDATE TBL_TRANSACTION
-            SET VEHICLESPEED = P_VEHICLESPEED
-          WHERE     TMS_ID = P_TMS_ID
-                AND PLAZA_ID = P_PLAZA_ID
-                AND LANE_ID = P_LANE_ID
-                AND TRANSACTION_ID = P_TRANSACTION_ID;
-      END IF;
+   -- IF (P_VEHICLESPEED > 0)
+   -- THEN
+   -- UPDATE TBL_TRANSACTION
+   -- SET VEHICLESPEED = P_VEHICLESPEED
+   -- WHERE     TMS_ID = P_TMS_ID
+   -- AND PLAZA_ID = P_PLAZA_ID
+   -- AND LANE_ID = P_LANE_ID
+   -- AND TRANSACTION_ID = P_TRANSACTION_ID;
+   -- END IF;
    END TRAN_UPDATE_BY_NFP_FRONT;
 
 
@@ -2165,25 +2176,36 @@ AS
                                       P_VEHICLESPEED       IN DECIMAL,
                                       P_NF_ENTRY_ID_REAR   IN NUMBER)
    AS
+      LastSpeed   NUMBER;
    BEGIN
+      SELECT NVL (VEHICLESPEED, 0)
+        INTO LastSpeed
+        FROM TBL_TRANSACTION
+       WHERE TRANSACTION_ID = P_TRANSACTION_ID;
+
+      IF (P_VEHICLESPEED > LastSpeed)
+      THEN
+         LastSpeed := P_VEHICLESPEED;
+      END IF;
+
+
       UPDATE TBL_TRANSACTION
-         SET NF_ENTRY_ID_REAR = P_NF_ENTRY_ID_REAR, LANE_ID = P_LANE_ID
+         SET NF_ENTRY_ID_REAR = P_NF_ENTRY_ID_REAR,
+             LANE_ID = P_LANE_ID,
+             VEHICLESPEED = LastSpeed
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
-
-
-
-      IF (P_VEHICLESPEED > 0)
-      THEN
-         UPDATE TBL_TRANSACTION
-            SET VEHICLESPEED = P_VEHICLESPEED
-          WHERE     TMS_ID = P_TMS_ID
-                AND PLAZA_ID = P_PLAZA_ID
-                AND LANE_ID = P_LANE_ID
-                AND TRANSACTION_ID = P_TRANSACTION_ID;
-      END IF;
+   -- IF (P_VEHICLESPEED > 0)
+   -- THEN
+   -- UPDATE TBL_TRANSACTION
+   -- SET VEHICLESPEED = P_VEHICLESPEED
+   -- WHERE     TMS_ID = P_TMS_ID
+   -- AND PLAZA_ID = P_PLAZA_ID
+   -- AND LANE_ID = P_LANE_ID
+   -- AND TRANSACTION_ID = P_TRANSACTION_ID;
+   -- END IF;
    END TRAN_UPDATE_BY_NFP_REAR;
 
 
@@ -2237,6 +2259,21 @@ AS
              AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_UPDATE_CTP;
+
+   PROCEDURE TRAN_UPDATE_CTP_REAR (P_TMS_ID           IN NUMBER,
+                                   P_PLAZA_ID         IN NUMBER,
+                                   P_LANE_ID          IN NUMBER,
+                                   P_TRANSACTION_ID   IN NUMBER,
+                                   P_CT_ENTRY_ID      IN NUMBER)
+   AS
+   BEGIN
+      UPDATE TBL_TRANSACTION
+         SET CT_ENTRY_ID_REAR = P_CT_ENTRY_ID
+       WHERE     TMS_ID = P_TMS_ID
+             AND PLAZA_ID = P_PLAZA_ID
+             AND LANE_ID = P_LANE_ID
+             AND TRANSACTION_ID = P_TRANSACTION_ID;
+   END TRAN_UPDATE_CTP_REAR;
 
 
 
@@ -2467,7 +2504,7 @@ AS
                   NVL (L.LANE_NAME, '') LANE_NAME,
                   T.TRANSACTION_ID,
                   T.TRANSACTION_DATETIME,
-                  NVL (CTP.FIRST_READ, '') CROSSTALK_TAG_ID,
+                  NVL (CTP.OBJECT_ID, '') CROSSTALK_TAG_ID,
                   NVL (CV.VEHICLE_CLASS_ID, '') CROSSTALK_VEHICLE_CLASS_ID,
                   NVL (CV.VEH_REG_NO, '') CROSSTALK_VRN,
                   NVL (CTP.TIME_STAMP, '') CROSSTALK_TIMESTAMP,
@@ -2499,7 +2536,7 @@ AS
                   LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
                      ON T.CT_ENTRY_ID = CTP.ENTRY_ID
                   LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
-                     ON CTP.FIRST_READ = CV.TAG_ID
+                     ON CTP.OBJECT_ID = CV.TAG_ID
                   LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
                      ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
          ORDER BY T.TRANSACTION_DATETIME DESC;
@@ -2536,7 +2573,7 @@ AS
                   LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
                      ON T.CT_ENTRY_ID = CTP.ENTRY_ID
                   LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
-                     ON CTP.FIRST_READ = CV.TAG_ID
+                     ON CTP.OBJECT_ID = CV.TAG_ID
                   LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
                      ON CV.VEHICLE_CLASS_ID = VC.VEHICLE_CLASS_ID
          ORDER BY T.TRANSACTION_DATETIME DESC;
@@ -4410,7 +4447,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
       SQLQUERY   VARCHAR2 (2000);
    BEGIN
       SQLQUERY :=
-            ' SELECT ENTRY_ID,
+         ' SELECT ENTRY_ID,
        TMS_ID,
        CUSTOMER_ACCOUNT_ID,
        CUSTOMER_NAME,
@@ -4426,11 +4463,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
        CREATION_DATE,
        MODIFICATION_DATE,
        MODIFIED_BY,
-	   GATEWAY_RESPONSE_CODE,
-	   OPERATOR_RESPONSE_CODE
-  FROM TBL_SMS_COMM_HISTORY '
-         || P_FILTER
-         || ' ORDER BY ENTRY_ID';
+       GATEWAY_RESPONSE_CODE,
+       OPERATOR_RESPONSE_CODE
+  FROM TBL_SMS_COMM_HISTORY ' || P_FILTER || ' ORDER BY ENTRY_ID';
 
 
 
@@ -6726,63 +6761,68 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AND IS_REGISTERED = 1
                   ORDER BY TRANSACTION_ID)
          SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
-                UPPER (CUST_VEH.VEH_REG_NO) AS EVI_VEH_NO,
+                UPPER (CTP.PLATE_NUMBER) AS EVI_VRN_FRONT,
+                UPPER (CTP_REAR.PLATE_NUMBER) AS EVI_VRN_REAR,
                 UPPER (NFP.PLATE_NUMBER) AS FRONT_VRN,
                 UPPER (NFP1.PLATE_NUMBER) AS REAR_VRN,
-                UPPER (VC1.VEHICLE_CLASS_NAME) AS VEH_NAME_EVI,
-                UPPER (VC2.VEHICLE_CLASS_NAME) AS VEH_NAME_NODEFLUX,
+                (CASE NVL (CTP.VEHICLE_CLASS_ID, 0)
+                    WHEN 1 THEN 'Two-wheeled'
+                    WHEN 2 THEN 'Small'
+                    WHEN 3 THEN 'Medium'
+                    WHEN 4 THEN 'Large'
+                    ELSE ''
+                 END)
+                   EVI_CLASS_FRONT,
+                (CASE NVL (CTP_REAR.VEHICLE_CLASS_ID, 0)
+                    WHEN 1 THEN 'Two-wheeled'
+                    WHEN 2 THEN 'Small'
+                    WHEN 3 THEN 'Medium'
+                    WHEN 4 THEN 'Large'
+                    ELSE ''
+                 END)
+                   EVI_CLASS_REAR,
+                (CASE NVL (NFP.VEHICLE_CLASS_ID, 0)
+                    WHEN 1 THEN 'Two-wheeled'
+                    WHEN 2 THEN 'Small'
+                    WHEN 3 THEN 'Medium'
+                    WHEN 4 THEN 'Large'
+                    ELSE ''
+                 END)
+                   ANPR_CLASS_FRONT,
+                (CASE NVL (NFP1.VEHICLE_CLASS_ID, 0)
+                    WHEN 1 THEN 'Two-wheeled'
+                    WHEN 2 THEN 'Small'
+                    WHEN 3 THEN 'Medium'
+                    WHEN 4 THEN 'Large'
+                    ELSE ''
+                 END)
+                   ANPR_CLASS_REAR,
                 TRAN.LANE_ID AS LANE_ID,
                 CTP.OBJECT_ID AS EVI_ID,
-                CUST_ACC.ACCOUNT_ID AS OWNER_ID,
-                (CUST_ACC.FIRST_NAME || CUST_ACC.LAST_NAME) AS VEHICLE_OWNER,
+                CUST_ACC.RESIDENT_ID AS RESIDENT_ID,
+                (CUST_ACC.FIRST_NAME) AS VEHICLE_OWNER,
                 NVL (ACC_HIST.AMOUNT, 0) AS AMOUNT_CHARGED,
                 NVL (CUST_ACC.ACCOUNT_BALANCE, 0) AS BALANCE,
-                /*NFP.PLATE_THUMBNAIL AS FRONT_PLATE_THUMBNAIL,
-
-
-
-                NFP.VEHICLE_THUMBNAIL AS FRONT_VEHICLE_THUMBNAIL,
-
-
-
-                NFP.VIDEO_URL AS FRONT_VIDEO_URL,
-
-
-
-                NFP1.PLATE_THUMBNAIL AS REAR_PLATE_THUMBNAIL,
-
-
-
-                NFP1.VEHICLE_THUMBNAIL AS REAR_VEHICLE_THUMBNAIL,
-
-
-
-                NFP1.VIDEO_URL AS REAR_VIDEO_URL,*/
-
-
-
                 (CASE NVL (ACC_HIST.SMS_SENT, 0)
                     WHEN 1 THEN 'TRUE'
                     ELSE 'FALSE'
                  END)
                    AS SMS_NOTIFICATION
            FROM CTE TRAN
+                LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                   ON TRAN.CT_ENTRY_ID = CTP.ENTRY_ID
+                LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP_REAR
+                   ON TRAN.CT_ENTRY_ID_REAR = CTP_REAR.ENTRY_ID
                 LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
                    ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
                 LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
                    ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
-                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC2
-                   ON NFP.VEHICLE_CLASS_ID = VC2.VEHICLE_CLASS_ID
                 LEFT OUTER JOIN TBL_ACCOUNT_HISTORY ACC_HIST
                    ON TRAN.TRANSACTION_ID = ACC_HIST.TRANSACTION_ID
-                LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
-                   ON TRAN.CT_ENTRY_ID = CTP.ENTRY_ID
                 LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CUST_VEH
                    ON UPPER (CTP.OBJECT_ID) = UPPER (CUST_VEH.TAG_ID)
                 LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CUST_ACC
-                   ON CUST_VEH.ACCOUNT_ID = CUST_ACC.ACCOUNT_ID
-                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC1
-                   ON CUST_VEH.VEHICLE_CLASS_ID = VC1.VEHICLE_CLASS_ID;
+                   ON CUST_VEH.ACCOUNT_ID = CUST_ACC.ACCOUNT_ID;
    END TRAN_CSV_GETNORMALTRAN;
 
 
@@ -6801,35 +6841,30 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AND IS_REGISTERED = 2
                   ORDER BY TRANSACTION_ID)
          SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
-                CUST_VEH.VEH_REG_NO AS EVI_VEH_NO,
                 NFP.PLATE_NUMBER AS FRONT_VRN,
                 NFP1.PLATE_NUMBER AS REAR_VRN,
-                VC1.VEHICLE_CLASS_NAME AS VEH_NAME_EVI,
-                VC2.VEHICLE_CLASS_NAME AS VEH_NAME_NODEFLUX,
-                TRAN.LANE_ID AS LANE_ID,
-                CTP.OBJECT_ID AS EVI_ID,
-                CUST_ACC.ACCOUNT_ID AS OWNER_ID,
-                (CUST_ACC.FIRST_NAME || CUST_ACC.LAST_NAME) AS VEHICLE_OWNER,
-                ACC_HIST.AMOUNT AS AMOUNT_CHARGED,
-                CUST_ACC.ACCOUNT_BALANCE AS BALANCE,
-                ACC_HIST.SMS_SENT AS SMS_NOTIFICATION
+                (CASE NVL (NFP.VEHICLE_CLASS_ID, 0)
+                    WHEN 1 THEN 'Two-wheeled'
+                    WHEN 2 THEN 'Small'
+                    WHEN 3 THEN 'Medium'
+                    WHEN 4 THEN 'Large'
+                    ELSE ''
+                 END)
+                   ANPR_CLASS_FRONT,
+                (CASE NVL (NFP1.VEHICLE_CLASS_ID, 0)
+                    WHEN 1 THEN 'Two-wheeled'
+                    WHEN 2 THEN 'Small'
+                    WHEN 3 THEN 'Medium'
+                    WHEN 4 THEN 'Large'
+                    ELSE ''
+                 END)
+                   ANPR_CLASS_REAR,
+                TRAN.LANE_ID AS LANE_ID
            FROM CTE TRAN
-                LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
-                   ON TRAN.CT_ENTRY_ID = CTP.ENTRY_ID
                 LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
                    ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
                 LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
-                   ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
-                LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CUST_VEH
-                   ON CTP.FIRST_READ = CUST_VEH.TAG_ID
-                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CUST_ACC
-                   ON CUST_VEH.ACCOUNT_ID = CUST_ACC.ACCOUNT_ID
-                LEFT OUTER JOIN TBL_ACCOUNT_HISTORY ACC_HIST
-                   ON TRAN.TRANSACTION_ID = ACC_HIST.TRANSACTION_ID
-                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC1
-                   ON CUST_VEH.VEHICLE_CLASS_ID = VC1.VEHICLE_CLASS_ID
-                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC2
-                   ON NFP.VEHICLE_CLASS_ID = VC2.VEHICLE_CLASS_ID;
+                   ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID;
    END TRAN_CSV_GETVIOTRAN;
 
 
@@ -6847,7 +6882,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   VC1.VEHICLE_CLASS_NAME AS VEH_NAME_EVI,
                   VC2.VEHICLE_CLASS_NAME AS VEH_NAME_NODEFLUX,
                   TRAN.LANE_ID AS LANE_ID,
-                  CTP.FIRST_READ AS EVI_ID,
+                  CTP.OBJECT_ID AS EVI_ID,
                   CUST_ACC.ACCOUNT_ID AS OWNER_ID,
                   (CUST_ACC.FIRST_NAME || CUST_ACC.LAST_NAME) AS VEHICLE_OWNER,
                   ACC_HIST.AMOUNT AS AMOUNT_CHARGED,
@@ -6857,7 +6892,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
                      ON TRAN.CT_ENTRY_ID = CTP.ENTRY_ID
                   LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CUST_VEH
-                     ON CTP.FIRST_READ = CUST_VEH.TAG_ID
+                     ON CTP.OBJECT_ID = CUST_VEH.TAG_ID
                   LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
                      ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
                   LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
@@ -7745,5 +7780,14 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END CUSTOMERVEHICLE_FILTERED;
+
+   PROCEDURE ACTIVE_ANPR_GET (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT ANPR_NAME
+           FROM TBL_ANPR_SYSTEM
+          WHERE STATUS = 1;
+   END ACTIVE_ANPR_GET;
 END MLFF_PACKAGE;
 /
