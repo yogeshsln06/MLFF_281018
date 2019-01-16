@@ -1,4 +1,4 @@
-/* Formatted on 16/01/2019 17:29:33 (QP5 v5.215.12089.38647) */
+/* Formatted on 17/01/2019 01:36:02 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -7789,5 +7789,50 @@ ORDER BY TRANSACTION_DATETIME DESC';
            FROM TBL_ANPR_SYSTEM
           WHERE STATUS = 1;
    END ACTIVE_ANPR_GET;
+
+   PROCEDURE VEHICLE_BALANCE_REPORT (P_VEHICLE_ID   IN     NUMBER,
+                                     P_MONTH_ID     IN     NUMBER,
+                                     P_YEAR_ID      IN     NUMBER,
+                                     CUR_OUT           OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+                     CREATION_DATE,
+                  (CASE AH.TRANSACTION_ID
+                      WHEN 0 THEN AH.ENTRY_ID
+                      ELSE AH.TRANSACTION_ID
+                   END)
+                     TRANSACTION_ID,
+                  (CASE AH.TRANSACTION_TYPE
+                      WHEN 1 THEN 'Sale'
+                      WHEN 2 THEN 'Top-Up'
+                      WHEN 3 THEN 'Refund'
+                      WHEN 4 THEN 'Charge'
+                   END)
+                     TRANSACTION_TYPE,
+                  P.PLAZA_NAME,
+                  T.LANE_ID,
+                  AH.AMOUNT,
+                  AH.OPENING_BALANCE,
+                  AH.CLOSING_BALANCE,
+                  NFP.PLATE_THUMBNAIL AS FRONT_IMAGE,
+                  NFP.VIDEO_URL AS FRONT_VIDEO_URL,
+                  NFP1.PLATE_THUMBNAIL AS REAR_IMAGE,
+                  NFP1.VIDEO_URL AS REAR_VIDEO_URL
+             FROM TBL_ACCOUNT_HISTORY AH
+                  LEFT OUTER JOIN TBL_TRANSACTION T
+                     ON AH.TRANSACTION_ID = T.TRANSACTION_ID
+                  LEFT OUTER JOIN TBL_PLAZA P
+                     ON T.PLAZA_ID = P.PLAZA_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
+                     ON T.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
+                     ON T.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
+            WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
+                  AND TO_CHAR (AH.CREATION_DATE, 'MM') = P_MONTH_ID
+                  AND TO_CHAR (AH.CREATION_DATE, 'YYYY') = P_YEAR_ID
+         ORDER BY AH.CREATION_DATE, AH.ENTRY_ID;
+   END VEHICLE_BALANCE_REPORT;
 END MLFF_PACKAGE;
 /
