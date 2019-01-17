@@ -1,4 +1,4 @@
-/* Formatted on 17/01/2019 01:36:02 (QP5 v5.215.12089.38647) */
+/* Formatted on 17/01/2019 22:41:42 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2758,14 +2758,14 @@ ORDER BY TRANSACTION_DATETIME DESC';
       SQLQUERY   VARCHAR2 (3000);
    BEGIN
       SQLQUERY :=
-            ' SELECT ROW_NUMBER () OVER (ORDER BY TRANSACTION_DATETIME ASC) AS ROWNUMBER,
+            ' SELECT ROW_NUMBER () OVER (ORDER BY TRANSACTION_DATETIME DESC) AS ROWNUMBER,
        T.TMS_ID,
        T.PLAZA_ID,
        T.PLAZA_NAME,
        T.LANE_ID,
        T.LANE_NAME,
        T.TRANSACTION_ID,
-       T.TRANSACTION_DATETIME,
+       T.F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
        T.CT_ENTRY_ID,
        CTP.OBJECT_ID AS TAG_ID,
        CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
@@ -2807,7 +2807,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
          || P_FILTER
          || '
          
-         ORDER BY TRANSACTION_DATETIME ASC';
+         ORDER BY T.TRANSACTION_DATETIME DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_UNREVIEWED_FILTERED;
@@ -2830,7 +2830,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            T.LANE_ID,
                            L.LANE_NAME,
                            T.TRANSACTION_ID,
-                           T.TRANSACTION_DATETIME,
+                           T.F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
                            T.CT_ENTRY_ID,
                            T.NF_ENTRY_ID_FRONT,
                            T.NF_ENTRY_ID_REAR,
@@ -2845,7 +2845,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            T.AUDITED_VRN,
                            T.VEHICLESPEED,
                            T.MEARGED_TRAN_ID
-                      FROM TBL_TRANSACTION T
+                      FROM TRANS_UNREVIEWED T
                            LEFT OUTER JOIN TBL_PLAZA P
                               ON T.PLAZA_ID = P.PLAZA_ID
                            LEFT OUTER JOIN TBL_LANE L
@@ -2918,7 +2918,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   T.LANE_ID,
                   T.LANE_NAME,
                   T.TRANSACTION_ID,
-                  T.TRANSACTION_DATETIME,
+                  TO_CHAR (T.TRANSACTION_DATETIME, 'DD-Mon-YYYY HH:MI:SS AM')
+                     TRANSACTION_DATETIME,
                   T.CT_ENTRY_ID,
                   CTP.OBJECT_ID AS TAG_ID,
                   CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
@@ -2986,7 +2987,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   T.LANE_ID,
                   T.LANE_NAME,
                   T.TRANSACTION_ID,
-                  T.TRANSACTION_DATETIME,
+                  F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
                   T.CT_ENTRY_ID,
                   CTP.OBJECT_ID AS TAG_ID,
                   CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
@@ -3056,6 +3057,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            LANE_NAME,
                            TRANSACTION_ID,
                            TRANSACTION_DATETIME,
+                           F_TRANSACTION_DATETIME,
                            CT_ENTRY_ID,
                            NF_ENTRY_ID_FRONT,
                            NF_ENTRY_ID_REAR,
@@ -3078,7 +3080,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   T.LANE_ID,
                   T.LANE_NAME,
                   T.TRANSACTION_ID,
-                  T.TRANSACTION_DATETIME,
+                  F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
                   T.CT_ENTRY_ID,
                   CTP.OBJECT_ID AS TAG_ID,
                   CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
@@ -3214,7 +3216,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
       OPEN CUR_OUT FOR
          WITH CTE_TRANS_HISTORY
               AS (  SELECT ROW_NUMBER ()
-                              OVER (ORDER BY TRANSACTION_DATETIME DESC)
+                              OVER (ORDER BY T.TRANSACTION_DATETIME DESC)
                               AS ROWNUMBER,
                            T.TMS_ID,
                            T.PLAZA_ID,
@@ -3222,7 +3224,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            T.LANE_ID,
                            T.LANE_NAME,
                            T.TRANSACTION_ID,
-                           T.TRANSACTION_DATETIME,
+                           T.F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
                            T.CT_ENTRY_ID,
                            T.NF_ENTRY_ID_FRONT,
                            T.NF_ENTRY_ID_REAR,
@@ -3239,7 +3241,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            T.MEARGED_TRAN_ID
                       FROM TRANS_CHARGED T
                      WHERE ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
-                  ORDER BY TRANSACTION_DATETIME DESC)
+                  ORDER BY T.TRANSACTION_DATETIME DESC)
            SELECT ROWNUMBER,
                   T.TMS_ID,
                   T.PLAZA_ID,
@@ -4801,6 +4803,94 @@ ORDER BY TRANSACTION_DATETIME DESC';
          ORDER BY CA.CREATION_DATE DESC, CA.MODIFICATION_DATE DESC;
    END ACCOUNT_GETALLCSV;
 
+   PROCEDURE ACCOUNT_CSVWITHFILTER (P_FILTER   IN     NVARCHAR2,
+                                    CUR_OUT       OUT T_CURSOR)
+   IS
+      SQLQUERY   VARCHAR2 (3000);
+   BEGIN
+      SQLQUERY :=
+            ' SELECT ACCOUNT_ID AS "Customer ID",
+                  RESIDENT_ID AS "Resident ID",
+                  FIRST_NAME AS "Name",
+                  BIRTH_PLACE AS "Birthplace",
+                  BIRTH_DATE AS "Birthdate",
+                  (CASE NATIONALITY WHEN 2 THEN ''WNA'' ELSE ''WNI'' END)
+                     AS "Nationality",
+                  (CASE GENDER WHEN 2 THEN ''PEREMPUAN'' ELSE ''LAKI-LAKI'' END)
+                     AS "Gender",
+                  (CASE MARITAL_STATUS
+                      WHEN 2 THEN ''KAWIN''
+                      ELSE ''BELUM KAWIN''
+                   END)
+                     AS "Marital Status",
+                  OCCUPATION AS "Occupation",
+                  VALID_UNTIL AS "Valid Until",
+                  MOB_NUMBER AS "Mobile Phone",
+                  EMAIL_ID AS "Email",
+                  PROVINCE_NAME AS "Province",
+                  CITY_NAME AS "Kabupaten/Kota",
+                  DISTRICT_NAME AS "Kecamatan",
+                  SUB_DISTRICT_NAME AS "Kelurahan/Desa",
+                  RT_RW AS "RT/RW",
+                  ADDRESS AS "Address",
+                  POSTAL_CODE AS "Postal Code"
+            FROM (SELECT CA.ACCOUNT_ID,
+         CA.RESIDENT_ID,
+         CA.FIRST_NAME,
+         CA.BIRTH_PLACE,
+         CA.BIRTH_DATE,
+         CA.NATIONALITY,
+         CA.GENDER,
+         CA.MARITAL_STATUS,
+         CA.OCCUPATION,
+         CA.VALID_UNTIL,
+         CA.MOB_NUMBER,
+         CA.EMAIL_ID,
+         P.PROVINCE_NAME,
+         C.CITY_NAME,
+         D.DISTRICT_NAME,
+         SD.SUB_DISTRICT_NAME,
+         CA.RT_RW,
+         CA.ADDRESS,
+         CA.POSTAL_CODE
+    FROM TBL_CUSTOMER_ACCOUNT CA
+         LEFT OUTER JOIN TBL_PROVINCE P
+            ON CA.PROVINCE_ID = P.PROVINCE_ID
+         LEFT OUTER JOIN TBL_CITY C
+            ON CA.CITY_ID = C.CITY_ID
+         LEFT OUTER JOIN TBL_DISTRICT D
+            ON CA.DISTRICT_ID = D.DISTRICT_ID
+         LEFT OUTER JOIN TBL_SUB_DISTRICT SD
+            ON CA.SUB_DISTRICT_ID = SD.SUB_DISTRICT_ID
+         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV
+            ON CA.ACCOUNT_ID = CV.ACCOUNT_ID '
+         || P_FILTER
+         || ' GROUP BY CA.ACCOUNT_ID,
+         CA.RESIDENT_ID,
+         CA.FIRST_NAME,
+         CA.BIRTH_PLACE,
+         CA.BIRTH_DATE,
+         CA.NATIONALITY,
+         CA.GENDER,
+         CA.MARITAL_STATUS,
+         CA.OCCUPATION,
+         CA.VALID_UNTIL,
+         CA.MOB_NUMBER,
+         CA.EMAIL_ID,
+         P.PROVINCE_NAME,
+         C.CITY_NAME,
+         D.DISTRICT_NAME,
+         SD.SUB_DISTRICT_NAME,
+         CA.RT_RW,
+         CA.ADDRESS,
+         CA.POSTAL_CODE,
+         CA.CREATION_DATE,
+         CA.MODIFICATION_DATE
+         ORDER BY CA.CREATION_DATE DESC, CA.MODIFICATION_DATE DESC) ';
+
+      OPEN CUR_OUT FOR SQLQUERY;
+   END ACCOUNT_CSVWITHFILTER;
+
 
 
    PROCEDURE ACCOUNT_GETBYID (P_TMS_ID       IN     NUMBER,
@@ -5661,6 +5751,86 @@ ORDER BY TRANSACTION_DATETIME DESC';
                      ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
          ORDER BY CV.CREATION_DATE DESC, CV.MODIFICATION_DATE DESC;
    END VEHICLE_GETALLCSV;
+
+   PROCEDURE VEHICLE_CSVWITHFILTER (P_FILTER   IN     NVARCHAR2,
+                                    CUR_OUT       OUT T_CURSOR)
+   IS
+      SQLQUERY   VARCHAR2 (5000);
+   BEGIN
+      SQLQUERY :=
+            ' SELECT CA.ACCOUNT_ID AS "Customer ID",
+                  CA.FIRST_NAME AS "Name",
+                  CA.MOB_NUMBER AS "Mobile Phone",
+                  CA.RESIDENT_ID AS "Resident ID",
+                  CA.ADDRESS AS "Address",
+                  CA.EMAIL_ID AS "Email",
+                  CV.ENTRY_ID AS "Vehicle ID",
+                  CV.VEH_REG_NO AS "Registration Num",
+                  CV.OWNER_ADDRESS AS "Owner Address",
+                  CV.VEHICLE_TYPE AS "Type",
+                  CV.MODEL_NO AS "Model",
+                  CV.CYCLINDER_CAPACITY AS "Cylinder Capacity",
+                  CV.ENGINE_NUMBER AS "Engine Num",
+                  (CASE CV.FUEL_TYPE
+                      WHEN 1 THEN ''Diesel''
+                      WHEN 2 THEN ''Gasoline''
+                      WHEN 3 THEN ''Petrol''
+                      WHEN 4 THEN ''Electric''
+                      WHEN 5 THEN ''Solor''
+                      ELSE ''Unknown''
+                   END)
+                     AS "Fuel Type",
+                  CV.REGISTRATION_YEAR AS "Registration Year",
+                  CV.LOCATION_CODE AS "Location Code",
+                  CV.VALID_UNTIL AS "Valid Until",
+                  CV.VEHICLE_RC_NO AS "Certificate Num",
+                  CV.OWNER_NAME AS "Owner Name",
+                  CV.BRAND AS "Brand",
+                  CV.VEHICLE_CATEGORY AS "Category",
+                  CV.MANUFACTURING_YEAR AS "Manufacturing Year",
+                  CV.FRAME_NUMBER AS "Frame Num",
+                  CV.VEHICLE_COLOR AS "Color",
+                  (CASE CV.LICENCE_PLATE_COLOR
+                      WHEN 1 THEN ''Black''
+                      WHEN 2 THEN ''White''
+                      WHEN 3 THEN ''Yellow''
+                      WHEN 4 THEN ''Red''
+                      WHEN 5 THEN ''Blue''
+                      WHEN 6 THEN ''Green''
+                      ELSE ''Unknown''
+                   END)
+                     AS "Licence Plate Color",
+                  CV.VEHICLE_OWNERSHIP_NO AS "Ownership Document Num",
+                  CV.REG_QUEUE_NO AS "Registration Queue Num",
+                  (CASE CV.EXCEPTION_FLAG
+                      WHEN 1 THEN ''Charged''
+                      WHEN 2 THEN ''Not Charged''
+                      WHEN 3 THEN ''Blacklist''
+                      ELSE ''Unknown''
+                   END)
+                     AS "Exception Flag",
+                  CV.TID_FRONT AS "TID Front",
+                  CV.TID_REAR AS "TID Rear",
+                  CV.TAG_ID AS "EPC",
+                  (CASE CV.QUEUE_STATUS
+                      WHEN 1 THEN ''Open''
+                      WHEN 2 THEN ''Postponded''
+                      WHEN 3 THEN ''Processed''
+                      ELSE ''Unknown''
+                   END)
+                     AS "Status",
+                  VC.VEHICLE_CLASS_NAME AS "Vehicle Class",
+                  CV.ACCOUNT_BALANCE AS "Account Balance"
+    FROM TBL_CUSTOMER_VEHICLE CV
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                     ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                     ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID '
+         || P_FILTER
+         || ' ORDER BY CV.CREATION_DATE DESC, CV.MODIFICATION_DATE DESC ';
+
+      OPEN CUR_OUT FOR SQLQUERY;
+   END VEHICLE_CSVWITHFILTER;
 
    PROCEDURE CV_GET_BY_TRANCTPENTRYID (P_TRAN_CT_EN_ID   IN     NUMBER,
                                        CUR_OUT              OUT T_CURSOR)
@@ -6655,7 +6825,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                    END)
                      AS MYTRANID,
                   AH.AMOUNT,
-                  AH.CREATION_DATE,
+                  TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+                     CREATION_DATE,
                   P.PLAZA_NAME,
                   CV.VEH_REG_NO,
                   VC.VEHICLE_CLASS_NAME
@@ -6719,7 +6890,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                    END)
                      AS MYTRANID,
                   AH.AMOUNT,
-                  AH.CREATION_DATE,
+                  TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+                     CREATION_DATE,
                   P.PLAZA_NAME,
                   CV.VEH_REG_NO,
                   VC.VEHICLE_CLASS_NAME
@@ -7620,7 +7792,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   ORDER BY CREATION_DATE DESC)
            SELECT ROWNUMBER,
                   T.ENTRY_ID,
-                  T.CREATION_DATE,
+                  TO_CHAR (T.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+                     CREATION_DATE,
                   CV.VEH_REG_NO,
                   VC.VEHICLE_CLASS_NAME,
                   CA.FIRST_NAME,
@@ -7646,7 +7819,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
       SQLQUERY :=
             ' SELECT ROWNUM AS ROWNUMBER,
                   T.ENTRY_ID,
-                  T.CREATION_DATE,
+                  F_CREATION_DATE AS CREATION_DATE,
                   CV.VEH_REG_NO,
                   VC.VEHICLE_CLASS_NAME,
                   CA.FIRST_NAME,
@@ -7797,7 +7970,11 @@ ORDER BY TRANSACTION_DATETIME DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+           SELECT (  ROW_NUMBER ()
+                        OVER (ORDER BY AH.CREATION_DATE, AH.ENTRY_ID)
+                   + 1)
+                     AS ROWNUMBER,
+                  TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
                      CREATION_DATE,
                   (CASE AH.TRANSACTION_ID
                       WHEN 0 THEN AH.ENTRY_ID

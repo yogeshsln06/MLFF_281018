@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using VaaaN.MLFF.Libraries.CommonLibrary;
 using VaaaN.MLFF.Libraries.CommonLibrary.BLL;
+using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
 
 namespace MLFFWebUI.Controllers
 {
@@ -26,7 +27,64 @@ namespace MLFFWebUI.Controllers
             try
             {
                 FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
-                Int16 IsDataFound = CSVUtility.CreateCsv(file.FullName, CustomerAccountBLL.GetAllAsCSV());
+                Int16 IsDataFound = CSVUtility.CreateCsvWithTitle(file.FullName, CustomerAccountBLL.GetAllAsCSV(), "Customer");
+                if (IsDataFound == 0)
+                    filename = "No Data to Export.";
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed Export Customer CSV " + ex);
+            }
+            string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+
+        [HttpPost]
+        public string ExportCustomerAccountFilter(CustomerVehicleModel objCustomerVehicleModel)
+        {
+            var filename = "Customer_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
+            Int16 IsDataFound = 0;
+            try
+            {
+                string strQuery = " WHERE 1=1";
+                if (objCustomerVehicleModel.SearchEnable)
+                {
+                    #region Filter Query
+                    strQuery = " WHERE 1=1 AND (";
+                    if (objCustomerVehicleModel.AccountId > 0)
+                    {
+                        strQuery += " OR (CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
+                    {
+                        strQuery += " OR (CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
+                    {
+                        strQuery += " OR ((CA.MOB_NUMBER) LIKE '%" + objCustomerVehicleModel.MobileNo + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
+                    {
+                        strQuery += " OR (LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
+                    {
+                        strQuery += " OR (LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
+                    {
+                        strQuery += " OR (LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%')";
+                    }
+                    strQuery += ")";
+                    strQuery = strQuery.Replace("( OR", "(");
+                    IsDataFound = CSVUtility.CreateCsvWithTitleFilter(file.FullName, CustomerAccountBLL.GetFilterCSV(strQuery), "Customer", objCustomerVehicleModel);
+                    #endregion
+                }
+                else
+                {
+                    IsDataFound = CSVUtility.CreateCsvWithTitle(file.FullName, CustomerAccountBLL.GetFilterCSV(strQuery), "Customer");
+                }
                 if (IsDataFound == 0)
                     filename = "No Data to Export.";
             }
@@ -47,6 +105,79 @@ namespace MLFFWebUI.Controllers
             {
                 FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
                 Int16 IsDataFound = CSVUtility.CreateCsv(file.FullName, CustomerVehicleBLL.GetAllAsCSV());
+                if (IsDataFound == 0)
+                    filename = "No Data to Export.";
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed Export Customer CSV " + ex);
+            }
+            string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+
+        [HttpPost]
+        public string ExportCustomerVehicleFilter(CustomerVehicleModel objCustomerVehicleModel)
+        {
+            var filename = "Vehicle_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
+            Int16 IsDataFound = 0;
+            try
+            {
+                string strQuery = " WHERE 1=1";
+                if (objCustomerVehicleModel.SearchEnable)
+                {
+                    #region Filter Query
+                    strQuery = " WHERE 1=1 AND (";
+                    if (objCustomerVehicleModel.AccountId > 0)
+                    {
+                        strQuery += " OR (CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
+                    {
+                        strQuery += " OR (CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId.ToLower() + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
+                    {
+                        strQuery += " OR (CA.MOB_NUMBER LIKE '%" + objCustomerVehicleModel.MobileNo.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
+                    {
+                        strQuery += " OR (LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
+                    {
+                        strQuery += " OR (LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' )";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
+                    {
+                        strQuery += " OR (LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%')";
+                    }
+                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehicleRCNumber))
+                    {
+                        strQuery += " OR (LOWER(CV.VEHICLE_RC_NO) LIKE '%" + objCustomerVehicleModel.VehicleRCNumber.ToLower() + "%')";
+                    }
+                    if (objCustomerVehicleModel.VehicleClassId > 0)
+                    {
+                        strQuery += " OR (CV.VEHICLE_CLASS_ID = " + objCustomerVehicleModel.VehicleClassId + ")";
+                    }
+                    if (objCustomerVehicleModel.QueueStatus > 0)
+                    {
+                        strQuery += " OR (CV.QUEUE_STATUS = " + objCustomerVehicleModel.QueueStatus + ")";
+                    }
+                    if (objCustomerVehicleModel.ExceptionFlag > 0)
+                    {
+                        strQuery += " OR (CV.EXCEPTION_FLAG = " + objCustomerVehicleModel.ExceptionFlag + ")";
+                    }
+                    strQuery += ")";
+                    strQuery = strQuery.Replace("( OR", "(");
+                    IsDataFound = CSVUtility.CreateCsvWithTitleFilter(file.FullName, CustomerVehicleBLL.GetFilterCSV(strQuery), "Vehicle", objCustomerVehicleModel);
+                    #endregion
+                }
+                else
+                {
+                    IsDataFound = CSVUtility.CreateCsvWithTitle(file.FullName, CustomerVehicleBLL.GetFilterCSV(strQuery), "Vehicle");
+                }
                 if (IsDataFound == 0)
                     filename = "No Data to Export.";
             }

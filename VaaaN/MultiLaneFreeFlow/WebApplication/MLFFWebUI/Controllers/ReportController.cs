@@ -27,12 +27,12 @@ namespace MLFFWebUI.Controllers
                 return RedirectToAction("Logout", "Login");
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Report", "VehicleBalanceReport");
-            ViewData["CustomerVehicle"] = CustomerVehicleBLL.GetAllAsList();
-
-
-
+            List<CustomerVehicleCBE> SortedList = CustomerVehicleBLL.GetAllAsList().OrderBy(o => o.VehRegNo).ToList();
+            ViewData["CustomerVehicle"] = SortedList;
             return View();
         }
+
+        [HttpPost]
         public string VehicleBalanceReportFilter(Int32 VehicleId, int Month, int Year)
         {
             DataSet ds = CustomerVehicleBLL.GetVehicleBalanceReport(VehicleId, Month, Year);

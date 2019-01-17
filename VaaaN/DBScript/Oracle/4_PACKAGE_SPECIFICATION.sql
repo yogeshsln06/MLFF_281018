@@ -1,4 +1,4 @@
-/* Formatted on 17/01/2019 00:27:02 (QP5 v5.215.12089.38647) */
+/* Formatted on 17-01-2019 21:49:20 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -934,6 +934,9 @@ AS
 
    PROCEDURE ACCOUNT_GETALLCSV (CUR_OUT OUT T_CURSOR);
 
+   PROCEDURE ACCOUNT_CSVWITHFILTER (P_FILTER   IN     NVARCHAR2,
+                                    CUR_OUT       OUT T_CURSOR);
+
    PROCEDURE ACCOUNT_GETBYID (P_TMS_ID       IN     NUMBER,
                               P_ACCOUNT_ID   IN     NUMBER,
                               CUR_OUT           OUT T_CURSOR);
@@ -1060,6 +1063,9 @@ AS
                                              CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE VEHICLE_GETALLCSV (CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE VEHICLE_CSVWITHFILTER (P_FILTER   IN     NVARCHAR2,
+                                    CUR_OUT       OUT T_CURSOR);
 
    PROCEDURE CV_GET_BY_TRANCTPENTRYID (P_TRAN_CT_EN_ID   IN     NUMBER,
                                        CUR_OUT              OUT T_CURSOR);

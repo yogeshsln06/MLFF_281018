@@ -100,5 +100,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetAllAsCSV();
         }
+
+        public static DataTable GetFilterCSV(string filtere)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetFilterCSV(filtere);
+        }
     }
 }

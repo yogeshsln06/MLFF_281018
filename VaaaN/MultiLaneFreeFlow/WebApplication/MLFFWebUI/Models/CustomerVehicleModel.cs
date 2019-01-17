@@ -14,6 +14,7 @@ namespace MLFFWebUI.Models
         private String emailId;
         private String residentId;
         private String address;
+        private bool searchEnable;
 
 
         [Required]
@@ -71,5 +72,6 @@ namespace MLFFWebUI.Models
         public bool ImageLeftChnage { get; set; }
         public bool ImageRightChnage { get; set; }
         public bool RCNumberImageChnage { get; set; }
+        public bool SearchEnable { get; set; }
     }
 }

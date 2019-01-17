@@ -485,9 +485,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Stored procedure must have cur_out parameter.
                 //There is no need to add ref cursor for oracle in code.
                 string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "VEHICLE_GETALLCSV";
-
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-
                 DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 dt = ds.Tables[tableName];
 
@@ -499,7 +497,27 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return dt;
         }
+        public static DataTable GetFilterCSV(string filter)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "VEHICLE_CSVWITHFILTER";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
         public static DataSet GetVehicleBalanceReport(Int32 VehcileId, Int32 Month, Int32 Year)
         {
             DataSet ds = new DataSet();
@@ -514,7 +532,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 DataTable dt_copy = new DataTable();
                 dt_copy = dsVehcile.Tables[0].Copy();
                 ds.Tables.Add(dt_copy);
-
+                
                 spName = Constants.oraclePackagePrefix + "VEHICLE_BALANCE_REPORT";
                 command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_ID", DbType.Int32, VehcileId, ParameterDirection.Input));
@@ -527,12 +545,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 if (dt_Transaction.Rows.Count > 0)
                 {
                     DataRow toTop = dt_Transaction.NewRow();
-                    toTop[2] = "Beginning";
-                    toTop[5] = dsVehcileReport.Tables[0].Rows[0]["OPENING_BALANCE"];
+                    toTop[0] = 1;
+                    toTop[3] = "Beginning";
+                    toTop[6] = dsVehcileReport.Tables[0].Rows[0]["OPENING_BALANCE"];
                     dt_Transaction.Rows.InsertAt(toTop, 0);
                     DataRow tobottom = dt_Transaction.NewRow();
-                    tobottom[2] = "Ending";
-                    tobottom[5] = dsVehcileReport.Tables[0].Rows[dsVehcileReport.Tables[0].Rows.Count - 1]["CLOSING_BALANCE"];
+                    tobottom[0] = dsVehcileReport.Tables[0].Rows.Count + 2;
+                    tobottom[3] = "Ending";
+                    tobottom[6] = dsVehcileReport.Tables[0].Rows[dsVehcileReport.Tables[0].Rows.Count - 1]["CLOSING_BALANCE"];
                     dt_Transaction.Rows.InsertAt(tobottom, dsVehcileReport.Tables[0].Rows.Count + 1);
                 }
                 ds.Tables.Add(dt_Transaction);
@@ -544,6 +564,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return ds;
         }
+
+       
         #endregion
 
         #region Helper Methods

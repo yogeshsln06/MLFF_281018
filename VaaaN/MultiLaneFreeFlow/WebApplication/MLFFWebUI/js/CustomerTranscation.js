@@ -161,6 +161,10 @@ function BindUnreviewedFirstLoad() {
                 {
                     "targets": 13,
                     "className": "text-center",
+                },
+                {
+                    'searchable': false,
+                    'targets': [0, 8, 9, 12, 13]
                 }],
                 width: "100%"
             });
@@ -214,28 +218,30 @@ function reloadUnreviewedData() {
 }
 
 function AppendUnreviewedData() {
-    $(".animationload").show();
-    inProgress = true;
-    var Inputdata = { pageindex: pageload, pagesize: pagesize }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(Inputdata),
-        url: "UnreviewedListScroll",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $(".animationload").hide();
-            pageload++;
-            NoMoredata = data.length < pagesize;
-            datatableVariable.rows.add(data);
-            datatableVariable.columns.adjust().draw();
-            inProgress = false;
+    if (!searchEnable) {
+        $(".animationload").show();
+        inProgress = true;
+        var Inputdata = { pageindex: pageload, pagesize: pagesize }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "UnreviewedListScroll",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $(".animationload").hide();
+                pageload++;
+                NoMoredata = data.length < pagesize;
+                datatableVariable.rows.add(data);
+                datatableVariable.columns.adjust().draw();
+                inProgress = false;
 
-        },
-        error: function (ex) {
-            $(".animationload").hide();
-        }
-    });
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+        });
+    }
 
 }
 
@@ -380,22 +386,26 @@ function BindAssociatedData(Seconds) {
                         }
                     ],
                     'columnDefs': [
-                                    {
-                                        "targets": 8,
-                                        "className": "text-center",
-                                    },
-                                     {
-                                         "targets": 9,
-                                         "className": "text-center",
-                                     },
-                                      {
-                                          "targets": 12,
-                                          "className": "text-center",
-                                      },
-                                    {
-                                        "targets": 13,
-                                        "className": "text-center",
-                                    }],
+                    {
+                        "targets": 8,
+                        "className": "text-center",
+                    },
+                        {
+                            "targets": 9,
+                            "className": "text-center",
+                        },
+                        {
+                            "targets": 12,
+                            "className": "text-center",
+                        },
+                    {
+                        "targets": 13,
+                        "className": "text-center",
+                    },
+                    {
+                        'searchable': false,
+                        'targets': [0, 1, 8, 9, 12, 13]
+                    }],
                     width: "100%"
                 });
                 $('.dataTables_filter input').attr("placeholder", "Search this list…");
@@ -432,6 +442,7 @@ function SaveUnidentified() {
             var meassage = '';
             for (var i = 0; i < resultData.length; i++) {
                 if (resultData[i].ErrorMessage == "success") {
+                    alert('Transaction ID ' + TransactionId + ' set as unidentified!!!')
                     closePopup();
                     $(Transactioncol).parent().parent().remove();
                 }
@@ -632,7 +643,11 @@ function BindReviewedFirstLoad() {
                {
                    "targets": 13,
                    "className": "text-center",
-               }],
+               },
+                 {
+                     'searchable': false,
+                     'targets': [0, 8, 9, 12, 13]
+                 }],
                 width: "100%"
             });
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
@@ -849,25 +864,46 @@ function BindChargedFirstLoad() {
                         'data': 'VEHICLESPEED',
 
                     },
-                    { 'data': 'AMOUNT' },
+                     {
+                         'data': 'AMOUNT',
+                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                             if (oData.AMOUNT != '' && oData.AMOUNT != null) {
+                                 $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
+                                     maximumFractionDigits: 0,
+                                     style: 'currency',
+                                     currency: 'IDR'
+                                 }) + "</span>");
+                             }
+
+                         }
+                     },
                 ],
                 'columnDefs': [
                {
                    "targets": 8,
                    "className": "text-center",
                },
-                {
-                    "targets": 9,
-                    "className": "text-center",
-                },
-                 {
-                     "targets": 12,
-                     "className": "text-center",
-                 },
+               {
+                   "targets": 9,
+                   "className": "text-center",
+               },
+               {
+                   "targets": 12,
+                   "className": "text-center",
+               },
                {
                    "targets": 13,
                    "className": "text-center",
-               }],
+               },
+               {
+                   "targets": 15,
+                   "className": "text-right",
+               },
+                {
+                    'searchable': false,
+                    'targets': [0, 8, 9, 12, 13]
+                }
+                ],
                 width: "100%"
             });
             $('.dataTable').css('width', '1200px !important');
@@ -1368,7 +1404,26 @@ function BindTopUpFirstLoad() {
                     { 'data': 'VEH_REG_NO' },
                     { 'data': 'VEHICLE_CLASS_NAME' },
                     { 'data': 'FIRST_NAME' },
-                    { 'data': 'AMOUNT' },
+                    {
+                        'data': 'AMOUNT',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.AMOUNT != '' && oData.AMOUNT != null) {
+                                $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'IDR'
+                                }) + "</span>");
+                            }
+
+                        }
+                    },
+
+                ],
+                'columnDefs': [
+                {
+                    "targets": 6,
+                    "className": "text-right",
+                },
                 ],
                 width: "100%"
             });

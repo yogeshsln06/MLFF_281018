@@ -349,7 +349,6 @@
     <Content Include="Views\SetUp\FareList.cshtml" />
     <Content Include="Views\SetUp\ClassificationPopUp.cshtml" />
     <Content Include="Views\SetUp\HardwarePopUp.cshtml" />
-    <Content Include="Views\CustomerTransaction\VehicleBalanceReport.cshtml" />
     <Content Include="Views\Report\VehicleBalanceReport.cshtml" />
   </ItemGroup>
   <ItemGroup>

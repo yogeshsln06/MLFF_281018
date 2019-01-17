@@ -130,7 +130,10 @@ function BindCustmerAccount() {
                        }
                    },
                 ],
-                columnDefs: [{ "orderable": false, "targets": 7 }],
+                columnDefs: [
+                    { "orderable": false, "targets": 7 },
+                    { 'searchable': false, 'targets': [0, 6] }
+                ],
                 order: [[1, 'asc']],
             });
             datatableVariable.on('order.dt search.dt', function () {
@@ -628,10 +631,31 @@ function BindHistoryRecords() {
                     { 'data': 'VEH_REG_NO' },
                     { 'data': 'VEHICLE_CLASS_NAME' },
                     { 'data': 'PLAZA_NAME' },
-                    { 'data': 'AMOUNT' },
+                    {
+                        'data': 'AMOUNT',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.AMOUNT != '' && oData.AMOUNT != null) {
+                                $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'IDR'
+                                }) + "</span>");
+                            }
+
+                        }
+                    },
 
                 ],
-
+                'columnDefs': [
+                {
+                    "targets": 2,
+                    "className": "text-left",
+                },
+                {
+                    "targets": 7,
+                    "className": "text-right",
+                }
+                ],
             });
             HdatatableVariable.on('order.dt search.dt', function () {
                 HdatatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -760,10 +784,31 @@ function BindCustmerVehicleAccount() {
                     },
                     { 'data': 'CustomerQueueStatusName' },
                     { 'data': 'ExceptionFlagName' },
-                    { 'data': 'AccountBalance' },
+                    {
+                        'data': 'AccountBalance',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.AccountBalance != '' && oData.AccountBalance != null) {
+                                if (oData.AccountBalance < 0) {
+                                    $(nTd).html("<span class='text-right'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
+                                        maximumFractionDigits: 0,
+                                        style: 'currency',
+                                        currency: 'IDR'
+                                    }) + ")</span>");
+                                }
+                                else {
+                                    $(nTd).html("<span class='text-right'>" + oData.AccountBalance.toLocaleString('id-ID', {
+                                        maximumFractionDigits: 0,
+                                        style: 'currency',
+                                        currency: 'IDR'
+                                    }) + "</span>");
+                                }
+                            }
 
+                        }
+                    },
                 ],
-                columnDefs: [{ "orderable": false, "targets": 6 }],
+                columnDefs: [{ "orderable": false, "targets": 6 },
+                 {"targets": 8,"className": "text-right",}],
                 order: [[1, 'asc']],
                 width: "100%"
             });
@@ -884,13 +929,74 @@ function FilteCustomerData() {
 
 function MakeCSV() {
     $(".animationload").show();
+    var CutomerId = 0;
+    var ResidentID = '';
+    var Name = '';
+    var Mobile = '';
+    var EmailId = '';
+    var VRN = '';
+    var boolfliter = false;
+    if (searchEnable) {
+        if ($("#txtCustomerID").val() != '') {
+            var numbers = /^[0-9]+$/;
+            if (!$("#txtCustomerID").val().match(numbers)) {
+                alert('Customer Id should be numeric');
+                $("#txtCustomerID").focus();
+                return false;
+            }
+            boolfliter = true;
+            CutomerId = $("#txtCustomerID").val();
+        }
+        if ($("#txtResidentID").val() != '') {
+            if (!$("#txtResidentID").val().match(numbers)) {
+                alert('Resident Id should be numeric');
+                $("#txtResidentID").focus();
+                return false;
+            }
+            boolfliter = true;
+            ResidentID = $("#txtResidentID").val();
+
+        }
+        if ($("#txtName").val() != '') {
+            boolfliter = true;
+            Name = $("#txtName").val();
+        }
+        if ($("#txtMobile").val() != '') {
+            if (!$("#txtMobile").val().match(numbers)) {
+                alert('Mobile Phone should be numeric');
+                $("#txtMobile").focus();
+                return false;
+            }
+            boolfliter = true;
+            Mobile = $("#txtMobile").val();
+        }
+        if ($("#txtEmail").val() != '') {
+            boolfliter = true;
+            EmailId = $("#txtEmail").val();
+        }
+        if ($("#txtVRN").val() != '') {
+            boolfliter = true;
+            VRN = $("#txtVRN").val();
+        }
+    }
+    var Inputdata = {
+        ResidentId: ResidentID,
+        MobileNo: Mobile,
+        EmailId: EmailId,
+        FirstName: Name,
+        VehRegNo: VRN,
+        AccountId: CutomerId,
+        SearchEnable: searchEnable
+    }
+    $(".animationload").show();
     $.ajax({
-        url: '/CSV/ExportCSVCustomer',
+        type: "POST",
+        url: "/CSV/ExportCustomerAccountFilter",
         dataType: "JSON",
         async: true,
+        data: JSON.stringify(Inputdata),
         contentType: "application/json; charset=utf-8",
         success: function (Path) {
-
             $('.animationload').hide();
             if (Path.toLowerCase() == "no data to export." || Path.toLowerCase() == "file exported successfully") {
                 alert(Path)
@@ -901,10 +1007,13 @@ function MakeCSV() {
             else
                 alert(Path);
         },
-        error: function (x, e) {
-            $('.animationload').hide();
+        error: function (ex) {
+            $(".animationload").hide();
         }
+
     });
+
+
 }
 
 function ResetFilter() {

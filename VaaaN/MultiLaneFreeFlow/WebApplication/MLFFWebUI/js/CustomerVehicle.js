@@ -110,8 +110,7 @@ function BindCustmerVehicleAccount() {
                             if (oData.VehicleImageFront != '' && oData.VehicleImageFront != null) {
                                 $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImgV(this);' style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-blue-500 ti-camera'></i></span><img onclick='zoomImage(this);' style='display:none;' src='../Attachment/VehicleImage/" + oData.VehicleImageFront + "' data-high-res-src='' alt='' class='gallery-items'>");
                             }
-                            else
-                            {
+                            else {
                                 $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false'  style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-gray-500 ti-camera'></i></span>");
                             }
                         }
@@ -129,7 +128,27 @@ function BindCustmerVehicleAccount() {
                     },
                     { 'data': 'CustomerQueueStatusName' },
                     { 'data': 'ExceptionFlagName' },
-                    { 'data': 'AccountBalance' },
+                    {
+                        'data': 'AccountBalance',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.AccountBalance != '' && oData.AccountBalance != null) {
+                                if (oData.AccountBalance < 0) {
+                                    $(nTd).html("<span class='text-right'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
+                                        maximumFractionDigits: 0,
+                                        style: 'currency',
+                                        currency: 'IDR'
+                                    }) + ")</span>");
+                                }
+                                else {
+                                    $(nTd).html("<span class='text-right'>" + oData.AccountBalance.toLocaleString('id-ID', {
+                                        maximumFractionDigits: 0,
+                                        style: 'currency',
+                                        currency: 'IDR'
+                                    }) + "</span>");
+                                }
+                            }
+                        }
+                    },
                     {
                         'data': 'AccountId',
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -154,7 +173,9 @@ function BindCustmerVehicleAccount() {
                         }
                     },
                 ],
-                columnDefs: [{ "orderable": false, "targets": 7 }],
+                columnDefs: [{ "orderable": false, "targets": 7 },
+                 { 'searchable': false, 'targets': [0, 4, 5, 9] },
+                 { "targets": 8, "className": "text-right", }],
                 order: [[1, 'asc']],
             });
             $('.dataTable').css('width', '1200px !important');
@@ -506,7 +527,7 @@ function DetailsOpen(ctrl, id) {
 
             $(".animationload").hide();
             $("#ValidUntil").attr("readonly", false);
-
+            openpopup();
             $("#fildset").attr("disabled", "disabled");
             $("#VehicleImageFront").hide();
             $("#VehicleImageRear").hide();
@@ -549,6 +570,17 @@ function DetailsOpen(ctrl, id) {
             $("#imgVehicleImageLeft").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleImageLeft").val());
             $("#imgVehicleRCNumberImagePath").attr('src', "../Attachment/VehicleImage/" + $("#hfVehicleRCNumberImage").val());
 
+
+            $.grep(CustomerAccountJson, function (element, index) {
+                if (element.AccountId == $("#AccountId").val()) {
+                    if (element.ResidentId == '')
+                        alert("Resident Id not found please update customer acount first")
+                    else
+                        $("#ResidentId").val(element.ResidentId);
+
+                }
+            });
+
             $("#btnSave").hide();
 
             $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
@@ -557,7 +589,7 @@ function DetailsOpen(ctrl, id) {
             $("#btnpopupUpdate").show();
             $("#btnSaveNew").hide();
 
-            openpopup();
+
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -919,11 +951,24 @@ function BindHistoryRecords() {
                     { 'data': 'VEH_REG_NO' },
                     { 'data': 'VEHICLE_CLASS_NAME' },
                     { 'data': 'PLAZA_NAME' },
-                    { 'data': 'AMOUNT' },
+                    {
+                        'data': 'AMOUNT',
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            if (oData.AMOUNT != '' && oData.AMOUNT != null) {
+                                $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'IDR'
+                                }) + "</span>");
+                            }
+
+                        }
+                    },
 
                 ],
+                'columnDefs': [{"targets": 2,"className": "text-left",},{"targets": 7,"className": "text-right",}],
                 width: "100%",
-               
+
             });
             HdatatableVariable.on('order.dt search.dt', function () {
                 HdatatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -1039,7 +1084,6 @@ function myclick() {
 
 function FilteCustomerData() {
     var CutomerId = 0;
-
     var ResidentID = '';
     var Name = '';
     var Mobile = '';
@@ -1159,13 +1203,98 @@ function FilteCustomerData() {
 
 function MakeCSV() {
     $(".animationload").show();
+    var CutomerId = 0;
+    var ResidentID = '';
+    var Name = '';
+    var Mobile = '';
+    var EmailId = '';
+    var VRN = '';
+    var VRCN = '';
+    var VehicleClassId = 0;
+    var QueueStatus = 0;
+    var ExceptionFlag = 0;
+    var boolfliter = false;
+    if (searchEnable) {
+        if ($("#txtCustomerID").val() != '') {
+            var numbers = /^[0-9]+$/;
+            if (!$("#txtCustomerID").val().match(numbers)) {
+                alert('Customer Id should be numeric');
+                $("#txtCustomerID").focus();
+                return false;
+            }
+            boolfliter = true;
+            CutomerId = $("#txtCustomerID").val();
+        }
+        if ($("#txtResidentID").val() != '') {
+            if (!$("#txtResidentID").val().match(numbers)) {
+                alert('Resident Id should be numeric');
+                $("#txtResidentID").focus();
+                return false;
+            }
+            boolfliter = true;
+            ResidentID = $("#txtResidentID").val();
+        }
+        if ($("#txtName").val() != '') {
+
+            boolfliter = true;
+            Name = $("#txtName").val();
+        }
+        if ($("#txtMobile").val() != '') {
+            if (!$("#txtMobile").val().match(numbers)) {
+                alert('Mobile Phone should be numeric');
+                $("#txtMobile").focus();
+                return false;
+            }
+            boolfliter = true;
+            Mobile = $("#txtMobile").val();
+        }
+        if ($("#txtEmail").val() != '') {
+            boolfliter = true;
+            EmailId = $("#txtEmail").val();
+        }
+        if ($("#txtVRN").val() != '') {
+            boolfliter = true;
+            VRN = $("#txtVRN").val();
+        }
+        if ($("#txtVRCN").val() != '') {
+            boolfliter = true;
+            VRCN = $("#txtVRCN").val();
+        }
+        if ($("#ddlVehicleClassId").val() != 0) {
+            boolfliter = true;
+            VehicleClassId = $("#ddlVehicleClassId").val();
+        }
+        if ($("#ddlQueueStatus").val() != 0) {
+            boolfliter = true;
+            QueueStatus = $("#ddlQueueStatus").val();
+        }
+        if ($("#ddlExceptionFlag").val() != 0) {
+            boolfliter = true;
+            ExceptionFlag = $("#ddlExceptionFlag").val();
+        }
+    }
+    var Inputdata = {
+        ResidentId: ResidentID,
+        MobileNo: Mobile,
+        EmailId: EmailId,
+        FirstName: Name,
+        VehRegNo: VRN,
+        AccountId: CutomerId,
+        VehicleRCNumber: VRCN,
+        VehicleClassId: VehicleClassId,
+        QueueStatus: QueueStatus,
+        ExceptionFlag: ExceptionFlag,
+        SearchEnable: searchEnable
+    }
+    $(".animationload").show();
     $.ajax({
-        url: '/CSV/ExportCSVCustomerVehicle',
+        type: "POST",
+        url: "/CSV/ExportCustomerVehicleFilter",
         dataType: "JSON",
         async: true,
+        data: JSON.stringify(Inputdata),
         contentType: "application/json; charset=utf-8",
         success: function (Path) {
-
             $('.animationload').hide();
             if (Path.toLowerCase() == "no data to export." || Path.toLowerCase() == "file exported successfully") {
                 alert(Path)
@@ -1176,10 +1305,13 @@ function MakeCSV() {
             else
                 alert(Path);
         },
-        error: function (x, e) {
-            $('.animationload').hide();
+        error: function (ex) {
+            $(".animationload").hide();
         }
+
     });
+
+
 }
 
 
