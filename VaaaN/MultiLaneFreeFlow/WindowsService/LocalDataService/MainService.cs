@@ -71,7 +71,6 @@ namespace VaaaN.MLFF.WindowsServices
 
             //dont forget to comment this line
             //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
-
         }
 
         static void Main()
