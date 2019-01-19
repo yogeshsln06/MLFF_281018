@@ -499,6 +499,7 @@ namespace MLFFWebAPI.Controllers
             {
                 #region Serialize the nodeflux JSON Data
                 string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                response = Request.CreateResponse(HttpStatusCode.OK);
                 await Task.Delay(100);
                 #endregion
 
@@ -526,7 +527,7 @@ namespace MLFFWebAPI.Controllers
                 }
 
 
-                response = Request.CreateResponse(HttpStatusCode.OK);
+
                 #endregion
             }
             catch (IOException)
@@ -554,7 +555,7 @@ namespace MLFFWebAPI.Controllers
                     nodeFluxCBE.TimeStamp = Constants.ConversionDateTime(objNodeFluxPacketJSON.TimeStamp);
                     nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
                     nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
-                    nodeFluxCBE.Provider = 1;
+                    nodeFluxCBE.Provider = 3;
                     if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Camera_Position.ToString()))
                         nodeFluxCBE.CameraPosition = string.Empty;
                     else
@@ -596,7 +597,7 @@ namespace MLFFWebAPI.Controllers
                     string FileName = string.Empty;
                     FileName = "VRN_HV_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
                     imgfilepath = filepath + FileName;
-                    nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
+                    nodeFluxCBE.PlateThumbnail = objNodeFluxPacketJSON.Data.Thumbnail;//SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
 
                     imgfilepath = string.Empty;
                     FileName = string.Empty;
@@ -608,7 +609,7 @@ namespace MLFFWebAPI.Controllers
                     }
                     FileName = "Vehicle_HV_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
                     imgfilepath = filepath + FileName;
-                    nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
+                    nodeFluxCBE.VehicleThumbnail = objNodeFluxPacketJSON.Data.Vehicle_Thumbnail;//SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
 
                     #endregion
 

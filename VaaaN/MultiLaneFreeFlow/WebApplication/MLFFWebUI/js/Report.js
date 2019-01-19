@@ -3,6 +3,9 @@ var month = (new Date()).getMonth() + 1;
 var Startyear = 2018;
 var year = (new Date()).getFullYear();
 var CustomerVehcileJson = [];
+var MonthId = month;
+var VehicleId = 0;
+var YearId = year;
 
 function bindMonth() {
     for (var i = 0; i < monthNames.length; i++) {
@@ -197,9 +200,37 @@ function BindVehcileDeatils(VehcileDetails) {
     }
 }
 
+function openFilterpopupVechile() {
+    //$('#filterModel').modal('show');
+    //$(".modal-backdrop.show").hide();
+    $("#vrnList").val(VehicleId)
+    $("#monthList").val(MonthId);
+    $("#yearList").val(YearId);
+
+    var modal = $("#filterModel");
+    var body = $(window);
+    var w = modal.width();
+    var h = modal.height();
+    var bw = body.width();
+    var bh = body.height();
+    modal.css({
+        "top": "106px",
+        "left": ((bw - 450)) + "px",
+        "right": "49px"
+    })
+    $('#filterModel').modal('show');
+    $(".modal-backdrop.show").hide();
+}
+
 function FilterVBRData() {
     $(".animationload").show();
-    var Inputdata = { VehicleId: $("#vrnList").val(), Month: $("#monthList").val(), Year: $("#yearList").val() }
+    if ($("#vrnList").val() != 0) {
+        VehicleId = $("#vrnList").val();
+    }
+    MonthId = $("#monthList").val();
+    YearId = $("#yearList").val();
+
+    var Inputdata = { VehicleId: VehicleId, Month: MonthId, Year: YearId }
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -223,7 +254,7 @@ function ResetVBRFilter() {
     $("#vrnList").val(0);
     $("#monthList").val(month)
     $("#yearList").val(year);
-    FilterVBRData();
+    //FilterVBRData();
 }
 
 function myclick() {

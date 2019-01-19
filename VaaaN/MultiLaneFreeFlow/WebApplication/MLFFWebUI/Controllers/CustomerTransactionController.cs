@@ -674,7 +674,7 @@ namespace MLFFWebUI.Controllers
                                             #endregion
 
                                             ModelStateList objModelState = new ModelStateList();
-                                            objModelState.ErrorMessage = "Reviewed Success! Balance deducted.";
+                                            objModelState.ErrorMessage = "Transactions ID " + TransactionId + " is successfully charged !!! /n Transactions ID " + FirstChildTranasactionId + " successfully merged  to Transactions ID " + TransactionId + "!!!";
                                             objResponseMessage.Add(objModelState);
                                             #endregion
                                         }
@@ -1065,7 +1065,7 @@ namespace MLFFWebUI.Controllers
                                             {
                                                 objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
                                                 ModelStateList objModelState = new ModelStateList();
-                                                objModelState.ErrorMessage = "Reviewed Success! Balance deducted.";
+                                                objModelState.ErrorMessage = "Transactions ID " + TransactionId + " is successfully charged !!!";
                                                 objResponseMessage.Add(objModelState);
                                             }
                                             TransactionBLL.UpdateAuditSection(objtransaction);
@@ -1799,6 +1799,6 @@ namespace MLFFWebUI.Controllers
         #endregion
 
 
-        
+
     }
 }

@@ -51,33 +51,30 @@ namespace MLFFWebUI.Controllers
                 if (objCustomerVehicleModel.SearchEnable)
                 {
                     #region Filter Query
-                    strQuery = " WHERE 1=1 AND (";
                     if (objCustomerVehicleModel.AccountId > 0)
                     {
-                        strQuery += " OR (CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%')";
+                        strQuery += " AND CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%'";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
                     {
-                        strQuery += " OR (CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId + "%')";
+                        strQuery += " AND CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId + "%'";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
                     {
-                        strQuery += " OR ((CA.MOB_NUMBER) LIKE '%" + objCustomerVehicleModel.MobileNo + "%' )";
+                        strQuery += " AND CA.MOB_NUMBER) LIKE '%" + objCustomerVehicleModel.MobileNo + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
                     {
-                        strQuery += " OR (LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' )";
+                        strQuery += " AND LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
                     {
-                        strQuery += " OR (LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' )";
+                        strQuery += " AND LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
                     {
-                        strQuery += " OR (LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%')";
+                        strQuery += " AND LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%'";
                     }
-                    strQuery += ")";
-                    strQuery = strQuery.Replace("( OR", "(");
                     IsDataFound = CSVUtility.CreateCsvWithTitleFilter(file.FullName, CustomerAccountBLL.GetFilterCSV(strQuery), "Customer", objCustomerVehicleModel);
                     #endregion
                 }
@@ -128,49 +125,46 @@ namespace MLFFWebUI.Controllers
                 if (objCustomerVehicleModel.SearchEnable)
                 {
                     #region Filter Query
-                    strQuery = " WHERE 1=1 AND (";
                     if (objCustomerVehicleModel.AccountId > 0)
                     {
-                        strQuery += " OR (CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%')";
+                        strQuery += " AND CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
                     {
-                        strQuery += " OR (CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId.ToLower() + "%')";
+                        strQuery += " AND CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId.ToLower() + "%'";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
                     {
-                        strQuery += " OR (CA.MOB_NUMBER LIKE '%" + objCustomerVehicleModel.MobileNo.ToLower() + "%' )";
+                        strQuery += " AND CA.MOB_NUMBER LIKE '%" + objCustomerVehicleModel.MobileNo.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
                     {
-                        strQuery += " OR (LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' )";
+                        strQuery += " AND LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
                     {
-                        strQuery += " OR (LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' )";
+                        strQuery += " AND LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
                     {
-                        strQuery += " OR (LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%')";
+                        strQuery += " AND LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehicleRCNumber))
                     {
-                        strQuery += " OR (LOWER(CV.VEHICLE_RC_NO) LIKE '%" + objCustomerVehicleModel.VehicleRCNumber.ToLower() + "%')";
+                        strQuery += " AND LOWER(CV.VEHICLE_RC_NO) LIKE '%" + objCustomerVehicleModel.VehicleRCNumber.ToLower() + "%'";
                     }
                     if (objCustomerVehicleModel.VehicleClassId > 0)
                     {
-                        strQuery += " OR (CV.VEHICLE_CLASS_ID = " + objCustomerVehicleModel.VehicleClassId + ")";
+                        strQuery += " AND CV.VEHICLE_CLASS_ID = " + objCustomerVehicleModel.VehicleClassId + "";
                     }
                     if (objCustomerVehicleModel.QueueStatus > 0)
                     {
-                        strQuery += " OR (CV.QUEUE_STATUS = " + objCustomerVehicleModel.QueueStatus + ")";
+                        strQuery += " AND CV.QUEUE_STATUS = " + objCustomerVehicleModel.QueueStatus + "";
                     }
                     if (objCustomerVehicleModel.ExceptionFlag > 0)
                     {
-                        strQuery += " OR (CV.EXCEPTION_FLAG = " + objCustomerVehicleModel.ExceptionFlag + ")";
+                        strQuery += " AND CV.EXCEPTION_FLAG = " + objCustomerVehicleModel.ExceptionFlag + "";
                     }
-                    strQuery += ")";
-                    strQuery = strQuery.Replace("( OR", "(");
                     IsDataFound = CSVUtility.CreateCsvWithTitleFilter(file.FullName, CustomerVehicleBLL.GetFilterCSV(strQuery), "Vehicle", objCustomerVehicleModel);
                     #endregion
                 }
