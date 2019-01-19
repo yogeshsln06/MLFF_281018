@@ -11,6 +11,7 @@ $(document).ready(function () {
     $("#tableNodeFluxRear").freezeHeader({ 'height': '150px' });
     myVar = setInterval("GetMSMQData()", 2000);
     //GetMSMQData()
+    $('body').attr("style", "");
 });
 
 function filterData() {
@@ -63,9 +64,6 @@ function BindEventList(data) {
             else if (data[i].PacketName.toLowerCase() == "nodeflux - front") {
                 TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].PlazaName + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td style='text-align:left'>" + replacenull(data[i].VehicleClassName) + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
 "<td>" + data[i].Datepacket + "</td><td><a class='dropdown-item' href='javascript:void(0);' onclick='ViewFiles('" + data[i].NumberPlatePath + "','" + data[i].VehiclePath + "','" + data[i].VideoURL + "');'<span class='icon-holder'><i class='c-blue-500 ti-clip'></i></span></a></td></tr>"
-
-
-
                 if ($("#tableNodeFluxFront tbody tr").length > 0) {
                     $('#tableNodeFluxFront tbody tr:first').before(TR);
                 }
@@ -99,7 +97,6 @@ function replacenull(str) {
 
 function ViewFiles(vrnPath, VehiclePath, VideoURL) {
     //debugger;
-    var Imagepath = $("#hfAPIPath").val();
     if (replacenull(vrnPath) == '') {
         $("#myimageVrn").attr('src', noimagepath);
     }
