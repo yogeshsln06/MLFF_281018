@@ -499,6 +499,7 @@ namespace MLFFWebAPI.Controllers
             {
                 #region Serialize the nodeflux JSON Data
                 string jsonString = JsonConvert.SerializeObject(objNodeFluxPacketJSON);
+                response = Request.CreateResponse(HttpStatusCode.OK);
                 await Task.Delay(100);
                 #endregion
 
@@ -526,7 +527,7 @@ namespace MLFFWebAPI.Controllers
                 }
 
 
-                response = Request.CreateResponse(HttpStatusCode.OK);
+
                 #endregion
             }
             catch (IOException)
@@ -554,7 +555,7 @@ namespace MLFFWebAPI.Controllers
                     nodeFluxCBE.TimeStamp = Constants.ConversionDateTime(objNodeFluxPacketJSON.TimeStamp);
                     nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
                     nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
-                    nodeFluxCBE.Provider = 1;
+                    nodeFluxCBE.Provider = 3;
                     if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Camera_Position.ToString()))
                         nodeFluxCBE.CameraPosition = string.Empty;
                     else
@@ -596,7 +597,7 @@ namespace MLFFWebAPI.Controllers
                     string FileName = string.Empty;
                     FileName = "VRN_HV_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
                     imgfilepath = filepath + FileName;
-                    nodeFluxCBE.PlateThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
+                    nodeFluxCBE.PlateThumbnail = objNodeFluxPacketJSON.Data.Thumbnail;//SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
 
                     imgfilepath = string.Empty;
                     FileName = string.Empty;
@@ -608,7 +609,7 @@ namespace MLFFWebAPI.Controllers
                     }
                     FileName = "Vehicle_HV_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
                     imgfilepath = filepath + FileName;
-                    nodeFluxCBE.VehicleThumbnail = SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
+                    nodeFluxCBE.VehicleThumbnail = objNodeFluxPacketJSON.Data.Vehicle_Thumbnail;//SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
 
                     #endregion
 
@@ -1216,6 +1217,26 @@ namespace MLFFWebAPI.Controllers
 
         #endregion
 
+        #region API for Response Mobile Balance
+        [Route("VaaaN/IndonesiaMLFFApi/ResponseMobileBalance")]
+        [HttpPost]
+        public HttpResponseMessage ResponseMobileBalance(MobileResponce objMobileResponce)
+        {
+            try
+            {
+                objMobileResponce.data.status = "success";
+                response = Request.CreateResponse(HttpStatusCode.OK, objMobileResponce);
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogging.SendErrorToText(ex);
+                LogInboundSMS("Error in API ResponseSMS : " + ex);
+            }
+
+            return response;
+        }
+        #endregion
+
         #region Save Image from the string
         private string SaveByteArrayAsImage(string fullOutputPath, string bytesString, string FileName)
         {
@@ -1321,6 +1342,22 @@ namespace MLFFWebAPI.Controllers
             }
 
             return anprName;
+        }
+
+        public class MobileResponce
+        {
+            public RespinceDataFields data { get; set; }
+        }
+
+        public class RespinceDataFields
+        {
+            public string status { get; set; }
+
+            public string message { get; set; }
+            public Int32 trans_id { get; set; }
+
+            
+
         }
         #endregion
     }

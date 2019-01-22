@@ -12,6 +12,16 @@ var CurrentData = [];
 var CustomerId = 0;
 var searchEnable = false;
 
+var CutomerId = 0;
+var ResidentID = '';
+var Name = '';
+var Mobile = '';
+var EmailId = '';
+var VRN = '';
+var boolfliter = false;
+
+
+
 $(document).ready(function () {
     $("#sidebar-toggle").bind("click", function () {
         $(".animationload").show();
@@ -28,6 +38,13 @@ function closePopup() {
 
 function reloadData() {
     if (searchEnable) {
+        if (CutomerId || 0 != 0)
+            $("#txtCustomerID").val(parseInt(CutomerId));
+        $("#txtResidentID").val(ResidentID);
+        $("#txtName").val(Name);
+        $("#txtMobile").val(Mobile);
+        $("#txtEmail").val(EmailId);
+        $("#txtVRN").val(VRN);
         FilteCustomerData();
     }
     else {
@@ -87,7 +104,7 @@ function BindCustmerAccount() {
                 scrollY: "39.5vh",
                 scrollX: true,
                 scrollCollapse: false,
-                autoWidth: false,
+                autoWidth: true,
                 paging: false,
                 info: false,
                 columns: [
@@ -143,9 +160,13 @@ function BindCustmerAccount() {
             }).draw();
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
-                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerData").height()) && !NoMoredata && !inProgress) {
+                var ScrollbarHeight = ($("#tblCustomerData").height() - $('.dataTables_scrollBody').outerHeight())
+                if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
                     AppendCustomerData();
                 }
+                //if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerData").height()) && !NoMoredata && !inProgress) {
+                //    AppendCustomerData();
+                //}
             });
             datatableVariable.columns.adjust();
 
@@ -653,7 +674,7 @@ function BindHistoryRecords() {
                 },
                 {
                     "targets": 7,
-                    "className": "text-right",
+                    "className": 'dt-body-right',
                 }
                 ],
             });
@@ -789,7 +810,7 @@ function BindCustmerVehicleAccount() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.AccountBalance != '' && oData.AccountBalance != null) {
                                 if (oData.AccountBalance < 0) {
-                                    $(nTd).html("<span class='text-right'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
+                                    $(nTd).html("<span class='text-right red'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
                                         maximumFractionDigits: 0,
                                         style: 'currency',
                                         currency: 'IDR'
@@ -808,7 +829,7 @@ function BindCustmerVehicleAccount() {
                     },
                 ],
                 columnDefs: [{ "orderable": false, "targets": 6 },
-                 {"targets": 8,"className": "text-right",}],
+                 { "targets": 8, "className": 'dt-body-right', }],
                 order: [[1, 'asc']],
                 width: "100%"
             });
@@ -834,13 +855,7 @@ function myclick() {
 }
 
 function FilteCustomerData() {
-    var CutomerId = 0;
-    var ResidentID = '';
-    var Name = '';
-    var Mobile = '';
-    var EmailId = '';
-    var VRN = '';
-    var boolfliter = false;
+    boolfliter = false;
     if ($("#txtCustomerID").val() != '') {
         var numbers = /^[0-9]+$/;
         if (!$("#txtCustomerID").val().match(numbers)) {
@@ -850,6 +865,9 @@ function FilteCustomerData() {
         }
         boolfliter = true;
         CutomerId = $("#txtCustomerID").val();
+    }
+    else {
+        CutomerId = 0;
     }
     if ($("#txtResidentID").val() != '') {
         if (!$("#txtResidentID").val().match(numbers)) {
@@ -861,9 +879,15 @@ function FilteCustomerData() {
         ResidentID = $("#txtResidentID").val();
 
     }
+    else {
+        ResidentID = '';
+    }
     if ($("#txtName").val() != '') {
         boolfliter = true;
         Name = $("#txtName").val();
+    }
+    else {
+        Name = '';
     }
     if ($("#txtMobile").val() != '') {
         if (!$("#txtMobile").val().match(numbers)) {
@@ -874,13 +898,22 @@ function FilteCustomerData() {
         boolfliter = true;
         Mobile = $("#txtMobile").val();
     }
+    else {
+        Mobile = '';
+    }
     if ($("#txtEmail").val() != '') {
         boolfliter = true;
         EmailId = $("#txtEmail").val();
     }
+    else {
+        EmailId = '';
+    }
     if ($("#txtVRN").val() != '') {
         boolfliter = true;
         VRN = $("#txtVRN").val();
+    }
+    else {
+        VRN = '';
     }
     if (boolfliter) {
         NoMoredata = true;
@@ -923,20 +956,23 @@ function FilteCustomerData() {
         });
     }
     else {
-        alert('At least one option must be fill for search !');
+        searchEnable = false;
+        $('#filterModel').modal('hide');
+        // alert('At least one option must be fill for search !');
+        reloadData();
     }
 }
 
 function MakeCSV() {
     $(".animationload").show();
-    var CutomerId = 0;
-    var ResidentID = '';
-    var Name = '';
-    var Mobile = '';
-    var EmailId = '';
-    var VRN = '';
-    var boolfliter = false;
     if (searchEnable) {
+        if (CutomerId || 0 != 0)
+            $("#txtCustomerID").val(parseInt(CutomerId));
+        $("#txtResidentID").val(ResidentID);
+        $("#txtName").val(Name);
+        $("#txtMobile").val(Mobile);
+        $("#txtEmail").val(EmailId);
+        $("#txtVRN").val(VRN);
         if ($("#txtCustomerID").val() != '') {
             var numbers = /^[0-9]+$/;
             if (!$("#txtCustomerID").val().match(numbers)) {
@@ -1017,9 +1053,9 @@ function MakeCSV() {
 }
 
 function ResetFilter() {
-    searchEnable = false;
+
     $("#filterbox").find('input:text').val('');
-    reloadData();
+    //reloadData();
 }
 
 function openImg(ctrl) {
@@ -1033,3 +1069,26 @@ function ResetCustomerFildes() {
     $("#imgPreview").attr('src', '');
 }
 
+function openFilterpopupCust() {
+    if (CutomerId || 0 != 0)
+        $("#txtCustomerID").val(parseInt(CutomerId));
+    $("#txtResidentID").val(ResidentID);
+    $("#txtName").val(Name);
+    $("#txtMobile").val(Mobile);
+    $("#txtEmail").val(EmailId);
+    $("#txtVRN").val(VRN);
+
+    var modal = $("#filterModel");
+    var body = $(window);
+    var w = modal.width();
+    var h = modal.height();
+    var bw = body.width();
+    var bh = body.height();
+    modal.css({
+        "top": "106px",
+        "left": ((bw - 450)) + "px",
+        "right": "30px"
+    })
+    $('#filterModel').modal('show');
+    $(".modal-backdrop.show").hide();
+}

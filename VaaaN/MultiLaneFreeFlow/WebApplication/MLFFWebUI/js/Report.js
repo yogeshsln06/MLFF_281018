@@ -3,6 +3,9 @@ var month = (new Date()).getMonth() + 1;
 var Startyear = 2018;
 var year = (new Date()).getFullYear();
 var CustomerVehcileJson = [];
+var MonthId = month;
+var VehicleId = 0;
+var YearId = year;
 
 function bindMonth() {
     for (var i = 0; i < monthNames.length; i++) {
@@ -47,8 +50,11 @@ function FirstLoadVehicleBalance() {
         success: function (result) {
             BindVehcileDeatils(result.TBL_CUSTOMER_VEHICLE);
             $("#tblVBRData").removeClass('my-table-bordered').addClass('table-bordered');
+            var bindDate = result.TranscationDeatils;
+            if (bindDate.length == 2)
+                bindDate = null;
             VBRDataVariable = $('#tblVBRData').DataTable({
-                data: result.TranscationDeatils,
+                data: bindDate,
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
                 scrollY: "39.5vh",
@@ -110,7 +116,7 @@ function FirstLoadVehicleBalance() {
                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                            if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                                if (oData.AMOUNT < 0) {
-                                   $(nTd).html("<span class='text-right'>(" + ((oData.AMOUNT) * (-1)).toLocaleString('id-ID', {
+                                   $(nTd).html("<span class='text-right red'>(" + ((oData.AMOUNT) * (-1)).toLocaleString('id-ID', {
                                        maximumFractionDigits: 0,
                                        style: 'currency',
                                        currency: 'IDR'
@@ -159,7 +165,7 @@ function FirstLoadVehicleBalance() {
                 },
                 {
                     "targets": 10,
-                    "className": "text-right",
+                    "className": 'dt-body-right',
                 },
                 ],
                 width: "100%"
@@ -197,9 +203,35 @@ function BindVehcileDeatils(VehcileDetails) {
     }
 }
 
+function openFilterpopupVechile() {
+    //$('#filterModel').modal('show');
+    //$(".modal-backdrop.show").hide();
+    $("#vrnList").val(VehicleId)
+    $("#monthList").val(MonthId);
+    $("#yearList").val(YearId);
+
+    var modal = $("#filterModel");
+    var body = $(window);
+    var w = modal.width();
+    var h = modal.height();
+    var bw = body.width();
+    var bh = body.height();
+    modal.css({
+        "top": "106px",
+        "left": ((bw - 450)) + "px",
+        "right": "49px"
+    })
+    $('#filterModel').modal('show');
+    $(".modal-backdrop.show").hide();
+}
+
 function FilterVBRData() {
     $(".animationload").show();
-    var Inputdata = { VehicleId: $("#vrnList").val(), Month: $("#monthList").val(), Year: $("#yearList").val() }
+    VehicleId = $("#vrnList").val();
+    MonthId = $("#monthList").val();
+    YearId = $("#yearList").val();
+
+    var Inputdata = { VehicleId: VehicleId, Month: MonthId, Year: YearId }
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -208,8 +240,11 @@ function FilterVBRData() {
         contentType: "application/json; charset=utf-8",
         success: function (result) {
             BindVehcileDeatils(result.TBL_CUSTOMER_VEHICLE);
+            var bindDate = result.TranscationDeatils;
             VBRDataVariable.clear().draw();
-            VBRDataVariable.rows.add(result.TranscationDeatils);
+            if (bindDate.length != 2) {
+                VBRDataVariable.rows.add(bindDate);
+            }
             VBRDataVariable.columns.adjust().draw();
             $(".animationload").hide();
         },
@@ -223,7 +258,7 @@ function ResetVBRFilter() {
     $("#vrnList").val(0);
     $("#monthList").val(month)
     $("#yearList").val(year);
-    FilterVBRData();
+    //FilterVBRData();
 }
 
 function myclick() {

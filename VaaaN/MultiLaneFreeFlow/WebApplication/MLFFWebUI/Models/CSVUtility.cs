@@ -196,365 +196,460 @@ namespace MLFFWebUI.Models
                     CustomerVehicleModel objCustomerVehicleModel = new CustomerVehicleModel();
                     objCustomerVehicleModel = (CustomerVehicleModel)obj;
                     #region Customer Id Filter
-                    if (objCustomerVehicleModel.AccountId > 0)
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
                     {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i == 0)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Customer ID");
-                            }
-                            else if (i == 1)
+                            sw.Write("Customer ID");
+                        }
+                        else if (i == 1)
+                        {
+                            if (objCustomerVehicleModel.AccountId > 0)
                             {
                                 sw.Write(objCustomerVehicleModel.AccountId);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Resident Id Filter
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Resident ID");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Resident Id Filter
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Resident ID");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
                             {
                                 sw.Write(objCustomerVehicleModel.ResidentId);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Name Filter
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Name");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Name Filter
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Name");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
                             {
                                 sw.Write(objCustomerVehicleModel.FirstName);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Mobile Phone Filter
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Mobile Phone");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Mobile Phone Filter
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Mobile Phone");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
                             {
                                 sw.Write(objCustomerVehicleModel.MobileNo);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Email
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Email");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Email
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Email");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
                             {
                                 sw.Write(objCustomerVehicleModel.EmailId);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Registration Num (VRN)
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Registration Num (VRN)");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Registration Num (VRN)
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Registration Num (VRN)");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
                             {
                                 sw.Write(objCustomerVehicleModel.VehRegNo);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
                         }
-                        sw.Write(sw.NewLine);
+                        if (i < iColCount)
+                        {
+                            sw.Write(",");
+                        }
                     }
+                    sw.Write(sw.NewLine);
+
                     #endregion
                 }
                 else if (Title == "Vehicle")
                 {
                     CustomerVehicleModel objCustomerVehicleModel = new CustomerVehicleModel();
                     objCustomerVehicleModel = (CustomerVehicleModel)obj;
+                 
                     #region Customer Id Filter
-                    if (objCustomerVehicleModel.AccountId > 0)
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
                     {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i == 0)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Customer ID");
-                            }
-                            else if (i == 1)
+                            sw.Write("Customer ID");
+                        }
+                        else if (i == 1)
+                        {
+                            if (objCustomerVehicleModel.AccountId > 0)
                             {
                                 sw.Write(objCustomerVehicleModel.AccountId);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Resident Id Filter
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Resident ID");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Resident Id Filter
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Resident ID");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
                             {
                                 sw.Write(objCustomerVehicleModel.ResidentId);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Name Filter
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Name");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Name Filter
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Name");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
                             {
                                 sw.Write(objCustomerVehicleModel.FirstName);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Mobile Phone Filter
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Mobile Phone");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Mobile Phone Filter
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Mobile Phone");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
                             {
                                 sw.Write(objCustomerVehicleModel.MobileNo);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Email
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Email");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Email
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Email");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
                             {
                                 sw.Write(objCustomerVehicleModel.EmailId);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Certificate Num (VRCN)
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehicleRCNumber))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Certificate Num (VRCN)");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    #endregion
+
+                    #region Certificate Num (VRCN)
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Certificate Num (VRCN)");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehicleRCNumber))
                             {
                                 sw.Write(objCustomerVehicleModel.VehicleRCNumber);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Registration Num (VRN)
-                    if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Registration Num (VRN)");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    
+                    #endregion
+                   
+                    #region Registration Num (VRN)
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Registration Num (VRN)");
+                        }
+                        else if (i == 1)
+                        {
+                            if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
                             {
                                 sw.Write(objCustomerVehicleModel.VehRegNo);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Class
-                    if (objCustomerVehicleModel.VehicleClassId > 0)
-                    {
-                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCollection vehicleClasses = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAllAsCollection();
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+
+                    #endregion
+                   
+                    #region Class
+
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Class");
+                        }
+                        else if (i == 1)
+                        {
+                            if (objCustomerVehicleModel.VehicleClassId > 0)
                             {
-                                sw.Write("Class");
-                            }
-                            else if (i == 1)
-                            {
+                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCollection vehicleClasses = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAllAsCollection();
                                 sw.Write(GetVehicleClassByName(objCustomerVehicleModel.VehicleClassId, vehicleClasses));
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Status
-                    if (objCustomerVehicleModel.QueueStatus > 0)
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Status");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                    
+                    #endregion
+                   
+                    #region Status
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Status");
+                        }
+                        else if (i == 1)
+                        {
+                            if (objCustomerVehicleModel.QueueStatus > 0)
                             {
                                 sw.Write(Constants.CustomerQueueStatusName[(objCustomerVehicleModel.QueueStatus) - 1]);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
-                    }
-                    #endregion
-                    #region Exception
-                    if (objCustomerVehicleModel.ExceptionFlag > 0)
-                    {
-                        iColCount = dt.Columns.Count;
-                        for (int i = 0; i < iColCount; i++)
+                        if (i < iColCount)
                         {
-                            if (i == 0)
-                            {
-                                sw.Write("Exception");
-                            }
-                            else if (i == 1)
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+                   
+                    #endregion
+                  
+                    #region Exception
+                    iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            sw.Write("Exception");
+                        }
+                        else if (i == 1)
+                        {
+                            if (objCustomerVehicleModel.ExceptionFlag > 0)
                             {
                                 sw.Write(Constants.ExceptionFlagName[(objCustomerVehicleModel.ExceptionFlag) - 1]);
                             }
-                            if (i < iColCount)
+                            else
                             {
-                                sw.Write(",");
+                                sw.Write("All");
                             }
+
                         }
-                        sw.Write(sw.NewLine);
+                        if (i < iColCount)
+                        {
+                            sw.Write(",");
+                        }
                     }
+                    sw.Write(sw.NewLine);
+                   
                     #endregion
                 }
-                sw.Write(sw.NewLine);
                 sw.Write(sw.NewLine);
                 sw.Write(sw.NewLine);
                 iColCount = dt.Columns.Count;

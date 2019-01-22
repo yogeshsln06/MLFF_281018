@@ -561,15 +561,20 @@ width:1209px;
 }
 
 .modal.right.fade .modal-dialog {
-    right: -403px;
+    /*top: 106px;
+    left: 934px;
+    right: 45px;*/
+    /*right: -403px;
+    right: -29.5%;
     top: 106px;
     text-align: left;
-    /*right: -532px;
-top: 20px;*/
-    /*-webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+    right: -532px;
+top: 20px;
+    -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
 -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
 -o-transition: opacity 0.3s linear, right 0.3s ease-out;
-transition: opacity 0.3s linear, right 0.3s ease-out;*/
+transition: opacity 0.3s linear, right 0.3s ease-out;
+*/
 }
 
 .modal.right.fade.in .modal-dialog {
@@ -730,4 +735,9 @@ img {
     height: 72px;
     opacity: 0;
   }
+}
+
+
+.red {
+color:red;
 }

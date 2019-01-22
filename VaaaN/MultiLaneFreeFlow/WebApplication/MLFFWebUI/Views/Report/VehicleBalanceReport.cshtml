@@ -1,43 +1,42 @@
-﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.ViewTransactionCBE
+﻿@model MLFFWebUI.Models.CustomerVehicleModel
 @{
-    ViewBag.Title = "Vehicle Balance";
+    ViewBag.Title = "Vehicle Balance Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid">
+<div class="container-fluid" style="overflow-y:scroll; overflow-x:hidden">
     <div class="row">
         <div class="col-md-12">
             <div class="bgc-white bd bdrs-3 p-20 mB-20">
                 <div class="form-row">
                     <div class="col-md-8">
                         <div class="mT-10">
-                            <h4 class="c-mygrey-900 mB-20">Vehicle Balance</h4>
+                            <h4 class="c-mygrey-900 mB-20">Vehicle Balance Report</h4>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mT-10">
                             <div class="gap-5 peers" style="float:right;overflow: visible !important;">
                                 <div class="peer">
-                                    <a class="btn cur-p btn-outline-primary" href='javascript:void(0);' onclick="reloadVBRData();">
+                                    <a class="btn cur-p btn-outline-primary" href='javascript:void(0);' onclick="FilterVBRData();">
                                         <span class='icon-holder'>
                                             <i class='c-black-500 ti-reload'></i>
                                         </span>
                                     </a>
                                 </div>
                                 <div class="peer">
-                                    <a class="btn cur-p btn-outline-primary cd-filter-trigger" href='javascript:void(0);' onclick="openFilterpopup();">
+                                    <a class="btn cur-p btn-outline-primary cd-filter-trigger" href='javascript:void(0);' onclick="openFilterpopupVechile();">
                                         <span class='icon-holder'>
                                             <i class='c-black-500 ti-filter'></i>
                                         </span>
                                     </a>
-                                    <div class="modal right fade" id="filterModel" tabindex="-1" role="dialog" aria-labelledby="filterModelLabel">
+                                    <div class="modal fade" id="filterModel" tabindex="-1" role="dialog" aria-labelledby="filterModelLabel">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-body filterModel">
                                                     <form id="filterbox">
                                                         <div class="form-group">
                                                             <label for="vrnList">VRN</label>
-                                                            @*@Html.DisplayFor(model => model.PlateNumber, new { htmlAttributes = new { @class = "form-control" } })*@
                                                             <select id="vrnList" name="vrnList" class="form-control"></select>
                                                         </div>
                                                         <div class="form-group">
@@ -62,15 +61,91 @@
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
+                    
                 </div>
+                <fieldset id="fildset" disabled>
+                    <div>
+                        <h5 class="c-mygrey-900 heading"><strong>Vehicle </strong>Information<span></span></h5>
+                        <div class="mT-5">
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.VehRegNo, htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.EditorFor(model => model.VehRegNo, new { htmlAttributes = new { @class = "form-control", } })
+                                </div>
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.EntryId, htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.EditorFor(model => model.EntryId, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.VehicleClassId, htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.EditorFor(model => model.VehicleClassName, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="control-label">Period</label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input class="form-control" id="period" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <h5 class="c-mygrey-900 heading"><strong>Customer </strong> Information <span></span></h5>
+                        <div class="mT-5">
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", } })
+                                </div>
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.ResidentId, htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.EditorFor(model => model.ResidentId, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="form-group col-md-2">
+                                    @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control", } })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+                <h5 class="c-mygrey-900 heading"><strong>Balance </strong> Details <span></span></h5>
                 <table id="tblVBRData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" id="tblVBRDataTR">
+                                No
+                            </th>
                             <th style="text-align: center; vertical-align: middle; " rowspan="2">
                                 Date Time
                             </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2" id="tblVBRDataTR">
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2">
                                 ID
                             </th>
                             <th style="text-align: center; vertical-align: middle; " rowspan="2">
@@ -111,6 +186,7 @@
                     <tbody></tbody>
                 </table>
             </div>
+            
         </div>
     </div>
 </div>
@@ -125,9 +201,18 @@
         bindVRN();
         bindMonth();
         bindYear();
+        FirstLoadVehicleBalance();
+
+        function setHeight() {
+            windowHeight = $(window).innerHeight()-110;
+            $('.container-fluid').css('max-height', windowHeight);
+        };
+        setHeight();
+
+        $(window).resize(function () {
+            setHeight();
+        });
     });
 </script>
 <script src="~/js/Report.js"></script>
-<link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
 

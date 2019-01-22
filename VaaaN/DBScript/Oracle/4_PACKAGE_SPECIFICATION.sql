@@ -1,4 +1,4 @@
-/* Formatted on 17-01-2019 21:49:20 (QP5 v5.215.12089.38647) */
+/* Formatted on 21/01/2019 16:25:28 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -1301,6 +1301,8 @@ AS
    PROCEDURE VEHICLE_BALANCE_REPORT (P_VEHICLE_ID   IN     NUMBER,
                                      P_MONTH_ID     IN     NUMBER,
                                      P_YEAR_ID      IN     NUMBER,
+                                     P_PMONTH_ID    IN     NUMBER,
+                                     P_PYEAR_ID     IN     NUMBER,
                                      CUR_OUT           OUT T_CURSOR);
 END MLFF_PACKAGE;
 /

@@ -254,7 +254,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Cyclinder Capacity")]
+        [Display(Name = "Cylinder Capacity")]
         public String CyclinderCapacity
         {
             get

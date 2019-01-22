@@ -9,6 +9,16 @@ var CustomerRegistrationNumber = '';
 var CustomerAccountJson = [];
 var VehicleId = 0;
 var searchEnable = false;
+var CutomerId = 0;
+var ResidentID = '';
+var Name = '';
+var Mobile = '';
+var EmailId = '';
+var VRN = '';
+var VRCN = '';
+var VehicleClassId = 0;
+var QueueStatus = 0;
+var ExceptionFlag = 0;
 
 $(document).ready(function () {
     $("#sidebar-toggle").bind("click", function () {
@@ -21,6 +31,17 @@ $(document).ready(function () {
 
 function refreshData() {
     if (searchEnable) {
+        if (CutomerId || 0 != 0)
+            $("#txtCustomerID").val(parseInt(CutomerId));
+        $("#txtResidentID").val(ResidentID);
+        $("#txtName").val(Name);
+        $("#txtMobile").val(Mobile);
+        $("#txtEmail").val(EmailId);
+        $("#txtVRN").val(VRN);
+        $("#txtVRCN").val(VRCN);
+        $("#ddlVehicleClassId").val(VehicleClassId);
+        $("#ddlQueueStatus").val(QueueStatus);
+        $("#ddlExceptionFlag").val(ExceptionFlag);
         FilteCustomerData();
     }
     else {
@@ -133,7 +154,7 @@ function BindCustmerVehicleAccount() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.AccountBalance != '' && oData.AccountBalance != null) {
                                 if (oData.AccountBalance < 0) {
-                                    $(nTd).html("<span class='text-right'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
+                                    $(nTd).html("<span class='text-right red'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
                                         maximumFractionDigits: 0,
                                         style: 'currency',
                                         currency: 'IDR'
@@ -175,7 +196,7 @@ function BindCustmerVehicleAccount() {
                 ],
                 columnDefs: [{ "orderable": false, "targets": 7 },
                  { 'searchable': false, 'targets': [0, 4, 5, 9] },
-                 { "targets": 8, "className": "text-right", }],
+                 { "targets": 8, "className": 'dt-body-right', }],
                 order: [[1, 'asc']],
             });
             $('.dataTable').css('width', '1200px !important');
@@ -187,9 +208,13 @@ function BindCustmerVehicleAccount() {
 
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
-                if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerVehicle").height()) && !NoMoredata && !inProgress) {
+                var ScrollbarHeight = ($("#tblCustomerVehicle").height() - $('.dataTables_scrollBody').outerHeight())
+                if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
                     AppendCustomerData();
                 }
+                //if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerVehicle").height()) && !NoMoredata && !inProgress) {
+                //    AppendCustomerData();
+                //}
             });
             thId = 'tblCustomerDataTR';
             myVar = setInterval("myclick()", 500);
@@ -966,7 +991,7 @@ function BindHistoryRecords() {
                     },
 
                 ],
-                'columnDefs': [{"targets": 2,"className": "text-left",},{"targets": 7,"className": "text-right",}],
+                'columnDefs': [{ "targets": 2, "className": "text-left", }, { "targets": 7, "className": 'dt-body-right', }],
                 width: "100%",
 
             });
@@ -1083,16 +1108,7 @@ function myclick() {
 }
 
 function FilteCustomerData() {
-    var CutomerId = 0;
-    var ResidentID = '';
-    var Name = '';
-    var Mobile = '';
-    var EmailId = '';
-    var VRN = '';
-    var VRCN = '';
-    var VehicleClassId = 0;
-    var QueueStatus = 0;
-    var ExceptionFlag = 0;
+
     var boolfliter = false;
     if ($("#txtCustomerID").val() != '') {
         var numbers = /^[0-9]+$/;
@@ -1104,6 +1120,9 @@ function FilteCustomerData() {
         boolfliter = true;
         CutomerId = $("#txtCustomerID").val();
     }
+    else {
+        CutomerId = 0;
+    }
     if ($("#txtResidentID").val() != '') {
         if (!$("#txtResidentID").val().match(numbers)) {
             alert('Resident Id should be numeric');
@@ -1112,11 +1131,17 @@ function FilteCustomerData() {
         }
         boolfliter = true;
         ResidentID = $("#txtResidentID").val();
+
+    }
+    else {
+        ResidentID = '';
     }
     if ($("#txtName").val() != '') {
-
         boolfliter = true;
         Name = $("#txtName").val();
+    }
+    else {
+        Name = '';
     }
     if ($("#txtMobile").val() != '') {
         if (!$("#txtMobile").val().match(numbers)) {
@@ -1127,29 +1152,50 @@ function FilteCustomerData() {
         boolfliter = true;
         Mobile = $("#txtMobile").val();
     }
+    else {
+        Mobile = '';
+    }
     if ($("#txtEmail").val() != '') {
         boolfliter = true;
         EmailId = $("#txtEmail").val();
+    }
+    else {
+        EmailId = '';
     }
     if ($("#txtVRN").val() != '') {
         boolfliter = true;
         VRN = $("#txtVRN").val();
     }
+    else {
+        VRN = '';
+    }
     if ($("#txtVRCN").val() != '') {
         boolfliter = true;
         VRCN = $("#txtVRCN").val();
+    }
+    else {
+        VRCN = '';
     }
     if ($("#ddlVehicleClassId").val() != 0) {
         boolfliter = true;
         VehicleClassId = $("#ddlVehicleClassId").val();
     }
+    else {
+        VehicleClassId = 0;
+    }
     if ($("#ddlQueueStatus").val() != 0) {
         boolfliter = true;
         QueueStatus = $("#ddlQueueStatus").val();
     }
+    else {
+        QueueStatus = 0;
+    }
     if ($("#ddlExceptionFlag").val() != 0) {
         boolfliter = true;
         ExceptionFlag = $("#ddlExceptionFlag").val();
+    }
+    else {
+        ExceptionFlag = 0;
     }
     if (boolfliter) {
         NoMoredata = true;
@@ -1197,24 +1243,28 @@ function FilteCustomerData() {
         });
     }
     else {
-        alert('At least one option must be fill for search !');
+        $('#filterModel').modal('hide');
+        searchEnable = false;
+        refreshData();
     }
 }
 
 function MakeCSV() {
     $(".animationload").show();
-    var CutomerId = 0;
-    var ResidentID = '';
-    var Name = '';
-    var Mobile = '';
-    var EmailId = '';
-    var VRN = '';
-    var VRCN = '';
-    var VehicleClassId = 0;
-    var QueueStatus = 0;
-    var ExceptionFlag = 0;
     var boolfliter = false;
     if (searchEnable) {
+        if (CutomerId || 0 != 0)
+            $("#txtCustomerID").val(parseInt(CutomerId));
+        $("#txtResidentID").val(ResidentID);
+        $("#txtName").val(Name);
+        $("#txtMobile").val(Mobile);
+        $("#txtEmail").val(EmailId);
+        $("#txtVRN").val(VRN);
+        $("#txtVRCN").val(VRCN);
+        $("#ddlVehicleClassId").val(VehicleClassId);
+        $("#ddlQueueStatus").val(QueueStatus);
+        $("#ddlExceptionFlag").val(ExceptionFlag);
+
         if ($("#txtCustomerID").val() != '') {
             var numbers = /^[0-9]+$/;
             if (!$("#txtCustomerID").val().match(numbers)) {
@@ -1316,11 +1366,10 @@ function MakeCSV() {
 
 
 function ResetFilter() {
-    searchEnable = false;
     $("#filterbox").find('input:text').val('');
     $("#filterbox").find('input:file').val('');
     $("#filterbox").find('select').val(0);
-    refreshData();
+
 }
 
 function GetCustomerDetails(ctrl) {
@@ -1336,4 +1385,31 @@ function GetCustomerDetails(ctrl) {
         }
     });
 
+}
+
+function openFilterpopupCust() {
+    if (CutomerId || 0 != 0)
+        $("#txtCustomerID").val(parseInt(CutomerId));
+    $("#txtResidentID").val(ResidentID);
+    $("#txtName").val(Name);
+    $("#txtMobile").val(Mobile);
+    $("#txtEmail").val(EmailId);
+    $("#txtVRN").val(VRN);
+    $("#txtVRCN").val(VRCN);
+    $("#ddlVehicleClassId").val(VehicleClassId);
+    $("#ddlQueueStatus").val(QueueStatus);
+    $("#ddlExceptionFlag").val(ExceptionFlag);
+    var modal = $("#filterModel");
+    var body = $(window);
+    var w = modal.width();
+    var h = modal.height();
+    var bw = body.width();
+    var bh = body.height();
+    modal.css({
+        "top": "106px",
+        "left": ((bw - 450)) + "px",
+        "right": "30px"
+    })
+    $('#filterModel').modal('show');
+    $(".modal-backdrop.show").hide();
 }

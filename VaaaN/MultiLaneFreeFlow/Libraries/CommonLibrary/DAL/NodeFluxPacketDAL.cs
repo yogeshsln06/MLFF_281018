@@ -39,9 +39,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLATE_NUMBER", DbType.String, nodeFluxPacket.PlateNumber, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_CLASS_ID", DbType.Int32, nodeFluxPacket.VehicleClassId, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_SPEED", DbType.Int32, nodeFluxPacket.VehicleSpeed, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLATE_THUMBNAIL", DbType.String, nodeFluxPacket.PlateThumbnail, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_THUMBNAIL", DbType.String, nodeFluxPacket.VehicleThumbnail, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VIDEO_URL", DbType.String, nodeFluxPacket.VideoURL, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLATE_THUMBNAIL", DbType.String, nodeFluxPacket.PlateThumbnail, ParameterDirection.Input, 500));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_THUMBNAIL", DbType.String, nodeFluxPacket.VehicleThumbnail, ParameterDirection.Input, 500));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VIDEO_URL", DbType.String, nodeFluxPacket.VideoURL, ParameterDirection.Input, 500));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVIDER", DbType.Int32, nodeFluxPacket.Provider, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, nodeFluxPacket.CreationDate, ParameterDirection.Input));
 
@@ -79,9 +79,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLATE_NUMBER", DbType.String, nodeFluxPacket.PlateNumber, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_CLASS_ID", DbType.Int32, nodeFluxPacket.VehicleClassId, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_SPEED", DbType.Int32, nodeFluxPacket.VehicleSpeed, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLATE_THUMBNAIL", DbType.String, nodeFluxPacket.PlateThumbnail, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_THUMBNAIL", DbType.String, nodeFluxPacket.VehicleThumbnail, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VIDEO_URL", DbType.String, nodeFluxPacket.VideoURL, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLATE_THUMBNAIL", DbType.String, nodeFluxPacket.PlateThumbnail, ParameterDirection.Input, 500));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_THUMBNAIL", DbType.String, nodeFluxPacket.VehicleThumbnail, ParameterDirection.Input, 500));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VIDEO_URL", DbType.String, nodeFluxPacket.VideoURL, ParameterDirection.Input, 500));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVIDER", DbType.Int32, nodeFluxPacket.VideoURL, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, nodeFluxPacket.ModifierId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, nodeFluxPacket.ModificationDate, ParameterDirection.Input));

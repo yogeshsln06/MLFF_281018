@@ -518,7 +518,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             return dt;
         }
-        public static DataSet GetVehicleBalanceReport(Int32 VehcileId, Int32 Month, Int32 Year)
+        public static DataSet GetVehicleBalanceReport(Int32 VehcileId, Int32 Month, Int32 Year, Int32 PMonth, Int32 PYear)
         {
             DataSet ds = new DataSet();
 
@@ -532,29 +532,31 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 DataTable dt_copy = new DataTable();
                 dt_copy = dsVehcile.Tables[0].Copy();
                 ds.Tables.Add(dt_copy);
-                
+
                 spName = Constants.oraclePackagePrefix + "VEHICLE_BALANCE_REPORT";
                 command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLE_ID", DbType.Int32, VehcileId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MONTH_ID", DbType.Int32, Month, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_YEAR_ID", DbType.Int32, Year, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PMONTH_ID", DbType.Int32, PMonth, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PYEAR_ID", DbType.Int32, PYear, ParameterDirection.Input));
                 DataSet dsVehcileReport = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 DataTable dt_Transaction = new DataTable();
                 dsVehcileReport.Tables[0].TableName = "TranscationDeatils";
                 dt_Transaction = dsVehcileReport.Tables[0].Copy();
-                if (dt_Transaction.Rows.Count > 0)
-                {
-                    DataRow toTop = dt_Transaction.NewRow();
-                    toTop[0] = 1;
-                    toTop[3] = "Beginning";
-                    toTop[6] = dsVehcileReport.Tables[0].Rows[0]["OPENING_BALANCE"];
-                    dt_Transaction.Rows.InsertAt(toTop, 0);
-                    DataRow tobottom = dt_Transaction.NewRow();
-                    tobottom[0] = dsVehcileReport.Tables[0].Rows.Count + 2;
-                    tobottom[3] = "Ending";
-                    tobottom[6] = dsVehcileReport.Tables[0].Rows[dsVehcileReport.Tables[0].Rows.Count - 1]["CLOSING_BALANCE"];
-                    dt_Transaction.Rows.InsertAt(tobottom, dsVehcileReport.Tables[0].Rows.Count + 1);
-                }
+                //if (dt_Transaction.Rows.Count > 0)
+                //{
+                //    DataRow toTop = dt_Transaction.NewRow();
+                //    toTop[0] = 1;
+                //    toTop[3] = "Beginning";
+                //    toTop[6] = dsVehcileReport.Tables[0].Rows[0]["OPENING_BALANCE"];
+                //    dt_Transaction.Rows.InsertAt(toTop, 0);
+                //    DataRow tobottom = dt_Transaction.NewRow();
+                //    tobottom[0] = dsVehcileReport.Tables[0].Rows.Count + 2;
+                //    tobottom[3] = "Ending";
+                //    tobottom[6] = dsVehcileReport.Tables[0].Rows[dsVehcileReport.Tables[0].Rows.Count - 1]["CLOSING_BALANCE"];
+                //    dt_Transaction.Rows.InsertAt(tobottom, dsVehcileReport.Tables[0].Rows.Count + 1);
+                //}
                 ds.Tables.Add(dt_Transaction);
             }
             catch (Exception ex)
@@ -565,7 +567,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return ds;
         }
 
-       
+
         #endregion
 
         #region Helper Methods

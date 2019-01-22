@@ -609,33 +609,32 @@ namespace MLFFWebUI.Controllers
             {
                 try
                 {
-                    string strQuery = " WHERE 1=1 AND (";
+                    string strQuery = " WHERE 1=1 ";
                     if (objCustomerVehicleModel.AccountId > 0)
                     {
-                        strQuery += " OR (CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%')";
+                        strQuery += " AND CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%'";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
                     {
-                        strQuery += " OR (CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId + "%')";
+                        strQuery += " AND CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId + "%'";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
                     {
-                        strQuery += " OR ((CA.MOB_NUMBER) LIKE '%" + objCustomerVehicleModel.MobileNo + "%' )";
+                        strQuery += " AND CA.MOB_NUMBER LIKE '%" + objCustomerVehicleModel.MobileNo + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
                     {
-                        strQuery += " OR (LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' )";
+                        strQuery += " AND LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
                     {
-                        strQuery += " OR (LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' )";
+                        strQuery += " AND LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
                     {
-                        strQuery += " OR (LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%')";
+                        strQuery += " AND LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%'";
                     }
-                    strQuery += ")";
-                    customerDataList = CustomerAccountBLL.GetCustomerAccountFiltered(strQuery.Replace("( OR", "("));
+                    customerDataList = CustomerAccountBLL.GetCustomerAccountFiltered(strQuery);
                     result.Data = customerDataList;
                 }
                 catch (Exception)
@@ -664,7 +663,7 @@ namespace MLFFWebUI.Controllers
             List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
             vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-            vehicleclassList.Add(new SelectListItem() { Text = "--Select Classification--", Value = "0" });
+            vehicleclassList.Add(new SelectListItem() { Text = "All Class", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
             {
                 vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -676,7 +675,7 @@ namespace MLFFWebUI.Controllers
             #region Queue Status
             List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
             Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
-            customerQueueStatus.Add(new SelectListItem() { Text = "--Select Status--", Value = "0" });
+            customerQueueStatus.Add(new SelectListItem() { Text = "All Status", Value = "0" });
             for (int i = 0; i < arStatus.Length; i++)
             {
                 customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
@@ -688,7 +687,7 @@ namespace MLFFWebUI.Controllers
             #region Exception Flag
             List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
             Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
-            ExceptionFlagList.Add(new SelectListItem() { Text = "--Select Exception--", Value = "0" });
+            ExceptionFlagList.Add(new SelectListItem() { Text = "All Exception", Value = "0" });
             for (int i = 0; i < ExceptionFlagListart.Length; i++)
             {
                 ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
@@ -727,7 +726,7 @@ namespace MLFFWebUI.Controllers
             List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
             vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-            vehicleclassList.Add(new SelectListItem() { Text = "--Select Classification--", Value = "0" });
+            vehicleclassList.Add(new SelectListItem() { Text = "All Class", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
             {
                 vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -984,7 +983,7 @@ namespace MLFFWebUI.Controllers
                 List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
                 vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-                vehicleclassList.Add(new SelectListItem() { Text = "--Select Classification--", Value = "0" });
+                vehicleclassList.Add(new SelectListItem() { Text = "All Class", Value = "0" });
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
                 {
                     vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -1750,49 +1749,48 @@ namespace MLFFWebUI.Controllers
             {
                 try
                 {
-                    string strQuery = " WHERE 1=1 AND (";
+                    string strQuery = " WHERE 1=1 ";
                     if (objCustomerVehicleModel.AccountId > 0)
                     {
-                        strQuery += " OR (CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%')";
+                        strQuery += " AND CA.ACCOUNT_ID LIKE '%" + objCustomerVehicleModel.AccountId + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.ResidentId))
                     {
-                        strQuery += " OR (CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId.ToLower() + "%')";
+                        strQuery += " AND CA.RESIDENT_ID LIKE '%" + objCustomerVehicleModel.ResidentId.ToLower() + "%'";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
                     {
-                        strQuery += " OR (CA.MOB_NUMBER LIKE '%" + objCustomerVehicleModel.MobileNo.ToLower() + "%' )";
+                        strQuery += " AND CA.MOB_NUMBER LIKE '%" + objCustomerVehicleModel.MobileNo.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
                     {
-                        strQuery += " OR (LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' )";
+                        strQuery += " AND LOWER(CA.EMAIL_ID) LIKE '%" + objCustomerVehicleModel.EmailId.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.FirstName))
                     {
-                        strQuery += " OR (LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' )";
+                        strQuery += " AND LOWER(CA.FIRST_NAME) LIKE '%" + objCustomerVehicleModel.FirstName.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehRegNo))
                     {
-                        strQuery += " OR (LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%')";
+                        strQuery += " AND LOWER(CV.VEH_REG_NO) LIKE '%" + objCustomerVehicleModel.VehRegNo.ToLower() + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.VehicleRCNumber))
                     {
-                        strQuery += " OR (LOWER(CV.VEHICLE_RC_NO) LIKE '%" + objCustomerVehicleModel.VehicleRCNumber.ToLower() + "%')";
+                        strQuery += " AND LOWER(CV.VEHICLE_RC_NO) LIKE '%" + objCustomerVehicleModel.VehicleRCNumber.ToLower() + "%'";
                     }
                     if (objCustomerVehicleModel.VehicleClassId > 0)
                     {
-                        strQuery += " OR (CV.VEHICLE_CLASS_ID = " + objCustomerVehicleModel.VehicleClassId + ")";
+                        strQuery += " AND CV.VEHICLE_CLASS_ID = " + objCustomerVehicleModel.VehicleClassId + "";
                     }
                     if (objCustomerVehicleModel.QueueStatus > 0)
                     {
-                        strQuery += " OR (CV.QUEUE_STATUS = " + objCustomerVehicleModel.QueueStatus + ")";
+                        strQuery += " AND CV.QUEUE_STATUS = " + objCustomerVehicleModel.QueueStatus + "";
                     }
                     if (objCustomerVehicleModel.ExceptionFlag > 0)
                     {
-                        strQuery += " OR (CV.EXCEPTION_FLAG = " + objCustomerVehicleModel.ExceptionFlag + ")";
+                        strQuery += " AND CV.EXCEPTION_FLAG = " + objCustomerVehicleModel.ExceptionFlag + "";
                     }
-                    strQuery += ")";
-                    customerDataList = CustomerVehicleBLL.GetCustomerVehicleFiltered(strQuery.Replace("( OR", "("));
+                    customerDataList = CustomerVehicleBLL.GetCustomerVehicleFiltered(strQuery);
                     result.Data = customerDataList;
                 }
                 catch (Exception)

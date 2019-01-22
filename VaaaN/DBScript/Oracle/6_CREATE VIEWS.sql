@@ -1,4 +1,4 @@
-/* Formatted on 17/01/2019 22:42:02 (QP5 v5.215.12089.38647) */
+/* Formatted on 21/01/2019 17:50:52 (QP5 v5.215.12089.38647) */
 DROP VIEW TRANS_UNREVIEWED;
 
 CREATE VIEW TRANS_UNREVIEWED
@@ -12,7 +12,11 @@ AS
             T.TRANSACTION_DATETIME,
             TO_CHAR (T.TRANSACTION_DATETIME, 'DD-Mon-YYYY HH:MI:SS AM')
                F_TRANSACTION_DATETIME,
-            T.CT_ENTRY_ID,
+            (CASE NVL (T.CT_ENTRY_ID, 0)
+                WHEN 0 THEN T.CT_ENTRY_ID_REAR
+                ELSE T.CT_ENTRY_ID
+             END)
+               CT_ENTRY_ID,
             T.NF_ENTRY_ID_FRONT,
             T.NF_ENTRY_ID_REAR,
             T.IS_BALANCE_UPDATED,
@@ -49,7 +53,11 @@ AS
             T.TRANSACTION_DATETIME,
             TO_CHAR (T.TRANSACTION_DATETIME, 'DD-Mon-YYYY HH:MI:SS AM')
                F_TRANSACTION_DATETIME,
-            T.CT_ENTRY_ID,
+            (CASE NVL (T.CT_ENTRY_ID, 0)
+                WHEN 0 THEN T.CT_ENTRY_ID_REAR
+                ELSE T.CT_ENTRY_ID
+             END)
+               CT_ENTRY_ID,
             T.NF_ENTRY_ID_FRONT,
             T.NF_ENTRY_ID_REAR,
             T.IS_REGISTERED,
@@ -89,7 +97,11 @@ AS
             T.TRANSACTION_DATETIME,
             TO_CHAR (T.TRANSACTION_DATETIME, 'DD-Mon-YYYY HH:MI:SS AM')
                F_TRANSACTION_DATETIME,
-            T.CT_ENTRY_ID,
+            (CASE NVL (T.CT_ENTRY_ID, 0)
+                WHEN 0 THEN T.CT_ENTRY_ID_REAR
+                ELSE T.CT_ENTRY_ID
+             END)
+               CT_ENTRY_ID,
             T.NF_ENTRY_ID_FRONT,
             T.NF_ENTRY_ID_REAR,
             T.IS_BALANCE_UPDATED,

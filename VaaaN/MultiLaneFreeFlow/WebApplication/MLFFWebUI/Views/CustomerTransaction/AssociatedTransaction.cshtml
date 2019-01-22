@@ -90,8 +90,13 @@
                 </td>
                 <td style="text-align:center;">
                     @if (item["FRONT_IMAGE"].ToString() != "")
-                {
-                        <img src="\@item["REAR_IMAGE"].ToString()" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
+                    {
+                        string path = item["FRONT_IMAGE"].ToString();
+                        @if (!path.Contains("http"))
+                        {
+                            path = @"\" + path;
+                        }
+                        <img src="@path" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
                 <td style="text-align:center;">
@@ -115,8 +120,13 @@
                 </td>
                 <td style="text-align:center;">
                     @if (item["REAR_IMAGE"].ToString() != "")
-                {
-                        <img src="\@item["REAR_IMAGE"].ToString()" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
+                    {
+                        string path = item["REAR_IMAGE"].ToString();
+                        @if (!path.Contains("http"))
+                        {
+                            path = @"\" + path;
+                        }
+                        <img src="@path" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
                 <td style="text-align:center;">
@@ -222,6 +232,6 @@
     $(document).ready(function () {
         bindSecond();
         BindAssociatedData(30);
-       
+
     });
 </script>

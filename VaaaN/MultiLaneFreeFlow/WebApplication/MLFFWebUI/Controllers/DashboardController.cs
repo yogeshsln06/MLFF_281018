@@ -98,7 +98,7 @@ namespace MLFFWebUI.Controllers
                                     liveEvent.VehicleClassName = ctp.VehicleClassName;
                                     liveEvent.VRN = ctp.VRN;
                                     liveEvent.TagId = ctp.TagId;
-                                    liveEvent.Datepacket = ctp.Timestamp.ToString(Constants.dateTimeFormat24HsqlServer);
+                                    liveEvent.Datepacket = ctp.Timestamp.ToString("dd-MMM-yyyy hh:mm:ss tt");
                                     liveEvents.Add(liveEvent);
                                     #endregion
                                 }
@@ -117,7 +117,7 @@ namespace MLFFWebUI.Controllers
                                     liveEvent.NumberPlatePath = ntp.NumberPlatePath.Replace('\\', '^'); ;
                                     liveEvent.VehiclePath = ntp.VehiclePath.Replace('\\', '^');
                                     liveEvent.VideoURL = ntp.VideoURL.Replace('\\', '^'); ;
-                                    liveEvent.Datepacket = ntp.Timestamp.ToString(Constants.dateTimeFormat24HsqlServer);
+                                    liveEvent.Datepacket = ntp.Timestamp.ToString("dd-MMM-yyyy hh:mm:ss tt");
                                     liveEvents.Add(liveEvent);
                                     #endregion
                                 }
