@@ -1244,7 +1244,7 @@ function BindChargedFirstLoad() {
     $("#tblChargedData").removeClass('my-table-bordered').addClass('table-bordered');
     $(".animationload").hide();
     ChargeddatatableVariable = $('#tblChargedData').DataTable({
-        data: data,
+        data: null,
         "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
         "bScrollInfinite": true,
         "bScrollCollapse": false,
@@ -1742,7 +1742,7 @@ function ResetChargedFilter() {
 function BindTopUpFirstLoad() {
     $("#tblTopUpData").removeClass('my-table-bordered').addClass('table-bordered');
     TopUpdatatableVariable = $('#tblTopUpData').DataTable({
-        data: data,
+        data: null,
         "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
         "bScrollInfinite": true,
         "bScrollCollapse": false,
