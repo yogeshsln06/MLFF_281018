@@ -22,6 +22,131 @@ var EndDate = '';
 
 /***************************** UnReviewed Start ****************/
 function BindUnreviewedFirstLoad() {
+    $("#tblUnreviewedData").removeClass('my-table-bordered').addClass('table-bordered');
+    datatableVariable = $('#tblUnreviewedData').DataTable({
+        data: null,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        "bScrollInfinite": true,
+        "bScrollCollapse": false,
+        scrollY: "39.5vh",
+        scrollX: true,
+        scrollCollapse: false,
+        autoWidth: true,
+        paging: false,
+        info: false,
+        columns: [
+            { 'data': 'ROWNUMBER' },
+            {
+                'data': 'TRANSACTION_ID',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<a href='javascript:void(0);' onclick='GetAssociatedTranscation(this," + oData.TRANSACTION_ID + ")'>" + oData.TRANSACTION_ID + "</a>");
+                }
+            },
+            {
+                'data': 'TRANSACTION_DATETIME',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
+                        oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
+                        $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                    }
+                }
+
+            },
+            { 'data': 'PLAZA_NAME' },
+            { 'data': 'CTP_VRN' },
+            { 'data': 'CTP_VEHICLE_CLASS_NAME' },
+            { 'data': 'FRONT_VRN' },
+            { 'data': 'NFP_VEHICLE_CLASS_NAME_FRONT' },
+            {
+                'data': 'FRONT_IMAGE',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
+                        if (oData.FRONT_IMAGE.indexOf('http') > -1) {
+                            oData.FRONT_IMAGE = oData.FRONT_IMAGE;
+                        }
+                        else {
+                            oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                        }
+                        $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                    }
+                }
+            },
+            {
+                'data': 'FRONT_VIDEO_URL',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
+
+                        $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
+                    }
+                }
+            },
+            { 'data': 'REAR_VRN' },
+            { 'data': 'NFP_VEHICLE_CLASS_NAME_REAR' },
+            {
+                'data': 'REAR_IMAGE',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
+                        if (oData.REAR_IMAGE.indexOf('http') > -1) {
+                            oData.REAR_IMAGE = oData.REAR_IMAGE;
+                        }
+                        else {
+                            oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                        }
+                        $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                    }
+                }
+            },
+            {
+                'data': 'REAR_VIDEO_URL',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
+
+                        $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
+                    }
+                }
+            },
+            {
+                'data': 'VEHICLESPEED',
+            }
+        ],
+        'columnDefs': [
+        {
+            "targets": 8,
+            "className": "text-center",
+        },
+         {
+             "targets": 9,
+             "className": "text-center",
+         },
+          {
+              "targets": 12,
+              "className": "text-center",
+          },
+        {
+            "targets": 13,
+            "className": "text-center",
+        },
+        {
+            'searchable': false,
+            'targets': [0, 8, 9, 12, 13]
+        }],
+        width: "100%"
+    });
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    $('.dataTables_scrollBody').on('scroll', function () {
+        var ScrollbarHeight = ($("#tblUnreviewedData").height() - $('.dataTables_scrollBody').outerHeight())
+        if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
+            AppendUnreviewedData();
+        }
+        //if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= ($("#tblUnreviewedData").height())) && !NoMoredata && !inProgress) {
+        //    AppendUnreviewedData();
+        //}
+    });
+    thId = 'tblUnreviewedDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+
+function BindUnreviewedFirstLoad1() {
     pageload = 1;
     $(".animationload").show();
     inProgress = true;
@@ -37,7 +162,7 @@ function BindUnreviewedFirstLoad() {
             NoMoredata = data.length < pagesize
             pageload++;
             datatableVariable = $('#tblUnreviewedData').DataTable({
-                data: data,
+                data: null,
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
@@ -166,39 +291,44 @@ function BindUnreviewedFirstLoad() {
 }
 
 function reloadUnreviewedData() {
-    if (searchEnable) {
-        $("#ddlGantry").val(GantryId)
-        $("#ddlTransactionCategory").val(TransactionCategory);
-        $('#StartDate').val(StartDate);
-        $('#EndDate').val(EndDate);
-        FilteUnreviewedData();
-    }
-    else {
-        pageload = 1;
-        $(".animationload").show();
-        inProgress = true;
-        var Inputdata = { pageindex: pageload, pagesize: pagesize }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(Inputdata),
-            url: "UnreviewedListScroll",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $(".animationload").hide();
-                pageload++;
-                NoMoredata = data.length < pagesize;
-                inProgress = false;
-                datatableVariable.clear().draw();
-                datatableVariable.rows.add(data); // Add new data
-                datatableVariable.columns.adjust().draw();
+    $("#ddlGantry").val(GantryId)
+    $("#ddlTransactionCategory").val(TransactionCategory);
+    $('#StartDate').val(StartDate);
+    $('#EndDate').val(EndDate);
+    FilteUnreviewedData();
+    //if (searchEnable) {
+    //    $("#ddlGantry").val(GantryId)
+    //    $("#ddlTransactionCategory").val(TransactionCategory);
+    //    $('#StartDate').val(StartDate);
+    //    $('#EndDate').val(EndDate);
+    //    FilteUnreviewedData();
+    //}
+    //else {
+    //    pageload = 1;
+    //    $(".animationload").show();
+    //    inProgress = true;
+    //    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    //    $.ajax({
+    //        type: "POST",
+    //        dataType: "json",
+    //        data: JSON.stringify(Inputdata),
+    //        url: "UnreviewedListScroll",
+    //        contentType: "application/json; charset=utf-8",
+    //        success: function (data) {
+    //            $(".animationload").hide();
+    //            pageload++;
+    //            NoMoredata = data.length < pagesize;
+    //            inProgress = false;
+    //            datatableVariable.clear().draw();
+    //            datatableVariable.rows.add(data); // Add new data
+    //            datatableVariable.columns.adjust().draw();
 
-            },
-            error: function (ex) {
-                $(".animationload").hide();
-            }
-        });
-    }
+    //        },
+    //        error: function (ex) {
+    //            $(".animationload").hide();
+    //        }
+    //    });
+    //}
 
 }
 
@@ -593,6 +723,10 @@ function Complete() {
                 var close = false;
                 for (var i = 0; i < resultData.length; i++) {
                     if (resultData[i].ErrorMessage.toLowerCase().indexOf('success') > -1) {
+                        var res = resultData[i].ErrorMessage.split("-999-");
+                        for (var j = 0; j < res.length; j++) {
+                            Msg = Msg + "\xb7 " + res[j].replace('success', '') + " \n";
+                        }
                         close = true
                     }
                     else {
@@ -601,7 +735,10 @@ function Complete() {
 
                 }
                 if (close) {
-                    alert("Reviewed successfully !")
+                    if (Msg == '')
+                        alert("Reviewed successfully !")
+                    else
+                        alert(Msg);
                     closePopup();
                     $(Transactioncol).parent().parent().remove();
                 }
@@ -623,6 +760,127 @@ function Complete() {
 
 /***************************** Reviewed Start ****************/
 function BindReviewedFirstLoad() {
+    $("#tblReviewedData").removeClass('my-table-bordered').addClass('table-bordered');
+    $(".animationload").hide();
+    RevieweddatatableVariable = $('#tblReviewedData').DataTable({
+        data: null,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        "bScrollInfinite": true,
+        "bScrollCollapse": false,
+        scrollY: "39.5vh",
+        scrollX: true,
+        scrollCollapse: false,
+        autoWidth: true,
+        paging: false,
+        info: false,
+        columns: [
+            { 'data': 'ROWNUMBER' },
+            { 'data': 'TRANSACTION_ID' },
+            {
+                'data': 'TRANSACTION_DATETIME',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
+                        oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
+                        $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                    }
+                }
+
+            },
+            { 'data': 'PLAZA_NAME' },
+            { 'data': 'CTP_VRN' },
+            { 'data': 'CTP_VEHICLE_CLASS_NAME' },
+            { 'data': 'FRONT_VRN' },
+            { 'data': 'NFP_VEHICLE_CLASS_NAME_FRONT' },
+            {
+                'data': 'FRONT_IMAGE',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
+                        if (oData.FRONT_IMAGE.indexOf('http') > -1) {
+                            oData.FRONT_IMAGE = oData.FRONT_IMAGE;
+                        }
+                        else {
+                            oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                        }
+                        $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                    }
+                }
+            },
+            {
+                'data': 'FRONT_VIDEO_URL',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
+
+                        $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
+                    }
+                }
+            },
+            { 'data': 'REAR_VRN' },
+            { 'data': 'NFP_VEHICLE_CLASS_NAME_REAR' },
+            {
+                'data': 'REAR_IMAGE',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
+                        if (oData.REAR_IMAGE.indexOf('http') > -1) {
+                            oData.REAR_IMAGE = oData.REAR_IMAGE;
+                        }
+                        else {
+                            oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                        }
+                        $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                    }
+                }
+            },
+            {
+                'data': 'REAR_VIDEO_URL',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
+
+                        $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
+                    }
+                }
+            },
+            { 'data': 'VEHICLESPEED', },
+            { 'data': 'AUDITED_VRN' },
+            { 'data': 'AUDIT_VEHICLE_CLASS_NAME' },
+            { 'data': 'MEARGED_TRAN_ID' },
+            { 'data': 'AUDITOR_NAME' },
+            { 'data': 'TRANS_STATUS_NAME' },
+        ],
+        'columnDefs': [
+       {
+           "targets": 8,
+           "className": "text-center",
+       },
+        {
+            "targets": 9,
+            "className": "text-center",
+        },
+         {
+             "targets": 12,
+             "className": "text-center",
+         },
+       {
+           "targets": 13,
+           "className": "text-center",
+       },
+         {
+             'searchable': false,
+             'targets': [0, 8, 9, 12, 13]
+         }],
+        width: "100%"
+    });
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    $('.dataTables_scrollBody').on('scroll', function () {
+        var ScrollbarHeight = ($("#tblReviewedData").height() - $('.dataTables_scrollBody').outerHeight())
+        if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
+            AppendReviewedData();
+        }
+       
+    });
+    thId = 'tblReviewedDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+function BindReviewedFirstLoad1() {
     pageload = 1;
     $(".animationload").show();
     inProgress = true;
@@ -767,48 +1025,62 @@ function BindReviewedFirstLoad() {
 }
 
 function reloadReviewedData() {
-    if (searchEnable) {
-        $("#ddlGantry").val(GantryId);
-        if (ParentTranscationId != 0)
-            $("#ParentTranscationId").val(ParentTranscationId);
-        else
-            $("#ParentTranscationId").val('');
+    $("#ddlGantry").val(GantryId);
+    if (ParentTranscationId != 0)
+        $("#ParentTranscationId").val(ParentTranscationId);
+    else
+        $("#ParentTranscationId").val('');
 
-        $("#ReviewerId").val(ReviewerId);
+    $("#ReviewerId").val(ReviewerId);
 
-        $("#ReviewerStatus").val(ReviewerStatus);
-        $("#PlateNumber").val(VRN);
-        $("#VehicleClassId").val(VehicleClassId);
-        $('#StartDate').val(StartDate);
-        $('#EndDate').val(EndDate);
-        FilteReviewedData();
-    }
-    else {
-        pageload = 1;
-        $(".animationload").show();
-        inProgress = true;
-        var Inputdata = { pageindex: pageload, pagesize: pagesize }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(Inputdata),
-            url: "ReviewedListScroll",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $(".animationload").hide();
-                pageload++;
-                NoMoredata = data.length < pagesize;
-                RevieweddatatableVariable.clear().draw();
-                RevieweddatatableVariable.rows.add(data); // Add new data
-                RevieweddatatableVariable.columns.adjust().draw();
+    $("#ReviewerStatus").val(ReviewerStatus);
+    $("#PlateNumber").val(VRN);
+    $("#VehicleClassId").val(VehicleClassId);
+    $('#StartDate').val(StartDate);
+    $('#EndDate').val(EndDate);
+    FilteReviewedData();
+    //if (searchEnable) {
+    //    $("#ddlGantry").val(GantryId);
+    //    if (ParentTranscationId != 0)
+    //        $("#ParentTranscationId").val(ParentTranscationId);
+    //    else
+    //        $("#ParentTranscationId").val('');
 
-                inProgress = false;
-            },
-            error: function (ex) {
-                $(".animationload").hide();
-            }
-        });
-    }
+    //    $("#ReviewerId").val(ReviewerId);
+
+    //    $("#ReviewerStatus").val(ReviewerStatus);
+    //    $("#PlateNumber").val(VRN);
+    //    $("#VehicleClassId").val(VehicleClassId);
+    //    $('#StartDate').val(StartDate);
+    //    $('#EndDate').val(EndDate);
+    //    FilteReviewedData();
+    //}
+    //else {
+    //    pageload = 1;
+    //    $(".animationload").show();
+    //    inProgress = true;
+    //    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    //    $.ajax({
+    //        type: "POST",
+    //        dataType: "json",
+    //        data: JSON.stringify(Inputdata),
+    //        url: "ReviewedListScroll",
+    //        contentType: "application/json; charset=utf-8",
+    //        success: function (data) {
+    //            $(".animationload").hide();
+    //            pageload++;
+    //            NoMoredata = data.length < pagesize;
+    //            RevieweddatatableVariable.clear().draw();
+    //            RevieweddatatableVariable.rows.add(data); // Add new data
+    //            RevieweddatatableVariable.columns.adjust().draw();
+
+    //            inProgress = false;
+    //        },
+    //        error: function (ex) {
+    //            $(".animationload").hide();
+    //        }
+    //    });
+    //}
 }
 
 function AppendReviewedData() {
@@ -968,8 +1240,148 @@ function ResetReviewedFilter() {
 /***************************** Reviewed End ****************/
 
 /***************************** Charged Start ****************/
-
 function BindChargedFirstLoad() {
+    $("#tblChargedData").removeClass('my-table-bordered').addClass('table-bordered');
+    $(".animationload").hide();
+    ChargeddatatableVariable = $('#tblChargedData').DataTable({
+        data: data,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        "bScrollInfinite": true,
+        "bScrollCollapse": false,
+        scrollY: "39.5vh",
+        scrollX: true,
+        scrollCollapse: false,
+        autoWidth: true,
+        paging: false,
+        info: false,
+        columns: [
+            { 'data': 'ROWNUMBER' },
+            { 'data': 'TRANSACTION_ID' },
+            {
+                'data': 'TRANSACTION_DATETIME',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
+                        oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
+                        $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                    }
+                }
+
+            },
+            { 'data': 'PLAZA_NAME' },
+            { 'data': 'CTP_VRN' },
+            { 'data': 'CTP_VEHICLE_CLASS_NAME' },
+            { 'data': 'FRONT_VRN' },
+            { 'data': 'NFP_VEHICLE_CLASS_NAME_FRONT' },
+            {
+                'data': 'FRONT_IMAGE',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
+                        if (oData.FRONT_IMAGE.indexOf('http') > -1) {
+                            oData.FRONT_IMAGE = oData.FRONT_IMAGE;
+                        }
+                        else {
+                            oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                        }
+                        $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                    }
+                }
+            },
+            {
+                'data': 'FRONT_VIDEO_URL',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
+
+                        $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
+                    }
+                }
+            },
+            { 'data': 'REAR_VRN' },
+            { 'data': 'NFP_VEHICLE_CLASS_NAME_REAR' },
+            {
+                'data': 'REAR_IMAGE',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
+                        if (oData.REAR_IMAGE.indexOf('http') > -1) {
+                            oData.REAR_IMAGE = oData.REAR_IMAGE;
+                        }
+                        else {
+                            oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                        }
+                        $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
+                    }
+                }
+            },
+            {
+                'data': 'REAR_VIDEO_URL',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
+
+                        $(nTd).html("<span class='cur-p  icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
+                    }
+                }
+            },
+            {
+                'data': 'VEHICLESPEED',
+
+            },
+             {
+                 'data': 'AMOUNT',
+                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                     if (oData.AMOUNT != '' && oData.AMOUNT != null) {
+                         $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
+                             maximumFractionDigits: 0,
+                             style: 'currency',
+                             currency: 'IDR'
+                         }) + "</span>");
+                     }
+
+                 }
+             },
+        ],
+        'columnDefs': [
+       {
+           "targets": 8,
+           "className": "text-center",
+       },
+       {
+           "targets": 9,
+           "className": "text-center",
+       },
+       {
+           "targets": 12,
+           "className": "text-center",
+       },
+       {
+           "targets": 13,
+           "className": "text-center",
+       },
+       {
+           "targets": 15,
+           "className": 'dt-body-right',
+       },
+        {
+            'searchable': false,
+            'targets': [0, 8, 9, 12, 13]
+        }
+        ],
+        width: "100%"
+    });
+    $('.dataTable').css('width', '1200px !important');
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    $('.dataTables_scrollBody').on('scroll', function () {
+        var ScrollbarHeight = ($("#tblChargedData").height() - $('.dataTables_scrollBody').outerHeight())
+        if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
+            AppendChargedData();
+        }
+        //if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblChargedData").height()) && !NoMoredata && !inProgress) {
+        //    AppendChargedData();
+        //}
+    });
+    thId = 'tblChargedDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+
+function BindChargedFirstLoad1() {
     pageload = 1;
     $(".animationload").show();
     inProgress = true;
@@ -1130,43 +1542,53 @@ function BindChargedFirstLoad() {
 }
 
 function reloadChargedData() {
-    if (searchEnable) {
-        $("#ddlGantry").val(GantryId)
-        $("#ResidentId").val(ResidentID);
-        $("#Name").val(Name);
-        $("#Mobile").val(Mobile);
-        $("#Email").val(EmailId);
-        $("#PlateNumber").val(VRN);
-        $("#VehicleClassId").val(VehicleClassId);
-        $('#StartDate').val(StartDate);
-        $('#EndDate').val(EndDate);
-        FilterChargedData();
-    }
-    else {
-        pageload = 1;
-        $(".animationload").show();
-        inProgress = true;
-        var Inputdata = { pageindex: pageload, pagesize: pagesize }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(Inputdata),
-            url: "ChargedListScroll",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $(".animationload").hide();
-                pageload++;
-                NoMoredata = data.length < pagesize;
-                ChargeddatatableVariable.clear().draw();
-                ChargeddatatableVariable.rows.add(data); // Add new data
-                ChargeddatatableVariable.columns.adjust().draw();
-                inProgress = false;
-            },
-            error: function (ex) {
-                $(".animationload").hide();
-            }
-        });
-    }
+    $("#ddlGantry").val(GantryId)
+    $("#ResidentId").val(ResidentID);
+    $("#Name").val(Name);
+    $("#Mobile").val(Mobile);
+    $("#Email").val(EmailId);
+    $("#PlateNumber").val(VRN);
+    $("#VehicleClassId").val(VehicleClassId);
+    $('#StartDate').val(StartDate);
+    $('#EndDate').val(EndDate);
+    FilterChargedData();
+    //if (searchEnable) {
+    //    $("#ddlGantry").val(GantryId)
+    //    $("#ResidentId").val(ResidentID);
+    //    $("#Name").val(Name);
+    //    $("#Mobile").val(Mobile);
+    //    $("#Email").val(EmailId);
+    //    $("#PlateNumber").val(VRN);
+    //    $("#VehicleClassId").val(VehicleClassId);
+    //    $('#StartDate').val(StartDate);
+    //    $('#EndDate').val(EndDate);
+    //    FilterChargedData();
+    //}
+    //else {
+    //    pageload = 1;
+    //    $(".animationload").show();
+    //    inProgress = true;
+    //    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    //    $.ajax({
+    //        type: "POST",
+    //        dataType: "json",
+    //        data: JSON.stringify(Inputdata),
+    //        url: "ChargedListScroll",
+    //        contentType: "application/json; charset=utf-8",
+    //        success: function (data) {
+    //            $(".animationload").hide();
+    //            pageload++;
+    //            NoMoredata = data.length < pagesize;
+    //            ChargeddatatableVariable.clear().draw();
+    //            ChargeddatatableVariable.rows.add(data); // Add new data
+    //            ChargeddatatableVariable.columns.adjust().draw();
+    //            inProgress = false;
+    //        },
+    //        error: function (ex) {
+    //            $(".animationload").hide();
+    //        }
+    //    });
+    //}
 
 }
 
@@ -1318,6 +1740,78 @@ function ResetChargedFilter() {
 
 /***************************** Top-Up Start ****************/
 function BindTopUpFirstLoad() {
+    $("#tblTopUpData").removeClass('my-table-bordered').addClass('table-bordered');
+    TopUpdatatableVariable = $('#tblTopUpData').DataTable({
+        data: data,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        "bScrollInfinite": true,
+        "bScrollCollapse": false,
+        scrollY: "39.5vh",
+        scrollX: true,
+        scrollCollapse: false,
+        autoWidth: true,
+        paging: false,
+        info: false,
+        columns: [
+            { 'data': 'ROWNUMBER' },
+            { 'data': 'ENTRY_ID' },
+            {
+                'data': 'CREATION_DATE',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.CREATION_DATE != '' && oData.CREATION_DATE != null) {
+                        oData.CREATION_DATE = oData.CREATION_DATE.replace('T', ' ');
+                        $(nTd).html("" + oData.CREATION_DATE + "");
+                    }
+                }
+
+            },
+            { 'data': 'VEH_REG_NO' },
+            { 'data': 'VEHICLE_CLASS_NAME' },
+            { 'data': 'FIRST_NAME' },
+            {
+                'data': 'AMOUNT',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    if (oData.AMOUNT != '' && oData.AMOUNT != null) {
+                        $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
+                            maximumFractionDigits: 0,
+                            style: 'currency',
+                            currency: 'IDR'
+                        }) + "</span>");
+                    }
+
+                }
+            },
+
+        ],
+        'columnDefs': [
+        {
+            "targets": 6,
+            "className": 'dt-body-right'
+        },
+        ],
+        width: "100%"
+    });
+    $('.dataTable').css('width', '1200px !important');
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    $('.dataTables_scrollBody').on('scroll', function () {
+        var ScrollbarHeight = ($("#tblTopUpData").height() - $('.dataTables_scrollBody').outerHeight())
+
+
+        //if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblTopUpData").height()) && !NoMoredata && !inProgress) {
+        //    //console.log("scrollBody : " + $('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height());
+        //    //console.log("table : " + $("#tblTopUpData").height());
+        //    AppendTopUpData();
+        //}
+
+        if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
+            AppendTopUpData();
+        }
+    });
+    thId = 'tblTopUpDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+
+function BindTopUpFirstLoad1() {
     pageload = 1;
     $(".animationload").show();
     inProgress = true;
@@ -1409,43 +1903,52 @@ function BindTopUpFirstLoad() {
 }
 
 function reloadTopUpData() {
-    if (searchEnable) {
-        $("#ResidentId").val(ResidentID);
-        $("#Name").val(Name);
-        $("#Mobile").val(Mobile);
-        $("#Email").val(EmailId);
-        $("#PlateNumber").val(VRN);
-        $("#VehicleClassId").val(VehicleClassId);
-        $('#StartDate').val(StartDate);
-        $('#EndDate').val(EndDate);
-        FilterTopUpData();
-    }
-    else {
-        pageload = 1;
-        $(".animationload").show();
-        inProgress = true;
-        var Inputdata = { pageindex: pageload, pagesize: pagesize }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(Inputdata),
-            url: "TopUpListScroll",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $(".animationload").hide();
-                pageload++;
-                NoMoredata = data.length < pagesize;
-                TopUpdatatableVariable.clear().draw();
-                TopUpdatatableVariable.rows.add(data); // Add new data
-                TopUpdatatableVariable.columns.adjust().draw();
+    $("#ResidentId").val(ResidentID);
+    $("#Name").val(Name);
+    $("#Mobile").val(Mobile);
+    $("#Email").val(EmailId);
+    $("#PlateNumber").val(VRN);
+    $("#VehicleClassId").val(VehicleClassId);
+    $('#StartDate').val(StartDate);
+    $('#EndDate').val(EndDate);
+    FilterTopUpData();
+    //if (searchEnable) {
+    //    $("#ResidentId").val(ResidentID);
+    //    $("#Name").val(Name);
+    //    $("#Mobile").val(Mobile);
+    //    $("#Email").val(EmailId);
+    //    $("#PlateNumber").val(VRN);
+    //    $("#VehicleClassId").val(VehicleClassId);
+    //    $('#StartDate').val(StartDate);
+    //    $('#EndDate').val(EndDate);
+    //    FilterTopUpData();
+    //}
+    //else {
+    //    pageload = 1;
+    //    $(".animationload").show();
+    //    inProgress = true;
+    //    var Inputdata = { pageindex: pageload, pagesize: pagesize }
+    //    $.ajax({
+    //        type: "POST",
+    //        dataType: "json",
+    //        data: JSON.stringify(Inputdata),
+    //        url: "TopUpListScroll",
+    //        contentType: "application/json; charset=utf-8",
+    //        success: function (data) {
+    //            $(".animationload").hide();
+    //            pageload++;
+    //            NoMoredata = data.length < pagesize;
+    //            TopUpdatatableVariable.clear().draw();
+    //            TopUpdatatableVariable.rows.add(data); // Add new data
+    //            TopUpdatatableVariable.columns.adjust().draw();
 
-                inProgress = false;
-            },
-            error: function (ex) {
-                $(".animationload").hide();
-            }
-        });
-    }
+    //            inProgress = false;
+    //        },
+    //        error: function (ex) {
+    //            $(".animationload").hide();
+    //        }
+    //    });
+    //}
 
 }
 
@@ -1501,7 +2004,7 @@ function openFilterpopupTopup() {
 function FilterTopUpData() {
     var StartDate1 = '';
     var EndDate1 = '';
-   
+
     StartDate = $('#StartDate').val() || ''
     if (StartDate != '') {
         var StartDate1 = DateFormatTime(StartDate);

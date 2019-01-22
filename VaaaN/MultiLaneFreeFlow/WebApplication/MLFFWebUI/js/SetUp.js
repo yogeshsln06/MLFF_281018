@@ -762,7 +762,8 @@ function openpopup() {
 }
 
 function ResetFildes() {
+  
     $("#fildset").find('input:text').val('');
-    $("#fildset").find('input:text').val('');
+ 
     $("#fildset").find('select').val(0);
 }

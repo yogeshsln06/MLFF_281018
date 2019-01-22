@@ -534,7 +534,7 @@ function SaveData(action) {
                             if (resultData[i].ErrorMessage == "Resident Id already exists") {
                                 alert("Resident Id already exists");
                                 $("#warning").hide();
-                                ResetCustomerFildes();
+                               // ResetCustomerFildes();
                                 break;
                             }
                             else {
@@ -1066,7 +1066,10 @@ function openImg(ctrl) {
 function ResetCustomerFildes() {
     $("#fildset").find('.text-box').val('');
     $("#fildset").find('input:file').val('');
-    $("#imgPreview").attr('src', '');
+    $("#ResidentidImage").parent().find('br').remove();
+    $("#ResidentidImage").prev().hide();
+    $("#ResidentidImage").next().find('span').text('Attach File');
+    $("#ResidentidImage").parent().find('img').attr('src', '');
 }
 
 function openFilterpopupCust() {
