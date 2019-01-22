@@ -514,9 +514,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         };
         public static string[] CustomerQueueStatusName = new string[]
       {
-            "Open",
-            "Postponded",
-            "Processed"
+            "OPEN",
+            "POSTPONED",
+            "PROCESSED"
       };
         public enum Gender
         {
@@ -599,9 +599,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
         public static string[] ExceptionFlagName = new string[]
       {
-            "Charged",
-            "Not Charged",
-            "Blacklist",
+            "CHARGED",
+            "NOT CHARGED",
+            "BLACK LISTED",
       };
         public enum FuelType
         {
