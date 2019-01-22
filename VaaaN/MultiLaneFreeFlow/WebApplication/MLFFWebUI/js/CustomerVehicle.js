@@ -31,6 +31,17 @@ $(document).ready(function () {
 
 function refreshData() {
     if (searchEnable) {
+        if (CutomerId || 0 != 0)
+            $("#txtCustomerID").val(parseInt(CutomerId));
+        $("#txtResidentID").val(ResidentID);
+        $("#txtName").val(Name);
+        $("#txtMobile").val(Mobile);
+        $("#txtEmail").val(EmailId);
+        $("#txtVRN").val(VRN);
+        $("#txtVRCN").val(VRCN);
+        $("#ddlVehicleClassId").val(VehicleClassId);
+        $("#ddlQueueStatus").val(QueueStatus);
+        $("#ddlExceptionFlag").val(ExceptionFlag);
         FilteCustomerData();
     }
     else {
@@ -143,7 +154,7 @@ function BindCustmerVehicleAccount() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.AccountBalance != '' && oData.AccountBalance != null) {
                                 if (oData.AccountBalance < 0) {
-                                    $(nTd).html("<span class='text-right'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
+                                    $(nTd).html("<span class='text-right red'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
                                         maximumFractionDigits: 0,
                                         style: 'currency',
                                         currency: 'IDR'
@@ -185,7 +196,7 @@ function BindCustmerVehicleAccount() {
                 ],
                 columnDefs: [{ "orderable": false, "targets": 7 },
                  { 'searchable': false, 'targets': [0, 4, 5, 9] },
-                 { "targets": 8, "className": "text-right", }],
+                 { "targets": 8, "className": 'dt-body-right', }],
                 order: [[1, 'asc']],
             });
             $('.dataTable').css('width', '1200px !important');
@@ -980,7 +991,7 @@ function BindHistoryRecords() {
                     },
 
                 ],
-                'columnDefs': [{ "targets": 2, "className": "text-left", }, { "targets": 7, "className": "text-right", }],
+                'columnDefs': [{ "targets": 2, "className": "text-left", }, { "targets": 7, "className": 'dt-body-right', }],
                 width: "100%",
 
             });
@@ -1232,6 +1243,7 @@ function FilteCustomerData() {
         });
     }
     else {
+        $('#filterModel').modal('hide');
         searchEnable = false;
         refreshData();
     }
@@ -1241,6 +1253,18 @@ function MakeCSV() {
     $(".animationload").show();
     var boolfliter = false;
     if (searchEnable) {
+        if (CutomerId || 0 != 0)
+            $("#txtCustomerID").val(parseInt(CutomerId));
+        $("#txtResidentID").val(ResidentID);
+        $("#txtName").val(Name);
+        $("#txtMobile").val(Mobile);
+        $("#txtEmail").val(EmailId);
+        $("#txtVRN").val(VRN);
+        $("#txtVRCN").val(VRCN);
+        $("#ddlVehicleClassId").val(VehicleClassId);
+        $("#ddlQueueStatus").val(QueueStatus);
+        $("#ddlExceptionFlag").val(ExceptionFlag);
+
         if ($("#txtCustomerID").val() != '') {
             var numbers = /^[0-9]+$/;
             if (!$("#txtCustomerID").val().match(numbers)) {
@@ -1364,13 +1388,12 @@ function GetCustomerDetails(ctrl) {
 }
 
 function openFilterpopupCust() {
-  
     if (CutomerId || 0 != 0)
         $("#txtCustomerID").val(parseInt(CutomerId));
     $("#txtResidentID").val(ResidentID);
     $("#txtName").val(Name);
-    $("#Mobile").val(Mobile);
-    $("#EmailId").val(EmailId);
+    $("#txtMobile").val(Mobile);
+    $("#txtEmail").val(EmailId);
     $("#txtVRN").val(VRN);
     $("#txtVRCN").val(VRCN);
     $("#ddlVehicleClassId").val(VehicleClassId);

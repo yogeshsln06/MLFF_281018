@@ -50,8 +50,11 @@ function FirstLoadVehicleBalance() {
         success: function (result) {
             BindVehcileDeatils(result.TBL_CUSTOMER_VEHICLE);
             $("#tblVBRData").removeClass('my-table-bordered').addClass('table-bordered');
+            var bindDate = result.TranscationDeatils;
+            if (bindDate.length == 2)
+                bindDate = null;
             VBRDataVariable = $('#tblVBRData').DataTable({
-                data: result.TranscationDeatils,
+                data: bindDate,
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
                 scrollY: "39.5vh",
@@ -113,7 +116,7 @@ function FirstLoadVehicleBalance() {
                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                            if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                                if (oData.AMOUNT < 0) {
-                                   $(nTd).html("<span class='text-right'>(" + ((oData.AMOUNT) * (-1)).toLocaleString('id-ID', {
+                                   $(nTd).html("<span class='text-right red'>(" + ((oData.AMOUNT) * (-1)).toLocaleString('id-ID', {
                                        maximumFractionDigits: 0,
                                        style: 'currency',
                                        currency: 'IDR'
@@ -162,7 +165,7 @@ function FirstLoadVehicleBalance() {
                 },
                 {
                     "targets": 10,
-                    "className": "text-right",
+                    "className": 'dt-body-right',
                 },
                 ],
                 width: "100%"
@@ -224,9 +227,7 @@ function openFilterpopupVechile() {
 
 function FilterVBRData() {
     $(".animationload").show();
-    if ($("#vrnList").val() != 0) {
-        VehicleId = $("#vrnList").val();
-    }
+    VehicleId = $("#vrnList").val();
     MonthId = $("#monthList").val();
     YearId = $("#yearList").val();
 
@@ -239,8 +240,11 @@ function FilterVBRData() {
         contentType: "application/json; charset=utf-8",
         success: function (result) {
             BindVehcileDeatils(result.TBL_CUSTOMER_VEHICLE);
+            var bindDate = result.TranscationDeatils;
             VBRDataVariable.clear().draw();
-            VBRDataVariable.rows.add(result.TranscationDeatils);
+            if (bindDate.length != 2) {
+                VBRDataVariable.rows.add(bindDate);
+            }
             VBRDataVariable.columns.adjust().draw();
             $(".animationload").hide();
         },

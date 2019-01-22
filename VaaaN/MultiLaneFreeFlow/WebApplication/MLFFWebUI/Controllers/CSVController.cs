@@ -61,7 +61,7 @@ namespace MLFFWebUI.Controllers
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.MobileNo))
                     {
-                        strQuery += " AND CA.MOB_NUMBER) LIKE '%" + objCustomerVehicleModel.MobileNo + "%' ";
+                        strQuery += " AND CA.MOB_NUMBER LIKE '%" + objCustomerVehicleModel.MobileNo + "%' ";
                     }
                     if (!string.IsNullOrEmpty(objCustomerVehicleModel.EmailId))
                     {

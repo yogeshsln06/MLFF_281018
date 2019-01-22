@@ -1217,6 +1217,26 @@ namespace MLFFWebAPI.Controllers
 
         #endregion
 
+        #region API for Response Mobile Balance
+        [Route("VaaaN/IndonesiaMLFFApi/ResponseMobileBalance")]
+        [HttpPost]
+        public HttpResponseMessage ResponseMobileBalance(MobileResponce objMobileResponce)
+        {
+            try
+            {
+                objMobileResponce.data.status = "success";
+                response = Request.CreateResponse(HttpStatusCode.OK, objMobileResponce);
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogging.SendErrorToText(ex);
+                LogInboundSMS("Error in API ResponseSMS : " + ex);
+            }
+
+            return response;
+        }
+        #endregion
+
         #region Save Image from the string
         private string SaveByteArrayAsImage(string fullOutputPath, string bytesString, string FileName)
         {
@@ -1322,6 +1342,22 @@ namespace MLFFWebAPI.Controllers
             }
 
             return anprName;
+        }
+
+        public class MobileResponce
+        {
+            public RespinceDataFields data { get; set; }
+        }
+
+        public class RespinceDataFields
+        {
+            public string status { get; set; }
+
+            public string message { get; set; }
+            public Int32 trans_id { get; set; }
+
+            
+
         }
         #endregion
     }

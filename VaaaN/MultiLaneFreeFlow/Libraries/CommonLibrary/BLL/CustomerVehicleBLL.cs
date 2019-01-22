@@ -124,9 +124,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetAllAsCSV();
         }
 
-        public static DataSet GetVehicleBalanceReport(Int32 VehcileId, Int32 Month, Int32 Year)
+        public static DataSet GetVehicleBalanceReport(Int32 VehcileId, Int32 Month, Int32 Year, Int32 PMonth, Int32 PYear)
         {
-            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetVehicleBalanceReport(VehcileId, Month, Year);
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetVehicleBalanceReport(VehcileId, Month, Year, PMonth, PYear);
         }
 
         public static DataTable GetFilterCSV(string filtere)

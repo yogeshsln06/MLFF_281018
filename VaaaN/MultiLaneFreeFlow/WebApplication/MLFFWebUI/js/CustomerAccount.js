@@ -20,6 +20,8 @@ var EmailId = '';
 var VRN = '';
 var boolfliter = false;
 
+
+
 $(document).ready(function () {
     $("#sidebar-toggle").bind("click", function () {
         $(".animationload").show();
@@ -36,6 +38,13 @@ function closePopup() {
 
 function reloadData() {
     if (searchEnable) {
+        if (CutomerId || 0 != 0)
+            $("#txtCustomerID").val(parseInt(CutomerId));
+        $("#txtResidentID").val(ResidentID);
+        $("#txtName").val(Name);
+        $("#txtMobile").val(Mobile);
+        $("#txtEmail").val(EmailId);
+        $("#txtVRN").val(VRN);
         FilteCustomerData();
     }
     else {
@@ -665,7 +674,7 @@ function BindHistoryRecords() {
                 },
                 {
                     "targets": 7,
-                    "className": "text-right",
+                    "className": 'dt-body-right',
                 }
                 ],
             });
@@ -801,7 +810,7 @@ function BindCustmerVehicleAccount() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.AccountBalance != '' && oData.AccountBalance != null) {
                                 if (oData.AccountBalance < 0) {
-                                    $(nTd).html("<span class='text-right'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
+                                    $(nTd).html("<span class='text-right red'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
                                         maximumFractionDigits: 0,
                                         style: 'currency',
                                         currency: 'IDR'
@@ -820,7 +829,7 @@ function BindCustmerVehicleAccount() {
                     },
                 ],
                 columnDefs: [{ "orderable": false, "targets": 6 },
-                 { "targets": 8, "className": "text-right", }],
+                 { "targets": 8, "className": 'dt-body-right', }],
                 order: [[1, 'asc']],
                 width: "100%"
             });
@@ -948,6 +957,7 @@ function FilteCustomerData() {
     }
     else {
         searchEnable = false;
+        $('#filterModel').modal('hide');
         // alert('At least one option must be fill for search !');
         reloadData();
     }
@@ -956,6 +966,13 @@ function FilteCustomerData() {
 function MakeCSV() {
     $(".animationload").show();
     if (searchEnable) {
+        if (CutomerId || 0 != 0)
+            $("#txtCustomerID").val(parseInt(CutomerId));
+        $("#txtResidentID").val(ResidentID);
+        $("#txtName").val(Name);
+        $("#txtMobile").val(Mobile);
+        $("#txtEmail").val(EmailId);
+        $("#txtVRN").val(VRN);
         if ($("#txtCustomerID").val() != '') {
             var numbers = /^[0-9]+$/;
             if (!$("#txtCustomerID").val().match(numbers)) {
@@ -1057,8 +1074,8 @@ function openFilterpopupCust() {
         $("#txtCustomerID").val(parseInt(CutomerId));
     $("#txtResidentID").val(ResidentID);
     $("#txtName").val(Name);
-    $("#Mobile").val(Mobile);
-    $("#EmailId").val(EmailId);
+    $("#txtMobile").val(Mobile);
+    $("#txtEmail").val(EmailId);
     $("#txtVRN").val(VRN);
 
     var modal = $("#filterModel");

@@ -35,7 +35,11 @@ namespace MLFFWebUI.Controllers
         [HttpPost]
         public string VehicleBalanceReportFilter(Int32 VehicleId, int Month, int Year)
         {
-            DataSet ds = CustomerVehicleBLL.GetVehicleBalanceReport(VehicleId, Month, Year);
+            DateTime newDate = Convert.ToDateTime("01-" + Month + "-" + Year);
+            newDate = newDate.AddMonths(-1);
+            int PMonth = Convert.ToInt32(newDate.ToString("MM"));
+            int PYear = Convert.ToInt32(newDate.ToString("yyyy"));
+            DataSet ds = CustomerVehicleBLL.GetVehicleBalanceReport(VehicleId, Month, Year, PMonth, PYear);
             string Det = JsonConvert.SerializeObject(ds, Formatting.Indented);
             return Det.Replace("\r", "").Replace("\n", "");
         }

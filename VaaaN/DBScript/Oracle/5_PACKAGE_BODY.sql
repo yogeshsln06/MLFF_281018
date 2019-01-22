@@ -1,4 +1,4 @@
-/* Formatted on 17/01/2019 22:41:42 (QP5 v5.215.12089.38647) */
+/* Formatted on 22/01/2019 12:09:41 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2611,7 +2611,7 @@ AS
 
    PROCEDURE TRAN_GETFILTERED (P_FILTER IN NVARCHAR2, CUR_OUT OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' SELECT T.TMS_ID,
@@ -2755,7 +2755,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE TRAN_UNREVIEWED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                        CUR_OUT       OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' SELECT ROW_NUMBER () OVER (ORDER BY TRANSACTION_DATETIME DESC) AS ROWNUMBER,
@@ -2976,7 +2976,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE TRAN_REVIEWED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                      CUR_OUT       OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' 
@@ -3138,7 +3138,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE TRAN_CHARGED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                     CUR_OUT       OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' SELECT ROWNUM AS ROWNUMBER,
@@ -3301,7 +3301,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE TRAN_VIOLATION_FILTERED (P_FILTER   IN     NVARCHAR2,
                                       CUR_OUT       OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' 
@@ -3462,7 +3462,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE TRAN_UNIDENTIFIED_FILTERED (P_FILTER   IN     NVARCHAR2,
                                          CUR_OUT       OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' 
@@ -4806,7 +4806,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE ACCOUNT_CSVWITHFILTER (P_FILTER   IN     NVARCHAR2,
                                     CUR_OUT       OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' SELECT ACCOUNT_ID AS "Customer ID",
@@ -5516,22 +5516,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_COLOR,
                 CV.FUEL_TYPE,
                 (CASE CV.FUEL_TYPE
-                    WHEN 1 THEN 'Diesel'
-                    WHEN 2 THEN 'Gasoline'
-                    WHEN 3 THEN 'Petrol'
-                    WHEN 4 THEN 'Electric'
-                    WHEN 5 THEN 'Solor'
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
                     ELSE 'Unknown'
                  END)
                    FUEL_TYPE_NAME,
                 CV.LICENCE_PLATE_COLOR,
                 (CASE CV.LICENCE_PLATE_COLOR
-                    WHEN 1 THEN 'Black'
-                    WHEN 2 THEN 'White'
-                    WHEN 3 THEN 'Yellow'
-                    WHEN 4 THEN 'Red'
-                    WHEN 5 THEN 'Blue'
-                    WHEN 6 THEN 'Green'
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
                     ELSE 'Unknown'
                  END)
                    LICENCE_PLATE_COLOR_NAME,
@@ -5612,22 +5610,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_COLOR,
                 CV.FUEL_TYPE,
                 (CASE CV.FUEL_TYPE
-                    WHEN 1 THEN 'Diesel'
-                    WHEN 2 THEN 'Gasoline'
-                    WHEN 3 THEN 'Petrol'
-                    WHEN 4 THEN 'Electric'
-                    WHEN 5 THEN 'Solor'
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
                     ELSE 'Unknown'
                  END)
                    FUEL_TYPE_NAME,
                 CV.LICENCE_PLATE_COLOR,
                 (CASE CV.LICENCE_PLATE_COLOR
-                    WHEN 1 THEN 'Black'
-                    WHEN 2 THEN 'White'
-                    WHEN 3 THEN 'Yellow'
-                    WHEN 4 THEN 'Red'
-                    WHEN 5 THEN 'Blue'
-                    WHEN 6 THEN 'Green'
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
                     ELSE 'Unknown'
                  END)
                    LICENCE_PLATE_COLOR_NAME,
@@ -5695,11 +5691,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.CYCLINDER_CAPACITY AS "Cylinder Capacity",
                   CV.ENGINE_NUMBER AS "Engine Num",
                   (CASE CV.FUEL_TYPE
-                      WHEN 1 THEN 'Diesel'
-                      WHEN 2 THEN 'Gasoline'
-                      WHEN 3 THEN 'Petrol'
-                      WHEN 4 THEN 'Electric'
-                      WHEN 5 THEN 'Solor'
+                      WHEN 1 THEN 'GASOLINE'
+                      WHEN 2 THEN 'DIESEL'
+                      WHEN 3 THEN 'ELECTRIC'
                       ELSE 'Unknown'
                    END)
                      AS "Fuel Type",
@@ -5714,12 +5708,12 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.FRAME_NUMBER AS "Frame Num",
                   CV.VEHICLE_COLOR AS "Color",
                   (CASE CV.LICENCE_PLATE_COLOR
-                      WHEN 1 THEN 'Black'
-                      WHEN 2 THEN 'White'
-                      WHEN 3 THEN 'Yellow'
-                      WHEN 4 THEN 'Red'
-                      WHEN 5 THEN 'Blue'
-                      WHEN 6 THEN 'Green'
+                      WHEN 1 THEN 'BLACK'
+                      WHEN 2 THEN 'BLUE'
+                      WHEN 3 THEN 'GREEN'
+                      WHEN 4 THEN 'RED'
+                      WHEN 5 THEN 'WHITE'
+                      WHEN 6 THEN 'YELLOW'
                       ELSE 'Unknown'
                    END)
                      AS "Licence Plate Color",
@@ -5772,11 +5766,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.CYCLINDER_CAPACITY AS "Cylinder Capacity",
                   CV.ENGINE_NUMBER AS "Engine Num",
                   (CASE CV.FUEL_TYPE
-                      WHEN 1 THEN ''Diesel''
-                      WHEN 2 THEN ''Gasoline''
-                      WHEN 3 THEN ''Petrol''
-                      WHEN 4 THEN ''Electric''
-                      WHEN 5 THEN ''Solor''
+                       WHEN 1 THEN ''GASOLINE''
+                      WHEN 2 THEN ''DIESEL''
+                      WHEN 3 THEN ''ELECTRIC''
                       ELSE ''Unknown''
                    END)
                      AS "Fuel Type",
@@ -5791,12 +5783,12 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.FRAME_NUMBER AS "Frame Num",
                   CV.VEHICLE_COLOR AS "Color",
                   (CASE CV.LICENCE_PLATE_COLOR
-                      WHEN 1 THEN ''Black''
-                      WHEN 2 THEN ''White''
-                      WHEN 3 THEN ''Yellow''
-                      WHEN 4 THEN ''Red''
-                      WHEN 5 THEN ''Blue''
-                      WHEN 6 THEN ''Green''
+                       WHEN 1 THEN ''BLACK''
+                      WHEN 2 THEN ''BLUE''
+                      WHEN 3 THEN ''GREEN''
+                      WHEN 4 THEN ''RED''
+                      WHEN 5 THEN ''WHITE''
+                      WHEN 6 THEN ''YELLOW''
                       ELSE ''Unknown''
                    END)
                      AS "Licence Plate Color",
@@ -5922,22 +5914,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_COLOR,
                 CV.FUEL_TYPE,
                 (CASE CV.FUEL_TYPE
-                    WHEN 1 THEN 'Diesel'
-                    WHEN 2 THEN 'Gasoline'
-                    WHEN 3 THEN 'Petrol'
-                    WHEN 4 THEN 'Electric'
-                    WHEN 5 THEN 'Solor'
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
                     ELSE 'Unknown'
                  END)
                    FUEL_TYPE_NAME,
                 CV.LICENCE_PLATE_COLOR,
                 (CASE CV.LICENCE_PLATE_COLOR
-                    WHEN 1 THEN 'Black'
-                    WHEN 2 THEN 'White'
-                    WHEN 3 THEN 'Yellow'
-                    WHEN 4 THEN 'Red'
-                    WHEN 5 THEN 'Blue'
-                    WHEN 6 THEN 'Green'
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
                     ELSE 'Unknown'
                  END)
                    LICENCE_PLATE_COLOR_NAME,
@@ -6016,22 +6006,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.VEHICLE_COLOR,
                   CV.FUEL_TYPE,
                   (CASE CV.FUEL_TYPE
-                      WHEN 1 THEN 'Diesel'
-                      WHEN 2 THEN 'Gasoline'
-                      WHEN 3 THEN 'Petrol'
-                      WHEN 4 THEN 'Electric'
-                      WHEN 5 THEN 'Solor'
+                      WHEN 1 THEN 'GASOLINE'
+                      WHEN 2 THEN 'DIESEL'
+                      WHEN 3 THEN 'ELECTRIC'
                       ELSE 'Unknown'
                    END)
                      FUEL_TYPE_NAME,
                   CV.LICENCE_PLATE_COLOR,
                   (CASE CV.LICENCE_PLATE_COLOR
-                      WHEN 1 THEN 'Black'
-                      WHEN 2 THEN 'White'
-                      WHEN 3 THEN 'Yellow'
-                      WHEN 4 THEN 'Red'
-                      WHEN 5 THEN 'Blue'
-                      WHEN 6 THEN 'Green'
+                      WHEN 1 THEN 'BLACK'
+                      WHEN 2 THEN 'BLUE'
+                      WHEN 3 THEN 'GREEN'
+                      WHEN 4 THEN 'RED'
+                      WHEN 5 THEN 'WHITE'
+                      WHEN 6 THEN 'YELLOW'
                       ELSE 'Unknown'
                    END)
                      LICENCE_PLATE_COLOR_NAME,
@@ -6119,22 +6107,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            CV.VEHICLE_COLOR,
                            CV.FUEL_TYPE,
                            (CASE CV.FUEL_TYPE
-                               WHEN 1 THEN 'Diesel'
-                               WHEN 2 THEN 'Gasoline'
-                               WHEN 3 THEN 'Petrol'
-                               WHEN 4 THEN 'Electric'
-                               WHEN 5 THEN 'Solor'
+                               WHEN 1 THEN 'GASOLINE'
+                               WHEN 2 THEN 'DIESEL'
+                               WHEN 3 THEN 'ELECTRIC'
                                ELSE 'Unknown'
                             END)
                               FUEL_TYPE_NAME,
                            CV.LICENCE_PLATE_COLOR,
                            (CASE CV.LICENCE_PLATE_COLOR
-                               WHEN 1 THEN 'Black'
-                               WHEN 2 THEN 'White'
-                               WHEN 3 THEN 'Yellow'
-                               WHEN 4 THEN 'Red'
-                               WHEN 5 THEN 'Blue'
-                               WHEN 6 THEN 'Green'
+                               WHEN 1 THEN 'BLACK'
+                               WHEN 2 THEN 'BLUE'
+                               WHEN 3 THEN 'GREEN'
+                               WHEN 4 THEN 'RED'
+                               WHEN 5 THEN 'WHITE'
+                               WHEN 6 THEN 'YELLOW'
                                ELSE 'Unknown'
                             END)
                               LICENCE_PLATE_COLOR_NAME,
@@ -6274,22 +6260,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_COLOR,
                 CV.FUEL_TYPE,
                 (CASE CV.FUEL_TYPE
-                    WHEN 1 THEN 'Diesel'
-                    WHEN 2 THEN 'Gasoline'
-                    WHEN 3 THEN 'Petrol'
-                    WHEN 4 THEN 'Electric'
-                    WHEN 5 THEN 'Solor'
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
                     ELSE 'Unknown'
                  END)
                    FUEL_TYPE_NAME,
                 CV.LICENCE_PLATE_COLOR,
                 (CASE CV.LICENCE_PLATE_COLOR
-                    WHEN 1 THEN 'Black'
-                    WHEN 2 THEN 'White'
-                    WHEN 3 THEN 'Yellow'
-                    WHEN 4 THEN 'Red'
-                    WHEN 5 THEN 'Blue'
-                    WHEN 6 THEN 'Green'
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
                     ELSE 'Unknown'
                  END)
                    LICENCE_PLATE_COLOR_NAME,
@@ -6369,22 +6353,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_COLOR,
                 CV.FUEL_TYPE,
                 (CASE CV.FUEL_TYPE
-                    WHEN 1 THEN 'Diesel'
-                    WHEN 2 THEN 'Gasoline'
-                    WHEN 3 THEN 'Petrol'
-                    WHEN 4 THEN 'Electric'
-                    WHEN 5 THEN 'Solor'
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
                     ELSE 'Unknown'
                  END)
                    FUEL_TYPE_NAME,
                 CV.LICENCE_PLATE_COLOR,
                 (CASE CV.LICENCE_PLATE_COLOR
-                    WHEN 1 THEN 'Black'
-                    WHEN 2 THEN 'White'
-                    WHEN 3 THEN 'Yellow'
-                    WHEN 4 THEN 'Red'
-                    WHEN 5 THEN 'Blue'
-                    WHEN 6 THEN 'Green'
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
                     ELSE 'Unknown'
                  END)
                    LICENCE_PLATE_COLOR_NAME,
@@ -6466,22 +6448,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_COLOR,
                 CV.FUEL_TYPE,
                 (CASE CV.FUEL_TYPE
-                    WHEN 1 THEN 'Diesel'
-                    WHEN 2 THEN 'Gasoline'
-                    WHEN 3 THEN 'Petrol'
-                    WHEN 4 THEN 'Electric'
-                    WHEN 5 THEN 'Solor'
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
                     ELSE 'Unknown'
                  END)
                    FUEL_TYPE_NAME,
                 CV.LICENCE_PLATE_COLOR,
                 (CASE CV.LICENCE_PLATE_COLOR
-                    WHEN 1 THEN 'Black'
-                    WHEN 2 THEN 'White'
-                    WHEN 3 THEN 'Yellow'
-                    WHEN 4 THEN 'Red'
-                    WHEN 5 THEN 'Blue'
-                    WHEN 6 THEN 'Green'
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
                     ELSE 'Unknown'
                  END)
                    LICENCE_PLATE_COLOR_NAME,
@@ -6563,22 +6543,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.VEHICLE_COLOR,
                   CV.FUEL_TYPE,
                   (CASE CV.FUEL_TYPE
-                      WHEN 1 THEN 'Diesel'
-                      WHEN 2 THEN 'Gasoline'
-                      WHEN 3 THEN 'Petrol'
-                      WHEN 4 THEN 'Electric'
-                      WHEN 5 THEN 'Solor'
+                      WHEN 1 THEN 'GASOLINE'
+                      WHEN 2 THEN 'DIESEL'
+                      WHEN 3 THEN 'ELECTRIC'
                       ELSE 'Unknown'
                    END)
                      FUEL_TYPE_NAME,
                   CV.LICENCE_PLATE_COLOR,
                   (CASE CV.LICENCE_PLATE_COLOR
-                      WHEN 1 THEN 'Black'
-                      WHEN 2 THEN 'White'
-                      WHEN 3 THEN 'Yellow'
-                      WHEN 4 THEN 'Red'
-                      WHEN 5 THEN 'Blue'
-                      WHEN 6 THEN 'Green'
+                      WHEN 1 THEN 'BLACK'
+                      WHEN 2 THEN 'BLUE'
+                      WHEN 3 THEN 'GREEN'
+                      WHEN 4 THEN 'RED'
+                      WHEN 5 THEN 'WHITE'
+                      WHEN 6 THEN 'YELLOW'
                       ELSE 'Unknown'
                    END)
                      LICENCE_PLATE_COLOR_NAME,
@@ -7814,7 +7792,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
    PROCEDURE TOPUP_TRANS_FILTER (P_FILTER IN NVARCHAR2, CUR_OUT OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' SELECT ROWNUM AS ROWNUMBER,
@@ -7840,7 +7818,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE CUSTOMERACCOUNT_FILTERED (P_FILTER   IN     NVARCHAR2,
                                        CUR_OUT       OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' SELECT ROWNUM AS ROWNUMBER,
@@ -7886,7 +7864,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE CUSTOMERVEHICLE_FILTERED (P_FILTER   IN     NVARCHAR2,
                                        CUR_OUT       OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (3000);
+      SQLQUERY   VARCHAR2 (5000);
    BEGIN
       SQLQUERY :=
             ' SELECT ROW_NUMBER ()
@@ -7966,50 +7944,156 @@ ORDER BY TRANSACTION_DATETIME DESC';
    PROCEDURE VEHICLE_BALANCE_REPORT (P_VEHICLE_ID   IN     NUMBER,
                                      P_MONTH_ID     IN     NUMBER,
                                      P_YEAR_ID      IN     NUMBER,
+                                     P_PMONTH_ID    IN     NUMBER,
+                                     P_PYEAR_ID     IN     NUMBER,
                                      CUR_OUT           OUT T_CURSOR)
    IS
+      C_COUNT   NUMBER;
    BEGIN
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_ACCOUNT_HISTORY
+       WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
+             AND TO_CHAR (CREATION_DATE, 'MM') = P_MONTH_ID
+             AND TO_CHAR (CREATION_DATE, 'YYYY') = P_YEAR_ID;
+
       OPEN CUR_OUT FOR
-           SELECT (  ROW_NUMBER ()
-                        OVER (ORDER BY AH.CREATION_DATE, AH.ENTRY_ID)
-                   + 1)
-                     AS ROWNUMBER,
-                  TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
-                     CREATION_DATE,
-                  (CASE AH.TRANSACTION_ID
-                      WHEN 0 THEN AH.ENTRY_ID
-                      ELSE AH.TRANSACTION_ID
-                   END)
-                     TRANSACTION_ID,
-                  (CASE AH.TRANSACTION_TYPE
-                      WHEN 1 THEN 'Sale'
-                      WHEN 2 THEN 'Top-Up'
-                      WHEN 3 THEN 'Refund'
-                      WHEN 4 THEN 'Charge'
-                   END)
-                     TRANSACTION_TYPE,
-                  P.PLAZA_NAME,
-                  T.LANE_ID,
-                  AH.AMOUNT,
-                  AH.OPENING_BALANCE,
-                  AH.CLOSING_BALANCE,
-                  NFP.PLATE_THUMBNAIL AS FRONT_IMAGE,
-                  NFP.VIDEO_URL AS FRONT_VIDEO_URL,
-                  NFP1.PLATE_THUMBNAIL AS REAR_IMAGE,
-                  NFP1.VIDEO_URL AS REAR_VIDEO_URL
-             FROM TBL_ACCOUNT_HISTORY AH
-                  LEFT OUTER JOIN TBL_TRANSACTION T
-                     ON AH.TRANSACTION_ID = T.TRANSACTION_ID
-                  LEFT OUTER JOIN TBL_PLAZA P
-                     ON T.PLAZA_ID = P.PLAZA_ID
-                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
-                     ON T.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
-                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
-                     ON T.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
-            WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
-                  AND TO_CHAR (AH.CREATION_DATE, 'MM') = P_MONTH_ID
-                  AND TO_CHAR (AH.CREATION_DATE, 'YYYY') = P_YEAR_ID
-         ORDER BY AH.CREATION_DATE, AH.ENTRY_ID;
+           SELECT ROWNUMBER,
+                  CREATION_DATE,
+                  TRANSACTION_ID,
+                  TRANSACTION_TYPE,
+                  PLAZA_NAME,
+                  LANE_ID,
+                  AMOUNT,
+                  OPENING_BALANCE,
+                  CLOSING_BALANCE,
+                  FRONT_IMAGE,
+                  FRONT_VIDEO_URL,
+                  REAR_IMAGE,
+                  REAR_VIDEO_URL
+             FROM (SELECT ROWNUMBER,
+                          CREATION_DATE,
+                          TRANSACTION_ID,
+                          TRANSACTION_TYPE,
+                          PLAZA_NAME,
+                          LANE_ID,
+                          AMOUNT,
+                          OPENING_BALANCE,
+                          CLOSING_BALANCE,
+                          FRONT_IMAGE,
+                          FRONT_VIDEO_URL,
+                          REAR_IMAGE,
+                          REAR_VIDEO_URL
+                     FROM (SELECT 1 AS ROWNUMBER,
+                                  NULL AS CREATION_DATE,
+                                  NULL TRANSACTION_ID,
+                                  'Beginning' TRANSACTION_TYPE,
+                                  NULL AS PLAZA_NAME,
+                                  NULL LANE_ID,
+                                  NVL (SUM (AMOUNT), 0) AMOUNT,
+                                  0 AS OPENING_BALANCE,
+                                  0 AS CLOSING_BALANCE,
+                                  NULL AS FRONT_IMAGE,
+                                  NULL AS FRONT_VIDEO_URL,
+                                  NULL AS REAR_IMAGE,
+                                  NULL AS REAR_VIDEO_URL
+                             FROM TBL_ACCOUNT_HISTORY
+                            WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
+                                  AND TO_CHAR (CREATION_DATE, 'MM') =
+                                         P_PMONTH_ID
+                                  AND TO_CHAR (CREATION_DATE, 'YYYY') =
+                                         P_PYEAR_ID) tabl1
+                   UNION
+                   SELECT ROWNUMBER,
+                          CREATION_DATE,
+                          TRANSACTION_ID,
+                          TRANSACTION_TYPE,
+                          PLAZA_NAME,
+                          LANE_ID,
+                          AMOUNT,
+                          OPENING_BALANCE,
+                          CLOSING_BALANCE,
+                          FRONT_IMAGE,
+                          FRONT_VIDEO_URL,
+                          REAR_IMAGE,
+                          REAR_VIDEO_URL
+                     FROM (SELECT (  ROW_NUMBER ()
+                                     OVER (
+                                        ORDER BY AH.CREATION_DATE, AH.ENTRY_ID)
+                                   + 1)
+                                     AS ROWNUMBER,
+                                  TO_CHAR (AH.CREATION_DATE,
+                                           'DD-Mon-YYYY HH:MI:SS AM')
+                                     CREATION_DATE,
+                                  (CASE AH.TRANSACTION_ID
+                                      WHEN 0 THEN AH.ENTRY_ID
+                                      ELSE AH.TRANSACTION_ID
+                                   END)
+                                     TRANSACTION_ID,
+                                  (CASE AH.TRANSACTION_TYPE
+                                      WHEN 1 THEN 'Sale'
+                                      WHEN 2 THEN 'Top-Up'
+                                      WHEN 3 THEN 'Refund'
+                                      WHEN 4 THEN 'Charge'
+                                   END)
+                                     TRANSACTION_TYPE,
+                                  P.PLAZA_NAME,
+                                  T.LANE_ID,
+                                  AH.AMOUNT,
+                                  AH.OPENING_BALANCE,
+                                  AH.CLOSING_BALANCE,
+                                  NFP.PLATE_THUMBNAIL AS FRONT_IMAGE,
+                                  NFP.VIDEO_URL AS FRONT_VIDEO_URL,
+                                  NFP1.PLATE_THUMBNAIL AS REAR_IMAGE,
+                                  NFP1.VIDEO_URL AS REAR_VIDEO_URL
+                             FROM TBL_ACCOUNT_HISTORY AH
+                                  LEFT OUTER JOIN TBL_TRANSACTION T
+                                     ON AH.TRANSACTION_ID = T.TRANSACTION_ID
+                                  LEFT OUTER JOIN TBL_PLAZA P
+                                     ON T.PLAZA_ID = P.PLAZA_ID
+                                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
+                                     ON T.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
+                                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
+                                     ON T.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
+                            WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
+                                  AND TO_CHAR (AH.CREATION_DATE, 'MM') =
+                                         P_MONTH_ID
+                                  AND TO_CHAR (AH.CREATION_DATE, 'YYYY') =
+                                         P_YEAR_ID) tabl2
+                   UNION
+                   SELECT ROWNUMBER,
+                          CREATION_DATE,
+                          TRANSACTION_ID,
+                          TRANSACTION_TYPE,
+                          PLAZA_NAME,
+                          LANE_ID,
+                          AMOUNT,
+                          OPENING_BALANCE,
+                          CLOSING_BALANCE,
+                          FRONT_IMAGE,
+                          FRONT_VIDEO_URL,
+                          REAR_IMAGE,
+                          REAR_VIDEO_URL
+                     FROM (SELECT (C_COUNT + 2) AS ROWNUMBER,
+                                  NULL AS CREATION_DATE,
+                                  NULL TRANSACTION_ID,
+                                  'Ending' TRANSACTION_TYPE,
+                                  NULL AS PLAZA_NAME,
+                                  NULL LANE_ID,
+                                  SUM (AMOUNT) AMOUNT,
+                                  0 AS OPENING_BALANCE,
+                                  0 AS CLOSING_BALANCE,
+                                  NULL AS FRONT_IMAGE,
+                                  NULL AS FRONT_VIDEO_URL,
+                                  NULL AS REAR_IMAGE,
+                                  NULL AS REAR_VIDEO_URL
+                             FROM TBL_ACCOUNT_HISTORY
+                            WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
+                                  AND TO_CHAR (CREATION_DATE, 'MM') =
+                                         P_MONTH_ID
+                                  AND TO_CHAR (CREATION_DATE, 'YYYY') =
+                                         P_YEAR_ID) tabl3) tabl
+         ORDER BY ROWNUMBER;
    END VEHICLE_BALANCE_REPORT;
 END MLFF_PACKAGE;
 /

@@ -399,7 +399,7 @@ namespace MLFFWebUI.Models
                 Value = "0",
                 // GetIndustryName just returns the Display.Name value
                 // of the enum - check out the next chapter for the code of this function.
-                Text = "--Select All--"
+                Text = "All Status"
             });
             foreach (var enumValue in enumValues)
             {

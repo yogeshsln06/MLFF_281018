@@ -612,9 +612,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
         public static string[] FuelTypeName = new string[]
       {
-          "Gasoline",
-          "Diesel",
-          "Electric",
+          "GASOLINE",
+          "DIESEL",
+          "ELECTRIC",
       };
         public enum VehicleColor
         {
@@ -654,23 +654,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         public static string[] LicencePlateColorName = new string[]
       {
 
-          "Black",
-          "Blue",
-          "Green",
-          "Red",
-          "White",
-          "Yellow"
-
-            //"White on Black",
-            //"Red on White",
-            //"Black on Yellow",
-            //"White on Red",
-            //"Black on Red",
-            //"Black on White",
-            //"White on Blue",
-            //"Black on Green",
-            //"Blue on White",
-            //"Unknown"
+          "BLACK",
+          "BLUE",
+          "GREEN",
+          "RED",
+          "WHITE",
+          "YELLOW"
       };
         public static string[] ECBStatusDescription = new string[]
         {

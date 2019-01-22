@@ -47,7 +47,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> gantryList = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
 
-            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
+            gantryList.Add(new SelectListItem() { Text = "All Gantry", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
             {
                 gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
@@ -120,7 +120,7 @@ namespace MLFFWebUI.Controllers
             }
             else if (transaction.TransactionCategoryId == 3)//Front/Rear ANPR Only
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected')) ";
+                strQuery += "  AND NVL (T.CT_ENTRY_ID, 0) = 0 AND((NVL(T.NF_ENTRY_ID_FRONT, 0) > 0 AND LOWER(NFPF.PLATE_NUMBER) <> 'not detected' AND NVL(T.NF_ENTRY_ID_REAR, 0) = 0) OR (NVL(T.NF_ENTRY_ID_REAR, 0) > 0 AND LOWER(NFPF.PLATE_NUMBER) <> 'not detected' AND NVL(T.NF_ENTRY_ID_FRONT, 0) = 0)) ";
             }
             else if (transaction.TransactionCategoryId == 4)//Unidentified Front/Rear ANPR
             {
@@ -1132,7 +1132,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> gantryList = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
 
-            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
+            gantryList.Add(new SelectListItem() { Text = "All Gantry", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
             {
                 gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
@@ -1146,7 +1146,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> vehicleClass = new List<SelectListItem>();
             List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
 
-            vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            vehicleClass.Add(new SelectListItem() { Text = "All Reviewed Class", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
             {
                 vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
@@ -1159,7 +1159,7 @@ namespace MLFFWebUI.Controllers
             #region Reviewer Dropdown
             List<SelectListItem> ReviewerList = new List<SelectListItem>();
             List<UserCBE> users = UserBLL.GetUserAll().Cast<UserCBE>().ToList();
-            ReviewerList.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            ReviewerList.Add(new SelectListItem() { Text = "All Reviewer", Value = "0" });
             foreach (UserCBE u in users)
             {
                 ReviewerList.Add(new SelectListItem() { Text = u.FirstName, Value = System.Convert.ToString(u.UserId) });
@@ -1216,7 +1216,7 @@ namespace MLFFWebUI.Controllers
             }
             if (!string.IsNullOrEmpty(transaction.ParentTranscationId))
             {
-                strQuery += " AND (T.MEARGED_TRAN_ID LIKE '%" + transaction.ParentTranscationId + ")";
+                strQuery += " AND (T.MEARGED_TRAN_ID LIKE '%" + transaction.ParentTranscationId + "%' )";
             }
 
             if (!string.IsNullOrEmpty(transaction.PlateNumber))
@@ -1258,7 +1258,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> vehicleClass = new List<SelectListItem>();
             List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
 
-            vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            vehicleClass.Add(new SelectListItem() { Text = "All Class", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
             {
                 vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
@@ -1272,7 +1272,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> gantryList = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
 
-            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
+            gantryList.Add(new SelectListItem() { Text = "All Gantry", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
             {
                 gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
@@ -1364,7 +1364,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> vehicleClass = new List<SelectListItem>();
             List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
 
-            vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            vehicleClass.Add(new SelectListItem() { Text = "All Class", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
             {
                 vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
