@@ -92,10 +92,11 @@
                     @if (item["FRONT_IMAGE"].ToString() != "")
                     {
                         string path = item["FRONT_IMAGE"].ToString();
-                        @*@if (!path.Contains("http"))
-                            {
-                                path = @"\" + path;
-                            }*@
+                        //bool result = path.Contains("http");
+                        @*@if (result == false)
+                        {
+                            path = @"\" + path;
+                        }*@
                         <img src="@path" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
@@ -121,9 +122,12 @@
                     {
                         string path = item["REAR_IMAGE"].ToString();
                         bool result = path.Contains("http");
+                        @*@if (result == false)
+                        {
+                            path = @"\" + path;
+                        }*@
 
-
-                        < img src = "@path" height = "40" width = "60" data - high - res - src = "" alt = "" class="gallery-items" onclick="zoomImage(this);" />
+                        <img src="@path" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
                 <td style="text-align:center;">
