@@ -1,4 +1,4 @@
-/* Formatted on 22/01/2019 13:37:51 (QP5 v5.215.12089.38647) */
+/* Formatted on 22/01/2019 14:07:07 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -5548,9 +5548,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_RC_NO_PATH,
                 CV.EXCEPTION_FLAG,
                 (CASE CV.EXCEPTION_FLAG
-                    WHEN 1 THEN 'Charged'
-                    WHEN 2 THEN 'Not Charged'
-                    WHEN 3 THEN 'Blacklist'
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
                     ELSE 'Unknown'
                  END)
                    EXCEPTION_FLAG_NAME,
@@ -5563,9 +5563,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.IS_DOC_VERIFIED,
                 CV.QUEUE_STATUS,
                 (CASE CV.QUEUE_STATUS
-                    WHEN 1 THEN 'Open'
-                    WHEN 2 THEN 'Postponded'
-                    WHEN 3 THEN 'Processed'
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
                     ELSE 'Unknown'
                  END)
                    QUEUE_STATUS_NAME,
@@ -5642,9 +5642,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_RC_NO_PATH,
                 CV.EXCEPTION_FLAG,
                 (CASE CV.EXCEPTION_FLAG
-                    WHEN 1 THEN 'Charged'
-                    WHEN 2 THEN 'Not Charged'
-                    WHEN 3 THEN 'Blacklist'
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
                     ELSE 'Unknown'
                  END)
                    EXCEPTION_FLAG_NAME,
@@ -5657,9 +5657,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.IS_DOC_VERIFIED,
                 CV.QUEUE_STATUS,
                 (CASE CV.QUEUE_STATUS
-                    WHEN 1 THEN 'Open'
-                    WHEN 2 THEN 'Postponded'
-                    WHEN 3 THEN 'Processed'
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
                     ELSE 'Unknown'
                  END)
                    QUEUE_STATUS_NAME,
@@ -5724,9 +5724,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.VEHICLE_OWNERSHIP_NO AS "Ownership Document Num",
                   CV.REG_QUEUE_NO AS "Registration Queue Num",
                   (CASE CV.EXCEPTION_FLAG
-                      WHEN 1 THEN 'Charged'
-                      WHEN 2 THEN 'Not Charged'
-                      WHEN 3 THEN 'Blacklist'
+                      WHEN 1 THEN 'CHARGED'
+                      WHEN 2 THEN 'NOT CHARGED'
+                      WHEN 3 THEN 'BLACK LISTED'
                       ELSE 'Unknown'
                    END)
                      AS "Exception Flag",
@@ -5734,9 +5734,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.TID_REAR AS "TID Rear",
                   CV.TAG_ID AS "EPC",
                   (CASE CV.QUEUE_STATUS
-                      WHEN 1 THEN 'Open'
-                      WHEN 2 THEN 'Postponded'
-                      WHEN 3 THEN 'Processed'
+                      WHEN 1 THEN 'OPEN'
+                      WHEN 2 THEN 'POSTPONED'
+                      WHEN 3 THEN 'PROCESSED'
                       ELSE 'Unknown'
                    END)
                      AS "Status",
@@ -5799,9 +5799,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.VEHICLE_OWNERSHIP_NO AS "Ownership Document Num",
                   CV.REG_QUEUE_NO AS "Registration Queue Num",
                   (CASE CV.EXCEPTION_FLAG
-                      WHEN 1 THEN ''Charged''
-                      WHEN 2 THEN ''Not Charged''
-                      WHEN 3 THEN ''Blacklist''
+                      WHEN 1 THEN ''CHARGED''
+                    WHEN 2 THEN ''NOT CHARGED''
+                    WHEN 3 THEN ''BLACK LISTED''
                       ELSE ''Unknown''
                    END)
                      AS "Exception Flag",
@@ -5809,9 +5809,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.TID_REAR AS "TID Rear",
                   CV.TAG_ID AS "EPC",
                   (CASE CV.QUEUE_STATUS
-                      WHEN 1 THEN ''Open''
-                      WHEN 2 THEN ''Postponded''
-                      WHEN 3 THEN ''Processed''
+                       WHEN 1 THEN ''OPEN''
+                    WHEN 2 THEN ''POSTPONED''
+                    WHEN 3 THEN ''PROCESSED''
                       ELSE ''Unknown''
                    END)
                      AS "Status",
@@ -5946,9 +5946,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_RC_NO_PATH,
                 CV.EXCEPTION_FLAG,
                 (CASE CV.EXCEPTION_FLAG
-                    WHEN 1 THEN 'Charged'
-                    WHEN 2 THEN 'Not Charged'
-                    WHEN 3 THEN 'Blacklist'
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
                     ELSE 'Unknown'
                  END)
                    EXCEPTION_FLAG_NAME,
@@ -5961,9 +5961,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.IS_DOC_VERIFIED,
                 CV.QUEUE_STATUS,
                 (CASE CV.QUEUE_STATUS
-                    WHEN 1 THEN 'Open'
-                    WHEN 2 THEN 'Postponded'
-                    WHEN 3 THEN 'Processed'
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
                     ELSE 'Unknown'
                  END)
                    QUEUE_STATUS_NAME,
@@ -6038,9 +6038,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.VEHICLE_RC_NO_PATH,
                   CV.EXCEPTION_FLAG,
                   (CASE CV.EXCEPTION_FLAG
-                      WHEN 1 THEN 'Charged'
-                      WHEN 2 THEN 'Not Charged'
-                      WHEN 3 THEN 'Blacklist'
+                      WHEN 1 THEN 'CHARGED'
+                      WHEN 2 THEN 'NOT CHARGED'
+                      WHEN 3 THEN 'BLACK LISTED'
                       ELSE 'Unknown'
                    END)
                      EXCEPTION_FLAG_NAME,
@@ -6053,9 +6053,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.IS_DOC_VERIFIED,
                   CV.QUEUE_STATUS,
                   (CASE CV.QUEUE_STATUS
-                      WHEN 1 THEN 'Open'
-                      WHEN 2 THEN 'Postponded'
-                      WHEN 3 THEN 'Processed'
+                      WHEN 1 THEN 'OPEN'
+                      WHEN 2 THEN 'POSTPONED'
+                      WHEN 3 THEN 'PROCESSED'
                       ELSE 'Unknown'
                    END)
                      QUEUE_STATUS_NAME,
@@ -6139,9 +6139,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            CV.VEHICLE_RC_NO_PATH,
                            CV.EXCEPTION_FLAG,
                            (CASE CV.EXCEPTION_FLAG
-                               WHEN 1 THEN 'Charged'
-                               WHEN 2 THEN 'Not Charged'
-                               WHEN 3 THEN 'Blacklist'
+                               WHEN 1 THEN 'CHARGED'
+                               WHEN 2 THEN 'NOT CHARGED'
+                               WHEN 3 THEN 'BLACK LISTED'
                                ELSE 'Unknown'
                             END)
                               EXCEPTION_FLAG_NAME,
@@ -6154,9 +6154,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            CV.IS_DOC_VERIFIED,
                            CV.QUEUE_STATUS,
                            (CASE CV.QUEUE_STATUS
-                               WHEN 1 THEN 'Open'
-                               WHEN 2 THEN 'Postponded'
-                               WHEN 3 THEN 'Processed'
+                               WHEN 1 THEN 'OPEN'
+                               WHEN 2 THEN 'POSTPONED'
+                               WHEN 3 THEN 'PROCESSED'
                                ELSE 'Unknown'
                             END)
                               QUEUE_STATUS_NAME,
@@ -6292,9 +6292,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_RC_NO_PATH,
                 CV.EXCEPTION_FLAG,
                 (CASE CV.EXCEPTION_FLAG
-                    WHEN 1 THEN 'Charged'
-                    WHEN 2 THEN 'Not Charged'
-                    WHEN 3 THEN 'Blacklist'
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
                     ELSE 'Unknown'
                  END)
                    EXCEPTION_FLAG_NAME,
@@ -6307,9 +6307,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.IS_DOC_VERIFIED,
                 CV.QUEUE_STATUS,
                 (CASE CV.QUEUE_STATUS
-                    WHEN 1 THEN 'Open'
-                    WHEN 2 THEN 'Postponded'
-                    WHEN 3 THEN 'Processed'
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
                     ELSE 'Unknown'
                  END)
                    QUEUE_STATUS_NAME,
@@ -6385,9 +6385,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_RC_NO_PATH,
                 CV.EXCEPTION_FLAG,
                 (CASE CV.EXCEPTION_FLAG
-                    WHEN 1 THEN 'Charged'
-                    WHEN 2 THEN 'Not Charged'
-                    WHEN 3 THEN 'Blacklist'
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
                     ELSE 'Unknown'
                  END)
                    EXCEPTION_FLAG_NAME,
@@ -6400,9 +6400,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.IS_DOC_VERIFIED,
                 CV.QUEUE_STATUS,
                 (CASE CV.QUEUE_STATUS
-                    WHEN 1 THEN 'Open'
-                    WHEN 2 THEN 'Postponded'
-                    WHEN 3 THEN 'Processed'
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
                     ELSE 'Unknown'
                  END)
                    QUEUE_STATUS_NAME,
@@ -6480,9 +6480,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.VEHICLE_RC_NO_PATH,
                 CV.EXCEPTION_FLAG,
                 (CASE CV.EXCEPTION_FLAG
-                    WHEN 1 THEN 'Charged'
-                    WHEN 2 THEN 'Not Charged'
-                    WHEN 3 THEN 'Blacklist'
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
                     ELSE 'Unknown'
                  END)
                    EXCEPTION_FLAG_NAME,
@@ -6495,9 +6495,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 CV.IS_DOC_VERIFIED,
                 CV.QUEUE_STATUS,
                 (CASE CV.QUEUE_STATUS
-                    WHEN 1 THEN 'Open'
-                    WHEN 2 THEN 'Postponded'
-                    WHEN 3 THEN 'Processed'
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
                     ELSE 'Unknown'
                  END)
                    QUEUE_STATUS_NAME,
@@ -6575,9 +6575,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.VEHICLE_RC_NO_PATH,
                   CV.EXCEPTION_FLAG,
                   (CASE CV.EXCEPTION_FLAG
-                      WHEN 1 THEN 'Charged'
-                      WHEN 2 THEN 'Not Charged'
-                      WHEN 3 THEN 'Blacklist'
+                      WHEN 1 THEN 'CHARGED'
+                      WHEN 2 THEN 'NOT CHARGED'
+                      WHEN 3 THEN 'BLACK LISTED'
                       ELSE 'Unknown'
                    END)
                      EXCEPTION_FLAG_NAME,
@@ -6590,9 +6590,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   CV.IS_DOC_VERIFIED,
                   CV.QUEUE_STATUS,
                   (CASE CV.QUEUE_STATUS
-                      WHEN 1 THEN 'Open'
-                      WHEN 2 THEN 'Postponded'
-                      WHEN 3 THEN 'Processed'
+                      WHEN 1 THEN 'OPEN'
+                      WHEN 2 THEN 'POSTPONED'
+                      WHEN 3 THEN 'PROCESSED'
                       ELSE 'Unknown'
                    END)
                      QUEUE_STATUS_NAME,
