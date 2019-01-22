@@ -138,6 +138,10 @@ namespace MLFFWebUI.Controllers
         #region Associated Transcation
         public ActionResult AssociatedTransaction(int TransactionId)
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             try
             {
                 dt = TransactionBLL.GetUnReviewedDataTableById(TransactionId);

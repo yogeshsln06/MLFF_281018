@@ -74,6 +74,10 @@ namespace MLFFWebUI.Controllers
         [HttpGet]
         public ActionResult NewCustomer()
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             #region Bind Province DropDowm
             List<SelectListItem> provincelist = new List<SelectListItem>();
             List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
@@ -591,6 +595,10 @@ namespace MLFFWebUI.Controllers
 
         public ActionResult VehicleListData()
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             return PartialView("VihicleList");
         }
 
@@ -715,12 +723,20 @@ namespace MLFFWebUI.Controllers
         [ChildActionOnly]
         public ActionResult CustomerVehicleChildList(List<CustomerVehicleCBE> Model)
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             return PartialView(Model);
         }
 
         [HttpGet]
         public ActionResult NewCustomerVehicle()
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             #region Vehicle Class Dropdown
             List<SelectListItem> vehicleclassList = new List<SelectListItem>();
             List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
@@ -1809,6 +1825,10 @@ namespace MLFFWebUI.Controllers
 
         public ActionResult GetCityList(CustomerAccountCBE customerAccount)
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             CityCBE city = new CityCBE();
             city.TmsId = 1;
             city.ProvinceId = customerAccount.ProvinceId;
@@ -1821,6 +1841,10 @@ namespace MLFFWebUI.Controllers
 
         public ActionResult GetDistrictList(CustomerAccountCBE customerAccount)
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             DistrictCBE district = new DistrictCBE();
             district.TmsId = 1;
             district.CityId = customerAccount.CityId;
@@ -1833,6 +1857,10 @@ namespace MLFFWebUI.Controllers
 
         public ActionResult GetSubDistrictList(CustomerAccountCBE customerAccount)
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             SubDistrictCBE subdistrict = new SubDistrictCBE();
             subdistrict.TmsId = 1;
             subdistrict.DistrictId = customerAccount.DistrictId;
@@ -1847,6 +1875,10 @@ namespace MLFFWebUI.Controllers
 
         public ActionResult TransactionHistory()
         {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
             return PartialView("TransactionHistory");
         }
 

@@ -28,6 +28,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private Decimal closingBalance;
 
 
+
         public AccountHistoryCBE()
         {
             this.tmsId = 0;

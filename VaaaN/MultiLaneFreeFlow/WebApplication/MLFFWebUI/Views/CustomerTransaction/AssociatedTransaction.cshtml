@@ -92,10 +92,10 @@
                     @if (item["FRONT_IMAGE"].ToString() != "")
                     {
                         string path = item["FRONT_IMAGE"].ToString();
-                        @if (!path.Contains("http"))
-                        {
-                            path = @"\" + path;
-                        }
+                        @*@if (!path.Contains("http"))
+                            {
+                                path = @"\" + path;
+                            }*@
                         <img src="@path" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
@@ -103,8 +103,6 @@
                     @if (item["FRONT_VIDEO_URL"].ToString() != "")
                     {
                         string path = item["FRONT_VIDEO_URL"].ToString();
-                        //path = path.Replace('/', '^');
-
                         <span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path="@path">
                             <i class='c-blue-500 ti-video-camera'></i>
                         </span>
@@ -122,18 +120,16 @@
                     @if (item["REAR_IMAGE"].ToString() != "")
                     {
                         string path = item["REAR_IMAGE"].ToString();
-                        @if (!path.Contains("http"))
-                        {
-                            path = @"\" + path;
-                        }
-                        <img src="@path" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
+                        bool result = path.Contains("http");
+
+
+                        < img src = "@path" height = "40" width = "60" data - high - res - src = "" alt = "" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
                 <td style="text-align:center;">
                     @if (item["REAR_VIDEO_URL"].ToString() != "")
                     {
                         string path = item["REAR_VIDEO_URL"].ToString();
-                        //path = path.Replace('/', '^');
                         <span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path="@path">
                             <i class='c-blue-500 ti-video-camera'></i>
                         </span>
