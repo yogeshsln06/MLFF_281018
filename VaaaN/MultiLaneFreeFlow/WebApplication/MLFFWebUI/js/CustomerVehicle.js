@@ -866,7 +866,7 @@ function SaveData(action) {
 
                             else {
                                 $("#warning").hide();
-                                ResetFildes();
+                                ResetCustFildes();
                             }
                             break;
                         }
@@ -1412,4 +1412,40 @@ function openFilterpopupCust() {
     })
     $('#filterModel').modal('show');
     $(".modal-backdrop.show").hide();
+}
+
+function ResetCustFildes() {
+    $("#fildset").find('.text-box').val('');
+    $("#fildset").find('input:file').val('');
+    $("#fildset").find('select').val(0);
+
+
+    $("#VehicleImageFront").parent().find('br').remove();
+    $("#VehicleImageFront").prev().hide();
+    $("#VehicleImageFront").next().find('span').text('Attach File');
+    $("#VehicleImageFront").parent().find('img').attr('src', '');
+
+    $("#VehicleImageRear").parent().find('br').remove();
+    $("#VehicleImageRear").prev().hide();
+    $("#VehicleImageRear").next().find('span').text('Attach File');
+    $("#VehicleImageRear").parent().find('img').attr('src', '');
+
+    $("#VehicleImageRight").parent().find('br').remove();
+    $("#VehicleImageRight").prev().hide();
+    $("#VehicleImageRight").next().find('span').text('Attach File');
+    $("#VehicleImageRight").parent().find('img').attr('src', '');
+
+    $("#VehicleImageLeft").parent().find('br').remove();
+    $("#VehicleImageLeft").prev().hide();
+    $("#VehicleImageLeft").next().find('span').text('Attach File');
+    $("#VehicleImageLeft").parent().find('img').attr('src', '');
+
+    $("#VehicleRCNumberImagePath").parent().find('br').remove();
+    $("#VehicleRCNumberImagePath").prev().hide();
+    $("#VehicleRCNumberImagePath").next().find('span').text('Attach File');
+    $("#VehicleRCNumberImagePath").parent().find('img').attr('src', '');
+
+   
+    //$("#ResidentId").val(0);
+    //$("#AccountId").val('');
 }

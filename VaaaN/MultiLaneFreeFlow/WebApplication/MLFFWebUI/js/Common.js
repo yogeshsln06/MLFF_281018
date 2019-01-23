@@ -56,6 +56,7 @@ function encodeImagetoBase64(element) {
         var filesize = file.size;
         var filename = file.name || '';
         $(element).parent().find('.filespan').text('Update File');
+        $(element).parent().find('.text-danger').text('');
         if ($(element).parent().find('br').length == 0) {
             $("<br/>").insertAfter($(element));
         }
@@ -134,7 +135,7 @@ function openImagePreview(ctrl) {
 }
 
 function showError(ctrlid, errorMsg) {
-    $(ctrlid).next().text(errorMsg);
+    $(ctrlid).parent().find('.text-danger').text(errorMsg);
 }
 
 function GetCityList() {

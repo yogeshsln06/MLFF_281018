@@ -184,7 +184,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 17, " +
+                                "\"Id\": 23, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Simulator\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +
@@ -250,7 +250,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 //timestamp part is added with three extra zeros for millisecond part locationid should be proper
                 result =
                     "<events> " +
-                      "<event objectId=\"" + tagId + "\" parentUUID=\"2BB5CAD0-1F66-710D-8682-547811838B92\" locationId=\"" + 1 + "\" uuid=\"5DB5ED55-4EB6-C47A-2E32-AD8E262A840D\" timestamp=\"" + DateTimeToUnixTimestamp(transactionTime) + "000" + "\" type=\"com:nofilis:crosstalk:event:tag-observation\"> " +
+                      "<event objectId=\"" + tagId + "\" parentUUID=\"2BB5CAD0-1F66-710D-8682-547811838B92\" locationId=\"" + 7 + "\" uuid=\"5DB5ED55-4EB6-C47A-2E32-AD8E262A840D\" timestamp=\"" + DateTimeToUnixTimestamp(transactionTime) + "000" + "\" type=\"com:nofilis:crosstalk:event:tag-observation\"> " +
                         "<property value=\"1325565648758\" id=\"first-read\"/> " +
                         "<property value=\"1325565648758\" id=\"last-read\"/> " +
                         "<property value=\"BD63426A-D8DE-F008-DD76-87E94B5D8B36\" id=\"observationUUID\"/>" +
@@ -277,7 +277,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 18, " +
+                                "\"Id\": 24, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Simulator\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +
@@ -308,7 +308,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 //timestamp part is added with three extra zeros for millisecond part   locationid should be proper
                 result =
                     "<events> " +
-                      "<event objectId=\"" + tagId + "\" parentUUID=\"2BB5CAD0-1F66-710D-8682-547811838B92\" locationId=\"" + 2 + "\" uuid=\"5DB5ED55-4EB6-C47A-2E32-AD8E262A840D\" timestamp=\"" + DateTimeToUnixTimestamp(transactionTime) + "000" + "\" type=\"com:nofilis:crosstalk:event:tag-observation\"> " +
+                      "<event objectId=\"" + tagId + "\" parentUUID=\"2BB5CAD0-1F66-710D-8682-547811838B92\" locationId=\"" + 8 + "\" uuid=\"5DB5ED55-4EB6-C47A-2E32-AD8E262A840D\" timestamp=\"" + DateTimeToUnixTimestamp(transactionTime) + "000" + "\" type=\"com:nofilis:crosstalk:event:tag-observation\"> " +
                         "<property value=\"1325565648758\" id=\"first-read\"/> " +
                         "<property value=\"1325565648758\" id=\"last-read\"/> " +
                         "<property value=\"BD63426A-D8DE-F008-DD76-87E94B5D8B36\" id=\"observationUUID\"/>" +

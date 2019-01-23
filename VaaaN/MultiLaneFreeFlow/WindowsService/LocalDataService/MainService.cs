@@ -562,7 +562,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                     #region Charging and SMSing
                                                                     //if anyone is matched, do the financial operation, no double charging
                                                                     // if IKE Pakect vehcile class not matched with ANPR and Dataabse than balance never deducated and mark Violation
-                                                                    if (associatedCVCT.Status == 3 && ctp.VehicleClassId == associatedCVCT.VehicleClassId && (ctp.VehicleClassId == vehicleClassIdFront) || (ctp.VehicleClassId == vehicleClassIdRear))
+                                                                    if (associatedCVCT.QueueStatus == 3 && ctp.VehicleClassId == associatedCVCT.VehicleClassId && (ctp.VehicleClassId == vehicleClassIdFront) || (ctp.VehicleClassId == vehicleClassIdRear))
                                                                     {
                                                                         //updated on 26 Dec, 2018 following if removed
                                                                         //if (transaction.IsViolation == -1) //0 for normal, 1 for violtion, by default -1 (this means this is not not updated)
@@ -653,7 +653,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                     #region Charging and SMSing
                                                                     //if anyone is matched, do the financial operation, no double charging
                                                                     // if IKE Pakect vehcile class not matched with ANPR and Dataabse than balance never deducated and mark Violation
-                                                                    if (associatedCVCT.Status == 3 && ctp.VehicleClassId == associatedCVCT.VehicleClassId && (ctp.VehicleClassId == vehicleClassIdFront) || (ctp.VehicleClassId == vehicleClassIdRear))
+                                                                    if (associatedCVCT.QueueStatus == 3 && ctp.VehicleClassId == associatedCVCT.VehicleClassId && (ctp.VehicleClassId == vehicleClassIdFront) || (ctp.VehicleClassId == vehicleClassIdRear))
                                                                     {
                                                                         //updated on 26 Dec, 2018 following if removed
                                                                         //if (transaction.IsViolation == -1) //0 for normal, 1 for violtion, by default -1 (this means this is not not updated)
@@ -1213,7 +1213,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     //if (Filtertransaction.IsViolation == -1) //0 for normal, 1 for violtion, by default -1 (not updated)
                                                     //{
                                                     LogMessage("Transaction is not marked as violation previously. Going to check violation...");
-                                                    if (customerVehicleInfo.Status == 3 && filteredTransaction.IKEVechileClassId == nfp.VehicleClassId && customerVehicleInfo.VehicleClassId == nfp.VehicleClassId)
+                                                    if (customerVehicleInfo.QueueStatus == 3 && filteredTransaction.IKEVechileClassId == nfp.VehicleClassId && customerVehicleInfo.VehicleClassId == nfp.VehicleClassId)
                                                     {
                                                         LogMessage("Tag class and NF class matched. Going to financial and notification processing...");
                                                         if (filteredTransaction.IsBalanceUpdated == -1) //0 for balance not updated, 1 means balance updated
@@ -1551,7 +1551,7 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("Finding out LaneType and toll rate to deduct...");
                 int laneTypeId = GetLaneTypeByLaneId(transaction.LaneId);
                 LogMessage("LaneType is: " + laneTypeId);
-                if (customerVehicleInfo.ExceptionFlag == 1)
+                if (customerVehicleInfo.ExceptionFlag == 2)
                 {
                     tollToDeduct = 0;
                     LogMessage("Toll to deduct is (EXCEPTION FLAG NOT CHARGED): " + tollToDeduct);

@@ -1069,7 +1069,7 @@ namespace MLFFWebUI.Controllers
                                             {
                                                 objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
                                                 ModelStateList objModelState = new ModelStateList();
-                                                objModelState.ErrorMessage = "Transactions ID " + TransactionId + " is successfully charged !!!";
+                                                objModelState.ErrorMessage = "successTransactions ID " + TransactionId + " is successfully charged !!!";
                                                 objResponseMessage.Add(objModelState);
                                             }
                                             TransactionBLL.UpdateAuditSection(objtransaction);

@@ -229,7 +229,7 @@ namespace SMSService
             try
             {
                 // Get unsent outgoing message from the database 
-                string query = " WHERE NVL(ATTEMPT_COUNT,0) < 4 AND SENT_STATUS = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent + " AND MESSAGE_DIRECTION = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                string query = " WHERE NVL(ATTEMPT_COUNT,0) < 3 AND SENT_STATUS = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent + " AND MESSAGE_DIRECTION = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection unsentSMSes = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.GetFilteredRecords(query);
                 bool DataProcess = true;
                 // Send message to customer
@@ -244,18 +244,20 @@ namespace SMSService
                         if (sms.AttemptCount < 3)
                         {
                             LogMessage("SMS sending attempt count is greater than 3 so will not be sent. SMS entry id: " + sms.EntryId + " Attempt: " + sms.AttemptCount + " ResponseCode :" + sms.ResponseCode);
-                            if (sms.OperatorResponseCode != 3701)
+                            if (sms.AttemptCount > 0)
                             {
-
-                                if ((DateTime.Now - sms.MessageReceiveTime).TotalSeconds < 60)
+                                if (sms.OperatorResponseCode != 3701)
                                 {
+
+                                    if ((DateTime.Now - sms.MessageReceiveTime).TotalSeconds < 60)
+                                    {
+                                        DataProcess = false;
+                                    }
+                                }
+                                else {
                                     DataProcess = false;
                                 }
                             }
-                            else {
-                                DataProcess = false;
-                            }
-
                             if (DataProcess)
                             {
                                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE smsResponse = smsGatewayController.SendSMS(sms);

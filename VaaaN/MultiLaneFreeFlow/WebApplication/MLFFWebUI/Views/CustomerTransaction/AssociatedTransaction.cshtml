@@ -92,7 +92,8 @@
                     @if (item["FRONT_IMAGE"].ToString() != "")
                     {
                         string path = item["FRONT_IMAGE"].ToString();
-                        @*@if (!path.Contains("http"))
+                        //bool result = path.Contains("http");
+                        @*@if (result == false)
                             {
                                 path = @"\" + path;
                             }*@
@@ -121,9 +122,12 @@
                     {
                         string path = item["REAR_IMAGE"].ToString();
                         bool result = path.Contains("http");
+                        @*@if (result == false)
+                            {
+                                path = @"\" + path;
+                            }*@
 
-
-                        < img src = "@path" height = "40" width = "60" data - high - res - src = "" alt = "" class="gallery-items" onclick="zoomImage(this);" />
+                        <img src="@path" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
                 <td style="text-align:center;">
@@ -160,7 +164,7 @@
     <table id="tblAssociatedData" class="table table-striped  my-table-bordered" cellspacing="0" width="100%" style="top:-52px!important">
         <thead>
             <tr>
-                <th style="text-align: center; vertical-align: middle; " rowspan="2" id="tblAssociatedDataTR">
+                <th style="text-align: center; vertical-align: middle;" rowspan="2" id="tblAssociatedDataTR">
 
                 </th>
                 <th style="text-align: center; vertical-align: middle; " rowspan="2">
