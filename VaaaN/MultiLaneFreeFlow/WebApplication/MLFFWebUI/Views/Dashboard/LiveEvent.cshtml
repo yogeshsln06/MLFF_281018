@@ -1,124 +1,16 @@
-﻿
-@{
-    ViewBag.Title = "LiveEvent";
+﻿@{
+    ViewBag.Title = "Live Event";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="container-fluid" style="overflow-y:scroll; height:75vh;">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="bgc-white bd bdrs-3 p-20 mB-20">
-                
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <div class="panel-group" id="accordion">
-                            <div class="panel panel-default">
-                                <h5 class="c-grey-900 heading"><strong>IKE </strong>Information<span></span></h5>
-                                <div id="collapse1" class="panel-collapse collapse in" style="display:block!important">
-                                    <div class="panel-body table-responsive">
-                                        <table id="tableCrossTalk" class="table table-condensed table-striped table-hover my-table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th style="text-align:left; width:60px;">
-                                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry
-                                                    </th>
-                                                    <th style="text-align:left; width:60px;">
-                                                        Lajur
-                                                    </th>
-                                                    <th style="text-align:left; width:60px;">
-                                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        Date Time
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        Tag Id
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel panel-default">
-                                <h5 class="c-grey-900 heading"><strong>ANPR Front </strong>Information<span></span></h5>
-                                <div id="collapse2" class="panel-collapse collapse in" style="display:block!important">
-                                    <div class="panel-body table-responsive">
-                                        <table id="tableNodeFluxFront" class="table table-condensed table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th style="text-align:left; width:60px;">
-                                                        Gantry
-                                                    </th>
-                                                    <th style="text-align:left; width:60px;">
-                                                        Lajur
-                                                    </th>
-                                                    <th style="text-align:left; width:60px;">
-                                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        Date Time
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        Files
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel panel-default">
-                                <h5 class="c-grey-900 heading"><strong>ANPR Rear </strong>Information<span></span></h5>
-                                <div id="collapse3" class="panel-collapse collapse in" style="display:block!important">
-                                    <div class="panel-body table-responsive">
-                                        <table id="tableNodeFluxRear" class="table table-condensed table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th style="text-align:left; width:60px;">
-                                                        Gantry
-                                                    </th>
-                                                    <th style="text-align:left; width:60px;">
-                                                        Lajur
-                                                    </th>
-                                                    <th style="text-align:left; width:60px;">
-                                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        Date Time
-                                                    </th>
-                                                    <th style="width:60px;">
-                                                        Files
-                                                    </th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </div>
-</div>
-
+@*<link href="~/Scripts/le/Bootstrap/css/bootstrap.css" rel="stylesheet" />*@
+<link href="~/Scripts/bootstrap3/css/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.freezeheader.js"></script>
+<script src="~/js/liveEvents.js"></script>
 <style>
+    .main-content {
+        padding: 10px 10px 10px !important;
+    }
+
     .well {
         min-height: 20px;
         padding: 5px;
@@ -193,7 +85,144 @@
     .panel-body {
         padding: 0px;
     }
-</style>
 
-<script src="~/js/liveEvents.js"></script>
-<script src="~/Scripts/jquery.freezeheader.js"></script>
+    .dropdown-item:hover {
+        display: block;
+        width: 100%;
+        padding: 4px 24px;
+        padding: .25rem 1.5rem;
+        clear: both;
+        font-weight: 400;
+        color: #fff !important;
+        text-align: inherit;
+        white-space: nowrap;
+        background-color: transparent !important;
+        border-color: none !important;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <h5 class="c-mygrey-900 heading"><strong>IKE </strong>Information<span></span></h5>
+                        <div id="collapse1" class="panel-collapse collapse in">
+                            <div class="panel-body table-responsive">
+                                <table id="tableCrossTalk" class="table table-condensed table-striped my-table-bordered">
+                                    <thead style="background:#f5f5f5;">
+                                        <tr>
+                                            <th style="text-align:left; width:60px;">
+                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry
+                                            </th>
+                                            <th style="text-align:left; width:60px;">
+                                                Lajur
+                                            </th>
+                                            <th style="text-align:left; width:60px;">
+                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
+                                            </th>
+                                            <th style="width:60px;">
+                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
+                                            </th>
+                                            <th style="width:60px;">
+                                                Date Time
+                                            </th>
+                                            <th style="width:60px;">
+                                                Tag Id
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <h5 class="c-mygrey-900 heading"><strong>ANPR Front </strong>Information<span></span></h5>
+                        <div id="collapse2" class="panel-collapse collapse in">
+                            <div class="panel-body table-responsive">
+                                <table id="tableNodeFluxFront" class="table table-condensed table-striped my-table-bordered">
+                                    <thead style="background:#f5f5f5;">
+                                        <tr>
+                                            <th style="text-align:left; width:60px;">
+                                                Gantry
+                                            </th>
+                                            <th style="text-align:left; width:60px;">
+                                                Lajur
+                                            </th>
+                                            <th style="text-align:left; width:60px;">
+                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
+                                            </th>
+                                            <th style="width:60px;">
+                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
+                                            </th>
+                                            <th style="width:60px;">
+                                                Date Time
+                                            </th>
+                                            <th style="width:60px;">
+                                                Files
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <h5 class="c-mygrey-900 heading"><strong>ANPR Reat </strong>Information<span></span></h5>
+                        <div id="collapse3" class="panel-collapse collapse in">
+                            <div class="panel-body table-responsive">
+                                <table id="tableNodeFluxRear" class="table table-condensed table-striped my-table-bordered">
+                                    <thead style="background:#f5f5f5;">
+                                        <tr>
+                                            <th style="text-align:left; width:60px;">
+                                                Gantry
+                                            </th>
+                                            <th style="text-align:left; width:60px;">
+                                                Lajur
+                                            </th>
+                                            <th style="text-align:left; width:60px;">
+                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
+                                            </th>
+                                            <th style="width:60px;">
+                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
+                                            </th>
+                                            <th style="width:60px;">
+                                                Date Time
+                                            </th>
+                                            <th style="width:60px;">
+                                                Files
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" onclick="imageclose()">&times;</span>
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <img src="" id="myimageVrn" height="150" width="200" />
+            </div>
+            <div class="col-md-4">
+                <img src="" id="myimageVehicle" height="150" width="200" />
+            </div>
+            <div id="rearvideo" class="col-md-4">
+                <video controls class="videoDiv">
+                    <source src="#" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>

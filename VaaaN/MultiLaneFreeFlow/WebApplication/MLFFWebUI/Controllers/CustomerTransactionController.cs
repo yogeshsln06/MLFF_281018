@@ -278,6 +278,7 @@ namespace MLFFWebUI.Controllers
         [HttpPost]
         public JsonResult CompleteReviewed(string[] AssociatedTransactionIds, int TransactionId, string VehRegNo, int vehicleClassID, int Seconds)
         {
+            #region Varaible 
             JsonResult result = new JsonResult();
 
             Int32 AuditedVehicleClassId = Convert.ToInt32(vehicleClassID);
@@ -314,21 +315,21 @@ namespace MLFFWebUI.Controllers
             Int32 ChildAnprRearEntryId = 0;
             Int32 ChildANPRRearVehicleClassId = 0;
             Int32 ChildPacketCount = 0;
-
-
+            #endregion
 
             if (string.IsNullOrEmpty(AuditedVRN))
             {
+                #region VRN Validation
                 ModelStateList objModelState = new ModelStateList();
                 objModelState.ErrorMessage = "VRN is required for reviewing transaction.";
                 objResponseMessage.Add(objModelState);
+                #endregion
             }
             else
             {
                 try
                 {
-                    #region Get transaction Data  by id
-
+                    #region Get transaction Data by id
                     dt = TransactionBLL.GetDataTableFilteredRecordById(TransactionId);
                     if (dt.Rows.Count > 0)
                     {
@@ -346,6 +347,7 @@ namespace MLFFWebUI.Controllers
                         objtransaction.AuditorId = Convert.ToInt32(Session["LoggedUserId"].ToString());
                         objtransaction.AuditedVRN = AuditedVRN;
                         objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
+                       
                         #region Customer Vehicle Info by VRN
                         CustomerVehicleCBE CustomerVehicleDetails = new CustomerVehicleCBE();
                         CustomerVehicleCBE objCustomerVehicleDetails = new CustomerVehicleCBE();
@@ -408,6 +410,7 @@ namespace MLFFWebUI.Controllers
                                 ParentAuditied = true;
                             }
                             #endregion
+
                             #region Check Associated TransactionIds is avaliable or not 
                             if (AssociatedTransactionIds != null)
                             {
@@ -423,6 +426,7 @@ namespace MLFFWebUI.Controllers
                                 }
                             }
                             #endregion
+
                             if (AssociatedTransactionCount > 0)
                             {
                                 #region Associated transaction Found Going to check its selection is valid or not
