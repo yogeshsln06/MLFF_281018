@@ -229,7 +229,7 @@ namespace SMSService
             try
             {
                 // Get unsent outgoing message from the database 
-                string query = " WHERE NVL(ATTEMPT_COUNT,0) < 4 AND SENT_STATUS = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent + " AND MESSAGE_DIRECTION = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                string query = " WHERE NVL(ATTEMPT_COUNT,0) < 3 AND SENT_STATUS = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent + " AND MESSAGE_DIRECTION = " + (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection unsentSMSes = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.GetFilteredRecords(query);
                 bool DataProcess = true;
                 // Send message to customer
