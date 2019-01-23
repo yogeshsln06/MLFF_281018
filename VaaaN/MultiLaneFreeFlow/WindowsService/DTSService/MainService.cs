@@ -289,7 +289,7 @@ namespace DTSService
         {
             try
             {
-                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 9, 0, 0, 0);
+                DateTime startDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 6, 0, 0, 0);
                 DateTime endDateTime = new DateTime(dateToCheck.Year, dateToCheck.Month, dateToCheck.Day, 9, 59, 59, 999);
                 DateTime currentDateTime = DateTime.Now;
 
