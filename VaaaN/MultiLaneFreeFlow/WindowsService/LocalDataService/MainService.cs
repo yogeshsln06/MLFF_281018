@@ -1275,7 +1275,9 @@ namespace VaaaN.MLFF.WindowsServices
                                                     LogMessage("VRN exists but no associated crosstalk transaction found in transaction table. Checking associated nodeflux transaction...");
 
                                                     //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
-                                                    filteredTransactionList = GetAssociatedTransactions(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
+                                                    //1. Jan 2019 --> 
+                                                    //filteredTransactionList = GetAssociatedTransactions(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
+                                                    filteredTransactionList = GetAssociatedTransactionsANPR(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, nfp.VehicleClassId, Convert.ToInt32(nfp.CameraPosition));
                                                     if (filteredTransactionList.Count > 0)
                                                     {
                                                         #region Update Tran Table if ANPR found
@@ -1355,13 +1357,13 @@ namespace VaaaN.MLFF.WindowsServices
                                                         if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                         {
                                                             Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.Registered);
-                                                            transcationDataList.Add(new TranscationData { TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 1, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
+                                                            transcationDataList.Add(new TranscationData { AnprFrontVehicleClassId = nfp.VehicleClassId, TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 1, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
                                                             LogMessage("Transaction inserted by nf entry id front.");
                                                         }
                                                         else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                         {
                                                             Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.Registered);
-                                                            transcationDataList.Add(new TranscationData { TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 2, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
+                                                            transcationDataList.Add(new TranscationData { AnprRearVehicleClassId = nfp.VehicleClassId, TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 2, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
                                                             LogMessage("Transaction inserted by nf entry id rear.");
                                                         }
                                                         else
@@ -1387,7 +1389,9 @@ namespace VaaaN.MLFF.WindowsServices
                                                 LogMessage("VRN does not exist. Checking associated nodeflux transaction...");
 
                                                 //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
-                                                filteredTransactionList = GetAssociatedTransactions(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
+                                                //2. Jan 2019 -->
+                                                //filteredTransactionList = GetAssociatedTransactions(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, "ANPR");
+                                                filteredTransactionList = GetAssociatedTransactionsANPR(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, nfp.VehicleClassId, Convert.ToInt32(nfp.CameraPosition));
                                                 if (filteredTransactionList.Count > 0)
                                                 {
                                                     #region Associate ANPR Found
@@ -1470,16 +1474,14 @@ namespace VaaaN.MLFF.WindowsServices
                                                     #region No Transcation Found
                                                     if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                     {
-
                                                         Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.NotRegistered);
                                                         LogMessage("Transaction inserted by nf entry id front.");
-                                                        transcationDataList.Add(new TranscationData { TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 1, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
+                                                        transcationDataList.Add(new TranscationData { AnprFrontVehicleClassId = nfp.VehicleClassId, TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 1, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
                                                     }
                                                     else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                     {
-
                                                         Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.NotRegistered);
-                                                        transcationDataList.Add(new TranscationData { TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprRId = nfpEntryId, CameraPosition = 2, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
+                                                        transcationDataList.Add(new TranscationData { AnprRearVehicleClassId = nfp.VehicleClassId, TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprRId = nfpEntryId, CameraPosition = 2, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
                                                         LogMessage("Transaction inserted by nf entry id rear.");
                                                     }
                                                     else
@@ -2218,9 +2220,23 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 return transcationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30)) && (trans.IKEFId > 0 || trans.IKERId > 0)).ToList();
             }
-            else if (pktType.ToLower() == "anpr")
+            else
             {
-                return transcationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30)) && (trans.AnprFId > 0 || trans.AnprRId > 0)).ToList();
+                return transcationDataList.Where(trans => (trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30))).ToList();
+            }
+        }
+
+        public List<TranscationData> GetAssociatedTransactionsANPR(Int32 tmsId, Int32 plazaId, DateTime timestamp, string vrn, Int32 vehicleClassId, int cameraPosition)
+        {
+            if (cameraPosition == 1) //front
+            {
+                //comparing front vehicle class id with rear class id
+                return transcationDataList.Where(trans => (trans.AnprRearVehicleClassId == vehicleClassId && trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30)) && (trans.AnprFId > 0 || trans.AnprRId > 0)).ToList();
+            }
+            else if (cameraPosition == 2) //rear
+            {
+                //comparing rear vehicle class id with front class id
+                return transcationDataList.Where(trans => (trans.AnprFrontVehicleClassId == vehicleClassId && trans.TMSId == tmsId && trans.PlazaId == plazaId && trans.VRN.ToLower() == vrn.ToLower() && trans.TransactionDateTime <= timestamp.AddSeconds(30) && trans.TransactionDateTime >= timestamp.AddSeconds(-30)) && (trans.AnprFId > 0 || trans.AnprRId > 0)).ToList();
             }
             else
             {
@@ -2495,6 +2511,11 @@ namespace VaaaN.MLFF.WindowsServices
         public Int64 IKERId { get; set; }
         public Int64 AnprFId { get; set; }
         public Int64 AnprRId { get; set; }
+
+        //Added on Jan 2019--------------------------------
+        public Int32 AnprFrontVehicleClassId { get; set; }
+        public Int32 AnprRearVehicleClassId { get; set; }
+        //-------------------------------------------------
 
         public DateTime CurrentDateTime { get; set; }
         public DateTime TransactionDateTime { get; set; }
