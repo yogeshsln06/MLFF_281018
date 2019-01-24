@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Oracle", "Oracle", "{1F600A
 		VaaaN\DBScript\Oracle\3_INSERT_TABLE.sql = VaaaN\DBScript\Oracle\3_INSERT_TABLE.sql
 		VaaaN\DBScript\Oracle\4_PACKAGE_SPECIFICATION.sql = VaaaN\DBScript\Oracle\4_PACKAGE_SPECIFICATION.sql
 		VaaaN\DBScript\Oracle\5_PACKAGE_BODY.sql = VaaaN\DBScript\Oracle\5_PACKAGE_BODY.sql
+		VaaaN\DBScript\Oracle\6_CREATE VIEWS.sql = VaaaN\DBScript\Oracle\6_CREATE VIEWS.sql
+		VaaaN\DBScript\Oracle\7_RESET SEQUENCE.sql = VaaaN\DBScript\Oracle\7_RESET SEQUENCE.sql
 		VaaaN\DBScript\Oracle\create_user.txt = VaaaN\DBScript\Oracle\create_user.txt
 	EndProjectSection
 EndProject
