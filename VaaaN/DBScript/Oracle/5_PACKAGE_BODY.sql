@@ -1,4 +1,4 @@
-/* Formatted on 22/01/2019 14:07:07 (QP5 v5.215.12089.38647) */
+/* Formatted on 24/01/2019 16:48:16 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -4272,7 +4272,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                  P_ATTEMPT_COUNT             IN     NUMBER,
                                  P_CREATION_DATE             IN     DATE,
                                  P_MODIFICATION_DATE         IN     DATE,
-                                 P_MODIFIED_BY               IN     NUMBER)
+                                 P_MODIFIED_BY               IN     NUMBER,
+                                 P_ACCOUNT_HISTORY_ID        IN     NUMBER)
    IS
       C_COUNT_HISTORY   NUMBER;
    BEGIN
@@ -4312,7 +4313,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                            ATTEMPT_COUNT,
                                            CREATION_DATE,
                                            MODIFICATION_DATE,
-                                           MODIFIED_BY)
+                                           MODIFIED_BY,
+                                           ACCOUNT_HISTORY_ID)
               VALUES (SMS_COMM_HISTORY_SEQ.NEXTVAL,
                       P_TMS_ID,
                       P_CUSTOMER_ACCOUNT_ID,
@@ -4329,7 +4331,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                       P_ATTEMPT_COUNT,
                       P_CREATION_DATE,
                       P_MODIFICATION_DATE,
-                      P_MODIFIED_BY);
+                      P_MODIFIED_BY,
+                      P_ACCOUNT_HISTORY_ID);
 
 
 
@@ -6643,7 +6646,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                        CREATION_DATE,
                                        TRANSFER_STATUS,
                                        OPENING_BALANCE,
-                                       CLOSING_BALANCE)
+                                       CLOSING_BALANCE,
+                                       SENT_STATUS)
            VALUES (P_TMS_ID,
                    P_ACCOUNT_ID,
                    ACCOUNT_HISTORY_SEQ.NEXTVAL,
@@ -6656,7 +6660,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                    P_CREATION_DATE,
                    P_TRANSFER_STATUS,
                    P_OPENING_BALANCE,
-                   P_CLOSING_BALANCE);
+                   P_CLOSING_BALANCE,
+                   1);
 
 
 
@@ -6914,69 +6919,70 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AND TRANSACTION_DATETIME <= P_END_TIME
                            AND IS_REGISTERED = 1
                   ORDER BY TRANSACTION_ID)
-         SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
-                UPPER (CTP.PLATE_NUMBER) AS EVI_VRN_FRONT,
-                UPPER (CTP_REAR.PLATE_NUMBER) AS EVI_VRN_REAR,
-                UPPER (NFP.PLATE_NUMBER) AS FRONT_VRN,
-                UPPER (NFP1.PLATE_NUMBER) AS REAR_VRN,
-                (CASE NVL (CTP.VEHICLE_CLASS_ID, 0)
-                    WHEN 1 THEN 'Two-wheeled'
-                    WHEN 2 THEN 'Small'
-                    WHEN 3 THEN 'Medium'
-                    WHEN 4 THEN 'Large'
-                    ELSE ''
-                 END)
-                   EVI_CLASS_FRONT,
-                (CASE NVL (CTP_REAR.VEHICLE_CLASS_ID, 0)
-                    WHEN 1 THEN 'Two-wheeled'
-                    WHEN 2 THEN 'Small'
-                    WHEN 3 THEN 'Medium'
-                    WHEN 4 THEN 'Large'
-                    ELSE ''
-                 END)
-                   EVI_CLASS_REAR,
-                (CASE NVL (NFP.VEHICLE_CLASS_ID, 0)
-                    WHEN 1 THEN 'Two-wheeled'
-                    WHEN 2 THEN 'Small'
-                    WHEN 3 THEN 'Medium'
-                    WHEN 4 THEN 'Large'
-                    ELSE ''
-                 END)
-                   ANPR_CLASS_FRONT,
-                (CASE NVL (NFP1.VEHICLE_CLASS_ID, 0)
-                    WHEN 1 THEN 'Two-wheeled'
-                    WHEN 2 THEN 'Small'
-                    WHEN 3 THEN 'Medium'
-                    WHEN 4 THEN 'Large'
-                    ELSE ''
-                 END)
-                   ANPR_CLASS_REAR,
-                TRAN.LANE_ID AS LANE_ID,
-                CTP.OBJECT_ID AS EVI_ID,
-                CUST_ACC.RESIDENT_ID AS RESIDENT_ID,
-                (CUST_ACC.FIRST_NAME) AS VEHICLE_OWNER,
-                NVL (ACC_HIST.AMOUNT, 0) AS AMOUNT_CHARGED,
-                NVL (CUST_ACC.ACCOUNT_BALANCE, 0) AS BALANCE,
-                (CASE NVL (ACC_HIST.SMS_SENT, 0)
-                    WHEN 1 THEN 'TRUE'
-                    ELSE 'FALSE'
-                 END)
-                   AS SMS_NOTIFICATION
-           FROM CTE TRAN
-                LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
-                   ON TRAN.CT_ENTRY_ID = CTP.ENTRY_ID
-                LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP_REAR
-                   ON TRAN.CT_ENTRY_ID_REAR = CTP_REAR.ENTRY_ID
-                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
-                   ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
-                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
-                   ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
-                LEFT OUTER JOIN TBL_ACCOUNT_HISTORY ACC_HIST
-                   ON TRAN.TRANSACTION_ID = ACC_HIST.TRANSACTION_ID
-                LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CUST_VEH
-                   ON UPPER (CTP.OBJECT_ID) = UPPER (CUST_VEH.TAG_ID)
-                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CUST_ACC
-                   ON CUST_VEH.ACCOUNT_ID = CUST_ACC.ACCOUNT_ID;
+           SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
+                  UPPER (CTP.PLATE_NUMBER) AS EVI_VRN_FRONT,
+                  UPPER (CTP_REAR.PLATE_NUMBER) AS EVI_VRN_REAR,
+                  UPPER (NFP.PLATE_NUMBER) AS FRONT_VRN,
+                  UPPER (NFP1.PLATE_NUMBER) AS REAR_VRN,
+                  (CASE NVL (CTP.VEHICLE_CLASS_ID, 0)
+                      WHEN 1 THEN 'Two-wheeled'
+                      WHEN 2 THEN 'Small'
+                      WHEN 3 THEN 'Medium'
+                      WHEN 4 THEN 'Large'
+                      ELSE ''
+                   END)
+                     EVI_CLASS_FRONT,
+                  (CASE NVL (CTP_REAR.VEHICLE_CLASS_ID, 0)
+                      WHEN 1 THEN 'Two-wheeled'
+                      WHEN 2 THEN 'Small'
+                      WHEN 3 THEN 'Medium'
+                      WHEN 4 THEN 'Large'
+                      ELSE ''
+                   END)
+                     EVI_CLASS_REAR,
+                  (CASE NVL (NFP.VEHICLE_CLASS_ID, 0)
+                      WHEN 1 THEN 'Two-wheeled'
+                      WHEN 2 THEN 'Small'
+                      WHEN 3 THEN 'Medium'
+                      WHEN 4 THEN 'Large'
+                      ELSE ''
+                   END)
+                     ANPR_CLASS_FRONT,
+                  (CASE NVL (NFP1.VEHICLE_CLASS_ID, 0)
+                      WHEN 1 THEN 'Two-wheeled'
+                      WHEN 2 THEN 'Small'
+                      WHEN 3 THEN 'Medium'
+                      WHEN 4 THEN 'Large'
+                      ELSE ''
+                   END)
+                     ANPR_CLASS_REAR,
+                  TRAN.LANE_ID AS LANE_ID,
+                  CTP.OBJECT_ID AS EVI_ID,
+                  CUST_ACC.RESIDENT_ID AS RESIDENT_ID,
+                  (CUST_ACC.FIRST_NAME) AS VEHICLE_OWNER,
+                  NVL (ACC_HIST.AMOUNT, 0) AS AMOUNT_CHARGED,
+                  NVL (CUST_ACC.ACCOUNT_BALANCE, 0) AS BALANCE,
+                  (CASE NVL (ACC_HIST.SMS_SENT, 0)
+                      WHEN 1 THEN 'TRUE'
+                      ELSE 'FALSE'
+                   END)
+                     AS SMS_NOTIFICATION
+             FROM CTE TRAN
+                  LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                     ON TRAN.CT_ENTRY_ID = CTP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP_REAR
+                     ON TRAN.CT_ENTRY_ID_REAR = CTP_REAR.ENTRY_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
+                     ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
+                     ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
+                  LEFT OUTER JOIN TBL_ACCOUNT_HISTORY ACC_HIST
+                     ON TRAN.TRANSACTION_ID = ACC_HIST.TRANSACTION_ID
+                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CUST_VEH
+                     ON UPPER (CTP.OBJECT_ID) = UPPER (CUST_VEH.TAG_ID)
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CUST_ACC
+                     ON CUST_VEH.ACCOUNT_ID = CUST_ACC.ACCOUNT_ID
+         ORDER BY TRAN.TRANSACTION_DATETIME;
    END TRAN_CSV_GETNORMALTRAN;
 
 
@@ -6994,31 +7000,32 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AND TRANSACTION_DATETIME <= P_END_TIME
                            AND IS_REGISTERED = 2
                   ORDER BY TRANSACTION_ID)
-         SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
-                NFP.PLATE_NUMBER AS FRONT_VRN,
-                NFP1.PLATE_NUMBER AS REAR_VRN,
-                (CASE NVL (NFP.VEHICLE_CLASS_ID, 0)
-                    WHEN 1 THEN 'Two-wheeled'
-                    WHEN 2 THEN 'Small'
-                    WHEN 3 THEN 'Medium'
-                    WHEN 4 THEN 'Large'
-                    ELSE ''
-                 END)
-                   ANPR_CLASS_FRONT,
-                (CASE NVL (NFP1.VEHICLE_CLASS_ID, 0)
-                    WHEN 1 THEN 'Two-wheeled'
-                    WHEN 2 THEN 'Small'
-                    WHEN 3 THEN 'Medium'
-                    WHEN 4 THEN 'Large'
-                    ELSE ''
-                 END)
-                   ANPR_CLASS_REAR,
-                TRAN.LANE_ID AS LANE_ID
-           FROM CTE TRAN
-                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
-                   ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
-                LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
-                   ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID;
+           SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
+                  NFP.PLATE_NUMBER AS FRONT_VRN,
+                  NFP1.PLATE_NUMBER AS REAR_VRN,
+                  (CASE NVL (NFP.VEHICLE_CLASS_ID, 0)
+                      WHEN 1 THEN 'Two-wheeled'
+                      WHEN 2 THEN 'Small'
+                      WHEN 3 THEN 'Medium'
+                      WHEN 4 THEN 'Large'
+                      ELSE ''
+                   END)
+                     ANPR_CLASS_FRONT,
+                  (CASE NVL (NFP1.VEHICLE_CLASS_ID, 0)
+                      WHEN 1 THEN 'Two-wheeled'
+                      WHEN 2 THEN 'Small'
+                      WHEN 3 THEN 'Medium'
+                      WHEN 4 THEN 'Large'
+                      ELSE ''
+                   END)
+                     ANPR_CLASS_REAR,
+                  TRAN.LANE_ID AS LANE_ID
+             FROM CTE TRAN
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP
+                     ON TRAN.NF_ENTRY_ID_FRONT = NFP.ENTRY_ID
+                  LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFP1
+                     ON TRAN.NF_ENTRY_ID_REAR = NFP1.ENTRY_ID
+         ORDER BY TRAN.TRANSACTION_DATETIME;
    END TRAN_CSV_GETVIOTRAN;
 
 
@@ -8099,5 +8106,109 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                          P_YEAR_ID) tabl3) tabl
          ORDER BY ROWNUMBER;
    END VEHICLE_BALANCE_REPORT;
+
+   PROCEDURE CUSTOMER_VEHICLE_BALANCE (CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT CV.TMS_ID,
+                  AH.ENTRY_ID,
+                  CV.ACCOUNT_ID,
+                  CV.VEH_REG_NO,
+                  CV.TAG_ID,
+                  CV.VEHICLE_CLASS_ID,
+                  VC.VEHICLE_CLASS_NAME,
+                  CV.CREATION_DATE,
+                  CV.MODIFICATION_DATE,
+                  CV.MODIFIED_BY,
+                  CV.TRANSFER_STATUS,
+                  CV.VEHICLE_RC_NO,
+                  CV.OWNER_NAME,
+                  CV.OWNER_ADDRESS,
+                  CV.BRAND,
+                  CV.VEHICLE_TYPE,
+                  CV.VEHICLE_CATEGORY,
+                  CV.MODEL_NO,
+                  CV.MANUFACTURING_YEAR,
+                  CV.CYCLINDER_CAPACITY,
+                  CV.FRAME_NUMBER,
+                  CV.ENGINE_NUMBER,
+                  CV.VEHICLE_COLOR,
+                  CV.FUEL_TYPE,
+                  (CASE CV.FUEL_TYPE
+                      WHEN 1 THEN 'GASOLINE'
+                      WHEN 2 THEN 'DIESEL'
+                      WHEN 3 THEN 'ELECTRIC'
+                      ELSE 'Unknown'
+                   END)
+                     FUEL_TYPE_NAME,
+                  CV.LICENCE_PLATE_COLOR,
+                  (CASE CV.LICENCE_PLATE_COLOR
+                      WHEN 1 THEN 'BLACK'
+                      WHEN 2 THEN 'BLUE'
+                      WHEN 3 THEN 'GREEN'
+                      WHEN 4 THEN 'RED'
+                      WHEN 5 THEN 'WHITE'
+                      WHEN 6 THEN 'YELLOW'
+                      ELSE 'Unknown'
+                   END)
+                     LICENCE_PLATE_COLOR_NAME,
+                  CV.REGISTRATION_YEAR,
+                  CV.VEHICLE_OWNERSHIP_NO,
+                  CV.LOCATION_CODE,
+                  CV.REG_QUEUE_NO,
+                  CV.VEHICLEIMAGE_FRONT,
+                  CV.VEHICLEIMAGE_REAR,
+                  CV.VEHICLEIMAGE_RIGHT,
+                  CV.VEHICLEIMAGE_LEFT,
+                  CV.VEHICLE_RC_NO_PATH,
+                  CV.EXCEPTION_FLAG,
+                  (CASE CV.EXCEPTION_FLAG
+                      WHEN 1 THEN 'CHARGED'
+                      WHEN 2 THEN 'NOT CHARGED'
+                      WHEN 3 THEN 'BLACK LISTED'
+                      ELSE 'Unknown'
+                   END)
+                     EXCEPTION_FLAG_NAME,
+                  CV.STATUS,
+                  CV.VALID_UNTIL,
+                  CV.TID_FRONT,
+                  CV.TID_REAR,
+                  AH.CLOSING_BALANCE AS ACCOUNT_BALANCE,
+                  CV.REGISTRATION_THROUGH,
+                  CV.IS_DOC_VERIFIED,
+                  CV.QUEUE_STATUS,
+                  (CASE CV.QUEUE_STATUS
+                      WHEN 1 THEN 'OPEN'
+                      WHEN 2 THEN 'POSTPONED'
+                      WHEN 3 THEN 'PROCESSED'
+                      ELSE 'Unknown'
+                   END)
+                     QUEUE_STATUS_NAME,
+                  CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                  CA.RESIDENT_ID,
+                  CA.EMAIL_ID,
+                  CA.MOB_NUMBER
+             FROM TBL_CUSTOMER_VEHICLE CV
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                     ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                  LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                     ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
+                     ON     CA.ACCOUNT_ID = AH.ACCOUNT_ID
+                        AND CV.ENTRY_ID = AH.CUSTOMER_VEHICLE_ENTRY_ID
+            WHERE NVL (AH.SENT_STATUS, 0) = 1 AND NVL (AH.AMOUNT, 0) <> 0
+         ORDER BY AH.CREATION_DATE;
+   END CUSTOMER_VEHICLE_BALANCE;
+
+   PROCEDURE ACCOUNT_HISTORY_BALANCEUPDATE (P_ENTRY_ID      IN NUMBER,
+                                            P_SENT_STATUS   IN NUMBER,
+                                            P_RESPONSE      IN NVARCHAR2)
+   AS
+   BEGIN
+      UPDATE TBL_ACCOUNT_HISTORY
+         SET SENT_STATUS = P_SENT_STATUS, RESPONSE = P_RESPONSE
+       WHERE ENTRY_ID = P_ENTRY_ID;
+   END ACCOUNT_HISTORY_BALANCEUPDATE;
 END MLFF_PACKAGE;
 /

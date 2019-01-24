@@ -30,6 +30,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private string gatewayResponse;
         private Int32 responseCode;
         private Int32 operatorResponseCode;
+        private Int32 accountHistoryId;
 
         public SMSCommunicationHistoryCBE()
         {
@@ -53,6 +54,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.modifiedBy = 0;
             this.responseCode = 0;
             this.operatorResponseCode = 0;
+            this.accountHistoryId = 0;
         }
         public Int32 EntryId
         {
@@ -184,6 +186,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.operatorResponseCode = value; }
         }
 
+        public Int32 AccountHistoryId
+        {
+            get { return this.accountHistoryId; }
+            set { this.accountHistoryId = value; }
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -205,7 +213,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             sb.Append("creationDate: " + this.creationDate + Environment.NewLine);
             sb.Append("modificationDate: " + this.modificationDate + Environment.NewLine);
             sb.Append("modifiedBy: " + this.modifiedBy + Environment.NewLine);
-
+            sb.Append("modifiedBy: " + this.modifiedBy + Environment.NewLine);
+            sb.Append("accountHistoryId: " + this.accountHistoryId + Environment.NewLine);
             return sb.ToString();
         }
 

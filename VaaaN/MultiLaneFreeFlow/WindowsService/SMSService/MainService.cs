@@ -8,12 +8,14 @@ using System.IO.Ports;
 using System.Linq;
 using System.Messaging;
 using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast;
 
 namespace SMSService
 {
@@ -21,8 +23,11 @@ namespace SMSService
     {
         #region Variable
         Thread threadSendSMS;
+        Thread threadAccountBalanceUpdate;
         private volatile bool stopThread = false;
+        //private volatile bool stopAccountBalanceThread = false;
         VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSGatewayController smsGatewayController;
+        string Response_url = "http://localhost:49947/VaaaN/IndonesiaMLFFApi/ResponseMobileBroadCast";
         private MessageQueue smsMessageQueue;
         #endregion
 
@@ -74,6 +79,14 @@ namespace SMSService
                 threadSendSMS.Start();
                 LogMessage("threadSendSMS started successfully.");
 
+
+                LogMessage("Trying to start threadAccountBalanceUpdate...");
+                threadAccountBalanceUpdate = new Thread(threadAccountBalanceUpdateFunction);
+                threadAccountBalanceUpdate.IsBackground = true;
+                threadAccountBalanceUpdate.Name = "threadSendAccountBalance";
+                threadAccountBalanceUpdate.Start();
+                LogMessage("threadAccountBalanceUpdate started successfully.");
+
                 LogMessage("SMS service started successfully.");
             }
             catch (Exception ex)
@@ -98,13 +111,18 @@ namespace SMSService
                     {
                         threadSendSMS.Abort();
                     }
-
+                    if (threadAccountBalanceUpdate != null && threadAccountBalanceUpdate.IsAlive)
+                    {
+                        threadAccountBalanceUpdate.Abort();
+                    }
                     threadSendSMS = null;
-                    LogMessage("The threadSendSMS thread has been stopped.");
+                    threadAccountBalanceUpdate = null;
+                    LogMessage("The threadSendSMS  and threadAccountBalanceUpdate thread has been stopped.");
+
                 }
                 catch (Exception ex)
                 {
-                    LogMessage("Error in stopping threadSendSMS thread function. GoSmsService cannot be stopped. " + ex.ToString());
+                    LogMessage("Error in stopping threadSendSMS thread function. Go Sms Service cannot be stopped. " + ex.ToString());
                 }
 
                 #endregion
@@ -164,7 +182,7 @@ namespace SMSService
                                 smsOutgoing.CreationDate = Convert.ToDateTime(DateTime.Now.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24H));
                                 smsOutgoing.ModificationDate = DateTime.Now;
                                 smsOutgoing.ModifiedBy = 0;
-
+                                smsOutgoing.AccountHistoryId = smsDetail.AccountHistoryId;
                                 LogMessage("Inserting sms communication history. Detail:" + smsOutgoing.ToString());
                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(smsOutgoing);
                                 LogMessage("SMS communication history updated successfully.");
@@ -203,6 +221,11 @@ namespace SMSService
         private void LogMessage(string message)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(message, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.OutboundSMS);
+        }
+
+        private void LogMessageMobile(string message)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(message, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.MobileWebAPI);
         }
 
         private void SendSMSThreadFunction()
@@ -249,7 +272,7 @@ namespace SMSService
                                 if (sms.OperatorResponseCode != 3701)
                                 {
 
-                                    if ((DateTime.Now - sms.MessageReceiveTime).TotalSeconds < 60)
+                                    if ((DateTime.Now - sms.MessageSendDateTime).TotalSeconds < 60)
                                     {
                                         DataProcess = false;
                                     }
@@ -279,19 +302,7 @@ namespace SMSService
                                     VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.UpdateFirstResponse(smsResponse);
                                     LogMessage("SMS sent status updated successfully.");
 
-                                    //if (isSent)
-                                    //{
 
-                                    //}
-                                    //else
-                                    //{
-                                    //    LogMessage("Failed to send SMS. Updating attempt count in database.");
-
-                                    //    sms.AttemptCount++;
-                                    //    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Update(sms);
-
-                                    //    LogMessage("SMS attempt count updated successfully.");
-                                    //}
                                 }
                                 catch (Exception ex)
                                 {
@@ -321,6 +332,64 @@ namespace SMSService
             }
         }
 
+
+        private void threadAccountBalanceUpdateFunction()
+        {
+            while (!stopThread)
+            {
+                try
+                {
+                    UpdateAccountBalance();
+                }
+                catch (Exception ex)
+                {
+                    LogMessage("Failed to send message." + ex.Message);
+                }
+                finally
+                {
+                    Thread.Sleep(500);
+                }
+            }
+        }
+
+        private void UpdateAccountBalance()
+        {
+            try
+            {
+                VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection unsentBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerbalanceUpdateMobile();
+
+                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vb in unsentBalance)
+                {
+                    var contents = SendBrodcastStatus(BrodcastDataMobile.BroadCastBalance(vb));
+                    Thread.Sleep(200);
+                    LogMessageMobile("Account Entry Id:" + vb.EntryId + " Responce :" + contents);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                LogMessageMobile("Failed to send Mobile." + ex.Message);
+            }
+            finally
+            {
+                Thread.Sleep(2000);
+            }
+        }
+
+        public async Task<string> SendBrodcastStatus(string responseString)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(Response_url);
+            var newresponse = await client.PostAsync(
+                        "",
+                        new StringContent(
+                            responseString,
+                            Encoding.UTF8,
+                            "application/json"));
+            var contents = await newresponse.Content.ReadAsStringAsync();
+
+            return contents;
+        }
         #endregion
     }
 }

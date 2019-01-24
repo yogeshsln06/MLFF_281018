@@ -163,6 +163,8 @@
     <Compile Include="CBE\UserSubmoduleRightCBE.cs" />
     <Compile Include="CBE\VehicleClass.cs" />
     <Compile Include="CBE\ViewTransactionCBE.cs" />
+    <Compile Include="Classes\MobileBroadCast\BrodcastDataMobile.cs" />
+    <Compile Include="Classes\SmsNotification\GoSMSGateway.cs" />
     <Compile Include="Classes\SmsNotification\SMSDetail.cs" />
     <Compile Include="Classes\SmsNotification\SMSGatewayBase.cs" />
     <Compile Include="Classes\SmsNotification\MobisuiteSMSGateway.cs" />

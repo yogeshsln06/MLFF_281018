@@ -973,7 +973,7 @@ namespace MLFFWebAPI.Controllers
                                             smsOutgoing.CreationDate = DateTime.Now;
                                             smsOutgoing.ModificationDate = DateTime.Now;
                                             smsOutgoing.ModifiedBy = 0;
-
+                                            smsOutgoing.AccountHistoryId = entryId;
                                             LogInboundSMS("Inserting outbound message.");
                                             VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(smsOutgoing);
                                             LogInboundSMS("outbound message inserted successfully.");
@@ -1029,6 +1029,7 @@ namespace MLFFWebAPI.Controllers
                                         sms.CreationDate = DateTime.Now;
                                         sms.ModificationDate = DateTime.Now;
                                         sms.ModifiedBy = 0;
+                                       
                                         LogInboundSMS("Inserting outbound message in database.");
                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
                                         LogInboundSMS("Outbound message inserted successfully in database.");
@@ -1217,14 +1218,20 @@ namespace MLFFWebAPI.Controllers
 
         #endregion
 
-        #region API for Response Mobile Balance
-        [Route("VaaaN/IndonesiaMLFFApi/ResponseMobileBalance")]
+        #region API for Response Mobile BroadCast
+        [Route("VaaaN/IndonesiaMLFFApi/ResponseMobileBroadCast")]
         [HttpPost]
-        public HttpResponseMessage ResponseMobileBalance(MobileResponce objMobileResponce)
+        public HttpResponseMessage ResponseMobileBroadCast(MobileResponce objMobileResponce)
         {
             try
             {
-                objMobileResponce.data.status = "success";
+                int SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                if (objMobileResponce.Apifor.ToLower() == "balance")
+                {
+                    if (objMobileResponce.status.ToLower() == "success")
+                        SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
+                    AccountHistoryBLL.UpdateBalanceStatus(objMobileResponce.trans_id, SentStatus, objMobileResponce.message);
+                }
                 response = Request.CreateResponse(HttpStatusCode.OK, objMobileResponce);
             }
             catch (Exception ex)
@@ -1346,18 +1353,10 @@ namespace MLFFWebAPI.Controllers
 
         public class MobileResponce
         {
-            public RespinceDataFields data { get; set; }
-        }
-
-        public class RespinceDataFields
-        {
-            public string status { get; set; }
-
-            public string message { get; set; }
+            public string Apifor { get; set; }
             public Int32 trans_id { get; set; }
-
-            
-
+            public string status { get; set; }
+            public string message { get; set; }
         }
         #endregion
     }

@@ -14,7 +14,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
     {
         public override SMSCommunicationHistoryCBE SendSMS(SMSCommunicationHistoryCBE sms)
         {
-
+            LogMessage("Using Mobiduite SMS gateway for sending message.");
             #region Variables
             string createdURL = "";
             string mobileNumber = sms.MobileNumber;

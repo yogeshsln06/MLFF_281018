@@ -133,5 +133,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetFilterCSV(filtere);
         }
+
+        public static CBE.CustomerVehicleCollection GetCustomerbalanceUpdateMobile()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerbalanceUpdateMobile();
+        }
     }
 }

@@ -1,4 +1,4 @@
-/* Formatted on 21/01/2019 16:25:28 (QP5 v5.215.12089.38647) */
+/* Formatted on 24/01/2019 16:47:48 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -811,7 +811,8 @@ AS
                                  P_ATTEMPT_COUNT             IN     NUMBER,
                                  P_CREATION_DATE             IN     DATE,
                                  P_MODIFICATION_DATE         IN     DATE,
-                                 P_MODIFIED_BY               IN     NUMBER);
+                                 P_MODIFIED_BY               IN     NUMBER,
+                                 P_ACCOUNT_HISTORY_ID        IN     NUMBER);
 
    PROCEDURE SMS_HISTORY_UPDATE_FIRST (
       P_ENTRY_ID                  IN NUMBER,
@@ -1304,5 +1305,11 @@ AS
                                      P_PMONTH_ID    IN     NUMBER,
                                      P_PYEAR_ID     IN     NUMBER,
                                      CUR_OUT           OUT T_CURSOR);
+
+   PROCEDURE CUSTOMER_VEHICLE_BALANCE (CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE ACCOUNT_HISTORY_BALANCEUPDATE (P_ENTRY_ID      IN NUMBER,
+                                            P_SENT_STATUS   IN NUMBER,
+                                            P_RESPONSE      IN NVARCHAR2);
 END MLFF_PACKAGE;
 /

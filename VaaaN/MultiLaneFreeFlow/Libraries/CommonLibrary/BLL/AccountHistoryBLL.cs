@@ -26,6 +26,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.Delete(accountHistory);
         }
+        public static int UpdateBalanceStatus(int EntryId, int SentStatus, string response)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.AccountHistoryDAL.UpdateBalanceStatus(EntryId, SentStatus, response);
+        }
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCollection GetAll()
         {

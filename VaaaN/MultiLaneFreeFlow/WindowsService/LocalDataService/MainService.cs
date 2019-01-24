@@ -1573,7 +1573,7 @@ namespace VaaaN.MLFF.WindowsServices
                 tollToDeduct = -1;
             }
             #endregion
-
+            int entryId = 0;
             if (tollToDeduct > -1)
             {
                 Decimal currentAccountBalance = customerVehicleInfo.AccountBalance;
@@ -1599,7 +1599,7 @@ namespace VaaaN.MLFF.WindowsServices
                     accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
                     accountHistory.OpeningBalance = currentAccountBalance;
                     accountHistory.ClosingBalance = afterDeduction;
-                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                    entryId=VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
                     LogMessage("Recorded in account history table successfully.");
                 }
                 catch (Exception ex)
@@ -1630,7 +1630,7 @@ namespace VaaaN.MLFF.WindowsServices
                 {
                     LogMessage("Trying to update isBalanceUpdated field in transaction table...");
                     VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsBalanceUpdated(transaction);
-                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
+                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction, entryId);
                     LogMessage("Transaction is marked as balance updated.");
                 }
                 catch (Exception ex)
@@ -1655,7 +1655,7 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
 
-        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Decimal tollToDeduct, Decimal AfterDeduction)
+        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Decimal tollToDeduct, Decimal AfterDeduction,int AccountHistoryId)
         {
             try
             {
@@ -1704,7 +1704,7 @@ namespace VaaaN.MLFF.WindowsServices
                 smsDetail.AccountId = customerAccountInfo.AccountId;
                 smsDetail.CustomerName = customerAccountInfo.FirstName + " " + customerAccountInfo.LastName;
                 smsDetail.SenderMobileNumber = customerAccountInfo.MobileNo;
-
+                smsDetail.AccountHistoryId = AccountHistoryId;
                 smsMessage.Body = smsDetail;
 
                 LogMessage("Detail:" + smsDetail.ToString());

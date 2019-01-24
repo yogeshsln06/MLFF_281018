@@ -19,6 +19,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
         public String SMSMessage { get; set; }
         public String RawData { get; set; }
 
+        public int AccountHistoryId { get; set; }
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

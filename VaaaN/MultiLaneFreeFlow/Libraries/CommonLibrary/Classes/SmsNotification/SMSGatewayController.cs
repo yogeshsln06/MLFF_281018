@@ -14,8 +14,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
         public SMSGatewayController()
         {
             // Get from configuration
-            LogMessage("Using Mobiduite SMS gateway for sending message.");
+            
             smsGatewayBase = new MobisuiteSMSGateway();
+           
+            //smsGatewayBase = new GoSMSGateway();
         }
 
         public SMSCommunicationHistoryCBE SendSMS(SMSCommunicationHistoryCBE sms)

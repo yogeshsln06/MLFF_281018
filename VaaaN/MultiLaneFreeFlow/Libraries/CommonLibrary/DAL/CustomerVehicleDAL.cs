@@ -567,7 +567,23 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return ds;
         }
 
-
+        public static CBE.CustomerVehicleCollection GetCustomerbalanceUpdateMobile() //what user ???? CJS
+        {
+            CBE.CustomerVehicleCollection vehicles = new CBE.CustomerVehicleCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = Constants.oraclePackagePrefix + "CUSTOMER_VEHICLE_BALANCE";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                vehicles = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return vehicles;
+        }
         #endregion
 
         #region Helper Methods
