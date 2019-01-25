@@ -57,5 +57,25 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.GetFilteredRecords(filter);
         }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetAllSendSMS()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.GetAllSendSMS();
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetAllSendSMSPendindStatus()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.GetAllSendSMSPendindStatus();
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetAllPendindNotification()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.GetAllPendindNotification();
+        }
+
+        public static void UpdateNotificationStatus(int EntryId,int Status)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.UpdateNotificationStatus(EntryId, Status);
+        }
     }
 }

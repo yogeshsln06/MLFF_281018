@@ -1584,8 +1584,6 @@ namespace VaaaN.MLFF.WindowsServices
                 #region Account History Section
                 try
                 {
-
-
                     LogMessage("Trying to record in account history table...");
                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCBE accountHistory = new Libraries.CommonLibrary.CBE.AccountHistoryCBE();
                     accountHistory.TMSId = transaction.TMSId;

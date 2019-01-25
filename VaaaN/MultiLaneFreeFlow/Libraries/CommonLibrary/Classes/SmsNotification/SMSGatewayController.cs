@@ -14,15 +14,20 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
         public SMSGatewayController()
         {
             // Get from configuration
-            
-            smsGatewayBase = new MobisuiteSMSGateway();
-           
-            //smsGatewayBase = new GoSMSGateway();
+
+            //smsGatewayBase = new MobisuiteSMSGateway();
+
+            smsGatewayBase = new GoSMSGateway();
         }
 
         public SMSCommunicationHistoryCBE SendSMS(SMSCommunicationHistoryCBE sms)
         {
             return smsGatewayBase.SendSMS(sms);
+        }
+
+        public string SMSStatus(SMSCommunicationHistoryCBE sms)
+        {
+            return smsGatewayBase.SMSStatus(sms);
         }
 
         public List<SMSDetail> ReadSMS()

@@ -112,6 +112,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transaction_id", DbType.String, sms.TransactionId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_gateway_response", DbType.String, sms.GatewayResponse, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_gateway_response_code", DbType.Int32, sms.ResponseCode, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_reference_no", DbType.String, sms.ReferenceNo, ParameterDirection.Input, 100));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
@@ -132,16 +133,26 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_message_receive_time", DbType.DateTime, sms.MessageReceiveTime, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_message_delivery_status", DbType.Int32, sms.MessageDeliveryStatus, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_operator_attempt_count", DbType.Int32, sms.OperatorAttemptCount, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transaction_id", DbType.String, sms.TransactionId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_operator_response", DbType.String, sms.GatewayResponse, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_operator_response_code", DbType.Int32, sms.ResponseCode, ParameterDirection.Input));
-
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_transaction_id", DbType.String, sms.TransactionId, ParameterDirection.Input, 500));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_operator_response", DbType.String, sms.GatewayResponse, ParameterDirection.Input, 500));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_operator_response_code", DbType.Int32, sms.OperatorResponseCode, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modification_date", DbType.DateTime, sms.ModificationDate, ParameterDirection.Input));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+        public static void UpdateNotificationStatus(int EntryId, int Status)
+        {
+            string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "MOBILE_NOTI_STATUS_UPDATE";
+            DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+            command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_entry_id", DbType.Int32, EntryId, ParameterDirection.Input));
+            command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_sent_status", DbType.Int32, Status, ParameterDirection.Input));
+            VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
         }
 
         #endregion
@@ -159,6 +170,69 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_filter", DbType.String, filter, ParameterDirection.Input));
 
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt = ds.Tables[tableName];
+                smses = ConvertDataTableToCollection(dt);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return smses;
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetAllSendSMS()
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection smses = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "SMS_HISTORY_SENDALL";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt = ds.Tables[tableName];
+                smses = ConvertDataTableToCollection(dt);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return smses;
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetAllSendSMSPendindStatus()
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection smses = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "SMS_HISTORY_PENDIND_STATUS";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                DataTable dt = ds.Tables[tableName];
+                smses = ConvertDataTableToCollection(dt);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return smses;
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetAllPendindNotification()
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection smses = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "MOBILE_PENDING_NOTI_ALL";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
                 DataTable dt = ds.Tables[tableName];
                 smses = ConvertDataTableToCollection(dt);
@@ -242,6 +316,23 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                     if (dt.Rows[i]["OPERATOR_RESPONSE_CODE"] != DBNull.Value)
                         sms.OperatorResponseCode = Convert.ToInt32(dt.Rows[i]["OPERATOR_RESPONSE_CODE"]);
+
+                    if (dt.Rows[i]["TRANSACTION_TYPE"] != DBNull.Value)
+                        sms.TransactionType = Convert.ToInt32(dt.Rows[i]["TRANSACTION_TYPE"]);
+
+                    if (dt.Rows[i]["TRANSACTION_SUBJECT"] != DBNull.Value)
+                        sms.Subject = Convert.ToString(dt.Rows[i]["TRANSACTION_SUBJECT"]);
+
+                    if (dt.Rows[i]["EMAIL_ID"] != DBNull.Value)
+                        sms.EmailId = Convert.ToString(dt.Rows[i]["EMAIL_ID"]);
+
+                    if (dt.Rows[i]["TRANSACTION_ID"] != DBNull.Value)
+                        sms.TransactionId = Convert.ToString(dt.Rows[i]["TRANSACTION_ID"]);
+
+                    if (dt.Rows[i]["VEHICLE_RC_NO"] != DBNull.Value)
+                        sms.VehicleRCNumber = Convert.ToString(dt.Rows[i]["VEHICLE_RC_NO"]);
+
+
                     smses.Add(sms);
                 }
                 return smses;

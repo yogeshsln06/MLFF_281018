@@ -31,6 +31,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
             #region Send SMS to Mobile phone
             try
             {
+                sms.ReferenceNo = Constants.SMSTranscationId(sms.EntryId);
                 LogMessage("Trying to send message to customer mobile number. Mobile No.:" + mobileNumber);
                 createdURL = "http://webapps.imitra.com:29003/sms_applications/smsb/api_mt_send_message.php?";
                 string data = "data=<bulk_sending>" +
@@ -124,6 +125,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
             return sms;
         }
 
+        public override string SMSStatus(SMSCommunicationHistoryCBE sms)
+        {
+            throw new NotImplementedException();
+        }
         public override List<SMSDetail> ReadSMS()
         {
             throw new NotImplementedException();

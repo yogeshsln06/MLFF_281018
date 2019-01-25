@@ -69,6 +69,60 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
             return responseString;
         }
 
+
+        public static string BroadCastNotification(SMSCommunicationHistoryCBE objSMSCommunicationHistoryCBE)
+        {
+            string TransId = objSMSCommunicationHistoryCBE.EntryId.ToString();
+            var responseString = "";
+            try
+            {
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/account");
+                request.Headers.Add("Authorization", Authorization);
+                request.Accept = "application/json";
+                var postData = "vehicle_registration_certificate_number=" + objSMSCommunicationHistoryCBE.VehicleRCNumber + "";
+                postData += "&title=" + objSMSCommunicationHistoryCBE.Subject + "";
+                postData += "&body=" + objSMSCommunicationHistoryCBE.MessageBody + "";
+                var data = Encoding.ASCII.GetBytes(postData);
+
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = data.Length;
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+                response = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException e)
+            {
+                if (e.Status == WebExceptionStatus.ProtocolError)
+                {
+                    response = (HttpWebResponse)e.Response;
+                }
+                else
+                {
+                    LogMessage("Transcation Id = " + TransId + " WebException " + e.Message + ".");
+                }
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Transcation Id = " + TransId + " Exception " + ex.Message + ".");
+            }
+
+            if (response != null)
+            {
+                int code = (int)response.StatusCode;
+                responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                responseString = responseString.Replace("\"status\"", "\"Apifor\": \"notification\",\"trans_id\": \"" + TransId + "\", \"status\" ");
+            }
+            else
+            {
+                LogMessage("Transcation Id = " + TransId + " response is null.");
+            }
+            return responseString;
+        }
+
         private static void LogMessage(string message)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(message, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.MobileWebAPI);

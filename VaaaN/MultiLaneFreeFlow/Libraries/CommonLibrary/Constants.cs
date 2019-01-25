@@ -10,6 +10,7 @@ using System.ServiceProcess;
 using System.Net;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
+using System.Security.Cryptography;
 
 namespace VaaaN.MLFF.Libraries.CommonLibrary
 {
@@ -1367,6 +1368,70 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             "TransJakarta"
         };
 
+
+        public enum SMSGaywayGoSMSStatus
+        {
+            Success = 1701,
+            Invalid_Username_or_Password = 1702,
+            Internal_Server_Error = 1703,
+            Data_not_found = 1704,
+            Process_Failed = 1705,
+            Invalid_Message = 1706,
+            Invalid_Number = 1707,
+            Insufficient_Credit = 1708,
+            Group_Empty = 1709,
+            Invalid_Group_Name = 1711,
+            Invalid_Group_ID = 1712,
+            Invalid_msgid = 1713,
+            Invalid_Phonebook_Name = 1721,
+            Invalid_Phonebook_ID = 1722,
+            User_Name_already_exist = 1731,
+            Sender_ID_not_valid = 1732,
+            Internal_Error_please_contact_administrator = 1733,
+            Invalid_client_user_name = 1734,
+            Invalid_Credit_Value = 1735
+        }
+        public static string[] SMSGaywayGoSMSStatusDescription = new string[]
+        {
+            "Success",
+            "Invalid Username or Password",
+            "Internal Server Error",
+            "Data not found",
+            "Process Failed",
+            "Invalid Message",
+            "Invalid Number",
+            "Insufficient Credit",
+            "Group Empty",
+            "Invalid Group Name",
+            "Invalid Group ID",
+            "Invalid msgid",
+            "Invalid Phonebook Name",
+            "Invalid Phonebook ID",
+            "User Name already exist",
+            "Sender ID not valid",
+            "Internal Error – please contact administrator",
+            "Invalid client user name",
+            "Invalid Credit Value"
+        };
+
+        public enum OperaterGoSMSStatus
+        {
+            Pending = 1,
+            Delivered,
+            Read,
+            Rejected,
+            Failed
+        }
+
+        public static string[] OperaterGoSMSStatusDescription = new string[]
+        {
+            "Pending",
+            "Delivered",
+            "Read",
+            "Rejected",
+            "Failed"
+        };
+
         public class TagStructure
         {
             int classId = -1;
@@ -1760,6 +1825,46 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             return FileName;
         }
 
+        public static string MD5Hash(string input)
+        {
+            StringBuilder hash = new StringBuilder();
+            MD5CryptoServiceProvider md5provider = new MD5CryptoServiceProvider();
+            byte[] bytes = md5provider.ComputeHash(new UTF8Encoding().GetBytes(input));
+
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                hash.Append(bytes[i].ToString("x2"));
+            }
+            return hash.ToString();
+        }
+
+        public static string SubStringSMSResponce(string responce)
+        {
+            int length = responce.Length;
+            string result = string.Empty;
+
+            if (length > 4)
+            {
+                string successcode = responce.Substring(0, 4);
+                result = successcode;
+                string trsnId = responce.Substring(4, length - 4);
+                result = successcode + "," + trsnId;
+            }
+            else {
+                string successcode = responce.Substring(0, 4);
+                result = successcode;
+                result = successcode + ",";
+            }
+            return result;
+        }
+
+        public static string SMSTranscationId(int Id)
+        {
+            String RefNumber = String.Empty;
+            string Initial = "SmartERP";
+            RefNumber = Initial + Id.ToString("00000000");
+            return RefNumber;
+        }
         #endregion
 
         #region Regex

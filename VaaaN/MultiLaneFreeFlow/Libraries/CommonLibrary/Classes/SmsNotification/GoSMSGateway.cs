@@ -15,13 +15,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
         {
             LogMessage("Using Go SMS gateway for sending message.");
             #region Variables
-            string createdURL = "https://secure.gosmsgateway.com/api/send.php?";
-            string PostedURL = "https://secure.gosmsgateway.com/api/send.php?";
+            string createdURL = "https://secure.gosmsgateway.com/api_balitowerlong/sendsms.php?";
             string mobileNumber = sms.MobileNumber;
             string messageBody = sms.MessageBody;
             string userName = "balitower";
             string password = "gosms37297";
-            string dr_url = "http://103.119.145.130:5555/VaaaN/IndonesiaMLFFApi/ResponseSMS";
             var responseString = "";
             HttpWebResponse response = null;
             #endregion
@@ -29,57 +27,91 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
             #region Send SMS to Mobile phone
             try
             {
-                LogMessage("Trying to send message to customer mobile number. Mobile No.:" + mobileNumber);
-                var postData = "username=" + userName + "";
+                sms.ReferenceNo = Constants.SMSTranscationId(sms.EntryId);
+                var postData = "username=balitower";
                 postData += "&mobile=" + mobileNumber + "";
                 postData += "&message=" + messageBody + "";
-                postData += "&password=" + password + "";
-                PostedURL = createdURL + postData;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(PostedURL);
+                postData += "&auth=" + Constants.MD5Hash(userName + password + mobileNumber) + "";
+                postData += "&trxid=" + sms.ReferenceNo + "";
+                postData += "&type=0";
+                LogMessage("trying to sending : " + postData);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(createdURL + postData);
                 response = (HttpWebResponse)request.GetResponse();
             }
             catch (WebException e)
             {
                 response = (HttpWebResponse)e.Response;
-                //sms.ResponseCode = (int)response.StatusCode;
-                //sms.GatewayResponse = responseString;
-              
-                //if (e.Status == WebExceptionStatus.ProtocolError)
-                //{
-                //    sms.ResponseCode = (int)response.StatusCode;
-                //    sms.GatewayResponse = responseString;
-                //    response = (HttpWebResponse)e.Response;
-                //}
-                //else
-                //{
-                //    LogMessage("Failed to send message to customer. WebException:" + e.Message + " Error: " + e.Status + "");
-
-                //}
+                LogMessage("Failed to send message to customer. WebException:" + e.Message + " SMS Id: " + sms.EntryId + "");
             }
             catch (Exception ex)
             {
-                //if sending request or getting response is not successful the SMS Gateway Server may do not run
-                LogMessage("Failed to send message to customer." + ex.Message);
+                LogMessage("Failed to send message to customer. Exception:" + ex.Message + " SMS Id: " + sms.EntryId + "");
             }
             #endregion
             if (response != null)
             {
                 int code = (int)response.StatusCode;
                 responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                if (responseString.Contains("1701"))
+                string[] responcelist = Constants.SubStringSMSResponce(responseString).Split(',');
+                sms.ResponseCode = Convert.ToInt32(responcelist[0].ToString());
+                if (sms.ResponseCode == 1701)
                 {
                     sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
                 }
-                sms.TransactionId = string.Empty;
-                sms.ResponseCode = (int)response.StatusCode;
+                sms.TransactionId = responcelist[1].ToString();
                 sms.GatewayResponse = responseString;
             }
             else
             {
                 LogMessage("Failed to send message to customer. due to no response found");
-               
+
             }
             return sms;
+        }
+
+        public override string SMSStatus(SMSCommunicationHistoryCBE sms)
+        {
+            LogMessage("Using Go SMS gateway for Delivery Status message.");
+            #region Variables
+            string createdURL = "https://secure.gosmsgateway.com/api_balitowerlong/statusmsg.php?";
+            string key = sms.TransactionId;
+            string userName = "balitower";
+            string password = "gosms37297";
+            var responseString = "";
+            HttpWebResponse response = null;
+            #endregion
+
+            #region Send SMS to Mobile phone
+            try
+            {
+                var postData = "username=" + userName + "";
+                postData += "&auth=" + Constants.MD5Hash(userName + password) + "";
+                postData += "&key=" + key + "";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(createdURL + postData);
+                response = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException e)
+            {
+                response = (HttpWebResponse)e.Response;
+                LogMessage("Failed to SMS Status message to customer. WebException:" + e.Message + " SMS Id: " + sms.EntryId + "");
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Failed to SMS Status message to customer. Exception:" + ex.Message + " SMS Id: " + sms.EntryId + "");
+            }
+            #endregion
+            if (response != null)
+            {
+                int code = (int)response.StatusCode;
+                responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                responseString = responseString.ToLower().Replace("\"idsms\"", "\"transId\": \"" + key + "\", \"idsms\" ");
+            }
+            else
+            {
+                LogMessage("Failed to SMS Status message to customer. due to no response found");
+
+            }
+            return responseString;
         }
 
         public override List<SMSDetail> ReadSMS()
@@ -91,5 +123,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
         {
             VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(message, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.InboundSMS);
         }
+
     }
 }

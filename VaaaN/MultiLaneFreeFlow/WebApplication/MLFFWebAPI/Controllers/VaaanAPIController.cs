@@ -1029,7 +1029,7 @@ namespace MLFFWebAPI.Controllers
                                         sms.CreationDate = DateTime.Now;
                                         sms.ModificationDate = DateTime.Now;
                                         sms.ModifiedBy = 0;
-                                       
+
                                         LogInboundSMS("Inserting outbound message in database.");
                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
                                         LogInboundSMS("Outbound message inserted successfully in database.");
@@ -1133,8 +1133,8 @@ namespace MLFFWebAPI.Controllers
                                 reader.Read();
                                 try
                                 {
-                                    sms.ResponseCode = Convert.ToInt32(Convert.ToString(reader.Value));
-                                    LogInboundSMS("Response status code is " + sms.ResponseCode + ".");
+                                    sms.OperatorResponseCode = Convert.ToInt32(Convert.ToString(reader.Value));
+                                    LogInboundSMS("Response status code is " + sms.OperatorResponseCode + ".");
                                 }
                                 catch (Exception)
                                 {
@@ -1167,7 +1167,7 @@ namespace MLFFWebAPI.Controllers
                 {
                     if (sms != null)
                     {
-                        if (sms.ResponseCode == 3701)
+                        if (sms.OperatorResponseCode == 3701)
                         {
                             sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.Delivered;
                             sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
@@ -1200,6 +1200,51 @@ namespace MLFFWebAPI.Controllers
             {
                 ExceptionLogging.SendErrorToText(ex);
                 LogInboundSMS("Error in API ResponseSMS : " + ex);
+            }
+
+            return response;
+        }
+
+        [Route("VaaaN/IndonesiaMLFFApi/GoSMSResponse")]
+        [HttpPost]
+        public HttpResponseMessage GoSMSResponse(SMSResponce objSMSResponce)
+        {
+            try
+            {
+                SMSCommunicationHistoryCBE sms = new SMSCommunicationHistoryCBE();
+                if (!string.IsNullOrEmpty(objSMSResponce.idsms))
+                {
+                    sms.TransactionId = objSMSResponce.transId;
+                    sms.OperatorResponseCode = objSMSResponce.status_sms;
+                    if (objSMSResponce.status_sms == 5)
+                    {
+                        sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered;
+                        sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+
+                    }
+                    else if (objSMSResponce.status_sms == 2 || objSMSResponce.status_sms == 3)
+                    {
+                        sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.Delivered;
+                        sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
+
+                    }
+                    else
+                    {
+                        sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.Delivered;
+                        sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
+                    }
+                    sms.MessageReceiveTime = DateTime.Now;
+                    sms.OperatorAttemptCount = 1;
+                    sms.GatewayResponse = JsonConvert.SerializeObject(objSMSResponce).ToString();
+                    SMSCommunicationHistoryBLL.UpdateSecondResponse(sms);
+                    LogInboundSMS("SMS sent status Second status updated successfully.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogging.SendErrorToText(ex);
+                LogInboundSMS("Error in API ResponseSMS : " + ex + " Responce : " + JsonConvert.SerializeObject(objSMSResponce).ToString());
             }
 
             return response;
@@ -1357,6 +1402,16 @@ namespace MLFFWebAPI.Controllers
             public Int32 trans_id { get; set; }
             public string status { get; set; }
             public string message { get; set; }
+        }
+
+        public class SMSResponce
+        {
+            public string transId { get; set; }
+            public string idsms { get; set; }
+            public DateTime senddate { get; set; }
+            public int status_sms { get; set; }
+            public string sender { get; set; }
+            public string sms { get; set; }
         }
         #endregion
     }

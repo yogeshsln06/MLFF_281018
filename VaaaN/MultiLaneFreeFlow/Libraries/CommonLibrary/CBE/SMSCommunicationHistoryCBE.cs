@@ -31,6 +31,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private Int32 responseCode;
         private Int32 operatorResponseCode;
         private Int32 accountHistoryId;
+        private Int32 transactionType;
+        private string subject;
+        private string emailid;
+        private string smsTransactionId;
+        private string referenceNo;
+        private String vehicleRCNumber;
 
         public SMSCommunicationHistoryCBE()
         {
@@ -55,6 +61,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.responseCode = 0;
             this.operatorResponseCode = 0;
             this.accountHistoryId = 0;
+            this.transactionType = 0;
+            this.subject = string.Empty;
+            this.emailid = string.Empty;
+            this.smsTransactionId = string.Empty;
+            this.referenceNo = string.Empty;
+            this.vehicleRCNumber = string.Empty;
         }
         public Int32 EntryId
         {
@@ -192,6 +204,48 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.accountHistoryId = value; }
         }
 
+        public Int32 TransactionType
+        {
+            get { return this.transactionType; }
+            set { this.transactionType = value; }
+        }
+
+        public string Subject
+        {
+            get { return this.subject; }
+            set { this.subject = value; }
+        }
+
+        public string EmailId
+        {
+            get { return this.emailid; }
+            set { this.emailid = value; }
+        }
+
+        public string SMSTransactionId
+        {
+            get { return this.smsTransactionId; }
+            set { this.smsTransactionId = value; }
+        }
+
+        public string ReferenceNo
+        {
+            get { return this.referenceNo; }
+            set { this.referenceNo = value; }
+        }
+
+        public String VehicleRCNumber
+        {
+            get
+            {
+                return this.vehicleRCNumber;
+            }
+
+            set
+            {
+                this.vehicleRCNumber = value;
+            }
+        }
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
