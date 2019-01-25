@@ -77,7 +77,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
             try
             {
 
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/account");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/notification");
                 request.Headers.Add("Authorization", Authorization);
                 request.Accept = "application/json";
                 var postData = "vehicle_registration_certificate_number=" + objSMSCommunicationHistoryCBE.VehicleRCNumber + "";
