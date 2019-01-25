@@ -1580,6 +1580,7 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 Decimal currentAccountBalance = customerVehicleInfo.AccountBalance;
                 Decimal afterDeduction = currentAccountBalance - tollToDeduct;
+                int entryId = 0;
                 #region Account History Section
                 try
                 {
@@ -1601,7 +1602,7 @@ namespace VaaaN.MLFF.WindowsServices
                     accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
                     accountHistory.OpeningBalance = currentAccountBalance;
                     accountHistory.ClosingBalance = afterDeduction;
-                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                    entryId=VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
                     LogMessage("Recorded in account history table successfully.");
                 }
                 catch (Exception ex)
@@ -1632,7 +1633,7 @@ namespace VaaaN.MLFF.WindowsServices
                 {
                     LogMessage("Trying to update isBalanceUpdated field in transaction table...");
                     VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsBalanceUpdated(transaction);
-                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
+                    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction, entryId);
                     LogMessage("Transaction is marked as balance updated.");
                 }
                 catch (Exception ex)
@@ -1657,7 +1658,7 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
 
-        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Decimal tollToDeduct, Decimal AfterDeduction)
+        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Decimal tollToDeduct, Decimal AfterDeduction,int entryId)
         {
             try
             {
@@ -1679,10 +1680,10 @@ namespace VaaaN.MLFF.WindowsServices
                     AFTERDEDUCTION = AFTERDEDUCTION.Replace("[plazaid]", GetPlazaNameById(transaction.PlazaId));
                     AFTERDEDUCTION = AFTERDEDUCTION.Replace("[balance]", Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture).Replace("Rp", ""));
                     AFTERDEDUCTION = AFTERDEDUCTION.Replace("tid", transaction.TransactionId.ToString());
-                    if (AFTERDEDUCTION.Length > 160)
-                    {
-                        AFTERDEDUCTION = AFTERDEDUCTION.Substring(0, 159);
-                    }
+                    //if (AFTERDEDUCTION.Length > 160)
+                    //{
+                    //    AFTERDEDUCTION = AFTERDEDUCTION.Substring(0, 159);
+                    //}
                     smsDetail.SMSMessage = AFTERDEDUCTION;// "Pelanggan Yth, telah dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", "") + " terhadap saldo SJBE anda atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di tempat " + GetPlazaNameById(transaction.PlazaId) + ". Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture).Replace("Rp", "") + " Ref: [" + transaction.TransactionId.ToString() + "]";
                 }
                 else
@@ -1695,10 +1696,10 @@ namespace VaaaN.MLFF.WindowsServices
                     NOTIFICATION = NOTIFICATION.Replace("[recharedate]", RechareDate);
                     NOTIFICATION = NOTIFICATION.Replace("[balance]", Decimal.Parse((AfterDeduction + tollToDeduct).ToString()).ToString("C", culture).Replace("Rp", ""));
                     NOTIFICATION = NOTIFICATION.Replace("tid", transaction.TransactionId.ToString());
-                    if (NOTIFICATION.Length > 160)
-                    {
-                        NOTIFICATION = NOTIFICATION.Substring(0, 159);
-                    }
+                    //if (NOTIFICATION.Length > 160)
+                    //{
+                    //    NOTIFICATION = NOTIFICATION.Substring(0, 159);
+                    //}
                     smsDetail.SMSMessage = NOTIFICATION;//"Pelanggan Yth, Saldo SJBE anda saat ini tidak mencukupi untuk dilakukan pemotongan senilai Rp " + Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", "") + " atas transaksi kendaraan " + customerVehicleInfo.VehRegNo + " pada " + transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS) + " di Gantry - Medan Merdeka Barat 1. Silahkan melakukan pengisian ulang saldo SJBE anda sebelum " + RechareDate + ". Keterlambatan pengisian ulang saldo akan dikenakan denda sebesar Rp 1.000.000,00. Sisa saldo SJBE anda saat ini Rp " + Decimal.Parse((AfterDeduction + tollToDeduct).ToString()).ToString("C", culture).Replace("Rp", "") + " Ref: [" + transaction.TransactionId.ToString() + "]";
                 }
 
@@ -1706,7 +1707,7 @@ namespace VaaaN.MLFF.WindowsServices
                 smsDetail.AccountId = customerAccountInfo.AccountId;
                 smsDetail.CustomerName = customerAccountInfo.FirstName + " " + customerAccountInfo.LastName;
                 smsDetail.SenderMobileNumber = customerAccountInfo.MobileNo;
-
+                smsDetail.AccountHistoryId = entryId;
                 smsMessage.Body = smsDetail;
 
                 LogMessage("Detail:" + smsDetail.ToString());
