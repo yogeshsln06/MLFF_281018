@@ -480,11 +480,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("Name,");
                 sb.Append("Amount,");
                 sb.Append("Balance,");
-                sb.Append("Notification Status");
-                sb.Append("Image URL (Front ANPR)");
-                sb.Append("Image URL (Rear ANPR)");
-                sb.Append("Video URL (Front ANPR)");
-                sb.Append("Video URL (Rear ANPR)");
+                sb.Append("Notification Status,");
+                sb.Append("Image URL (Front ANPR),");
+                sb.Append("Image URL (Rear ANPR),");
+                sb.Append("Video URL (Front ANPR),");
+                sb.Append("Video URL (Rear ANPR),");
 
             }
 
@@ -722,10 +722,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("Class (Rear ANPR),");
                 sb.Append("Total Record,");
                 sb.Append("Lane,");
-                sb.Append("Image URL (Front ANPR)");
-                sb.Append("Image URL (Rear ANPR)");
-                sb.Append("Video URL (Front ANPR)");
-                sb.Append("Video URL (Rear ANPR)");
+                sb.Append("Image URL (Front ANPR),");
+                sb.Append("Image URL (Rear ANPR),");
+                sb.Append("Video URL (Front ANPR),");
+                sb.Append("Video URL (Rear ANPR),");
             }
 
             foreach (DataRow dr in dt.Rows)
