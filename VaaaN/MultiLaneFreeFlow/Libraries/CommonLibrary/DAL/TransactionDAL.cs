@@ -481,6 +481,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("Amount,");
                 sb.Append("Balance,");
                 sb.Append("Notification Status");
+                sb.Append("Image URL (Front ANPR)");
+                sb.Append("Image URL (Rear ANPR)");
+                sb.Append("Video URL (Front ANPR)");
+                sb.Append("Video URL (Rear ANPR)");
+
             }
 
             foreach (DataRow dr in dt.Rows)
@@ -650,6 +655,47 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 {
                     sb.Append(Convert.ToString(dr["SMS_NOTIFICATION"]));
                 }
+                else
+                {
+                    sb.Append(",");
+                }
+                
+                //Image URL (Front ANPR)
+                if (dr["FRONT_PLATE_IMAGE"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_PLATE_IMAGE"]));
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+                
+                //Image URL (Rear ANPR)
+                if (dr["REAR_PLATE_IMAGE"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_PLATE_IMAGE"]));
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+                
+                //Video URL (Front ANPR)
+                if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]));
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+                
+                //Video URL (Rear ANPR)
+                if (dr["REAR_VIDEO_URL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]));
+                }
+                
             }
             //if (dt.Rows.Count > 0)
             //{
@@ -676,6 +722,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("Class (Rear ANPR),");
                 sb.Append("Total Record,");
                 sb.Append("Lane,");
+                sb.Append("Image URL (Front ANPR)");
+                sb.Append("Image URL (Rear ANPR)");
+                sb.Append("Video URL (Front ANPR)");
+                sb.Append("Video URL (Rear ANPR)");
             }
 
             foreach (DataRow dr in dt.Rows)
@@ -749,6 +799,41 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 {
                     sb.Append(",");
                 }
+                //Image URL (Front ANPR)
+                if (dr["FRONT_PLATE_IMAGE"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_PLATE_IMAGE"]));
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //Image URL (Rear ANPR)
+                if (dr["REAR_PLATE_IMAGE"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_PLATE_IMAGE"]));
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //Video URL (Front ANPR)
+                if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]));
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                //Video URL (Rear ANPR)
+                if (dr["REAR_VIDEO_URL"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]));
+                }
 
             }
             //if (dt.Rows.Count > 0)
@@ -801,41 +886,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
             return dt;
         }
-
-        /// <summary>
-        /// From the nodeflux cameraId get the lane id, plazaId is already hardcoded. Together with nodeflux vrn find out the transactions in the transaction table where transaction time lies between
-        /// nodeflux timestamp + 30 sec and nodeflux timestamp - 30 sec ORIGINAL
-        /// </summary>
-        /// <param name="nfp"></param>
-        /// <returns></returns>
-        //public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection GetCorrespondingTransaction(VaaaN.MLFF.Libraries.CommonLibrary.CBE.NodeFluxPacketCBE nfp)
-        //{
-        //    VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
-        //    try
-        //    {
-        //        //Stored procedure must have cur_out parameter.
-        //        //There is no need to add ref cursor for oracle in code.
-        //        string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_GET_CORRESPONDING";
-        //        DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-
-        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, nfp.TMSId, ParameterDirection.Input));
-        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLAZA_ID", DbType.Int32, nfp.GantryId, ParameterDirection.Input));
-
-        //        //conversion of nfp.TimeStamp to DateTime
-        //        DateTime nfpDateTime = Convert.ToDateTime(nfp.TimeStamp); //<==== nfp timestamp may be wrong in JSON packet CJS
-        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_TIMESTAMP", DbType.DateTime, nfpDateTime, ParameterDirection.Input));
-        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_VRN", DbType.String, nfp.PlateNumber, ParameterDirection.Input));
-        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_LANE_ID", DbType.Int32, nfp.LaneId, ParameterDirection.Input));
-        //        DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
-        //        DataTable dt = ds.Tables[tableName];
-        //        trans = ConvertDataTableToCollection(dt);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    return trans;
-        //}
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection GetCorrespondingTransactionInNodeFlux(Int32 tmsId, Int32 plazaId, DateTime timestamp, string ctpVrn)
         {

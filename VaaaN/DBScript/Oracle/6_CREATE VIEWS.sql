@@ -1,4 +1,4 @@
-/* Formatted on 25/01/2019 23:24:48 (QP5 v5.215.12089.38647) */
+/* Formatted on 26/01/2019 10:26:39 (QP5 v5.215.12089.38647) */
 DROP VIEW TRANS_UNREVIEWED;
 
 CREATE VIEW TRANS_UNREVIEWED
@@ -114,12 +114,28 @@ AS
             T.AUDITED_VEHICLE_CLASS_ID,
             T.AUDITED_VRN,
             T.VEHICLESPEED,
-            T.MEARGED_TRAN_ID
+            T.MEARGED_TRAN_ID,
+            (CASE NVL (T.AUDIT_STATUS, 0) WHEN 0 THEN 'Auto' ELSE 'Manual' END)
+               TSource,
+            SH.GATEWAY_RESPONSE_CODE,
+            (CASE NVL (SH.OPERATOR_RESPONSE_CODE, 0)
+                WHEN 0 THEN ' - '
+                WHEN 1 THEN ' - Pending'
+                WHEN 2 THEN ' - Delivered'
+                WHEN 3 THEN ' - Read'
+                WHEN 4 THEN ' - Rejected'
+                WHEN 5 THEN ' - Failed'
+             END)
+               OPERATOR_RESPONSE_CODE
        FROM TBL_TRANSACTION T
             LEFT OUTER JOIN TBL_PLAZA P
                ON T.PLAZA_ID = P.PLAZA_ID
             LEFT OUTER JOIN TBL_LANE L
                ON T.LANE_ID = L.LANE_ID
+            LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
+               ON T.TRANSACTION_ID = AH.TRANSACTION_ID
+            LEFT OUTER JOIN TBL_SMS_COMM_HISTORY SH
+               ON AH.ENTRY_ID = SH.ACCOUNT_HISTORY_ID
       WHERE NVL (T.IS_BALANCE_UPDATED, 0) = 1
    ORDER BY T.TRANSACTION_DATETIME DESC;
 
