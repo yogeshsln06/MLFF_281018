@@ -1,4 +1,4 @@
-/* Formatted on 26/01/2019 10:26:39 (QP5 v5.215.12089.38647) */
+/* Formatted on 26/01/2019 11:04:24 (QP5 v5.215.12089.38647) */
 DROP VIEW TRANS_UNREVIEWED;
 
 CREATE VIEW TRANS_UNREVIEWED
@@ -116,17 +116,18 @@ AS
             T.VEHICLESPEED,
             T.MEARGED_TRAN_ID,
             (CASE NVL (T.AUDIT_STATUS, 0) WHEN 0 THEN 'Auto' ELSE 'Manual' END)
-               TSource,
-            SH.GATEWAY_RESPONSE_CODE,
+               TSOURCE,
+            NVL (SH.GATEWAY_RESPONSE_CODE, 0) GATEWAY_RESPONSE_CODE,
+            NVL (SH.OPERATOR_RESPONSE_CODE, 0) OPERATOR_RESPONSE_CODE,
             (CASE NVL (SH.OPERATOR_RESPONSE_CODE, 0)
-                WHEN 0 THEN ' - '
-                WHEN 1 THEN ' - Pending'
-                WHEN 2 THEN ' - Delivered'
-                WHEN 3 THEN ' - Read'
-                WHEN 4 THEN ' - Rejected'
-                WHEN 5 THEN ' - Failed'
+                WHEN 0 THEN 'blank'
+                WHEN 1 THEN 'Pending'
+                WHEN 2 THEN 'Delivered'
+                WHEN 3 THEN 'Read'
+                WHEN 4 THEN 'Rejected'
+                WHEN 5 THEN 'Failed'
              END)
-               OPERATOR_RESPONSE_CODE
+               OPERATOR_RESPONSE_TEXT
        FROM TBL_TRANSACTION T
             LEFT OUTER JOIN TBL_PLAZA P
                ON T.PLAZA_ID = P.PLAZA_ID

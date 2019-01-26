@@ -875,7 +875,7 @@ function BindReviewedFirstLoad() {
         if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
             AppendReviewedData();
         }
-       
+
     });
     thId = 'tblReviewedDataTR';
     myVar = setInterval("myclick()", 500);
@@ -1337,6 +1337,19 @@ function BindChargedFirstLoad() {
 
                  }
              },
+             {
+                 'data': 'GATEWAY_RESPONSE_CODE',
+                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                     if (oData.GATEWAY_RESPONSE_CODE != 0) {
+                         $(nTd).html(oData.GATEWAY_RESPONSE_CODE + ' - ' + oData.OPERATOR_RESPONSE_TEXT);
+                     }
+                     else {
+                         $(nTd).html('');
+                     }
+
+                 }
+             },
+             { 'data': 'TSOURCE' },
         ],
         'columnDefs': [
        {
