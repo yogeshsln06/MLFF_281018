@@ -145,6 +145,7 @@ namespace MLFFWebUI.Controllers
             try
             {
                 dt = TransactionBLL.GetUnReviewedDataTableById(TransactionId);
+                ViewData["dtCount"] = dt.Rows.Count;
                 Session["CurrentTransaction"] = dt;
 
             }
@@ -347,7 +348,7 @@ namespace MLFFWebUI.Controllers
                         objtransaction.AuditorId = Convert.ToInt32(Session["LoggedUserId"].ToString());
                         objtransaction.AuditedVRN = AuditedVRN;
                         objtransaction.AuditedVehicleClassId = AuditedVehicleClassId;
-                       
+
                         #region Customer Vehicle Info by VRN
                         CustomerVehicleCBE CustomerVehicleDetails = new CustomerVehicleCBE();
                         CustomerVehicleCBE objCustomerVehicleDetails = new CustomerVehicleCBE();
@@ -376,6 +377,8 @@ namespace MLFFWebUI.Controllers
 
                         if (IsAuditedVRNExists)
                         {
+                            #region AUDITED VRN Exists Registred going to Review
+
                             #region Check which pakcet is missing in parent
                             if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString())) //IKE is missing
                             {
@@ -1083,25 +1086,49 @@ namespace MLFFWebUI.Controllers
                                     }
                                 }
                             }
+                            #endregion
                         }
                         else
                         {
                             #region VRN Not Exists Mark as Unregistred Violance and Auditied
+                            string ProcessTranscationId = TransactionId.ToString();
                             TransactionBLL.MarkAsUnregistred(objtransaction);
                             TransactionBLL.MarkAsViolation(objtransaction);
                             objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-
-
                             TransactionBLL.UpdateAuditSection(objtransaction);
 
-                            ModelStateList objModelState = new ModelStateList();
-                            objModelState.ErrorMessage = "Reviewed success! VRN not exists it marekd as violance.";
-                            objResponseMessage.Add(objModelState);
-                            //objModelState.ErrorMessage = "Balnce cannot deducated due to vrn not exists. It marked as violance.";
-                            //objResponseMessage.Add(objModelState);
-                            //objModelState.ErrorMessage = "VRN not exists it marekd as violance.";
-                            //objResponseMessage.Add(objModelState);
+                            #region Check Associated TransactionIds is avaliable or not 
+                            if (AssociatedTransactionIds != null)
+                            {
+                                if (AssociatedTransactionIds.Length > 0)
+                                {
+                                    AssociatedTransactionCount++;
+                                    FirstChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[0]);
+                                    objtransaction.TransactionId = FirstChildTranasactionId;
+                                    TransactionBLL.MarkAsUnregistred(objtransaction);
+                                    TransactionBLL.MarkAsViolation(objtransaction);
+                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                    ProcessTranscationId = ProcessTranscationId + ", " + FirstChildTranasactionId.ToString();
+                                }
+                                if (AssociatedTransactionIds.Length > 1)
+                                {
+                                    AssociatedTransactionCount++;
+                                    SecondChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[1]);
+                                    objtransaction.TransactionId = SecondChildTranasactionId;
+                                    TransactionBLL.MarkAsUnregistred(objtransaction);
+                                    TransactionBLL.MarkAsViolation(objtransaction);
+                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                    ProcessTranscationId = ProcessTranscationId + ", " + SecondChildTranasactionId.ToString();
+                                }
 
+
+                            }
+                            #endregion
+
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "successVRN not registered Transactions ID " + ProcessTranscationId + " set as VIOLATION!!!";
+                            objResponseMessage.Add(objModelState);
                             #endregion
                         }
 

@@ -40,7 +40,7 @@ namespace MLFFWebAPI.Controllers
         DataTable dt = new DataTable();
         XmlReader xmlFile;
         string anprName = string.Empty;
-        VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration smsFileConfig;
+        //VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration smsFileConfig;
 
         #endregion
 
@@ -685,6 +685,8 @@ namespace MLFFWebAPI.Controllers
         #endregion
 
         #region API for SEND SMS Data
+
+        #region Mobisuite
         [Route("VaaaN/IndonesiaMLFFApi/SendSMS")]
         [HttpPost]
         public HttpResponseMessage SendSMS(HttpRequestMessage request)
@@ -692,7 +694,7 @@ namespace MLFFWebAPI.Controllers
             try
             {
                 CultureInfo culture = new CultureInfo("id-ID");
-                smsFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration.Deserialize();
+                //smsFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration.Deserialize();
                 LogInboundSMS("====================Inbound message (Start)=======");
 
                 #region Variables
@@ -839,7 +841,7 @@ namespace MLFFWebAPI.Controllers
                                 sms.CustomerName = "";
                                 sms.MobileNumber = mobileNumber;
                                 sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                                string NOCUSTOMERFOUND = smsFileConfig.NOCUSTOMERFOUND;
+                                string NOCUSTOMERFOUND = Constants.NoCustomerFound;
 
                                 sms.MessageBody = NOCUSTOMERFOUND;
                                 sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
@@ -952,16 +954,12 @@ namespace MLFFWebAPI.Controllers
                                             smsOutgoing.MobileNumber = customerAccount.MobileNo;
                                             smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                                             //smsOutgoing.MessageBody = "Thanks for Top-Up with amount " + rechargeAmount + ". Your saldo is " + customerAccount.AccountBalance + ".";// Update message content TO DO
-                                            string Topup = smsFileConfig.TOPUP;
+                                            string Topup = Constants.TopUp;
                                             Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", ""));
                                             Topup = Topup.Replace("[vehregno]", VRN);
                                             Topup = Topup.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
                                             Topup = Topup.Replace("[transactiondatetime]", transcationDateTime.ToString());
                                             Topup = Topup.Replace("tid", entryId.ToString());
-                                            if (Topup.Length > 160)
-                                            {
-                                                Topup = Topup.Substring(0, 159);
-                                            }
                                             smsOutgoing.MessageBody = Topup;
                                             //smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", "") + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ". Ref: [" + entryId + "]";// Update message content TO DO
                                             smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
@@ -1011,13 +1009,9 @@ namespace MLFFWebAPI.Controllers
                                         sms.CustomerName = customerAccount.FirstName + " " + customerAccount.LastName;
                                         sms.MobileNumber = customerAccount.MobileNo;
                                         sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                                        string SALDO = smsFileConfig.SALDO;
+                                        string SALDO = Constants.Saldo;
                                         SALDO = SALDO.Replace("[vehregno]", VRN);
                                         SALDO = SALDO.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
-                                        if (SALDO.Length > 160)
-                                        {
-                                            SALDO = SALDO.Substring(0, 159);
-                                        }
                                         sms.MessageBody = SALDO;
                                         //sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ".";
                                         sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
@@ -1067,7 +1061,7 @@ namespace MLFFWebAPI.Controllers
                         sms.CustomerName = "";
                         sms.MobileNumber = mobileNumber;
                         sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                        string INVALID = smsFileConfig.INVALID;
+                        string INVALID = Constants.InValid;
                         sms.MessageBody = INVALID;
                         sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                         sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
@@ -1099,6 +1093,371 @@ namespace MLFFWebAPI.Controllers
 
             return response;
         }
+        #endregion
+
+        #region Go SMS
+        [Route("VaaaN/IndonesiaMLFFApi/GOSMSInboand")]
+        [HttpPost]
+        public HttpResponseMessage SMSInbox(SMSInboand objSMSInboand)
+        {
+            #region Serialize the nodeflux JSON Data
+            string jsonString = JsonConvert.SerializeObject(objSMSInboand);
+            response = Request.CreateResponse(HttpStatusCode.OK);
+            #endregion
+
+            #region Create Physical Path to save nodeflux JSON Data as file
+            if (!Directory.Exists(rootpath))
+            {
+                Directory.CreateDirectory(rootpath);
+            }
+            filepath = rootpath + "GoSMSInbond/";
+            if (!Directory.Exists(filepath))
+            {
+                Directory.CreateDirectory(filepath);
+            }
+            filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+            if (!File.Exists(filepath))
+            {
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, jsonString);
+            }
+            else {
+                var guid = Guid.NewGuid().ToString();
+                filepath = rootpath + "GoSMSInbond/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                File.Create(filepath).Dispose();
+                File.WriteAllText(filepath, jsonString);
+            }
+
+
+
+            #endregion
+
+
+            LogInboundSMS("====================GO SMS Inbound message (Start)=======");
+            #region Variables
+
+            string mobileNumber = objSMSInboand.sender.Replace("+", "").Trim();
+            string messageBody = objSMSInboand.content.Trim();
+            string VRN = "";
+
+            DateTime messageReceiveTime = DateTime.Now;
+            DateTime transcationDateTime = DateTime.Now;
+            Decimal rechargeAmount = 0;
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccount = null;
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicle = null;
+            CultureInfo culture = new CultureInfo("id-ID");
+            #endregion
+
+            #region Save Inbound message data in database
+            try
+            {
+
+                string[] messageBodyFormat = messageBody.Trim().Split(' ');
+                if (messageBodyFormat.Length == 2)
+                {
+                    #region Save Incoming message in database
+                    try
+                    {
+                        // Search account id by mobile number
+                        LogInboundSMS("Searching account number by mobile number. Mobile nbr.:" + mobileNumber);
+                        VRN = messageBodyFormat[1].ToString();
+                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetByMobileNumber(mobileNumber);
+                        CustomerVehicleCBE objCustomerVehicle = new CustomerVehicleCBE();
+                        objCustomerVehicle.VehRegNo = VRN;
+                        customerVehicle = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerVehicleByVehRegNo(objCustomerVehicle);
+
+                        #region SMS Communication History
+                        if (customerAccounts.Count > 0 && customerVehicle.AccountId == customerAccounts[0].AccountId)
+                        {
+                            customerAccount = customerAccounts[0];
+                            LogInboundSMS("Customer account found. Account id:" + customerAccount.AccountId);
+                            if (customerAccounts.Count > 1)
+                            {
+                                LogInboundSMS("Multiple customer account found for same mobile number. Considering only first one.");
+                            }
+
+                            VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE smsIncoming = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                            smsIncoming.EntryId = 0;
+                            smsIncoming.TmsId = 1;
+                            smsIncoming.CustomerAccountId = customerAccount.AccountId;
+                            smsIncoming.CustomerVehicleId = customerVehicle.EntryId;
+                            smsIncoming.CustomerName = customerAccount.FirstName;
+                            smsIncoming.MobileNumber = mobileNumber;
+                            smsIncoming.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Incoming;
+                            smsIncoming.MessageBody = messageBody;
+                            smsIncoming.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                            smsIncoming.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                            smsIncoming.MessageSendDateTime = DateTime.Now;
+                            smsIncoming.MessageReceiveTime = messageReceiveTime;
+                            smsIncoming.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                            smsIncoming.AttemptCount = 0;
+                            smsIncoming.CreationDate = DateTime.Now;
+                            smsIncoming.ModificationDate = DateTime.Now;
+                            smsIncoming.ModifiedBy = 0;
+                            LogInboundSMS(smsIncoming.ToString());
+                            LogInboundSMS("Inserting incoming message in database.");
+                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(smsIncoming);
+                            LogInboundSMS("Incoming message inserted successfully in database.");
+                        }
+                        else
+                        {
+                            LogInboundSMS("No customer account and vehicle found.");
+                            #region Customer Account and Vehicle Found
+                            VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                            sms.EntryId = 0;
+                            sms.TmsId = 1;
+                            sms.CustomerAccountId = 0;
+                            sms.CustomerVehicleId = 0;
+                            sms.CustomerName = "";
+                            sms.MobileNumber = mobileNumber;
+                            sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                            string NOCUSTOMERFOUND = Constants.NoCustomerFound;
+
+                            sms.MessageBody = NOCUSTOMERFOUND;
+                            sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                            sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                            sms.MessageSendDateTime = DateTime.Now;
+                            sms.MessageReceiveTime = DateTime.Now;
+                            sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                            sms.AttemptCount = 0;
+                            sms.CreationDate = DateTime.Now;
+                            sms.ModificationDate = DateTime.Now;
+                            sms.ModifiedBy = 0;
+                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
+                            LogInboundSMS("Outbound message inserted successfully in database for no customer account and vehicle found.");
+                            #endregion
+                        }
+                        #endregion
+                    }
+                    catch (Exception ex)
+                    {
+                        LogInboundSMS("Failed to insert SMS communication history. : " + ex.Message);
+                    }
+                    #endregion
+
+                    #region Create and save outgoing message
+                    try
+                    {
+                        if (customerAccount != null)
+                        {
+
+                            // Top up
+                            if (messageBody.ToUpper().Contains("TOP-UP"))
+                            {
+                                #region Process TOP UP message
+                                LogInboundSMS("===============TOP-UP=============");
+
+                                // Validate message- TODO
+                                bool isValidMessage = false;
+                                try
+                                {
+                                    rechargeAmount = 100000;// For POC only
+                                    isValidMessage = true;// TO DO
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    LogInboundSMS("Invalid message format. : " + ex.Message);
+                                }
+
+                                // Identify account id by mobile number
+                                if (isValidMessage)
+                                {
+                                    #region Update account balance in database
+                                    try
+                                    {
+                                        // Update account balance
+                                        customerVehicle.AccountBalance += rechargeAmount;
+                                        customerAccount.ModificationDate = DateTime.Now;
+
+                                        LogInboundSMS("Updating customer account.");
+                                        customerVehicle.AccountBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.UpdateVehiclebalance(customerVehicle, rechargeAmount);
+                                        LogInboundSMS("Customer account updated successfully.");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        LogInboundSMS("Failed to update customer account. : " + ex.Message);
+                                    }
+                                    #endregion
+
+                                    #region Update account history (POS transaction)
+                                    Int32 entryId = 0;
+                                    transcationDateTime = DateTime.Now;
+                                    try
+                                    {
+                                        LogInboundSMS("Updating account history table...");
+                                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCBE accountHistory = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.AccountHistoryCBE();
+                                        accountHistory.TMSId = customerAccount.TmsId;
+                                        //accountHistory.EntryId = 0;//this  is the auto incremented and primary key of table
+                                        accountHistory.AccountId = customerAccount.AccountId;
+                                        accountHistory.CustomerVehicleEntryId = customerVehicle.EntryId;
+                                        accountHistory.TransactionTypeId = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransactionType.Recharge;
+                                        accountHistory.TransactionId = 0;// Transaction id will be used if amount is debited by lane transaction
+                                        accountHistory.Amount = rechargeAmount;
+                                        accountHistory.IsSMSSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent; //will be updated later on
+                                        accountHistory.IsEmailSent = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.EmailSentStatus.Unsent;//will be updated later on
+                                        accountHistory.CreationDate = transcationDateTime;
+                                        accountHistory.ModificationDate = transcationDateTime;
+                                        accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
+                                        accountHistory.OpeningBalance = (customerVehicle.AccountBalance - rechargeAmount);
+                                        accountHistory.ClosingBalance = customerVehicle.AccountBalance;
+                                        entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                                        LogInboundSMS("Account history table updated successfully.");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        LogInboundSMS("Exception in recording in the Account History table. : " + ex.ToString());
+                                    }
+
+                                    #endregion
+
+                                    #region Save outgoing message in database
+                                    // This message will be sent by SMS service
+                                    try
+                                    {
+                                        VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE smsOutgoing = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                                        smsOutgoing.EntryId = 0;
+                                        smsOutgoing.TmsId = 1;
+                                        smsOutgoing.CustomerAccountId = customerAccount.AccountId;
+                                        smsOutgoing.CustomerVehicleId = customerVehicle.EntryId;
+                                        smsOutgoing.CustomerName = customerAccount.FirstName + " " + customerAccount.LastName;
+                                        smsOutgoing.MobileNumber = customerAccount.MobileNo;
+                                        smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                                        //smsOutgoing.MessageBody = "Thanks for Top-Up with amount " + rechargeAmount + ". Your saldo is " + customerAccount.AccountBalance + ".";// Update message content TO DO
+                                        string Topup = Constants.TopUp;
+                                        Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                        Topup = Topup.Replace("[vehregno]", VRN);
+                                        Topup = Topup.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                        Topup = Topup.Replace("[transactiondatetime]", transcationDateTime.ToString());
+                                        Topup = Topup.Replace("tid", entryId.ToString());
+                                        smsOutgoing.MessageBody = Topup;
+                                        //smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", "") + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ". Ref: [" + entryId + "]";// Update message content TO DO
+                                        smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                                        smsOutgoing.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                                        smsOutgoing.MessageSendDateTime = DateTime.Now;
+                                        smsOutgoing.MessageReceiveTime = DateTime.Now;
+                                        smsOutgoing.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                                        smsOutgoing.AttemptCount = 0;
+                                        smsOutgoing.CreationDate = DateTime.Now;
+                                        smsOutgoing.ModificationDate = DateTime.Now;
+                                        smsOutgoing.ModifiedBy = 0;
+                                        smsOutgoing.AccountHistoryId = entryId;
+                                        LogInboundSMS("Inserting outbound message.");
+                                        VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(smsOutgoing);
+                                        LogInboundSMS("outbound message inserted successfully.");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        LogInboundSMS("Failed to insert outbound message. : " + ex.Message);
+                                    }
+                                    #endregion
+                                }
+                                else
+                                {
+                                    // Create imvalid message
+                                }
+
+                                #endregion
+                            }
+
+                            // Balance check
+                            if (messageBody.ToUpper().Contains("SALDO"))
+                            {
+                                #region Process SALDO message
+
+                                // Search account by mobile number
+                                LogInboundSMS("===============SALDO=============");
+
+                                #region Save balance notification in database
+                                try
+                                {
+                                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                                    sms.EntryId = 0;
+                                    sms.TmsId = 1;
+                                    sms.CustomerAccountId = customerAccount.AccountId;
+                                    sms.CustomerVehicleId = customerVehicle.EntryId;
+                                    sms.CustomerName = customerAccount.FirstName + " " + customerAccount.LastName;
+                                    sms.MobileNumber = customerAccount.MobileNo;
+                                    sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                                    string SALDO = Constants.Saldo;
+                                    SALDO = SALDO.Replace("[vehregno]", VRN);
+                                    SALDO = SALDO.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                    sms.MessageBody = SALDO;
+                                    //sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ".";
+                                    sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                                    sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                                    sms.MessageSendDateTime = DateTime.Now;
+                                    sms.MessageReceiveTime = DateTime.Now;
+                                    sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                                    sms.AttemptCount = 0;
+                                    sms.CreationDate = DateTime.Now;
+                                    sms.ModificationDate = DateTime.Now;
+                                    sms.ModifiedBy = 0;
+
+                                    LogInboundSMS("Inserting outbound message in database.");
+                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
+                                    LogInboundSMS("Outbound message inserted successfully in database.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    LogInboundSMS("Failed to insert SMS communication history. : " + ex.Message);
+                                }
+                                #endregion
+
+                                #endregion
+                            }
+                        }
+                        else
+                        {
+                            LogInboundSMS("Customer account found null.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogInboundSMS("Failed to create outbound message for incoming message. : " + ex.Message);
+                    }
+
+                    #endregion
+                }
+                else
+                {
+                    LogInboundSMS("Invalid Format of SMS.");
+                    #region Customer Account and Vehicle Found
+                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                    sms.EntryId = 0;
+                    sms.TmsId = 1;
+                    sms.CustomerAccountId = 0;
+                    sms.CustomerVehicleId = 0;
+                    sms.CustomerName = "";
+                    sms.MobileNumber = mobileNumber;
+                    sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                    string INVALID = Constants.InValid;
+                    sms.MessageBody = INVALID;
+                    sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                    sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                    sms.MessageSendDateTime = DateTime.Now;
+                    sms.MessageReceiveTime = DateTime.Now;
+                    sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                    sms.AttemptCount = 0;
+                    sms.CreationDate = DateTime.Now;
+                    sms.ModificationDate = DateTime.Now;
+                    sms.ModifiedBy = 0;
+                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
+                    LogInboundSMS("Outbound message inserted successfully in database for invalid format of sms.");
+                    #endregion
+                }
+            }
+            catch (Exception ex)
+            {
+                LogInboundSMS("Failed to insert GO SMS record. : " + ex.Message);
+            }
+            #endregion
+
+            LogInboundSMS("==================== GO SMS Inbound message (Stop)=======");
+            return response;
+        }
+        #endregion
+
         #endregion
 
         #region API for Response SMS Data
@@ -1362,6 +1721,8 @@ namespace MLFFWebAPI.Controllers
             return response;
         }
 
+
+
         #region Helper Method
         public string VehicleClassForOpenALPR(OpenALPRPacketJSON objOpenALPRPacketJSON)
         {
@@ -1412,6 +1773,14 @@ namespace MLFFWebAPI.Controllers
             public int status_sms { get; set; }
             public string sender { get; set; }
             public string sms { get; set; }
+        }
+
+        public class SMSInboand
+        {
+            public string idsms { get; set; }
+            public string sender { get; set; }
+            public string content { get; set; }
+            public DateTime datetime { get; set; }
         }
         #endregion
     }

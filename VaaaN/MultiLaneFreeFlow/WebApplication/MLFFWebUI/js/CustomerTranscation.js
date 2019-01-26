@@ -498,141 +498,149 @@ function FilterAssociatedData() {
     });
 }
 
-function BindAssociatedData(Seconds) {
-    $(".animationload").show();
-    $.ajax({
-        type: "POST",
-        url: "GetAssociated?Seconds=" + Seconds,
-        async: true,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data) {
-            $(".animationload").hide();
-            $("#filterSec").val(30);
-            if (data != "No Record Found") {
-                $("#tblAssociatedData").removeClass('my-table-bordered').addClass('table-bordered');
-                AssociateddatatableVariable = $('#tblAssociatedData').DataTable({
-                    data: data,
-                    "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
-                    "bScrollInfinite": true,
-                    "bScrollCollapse": true,
-                    scrollY: 230,
-                    scroller: {
-                        loadingIndicator: true
-                    },
-                    processing: true,
-                    scrollCollapse: true,
-                    stateSave: true,
-                    autoWidth: false,
-                    paging: false,
-                    info: false,
-                    columns: [
-                        {
-                            'data': 'TRANSACTION_ID',
-                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                $(nTd).html("<input type='checkbox' class='checkBox' value=" + oData.TRANSACTION_ID + " />");
-                            }
+function BindAssociatedData(Seconds, dtCount) {
+    if (dtCount > 0) {
+        $(".animationload").show();
+        $.ajax({
+            type: "POST",
+            url: "GetAssociated?Seconds=" + Seconds,
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $(".animationload").hide();
+                $("#filterSec").val(30);
+                if (data != "No Record Found") {
+                    $("#tblAssociatedData").removeClass('my-table-bordered').addClass('table-bordered');
+                    AssociateddatatableVariable = $('#tblAssociatedData').DataTable({
+                        data: data,
+                        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+                        "bScrollInfinite": true,
+                        "bScrollCollapse": true,
+                        scrollY: 230,
+                        scroller: {
+                            loadingIndicator: true
                         },
-                        { 'data': 'TRANSACTION_ID' },
-                        {
-                            'data': 'TRANSACTION_DATETIME',
-                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
-                                    oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
-                                    $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                        processing: true,
+                        scrollCollapse: true,
+                        stateSave: true,
+                        autoWidth: false,
+                        paging: false,
+                        info: false,
+                        columns: [
+                            {
+                                'data': 'TRANSACTION_ID',
+                                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                    $(nTd).html("<input type='checkbox' class='checkBox' value=" + oData.TRANSACTION_ID + " />");
                                 }
-                            }
+                            },
+                            { 'data': 'TRANSACTION_ID' },
+                            {
+                                'data': 'TRANSACTION_DATETIME',
+                                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                    if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
+                                        oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
+                                        $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                                    }
+                                }
 
-                        },
-                        { 'data': 'PLAZA_NAME' },
-                        { 'data': 'CTP_VRN' },
-                        { 'data': 'CTP_VEHICLE_CLASS_NAME' },
-                        { 'data': 'FRONT_VRN' },
-                        { 'data': 'NFP_VEHICLE_CLASS_NAME_FRONT' },
-                        {
-                            'data': 'FRONT_IMAGE',
-                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
-                                    if (oData.FRONT_IMAGE.indexOf('http') > -1) {
-                                        oData.FRONT_IMAGE = oData.FRONT_IMAGE;
+                            },
+                            { 'data': 'PLAZA_NAME' },
+                            { 'data': 'CTP_VRN' },
+                            { 'data': 'CTP_VEHICLE_CLASS_NAME' },
+                            { 'data': 'FRONT_VRN' },
+                            { 'data': 'NFP_VEHICLE_CLASS_NAME_FRONT' },
+                            {
+                                'data': 'FRONT_IMAGE',
+                                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                    if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
+                                        if (oData.FRONT_IMAGE.indexOf('http') > -1) {
+                                            oData.FRONT_IMAGE = oData.FRONT_IMAGE;
+                                        }
+                                        else {
+                                            oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                                        }
+                                        $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
                                     }
-                                    else {
-                                        oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                                }
+                            },
+                            {
+                                'data': 'FRONT_VIDEO_URL',
+                                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                    if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
+                                        $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                                     }
-                                    $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
                                 }
-                            }
-                        },
-                        {
-                            'data': 'FRONT_VIDEO_URL',
-                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
-                                    $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
-                                }
-                            }
-                        },
-                        { 'data': 'REAR_VRN' },
-                        { 'data': 'NFP_VEHICLE_CLASS_NAME_REAR' },
-                        {
-                            'data': 'REAR_IMAGE',
-                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
-                                    if (oData.REAR_IMAGE.indexOf('http') > -1) {
-                                        oData.REAR_IMAGE = oData.REAR_IMAGE;
+                            },
+                            { 'data': 'REAR_VRN' },
+                            { 'data': 'NFP_VEHICLE_CLASS_NAME_REAR' },
+                            {
+                                'data': 'REAR_IMAGE',
+                                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                    if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
+                                        if (oData.REAR_IMAGE.indexOf('http') > -1) {
+                                            oData.REAR_IMAGE = oData.REAR_IMAGE;
+                                        }
+                                        else {
+                                            oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                                        }
+                                        $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
                                     }
-                                    else {
-                                        oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                                }
+                            },
+                            {
+                                'data': 'REAR_VIDEO_URL',
+                                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                    if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
+                                        $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                                     }
-                                    $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
                                 }
+                            },
+                            {
+                                'data': 'VEHICLESPEED',
                             }
+                        ],
+                        'columnDefs': [
+                        {
+                            "targets": 8,
+                            "className": "text-center",
                         },
+                            {
+                                "targets": 9,
+                                "className": "text-center",
+                            },
+                            {
+                                "targets": 12,
+                                "className": "text-center",
+                            },
                         {
-                            'data': 'REAR_VIDEO_URL',
-                            fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
-                                    $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
-                                }
-                            }
-                        },
-                        {
-                            'data': 'VEHICLESPEED',
-                        }
-                    ],
-                    'columnDefs': [
-                    {
-                        "targets": 8,
-                        "className": "text-center",
-                    },
-                        {
-                            "targets": 9,
+                            "targets": 13,
                             "className": "text-center",
                         },
                         {
-                            "targets": 12,
-                            "className": "text-center",
-                        },
-                    {
-                        "targets": 13,
-                        "className": "text-center",
-                    },
-                    {
-                        'searchable': false,
-                        'targets': [0, 1, 8, 9, 12, 13]
-                    }],
-                    width: "100%"
-                });
-                $('.dataTables_filter input').attr("placeholder", "Search this list…");
-                thId = 'tblAssociatedDataTR';
-                myVar = setInterval("myclick()", 500);
-                inProgress = false;
+                            'searchable': false,
+                            'targets': [0, 1, 8, 9, 12, 13]
+                        }],
+                        width: "100%"
+                    });
+                    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+                    thId = 'tblAssociatedDataTR';
+                    myVar = setInterval("myclick()", 500);
+                    inProgress = false;
+                }
+            },
+            error: function (x, e) {
+                $(".animationload").hide();
             }
-        },
-        error: function (x, e) {
-            $(".animationload").hide();
-        }
 
-    });
+        });
+    }
+    else
+    {
+        closePopup();
+        alert("Selected Transaction already reviewed please refresh your data!!!");
+        $(Transactioncol).parent().parent().remove();
+    }
 }
 
 function openpopup() {
@@ -656,7 +664,7 @@ function SaveUnidentified() {
             var meassage = '';
             for (var i = 0; i < resultData.length; i++) {
                 if (resultData[i].ErrorMessage == "success") {
-                    alert('Transaction ID ' + TransactionId + ' set as unidentified!!!')
+                    alert('Transaction ID ' + TransactionId + ' set as UNIDENTIFIED!!!')
                     closePopup();
                     $(Transactioncol).parent().parent().remove();
                 }

@@ -231,7 +231,7 @@
 <script>
     $(document).ready(function () {
         bindSecond();
-        BindAssociatedData(30);
+        BindAssociatedData(30,@Html.Raw(Json.Encode(ViewData["dtCount"])));
 
     });
 </script>

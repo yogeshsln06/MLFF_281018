@@ -11,15 +11,22 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
 {
     class GoSMSGateway : SMSGatewayBase
     {
+        public string userName = "balitower";
+
+        //public string password = "gosms37297";//for long SMS
+        public string password = "ifW6NcYR";//for masking SMS
+
+        //public  string createdURL ="https://secure.gosmsgateway.com/api_balitowerlong/"; //for long SMS
+        public string createdURL = "https://secure.gosmsgateway.com/masking/balitower/"; //for masking SMS
+
         public override SMSCommunicationHistoryCBE SendSMS(SMSCommunicationHistoryCBE sms)
         {
             LogMessage("Using Go SMS gateway for sending message.");
             #region Variables
-            string createdURL = "https://secure.gosmsgateway.com/api_balitowerlong/sendsms.php?";
+            string PostUrl = "sendsms.php?";
+
             string mobileNumber = sms.MobileNumber;
             string messageBody = sms.MessageBody;
-            string userName = "balitower";
-            string password = "gosms37297";
             var responseString = "";
             HttpWebResponse response = null;
             #endregion
@@ -35,7 +42,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
                 postData += "&trxid=" + sms.ReferenceNo + "";
                 postData += "&type=0";
                 LogMessage("trying to sending : " + postData);
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(createdURL + postData);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(createdURL + PostUrl + postData);
                 response = (HttpWebResponse)request.GetResponse();
             }
             catch (WebException e)
@@ -73,10 +80,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
         {
             LogMessage("Using Go SMS gateway for Delivery Status message.");
             #region Variables
-            string createdURL = "https://secure.gosmsgateway.com/api_balitowerlong/statusmsg.php?";
+            string PostUrl = "statusmsg.php?";
             string key = sms.TransactionId;
-            string userName = "balitower";
-            string password = "gosms37297";
             var responseString = "";
             HttpWebResponse response = null;
             #endregion
@@ -87,7 +92,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
                 var postData = "username=" + userName + "";
                 postData += "&auth=" + Constants.MD5Hash(userName + password) + "";
                 postData += "&key=" + key + "";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(createdURL + postData);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(createdURL + PostUrl + postData);
                 response = (HttpWebResponse)request.GetResponse();
             }
             catch (WebException e)
@@ -104,7 +109,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
             {
                 int code = (int)response.StatusCode;
                 responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                responseString = responseString.ToLower().Replace("\"idsms\"", "\"transId\": \"" + key + "\", \"idsms\" ");
+                responseString = responseString.ToLower().Replace("\"idsms\"", "\"transId\": \"" + key + "\", \"idsms\" ").ToLower();
             }
             else
             {

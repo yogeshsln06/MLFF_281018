@@ -68,8 +68,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
         public static string oraclePackagePrefix = "MLFF_PACKAGE.";
         public static string oraclePackageReportPrefix = "ATMS_PACKAGE_REPORTS.";
-
-
+        
+        #region SMS Format
+        public static string TopUp = "Top-up Rp [rechargeamount]. Saldo [vehregno] Rp [balance]. Ref: [transactiondatetime] / [tid].";
+        public static string Saldo = "Saldo [vehregno] Rp [balance].";
+        public static string AfterDeduction = "Transaksi Rp [tolltodeduct]. Gantry: [plazaid]. Ref: [transactiondatetime] / [tid]. Saldo [vehregno] Rp [balance].";
+        public static string Notification = "Transaksi Rp[tolltodeduct]. Gantry: [plazaid]. Ref: [transactiondatetime] / [tid]. Saldo[vehregno] Rp[balance]. Top-up dalam 24 Jam.Denda keterlambatan Rp 100.000.";
+        public static string NoCustomerFound = "Nomor polisi yang anda masukan tidak terdaftar!";
+        public static string InValid = "Format yang anda masukan salah! Format: [SALDO][spasi][nomor polisi], Contoh: SALDO B1234XYZ";
+        #endregion
         /// <summary>
         /// Possible transfer Status.
         /// </summary>

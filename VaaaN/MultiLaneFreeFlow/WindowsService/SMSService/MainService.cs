@@ -32,7 +32,7 @@ namespace SMSService
         private volatile bool stopThread = false;
         //private volatile bool stopAccountBalanceThread = false;
         VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSGatewayController smsGatewayController;
-        string Response_url = "http://localhost:49947/";
+        string Response_url = "http://10.213.0.33:5555/";
         private MessageQueue smsMessageQueue;
         #endregion
 
@@ -41,7 +41,7 @@ namespace SMSService
         {
             InitializeComponent();
 
-            OnStart(new string[] { "" });
+            //OnStart(new string[] { "" });
         }
 
         static void Main()
@@ -254,8 +254,8 @@ namespace SMSService
             {
                 try
                 {
-                    SendSMS();
-                    //SendGoSMS();
+                    // SendSMS();
+                    SendGoSMS();
                 }
                 catch (Exception ex)
                 {
@@ -423,7 +423,7 @@ namespace SMSService
                 }
                 finally
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
                 }
             }
         }
