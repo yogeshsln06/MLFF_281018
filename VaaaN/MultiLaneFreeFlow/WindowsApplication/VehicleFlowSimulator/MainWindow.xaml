@@ -8,7 +8,7 @@
         Title="MLFF Vehicle Flow Simulator" Height="482" Width="624" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Canvas RenderTransformOrigin="0.503,0.499">
         <Label x:Name="labelWebAPIAddress" Content="API Address:" Canvas.Left="10" Canvas.Top="16" VerticalAlignment="Center" Width="80" FontWeight="Bold"/>
-        <TextBox x:Name="textBoxAPIAddress" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="http://192.168.1.63:5555" Canvas.Top="20" Width="221" VerticalAlignment="Center"/>
+        <TextBox x:Name="textBoxAPIAddress" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="http://10.213.0.33:5555" Canvas.Top="20" Width="221" VerticalAlignment="Center"/>
 
         <Label x:Name="label1" Content="Vehicle:" Canvas.Left="10" Canvas.Top="46" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" FontWeight="Bold"/>
         <ComboBox x:Name="comboBoxVehicle" Canvas.Left="99" Canvas.Top="50" Width="460" SelectionChanged="comboBoxVehicle_SelectionChanged" VerticalAlignment="Center"/>
