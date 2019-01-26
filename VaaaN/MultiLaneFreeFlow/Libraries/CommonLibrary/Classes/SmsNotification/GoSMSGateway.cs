@@ -78,7 +78,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification
 
         public override string SMSStatus(SMSCommunicationHistoryCBE sms)
         {
-            LogMessage("Using Go SMS gateway for Delivery Status message.");
+            //LogMessage("Using Go SMS gateway for Delivery Status message.");
             #region Variables
             string PostUrl = "statusmsg.php?";
             string key = sms.TransactionId;
