@@ -659,43 +659,47 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 {
                     sb.Append(",");
                 }
-                
+
                 //Image URL (Front ANPR)
                 if (dr["FRONT_PLATE_IMAGE"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["FRONT_PLATE_IMAGE"]));
+                    sb.Append(Convert.ToString(dr["FRONT_PLATE_IMAGE"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
-                
+
                 //Image URL (Rear ANPR)
                 if (dr["REAR_PLATE_IMAGE"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["REAR_PLATE_IMAGE"]));
+                    sb.Append(Convert.ToString(dr["REAR_PLATE_IMAGE"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
-                
+
                 //Video URL (Front ANPR)
                 if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]));
+                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]) + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
-                
+
                 //Video URL (Rear ANPR)
                 if (dr["REAR_VIDEO_URL"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]));
+                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]) + ",");
                 }
-                
+                else
+                {
+                    sb.Append(",");
+                }
+
             }
             //if (dt.Rows.Count > 0)
             //{
@@ -802,7 +806,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Image URL (Front ANPR)
                 if (dr["FRONT_PLATE_IMAGE"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["FRONT_PLATE_IMAGE"]));
+                    sb.Append(Convert.ToString(dr["FRONT_PLATE_IMAGE"]) + ",");
                 }
                 else
                 {
@@ -812,7 +816,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Image URL (Rear ANPR)
                 if (dr["REAR_PLATE_IMAGE"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["REAR_PLATE_IMAGE"]));
+                    sb.Append(Convert.ToString(dr["REAR_PLATE_IMAGE"]) + ",");
                 }
                 else
                 {
@@ -822,7 +826,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Video URL (Front ANPR)
                 if (dr["FRONT_VIDEO_URL"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]));
+                    sb.Append(Convert.ToString(dr["FRONT_VIDEO_URL"]) + ",");
                 }
                 else
                 {
@@ -832,7 +836,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Video URL (Rear ANPR)
                 if (dr["REAR_VIDEO_URL"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]));
+                    sb.Append(Convert.ToString(dr["REAR_VIDEO_URL"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
                 }
 
             }
