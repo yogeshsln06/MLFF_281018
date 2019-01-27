@@ -635,8 +635,7 @@ function BindAssociatedData(Seconds, dtCount) {
 
         });
     }
-    else
-    {
+    else {
         closePopup();
         alert("Selected Transaction already reviewed please refresh your data!!!");
         $(Transactioncol).parent().parent().remove();
@@ -710,12 +709,14 @@ function Complete() {
     }
 
     if (confirm('Are you sure you want to reviewed ?')) {
+        var Seconds = $("#filterSec").val();
+        Seconds = 60;
         var InputData = {
             AssociatedTransactionIds: selectedIDs,
             TransactionId: TransactionId,
             VehRegNo: $('#txtVRN').val(),
             vehicleClassID: $('#ddlAuditedVehicleClass').val(),
-            Seconds: $("#filterSec").val(),
+            Seconds: Seconds,
         }
         $('#loader').show('fadeOut');
         $.ajax({
@@ -730,10 +731,11 @@ function Complete() {
                 var Msg = '';
                 var close = false;
                 for (var i = 0; i < resultData.length; i++) {
-                    if (resultData[i].ErrorMessage.toLowerCase().indexOf('success') > -1) {
+                    if (resultData[i].ErrorMessage.toLowerCase().indexOf('yes!') > -1) {
+                        resultData[i].ErrorMessage = resultData[i].ErrorMessage.replace('yes!', '')
                         var res = resultData[i].ErrorMessage.split("-999-");
                         for (var j = 0; j < res.length; j++) {
-                            Msg = Msg + "\xb7 " + res[j].replace('success', '') + " \n";
+                            Msg = Msg + "\xb7 " + res[j].replace('yes!', '') + " \n";
                         }
                         close = true
                     }

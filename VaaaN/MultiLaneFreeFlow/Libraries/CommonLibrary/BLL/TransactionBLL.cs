@@ -317,7 +317,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.GetUnReviewedDataTableFilteredRecordsLazyLoad(PageIndex, PageSize);
         }
-        
+
 
         public static DataTable GetReviewedDataTableFilteredRecords(string filter)
         {
@@ -373,11 +373,16 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.JoinAuditTransaction(parentTransactionId, childOneTransactionId, childTwoTransactionId, auditedVRN, auditedVehicleClassId, auditorID);
         }
 
-        public static void MeargedAuditTransaction(Int32 ParentId, Int32 IkeEntryId, Int32 ANPRFrontEntryId, Int32 ANPRRearEntryId, string AuditedVRN, int AuditedVehicleClassId, int AuditorID, int TranscationStatus)
+        public static void MeargedAuditTransactionOld(Int32 ParentId, Int32 IkeEntryId, Int32 ANPRFrontEntryId, Int32 ANPRRearEntryId, string AuditedVRN, int AuditedVehicleClassId, int AuditorID, int TranscationStatus)
         {
-            VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.MeargedAuditTransaction(ParentId, IkeEntryId, ANPRFrontEntryId, ANPRRearEntryId, AuditedVRN, AuditedVehicleClassId, AuditorID, TranscationStatus);
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.MeargedAuditTransactionOld(ParentId, IkeEntryId, ANPRFrontEntryId, ANPRRearEntryId, AuditedVRN, AuditedVehicleClassId, AuditorID, TranscationStatus);
         }
 
-       
+        public static void MeargedAuditTransaction(Int32 ParentId, Int32 ChildId, int TranscationStatus)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.MeargedAuditTransaction(ParentId, ChildId, TranscationStatus);
+        }
+
+
     }
 }

@@ -307,7 +307,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
-        public static void MeargedAuditTransaction(Int32 ParentId, Int32 IkeEntryId, Int32 ANPRFrontEntryId, Int32 ANPRRearEntryId, string AuditedVRN, int AuditedVehicleClassId, int AuditorID, int TranscationStatus)
+        public static void MeargedAuditTransactionOld(Int32 ParentId, Int32 IkeEntryId, Int32 ANPRFrontEntryId, Int32 ANPRRearEntryId, string AuditedVRN, int AuditedVehicleClassId, int AuditorID, int TranscationStatus)
         {
             try
             {
@@ -330,7 +330,23 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static void MeargedAuditTransaction(Int32 ParentId, Int32 ChildId, int TranscationStatus)
+        {
+            try
+            {
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "MEARGED_AUDIT_TRANSACTIONS";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PARENT_TRANSACTION_ID", DbType.Int32, ParentId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CHILD_TRANSACTION_ID", DbType.Int32, ChildId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANS_STATUS", DbType.Int32, TranscationStatus, ParameterDirection.Input));
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public static void Delete(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction)
         {
             try

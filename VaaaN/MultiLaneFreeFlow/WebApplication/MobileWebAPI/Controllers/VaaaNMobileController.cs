@@ -28,7 +28,6 @@ namespace MobileWebAPI.Controllers
         CustomerVehicleCBE objCustomerVehicleCBE = new CustomerVehicleCBE();
         ResponseMessage objResponse = new ResponseMessage();
         List<ModelStateList> objResponseMessage = new List<ModelStateList>();
-        VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration smsFileConfig;
         #endregion
 
 
@@ -553,18 +552,15 @@ namespace MobileWebAPI.Controllers
                             smsOutgoing.CustomerName = customerAccount.FirstName + " " + customerAccount.LastName;
                             smsOutgoing.MobileNumber = customerAccount.MobileNo;
                             smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                            smsFileConfig = VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.SMSFileConfiguration.Deserialize();
-                            string Topup = smsFileConfig.TOPUP;
+                           
+                            string Topup = Constants.TopUp;
                             CultureInfo culture = new CultureInfo("id-ID");
                             Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(objCustomerVehicleInformation.TopUpAmount.ToString()).ToString("C", culture).Replace("Rp", ""));
                             Topup = Topup.Replace("[vehregno]", objCustomerVehicleInformation.VehicleRegistrationNumber);
                             Topup = Topup.Replace("[balance]", Decimal.Parse(objCustomerVehicleCBE.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
                             Topup = Topup.Replace("[transactiondatetime]", transcationDateTime.ToString());
                             Topup = Topup.Replace("tid", entryId.ToString());
-                            if (Topup.Length > 160)
-                            {
-                                Topup = Topup.Substring(0, 159);
-                            }
+                          
                             smsOutgoing.MessageBody = Topup;
                             smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                             smsOutgoing.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
