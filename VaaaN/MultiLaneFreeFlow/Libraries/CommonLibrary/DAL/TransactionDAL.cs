@@ -669,7 +669,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //SMS_NOTIFICATION
                 if (dr["SMS_NOTIFICATION"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["SMS_NOTIFICATION"]));
+                    sb.Append(Convert.ToString(dr["SMS_NOTIFICATION"]) + ",");
                 }
                 else
                 {
