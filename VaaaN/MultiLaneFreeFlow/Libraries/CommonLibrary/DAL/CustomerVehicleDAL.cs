@@ -283,6 +283,36 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static DataTable CustomerVehicleDetailsByResidentId(string ResidentId)
+        {
+            try
+            {
+                string spName = Constants.oraclePackagePrefix + "VEHICLE_DETAILS_RESIDENTID";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RESIDENT_ID", DbType.String, ResidentId, ParameterDirection.Input));
+                return VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static DataTable CustomerVehicleDetailsByTID(string TID)
+        {
+            try
+            {
+                string spName = Constants.oraclePackagePrefix + "VEHICLE_DETAILS_TID";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TID", DbType.String, TID, ParameterDirection.Input));
+                return VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public static DataTable GetAllVehicleinDataTable()
         {
             try

@@ -198,7 +198,7 @@ function BindVehcileDeatils(VehcileDetails) {
         $("#ResidentId").val("");
         $("#MobileNo").val("");
         $("#EmailId").val("");
-        $("#period").val($("#monthList option:selected").text() + ' - ' + $("#yearList").val());
+        $("#period").val("");
 
     }
 }

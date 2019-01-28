@@ -28,6 +28,7 @@ $(document).ready(function () {
         thId = 'tblCustomerDataTR';
         myVar = setInterval("myclick()", 500);
     });
+
     BindCustmerAccount();
 });
 
@@ -263,6 +264,7 @@ function validateCustomer() {
 
 function openpopup() {
     $("#warning").hide();
+
     $('#customerModal').modal({ backdrop: 'static', keyboard: false })
     $('#customerModal').modal('show');
 
@@ -306,9 +308,15 @@ function NewCustomer() {
             openpopup();
             $("#AccountId").attr("disabled", "disabled");
             $("#lblResidentidImagePath").hide();
-            $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
-            $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
-
+            //$("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
+            //$("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
+            $(".form_datetime").datepicker({
+                dateFormat: "mm/dd/yy",
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                changeMonth: true,
+                changeYear: true,
+            }).attr("readolny", true);
             $("#btnSave").show();
             $("#btnSave").text("Save");
             $("#btnpopupClose").text('Cancel').removeClass('btn-outline-secondary').addClass('btn-outline-danger').show();
@@ -422,8 +430,13 @@ function OpenUpdatepopUp(id) {
             // $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
             GetCityList();
 
-            $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
-            $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
+            //$("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
+            //$("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
+            $(".form_datetime").datepicker({
+                dateFormat: "mm/dd/yy",
+                showOtherMonths: true,
+                selectOtherMonths: true,
+            }).attr("readolny", true);
             if ($("#hfBirthPlace").val() || '' != '') {
                 $('#BirthPlace option').each(function (index, option) {
                     if (option.text == $("#hfBirthPlace").val()) {
@@ -534,7 +547,7 @@ function SaveData(action) {
                             if (resultData[i].ErrorMessage == "Resident Id already exists") {
                                 alert("Resident Id already exists");
                                 $("#warning").hide();
-                               // ResetCustomerFildes();
+                                // ResetCustomerFildes();
                                 break;
                             }
                             else {

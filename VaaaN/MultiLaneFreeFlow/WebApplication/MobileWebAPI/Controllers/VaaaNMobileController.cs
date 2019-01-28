@@ -552,7 +552,7 @@ namespace MobileWebAPI.Controllers
                             smsOutgoing.CustomerName = customerAccount.FirstName + " " + customerAccount.LastName;
                             smsOutgoing.MobileNumber = customerAccount.MobileNo;
                             smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                           
+
                             string Topup = Constants.TopUp;
                             CultureInfo culture = new CultureInfo("id-ID");
                             Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(objCustomerVehicleInformation.TopUpAmount.ToString()).ToString("C", culture).Replace("Rp", ""));
@@ -560,7 +560,7 @@ namespace MobileWebAPI.Controllers
                             Topup = Topup.Replace("[balance]", Decimal.Parse(objCustomerVehicleCBE.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
                             Topup = Topup.Replace("[transactiondatetime]", transcationDateTime.ToString());
                             Topup = Topup.Replace("tid", entryId.ToString());
-                          
+
                             smsOutgoing.MessageBody = Topup;
                             smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                             smsOutgoing.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
@@ -634,43 +634,46 @@ namespace MobileWebAPI.Controllers
 
                         try
                         {
-                            CustomerVehicleDetails objCustomerVehicleDetails = new CustomerVehicleDetails();
-                            objCustomerVehicleDetails.Balance = Convert.ToDecimal(dt.Rows[0]["ACCOUNT_BALANCE"].ToString());
-                            objCustomerVehicleDetails.Brand = dt.Rows[0]["BRAND"].ToString();
-                            objCustomerVehicleDetails.Category = dt.Rows[0]["VEHICLE_CATEGORY"].ToString();
-                            objCustomerVehicleDetails.Classification = Convert.ToInt32(dt.Rows[0]["VEHICLE_CLASS_ID"].ToString());
-                            objCustomerVehicleDetails.Color = dt.Rows[0]["VEHICLE_COLOR"].ToString();
-                            objCustomerVehicleDetails.CylinderCapacity = dt.Rows[0]["CYCLINDER_CAPACITY"].ToString();
-                            objCustomerVehicleDetails.EngineNumber = dt.Rows[0]["ENGINE_NUMBER"].ToString();
-                            objCustomerVehicleDetails.ExceptionFlag = dt.Rows[0]["EXCEPTION_FLAG_NAME"].ToString();
-                            objCustomerVehicleDetails.FrameNumber = dt.Rows[0]["FRAME_NUMBER"].ToString();
-                            objCustomerVehicleDetails.FuelType = dt.Rows[0]["FUEL_TYPE_NAME"].ToString();
-                            objCustomerVehicleDetails.LicensePlateColor = dt.Rows[0]["LICENCE_PLATE_COLOR_NAME"].ToString();
-                            objCustomerVehicleDetails.LocationCode = dt.Rows[0]["LOCATION_CODE"].ToString();
-                            objCustomerVehicleDetails.ManufactureYear = Convert.ToInt32(dt.Rows[0]["MANUFACTURING_YEAR"].ToString());
-                            objCustomerVehicleDetails.Model = dt.Rows[0]["MODEL_NO"].ToString();
-                            objCustomerVehicleDetails.OwnerAddress = dt.Rows[0]["OWNER_ADDRESS"].ToString();
-                            objCustomerVehicleDetails.OwnerName = dt.Rows[0]["OWNER_NAME"].ToString();
-                            objCustomerVehicleDetails.RegistrationQueueNumber = dt.Rows[0]["REG_QUEUE_NO"].ToString();
-                            objCustomerVehicleDetails.RegistrationYear = Convert.ToInt32(dt.Rows[0]["REGISTRATION_YEAR"].ToString());
-                            objCustomerVehicleDetails.ResidentIdentityNumber = dt.Rows[0]["RESIDENT_ID"].ToString();
-                            objCustomerVehicleDetails.Status = dt.Rows[0]["QUEUE_STATUS"].ToString();
-                            objCustomerVehicleDetails.TIDFront = dt.Rows[0]["TID_FRONT"].ToString();
-                            objCustomerVehicleDetails.TIDRear = dt.Rows[0]["TID_REAR"].ToString();
-                            objCustomerVehicleDetails.Type = dt.Rows[0]["VEHICLE_TYPE"].ToString();
-                            objCustomerVehicleDetails.ValidUntil = dt.Rows[0]["VALID_UNTIL"].ToString();
-                            if (!string.IsNullOrEmpty(objCustomerVehicleDetails.ValidUntil))
-                            {
-                                objCustomerVehicleDetails.ValidUntil = Convert.ToDateTime(objCustomerVehicleDetails.ValidUntil).ToString("yyyy-MM-dd");
-                            }
-                            objCustomerVehicleDetails.VehicleImageFront = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_FRONT"].ToString();
-                            objCustomerVehicleDetails.VehicleImageLeft = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_LEFT"].ToString();
-                            objCustomerVehicleDetails.VehicleImageRear = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_REAR"].ToString();
-                            objCustomerVehicleDetails.VehicleImageRight = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_RIGHT"].ToString();
-                            objCustomerVehicleDetails.VehicleOwnershipDocumentNumber = dt.Rows[0]["VEHICLE_OWNERSHIP_NO"].ToString();
-                            objCustomerVehicleDetails.VehicleRegistrationCertificateImage = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLE_RC_NO_PATH"].ToString();
-                            objCustomerVehicleDetails.VehicleRegistrationCertificateNumber = dt.Rows[0]["VEHICLE_RC_NO"].ToString();
-                            objCustomerVehicleDetails.VehicleRegistrationNumber = dt.Rows[0]["VEH_REG_NO"].ToString();
+                            List<CustomerVehicleDetails> objCustomerVehicleDetails = new List<CustomerVehicleDetails>();
+                            CustomerVehicleDetails objCustomerVehicleDetail = new CustomerVehicleDetails();
+                            objCustomerVehicleDetails = ConvertDataTableToList(dt);
+                            objCustomerVehicleDetail = objCustomerVehicleDetails[0];
+                            //objCustomerVehicleDetails.Balance = Convert.ToDecimal(dt.Rows[0]["ACCOUNT_BALANCE"].ToString());
+                            //objCustomerVehicleDetails.Brand = dt.Rows[0]["BRAND"].ToString();
+                            //objCustomerVehicleDetails.Category = dt.Rows[0]["VEHICLE_CATEGORY"].ToString();
+                            //objCustomerVehicleDetails.Classification = Convert.ToInt32(dt.Rows[0]["VEHICLE_CLASS_ID"].ToString());
+                            //objCustomerVehicleDetails.Color = dt.Rows[0]["VEHICLE_COLOR"].ToString();
+                            //objCustomerVehicleDetails.CylinderCapacity = dt.Rows[0]["CYCLINDER_CAPACITY"].ToString();
+                            //objCustomerVehicleDetails.EngineNumber = dt.Rows[0]["ENGINE_NUMBER"].ToString();
+                            //objCustomerVehicleDetails.ExceptionFlag = dt.Rows[0]["EXCEPTION_FLAG_NAME"].ToString();
+                            //objCustomerVehicleDetails.FrameNumber = dt.Rows[0]["FRAME_NUMBER"].ToString();
+                            //objCustomerVehicleDetails.FuelType = dt.Rows[0]["FUEL_TYPE_NAME"].ToString();
+                            //objCustomerVehicleDetails.LicensePlateColor = dt.Rows[0]["LICENCE_PLATE_COLOR_NAME"].ToString();
+                            //objCustomerVehicleDetails.LocationCode = dt.Rows[0]["LOCATION_CODE"].ToString();
+                            //objCustomerVehicleDetails.ManufactureYear = Convert.ToInt32(dt.Rows[0]["MANUFACTURING_YEAR"].ToString());
+                            //objCustomerVehicleDetails.Model = dt.Rows[0]["MODEL_NO"].ToString();
+                            //objCustomerVehicleDetails.OwnerAddress = dt.Rows[0]["OWNER_ADDRESS"].ToString();
+                            //objCustomerVehicleDetails.OwnerName = dt.Rows[0]["OWNER_NAME"].ToString();
+                            //objCustomerVehicleDetails.RegistrationQueueNumber = dt.Rows[0]["REG_QUEUE_NO"].ToString();
+                            //objCustomerVehicleDetails.RegistrationYear = Convert.ToInt32(dt.Rows[0]["REGISTRATION_YEAR"].ToString());
+                            //objCustomerVehicleDetails.ResidentIdentityNumber = dt.Rows[0]["RESIDENT_ID"].ToString();
+                            //objCustomerVehicleDetails.Status = dt.Rows[0]["QUEUE_STATUS"].ToString();
+                            //objCustomerVehicleDetails.TIDFront = dt.Rows[0]["TID_FRONT"].ToString();
+                            //objCustomerVehicleDetails.TIDRear = dt.Rows[0]["TID_REAR"].ToString();
+                            //objCustomerVehicleDetails.Type = dt.Rows[0]["VEHICLE_TYPE"].ToString();
+                            //objCustomerVehicleDetails.ValidUntil = dt.Rows[0]["VALID_UNTIL"].ToString();
+                            //if (!string.IsNullOrEmpty(objCustomerVehicleDetails.ValidUntil))
+                            //{
+                            //    objCustomerVehicleDetails.ValidUntil = Convert.ToDateTime(objCustomerVehicleDetails.ValidUntil).ToString("yyyy-MM-dd");
+                            //}
+                            //objCustomerVehicleDetails.VehicleImageFront = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_FRONT"].ToString();
+                            //objCustomerVehicleDetails.VehicleImageLeft = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_LEFT"].ToString();
+                            //objCustomerVehicleDetails.VehicleImageRear = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_REAR"].ToString();
+                            //objCustomerVehicleDetails.VehicleImageRight = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_RIGHT"].ToString();
+                            //objCustomerVehicleDetails.VehicleOwnershipDocumentNumber = dt.Rows[0]["VEHICLE_OWNERSHIP_NO"].ToString();
+                            //objCustomerVehicleDetails.VehicleRegistrationCertificateImage = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLE_RC_NO_PATH"].ToString();
+                            //objCustomerVehicleDetails.VehicleRegistrationCertificateNumber = dt.Rows[0]["VEHICLE_RC_NO"].ToString();
+                            //objCustomerVehicleDetails.VehicleRegistrationNumber = dt.Rows[0]["VEH_REG_NO"].ToString();
                             sJSONResponse = JsonConvert.SerializeObject(objCustomerVehicleDetails);
                             return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
                         }
@@ -695,6 +698,119 @@ namespace MobileWebAPI.Controllers
                 catch (Exception ex)
                 {
                     Log("Exception in Inquiry Customer Vehicle Detail. : " + ex.ToString());
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Something went wrong.";
+                    objResponseMessage.Add(objModelState);
+                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                }
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+        }
+        #endregion
+
+
+        #region API for Customer Vehicle Details
+        [Route("VaaaN/IndonesiaMLFFMobileApi/InquiryCustomerVehicleList")]
+        [HttpPost]
+        [Filters.ValidateModel]
+        public HttpResponseMessage InquiryCustomerVehicleList(CustomerInformation objCustomerInformation)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    dt = CustomerVehicleBLL.CustomerVehicleDetailsByResidentId(objCustomerInformation.ResidentIdentityNumber);
+                    if (dt.Rows.Count > 0)
+                    {
+
+                        try
+                        {
+                            List<CustomerVehicleDetails> customerVehicleList = new List<CustomerVehicleDetails>();
+                            customerVehicleList = ConvertDataTableToList(dt);
+                            sJSONResponse = JsonConvert.SerializeObject(customerVehicleList);
+                            return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log("Exception in Inquiry Customer Vehicle Detail. : " + ex.ToString());
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong.";
+                            objResponseMessage.Add(objModelState);
+                            sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                        }
+                    }
+                    else {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "No vehcile found.";
+                        objResponseMessage.Add(objModelState);
+                        sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log("Exception in Inquiry Customer Vehicle Detail. : " + ex.ToString());
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Something went wrong.";
+                    objResponseMessage.Add(objModelState);
+                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                }
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+        }
+        #endregion
+
+        #region API for Customer Start Driving
+        [Route("VaaaN/IndonesiaMLFFMobileApi/StartDriving")]
+        [HttpPost]
+        [Filters.ValidateModel]
+        public HttpResponseMessage StartDriving(CustomerTIDDetails objCustomerTIDDetails)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    dt = CustomerVehicleBLL.CustomerVehicleDetailsByTID(objCustomerTIDDetails.TID);
+                    if (dt.Rows.Count > 0)
+                    {
+
+                        try
+                        {
+                            List<CustomerVehicleDetails> customerVehicleList = new List<CustomerVehicleDetails>();
+                            customerVehicleList = ConvertDataTableToList(dt);
+                            sJSONResponse = JsonConvert.SerializeObject(customerVehicleList);
+                            return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log("Exception in Inquiry Customer Vehicle Detail. : " + ex.ToString());
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong.";
+                            objResponseMessage.Add(objModelState);
+                            sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                        }
+                    }
+                    else {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "No vehcile found.";
+                        objResponseMessage.Add(objModelState);
+                        sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log("Exception in Start Driving. : " + ex.ToString());
                     ModelStateList objModelState = new ModelStateList();
                     objModelState.ErrorMessage = "Something went wrong.";
                     objResponseMessage.Add(objModelState);
@@ -833,6 +949,128 @@ namespace MobileWebAPI.Controllers
         public void Log(String ExceptionMsg)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(ExceptionMsg, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.MobileWebAPI);
+        }
+
+        private static List<CustomerVehicleDetails> ConvertDataTableToList(DataTable dt)
+        {
+            List<CustomerVehicleDetails> customerVehicleList = new List<CustomerVehicleDetails>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                customerVehicleList.Add(ConvertDataTableToCBE(dr));
+            }
+
+            return customerVehicleList;
+        }
+
+
+        private static CustomerVehicleDetails ConvertDataTableToCBE(DataRow row)
+        {
+
+            CustomerVehicleDetails vehicle = new CustomerVehicleDetails();
+
+            if (row["ENTRY_ID"] != DBNull.Value)
+                vehicle.VehicleId = Convert.ToInt32(row["ENTRY_ID"]);
+            if (row["VEH_REG_NO"] != DBNull.Value)
+                vehicle.VehicleRegistrationNumber = Convert.ToString(row["VEH_REG_NO"]);
+
+            if (row["VEHICLE_CLASS_ID"] != DBNull.Value)
+                vehicle.Classification = Convert.ToInt32(row["VEHICLE_CLASS_ID"]);
+
+            if (row["VEHICLE_RC_NO"] != DBNull.Value)
+                vehicle.VehicleRegistrationCertificateNumber = Convert.ToString(row["VEHICLE_RC_NO"]);
+
+            if (row["OWNER_NAME"] != DBNull.Value)
+                vehicle.OwnerName = Convert.ToString(row["OWNER_NAME"]);
+
+            if (row["OWNER_ADDRESS"] != DBNull.Value)
+                vehicle.OwnerAddress = Convert.ToString(row["OWNER_ADDRESS"]);
+
+            if (row["BRAND"] != DBNull.Value)
+                vehicle.Brand = Convert.ToString(row["BRAND"]);
+
+            if (row["VEHICLE_TYPE"] != DBNull.Value)
+                vehicle.Type = Convert.ToString(row["VEHICLE_TYPE"]);
+
+            if (row["VEHICLE_CATEGORY"] != DBNull.Value)
+                vehicle.Category = Convert.ToString(row["VEHICLE_CATEGORY"]);
+
+            if (row["MODEL_NO"] != DBNull.Value)
+                vehicle.Model = Convert.ToString(row["MODEL_NO"]);
+
+            if (row["MANUFACTURING_YEAR"] != DBNull.Value)
+                vehicle.ManufactureYear = Convert.ToInt32(row["MANUFACTURING_YEAR"]);
+
+            if (row["CYCLINDER_CAPACITY"] != DBNull.Value)
+                vehicle.CylinderCapacity = Convert.ToString(row["CYCLINDER_CAPACITY"]);
+
+            if (row["FRAME_NUMBER"] != DBNull.Value)
+                vehicle.FrameNumber = Convert.ToString(row["FRAME_NUMBER"]);
+
+            if (row["ENGINE_NUMBER"] != DBNull.Value)
+                vehicle.EngineNumber = Convert.ToString(row["ENGINE_NUMBER"]);
+
+            if (row["VEHICLE_COLOR"] != DBNull.Value)
+                vehicle.Color = Convert.ToString(row["VEHICLE_COLOR"]);
+
+            if (row["REGISTRATION_YEAR"] != DBNull.Value)
+                vehicle.RegistrationYear = Convert.ToInt32(row["REGISTRATION_YEAR"]);
+
+            if (row["VEHICLE_OWNERSHIP_NO"] != DBNull.Value)
+                vehicle.VehicleOwnershipDocumentNumber = Convert.ToString(row["VEHICLE_OWNERSHIP_NO"]);
+
+            if (row["LOCATION_CODE"] != DBNull.Value)
+                vehicle.LocationCode = Convert.ToString(row["LOCATION_CODE"]);
+
+            if (row["REG_QUEUE_NO"] != DBNull.Value)
+                vehicle.RegistrationQueueNumber = Convert.ToString(row["REG_QUEUE_NO"]);
+
+            if (row["VEHICLEIMAGE_FRONT"] != DBNull.Value)
+                vehicle.VehicleImageFront = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + Convert.ToString(row["VEHICLEIMAGE_FRONT"]);
+
+            if (row["VEHICLEIMAGE_REAR"] != DBNull.Value)
+                vehicle.VehicleImageRear = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + Convert.ToString(row["VEHICLEIMAGE_REAR"]);
+
+            if (row["VEHICLEIMAGE_RIGHT"] != DBNull.Value)
+                vehicle.VehicleImageRight = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + Convert.ToString(row["VEHICLEIMAGE_RIGHT"]);
+
+            if (row["VEHICLEIMAGE_LEFT"] != DBNull.Value)
+                vehicle.VehicleImageLeft = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + Convert.ToString(row["VEHICLEIMAGE_LEFT"]);
+
+            if (row["VEHICLE_RC_NO_PATH"] != DBNull.Value)
+                vehicle.VehicleRegistrationCertificateImage = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + Convert.ToString(row["VEHICLE_RC_NO_PATH"]);
+
+            if (row["TID_FRONT"] != DBNull.Value)
+                vehicle.TIDFront = Convert.ToString(row["TID_FRONT"]);
+
+            if (row["TID_REAR"] != DBNull.Value)
+                vehicle.TIDRear = Convert.ToString(row["TID_REAR"]);
+
+            if (row["ACCOUNT_BALANCE"] != DBNull.Value)
+                vehicle.Balance = Convert.ToDecimal(row["ACCOUNT_BALANCE"]);
+
+            if (row["EXCEPTION_FLAG_NAME"] != DBNull.Value)
+                vehicle.ExceptionFlag = Convert.ToString(row["EXCEPTION_FLAG_NAME"]);
+
+            if (row["FUEL_TYPE_NAME"] != DBNull.Value)
+                vehicle.FuelType = Convert.ToString(row["FUEL_TYPE_NAME"]);
+
+            if (row["LICENCE_PLATE_COLOR_NAME"] != DBNull.Value)
+                vehicle.LicensePlateColor = Convert.ToString(row["LICENCE_PLATE_COLOR_NAME"]);
+
+            if (row["QUEUE_STATUS"] != DBNull.Value)
+                vehicle.Status = Convert.ToString(row["QUEUE_STATUS"]);
+
+            if (row["VEHICLE_TYPE"] != DBNull.Value)
+                vehicle.Type = Convert.ToString(row["VEHICLE_TYPE"]);
+
+            if (row["VALID_UNTIL"] != DBNull.Value)
+                vehicle.ValidUntil = Convert.ToString(row["VALID_UNTIL"]);
+
+            if (row["RESIDENT_ID"] != DBNull.Value)
+                vehicle.ResidentIdentityNumber = Convert.ToString(row["RESIDENT_ID"]);
+
+            return vehicle;
         }
 
         #endregion

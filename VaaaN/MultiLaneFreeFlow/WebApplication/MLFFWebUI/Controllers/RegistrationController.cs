@@ -82,7 +82,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> provincelist = new List<SelectListItem>();
             List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
 
-            provincelist.Add(new SelectListItem() { Text = "--Select--", Value = "0" });
+            provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
             {
                 provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
@@ -100,7 +100,7 @@ namespace MLFFWebUI.Controllers
             #region Gender
             List<SelectListItem> genderList = new List<SelectListItem>();
             Array argender = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Gender));
-
+            genderList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < argender.Length; i++)
             {
                 genderList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GenderName[i], Value = System.Convert.ToString((int)argender.GetValue(i)) });
@@ -112,7 +112,7 @@ namespace MLFFWebUI.Controllers
             #region MaritalStatus
             List<SelectListItem> maritalstatusList = new List<SelectListItem>();
             Array armaritalstatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatus));
-
+            maritalstatusList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < armaritalstatus.Length; i++)
             {
                 maritalstatusList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatusName[i], Value = System.Convert.ToString((int)armaritalstatus.GetValue(i)) });
@@ -124,7 +124,7 @@ namespace MLFFWebUI.Controllers
             #region Nationality
             List<SelectListItem> nationalityList = new List<SelectListItem>();
             Array arnationality = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Nationality));
-
+            nationalityList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < arnationality.Length; i++)
             {
                 nationalityList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.NationalityName[i], Value = System.Convert.ToString((int)arnationality.GetValue(i)) });
@@ -742,7 +742,7 @@ namespace MLFFWebUI.Controllers
             List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
             vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-            vehicleclassList.Add(new SelectListItem() { Text = "All Class", Value = "0" });
+            vehicleclassList.Add(new SelectListItem() { Text = "", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
             {
                 vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -754,7 +754,7 @@ namespace MLFFWebUI.Controllers
             #region Queue Status
             List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
             Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
-
+            customerQueueStatus.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < arStatus.Length; i++)
             {
                 customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
@@ -766,7 +766,7 @@ namespace MLFFWebUI.Controllers
             #region Exception Flag
             List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
             Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
-
+            ExceptionFlagList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < ExceptionFlagListart.Length; i++)
             {
                 ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
@@ -778,7 +778,7 @@ namespace MLFFWebUI.Controllers
             #region Fuel Type
             List<SelectListItem> fuelTypeList = new List<SelectListItem>();
             Array arcfuelType = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelType));
-
+            fuelTypeList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < arcfuelType.Length; i++)
             {
                 fuelTypeList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelTypeName[i], Value = System.Convert.ToString((int)arcfuelType.GetValue(i)) });
@@ -790,7 +790,7 @@ namespace MLFFWebUI.Controllers
             #region Licence Plate Color
             List<SelectListItem> licencePlateColorList = new List<SelectListItem>();
             Array arlicencePlateColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColor));
-
+            licencePlateColorList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < arlicencePlateColor.Length; i++)
             {
                 licencePlateColorList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColorName[i], Value = System.Convert.ToString((int)arlicencePlateColor.GetValue(i)) });

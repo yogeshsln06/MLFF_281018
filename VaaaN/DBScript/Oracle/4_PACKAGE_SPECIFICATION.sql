@@ -1,4 +1,4 @@
-/* Formatted on 1/27/2019 4:52:46 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 28/01/2019 23:27:30 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -549,13 +549,15 @@ AS
                                    P_PLAZA_ID            IN NUMBER,
                                    P_LANE_ID             IN NUMBER,
                                    P_TRANSACTION_ID      IN NUMBER,
-                                   P_NF_ENTRY_ID_FRONT   IN NUMBER);
+                                   P_NF_ENTRY_ID_FRONT   IN NUMBER,
+                                   P_VEHICLESPEED        IN NUMBER);
 
    PROCEDURE TRAN_UPDATE_NF_REAR (P_TMS_ID             IN NUMBER,
                                   P_PLAZA_ID           IN NUMBER,
                                   P_LANE_ID            IN NUMBER,
                                   P_TRANSACTION_ID     IN NUMBER,
-                                  P_NF_ENTRY_ID_REAR   IN NUMBER);
+                                  P_NF_ENTRY_ID_REAR   IN NUMBER,
+                                  P_VEHICLESPEED       IN NUMBER);
 
    PROCEDURE TRAN_MARK_AS_VIOLATION (P_TMS_ID           IN NUMBER,
                                      P_PLAZA_ID         IN NUMBER,
@@ -1095,6 +1097,11 @@ AS
                                        P_RESIDENT_ID     IN     NVARCHAR2,
                                        P_VEHICLE_RC_NO   IN     NVARCHAR2,
                                        CUR_OUT              OUT T_CURSOR);
+
+   PROCEDURE VEHICLE_DETAILS_RESIDENTID (P_RESIDENT_ID   IN     NVARCHAR2,
+                                         CUR_OUT            OUT T_CURSOR);
+
+   PROCEDURE VEHICLE_DETAILS_TID (P_TID IN NVARCHAR2, CUR_OUT OUT T_CURSOR);
 
    PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
                                     CUR_OUT                 OUT T_CURSOR);

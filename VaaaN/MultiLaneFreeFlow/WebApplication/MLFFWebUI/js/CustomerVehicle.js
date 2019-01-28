@@ -763,10 +763,10 @@ function SaveData(action) {
             var ImageRightChnage = true;
             var RCNumberImageChnage = true;
             var PostURL = '/Registration/CustomerVehicleUpdate';
-            var VehicleImageFront = $("#VehicleImageFrontPath").text().trim();
-            var VehicleImageRear = $("#VehicleImageRearPath").text().trim();
-            var VehicleImageRight = $("#VehicleImageRightPath").text().trim();
-            var VehicleImageLeft = $("#VehicleImageLeftPath").text().trim();
+            var VehicleImageFront = $("#VehicleImageFrontPath").attr('href');//$("#VehicleImageFrontPath").text().trim();
+            var VehicleImageRear = $("#VehicleImageRearPath").attr('href'); //$("#VehicleImageRearPath").text().trim();
+            var VehicleImageRight = $("#VehicleImageRightPath").attr('href'); //$("#VehicleImageRightPath").text().trim();
+            var VehicleImageLeft = $("#VehicleImageLeftPath").attr('href'); //$("#VehicleImageLeftPath").text().trim();
             var VehicleRCNumberImagePath = $("#VehicleRCNumberImagePathPath").text().trim();
             if (EntryId == '') {
                 EntryId = 0;
@@ -883,7 +883,13 @@ function SaveData(action) {
                         $("#warning").show();
                     }
                 },
-                error: function (ex) {
+                error: function (xhr) {
+                    if (xhr.responseText.toLowerCase().indexOf('length') > 0)
+                        alert("Please select small size image")
+                    else {
+                        alert('somthing went wrong!')
+                    }
+                    // alert(xhr.responseText)
                     $(".animationload").hide();
                 }
             });
@@ -1445,7 +1451,7 @@ function ResetCustFildes() {
     $("#VehicleRCNumberImagePath").next().find('span').text('Attach File');
     $("#VehicleRCNumberImagePath").parent().find('img').attr('src', '');
 
-   
+
     //$("#ResidentId").val(0);
     //$("#AccountId").val('');
 }

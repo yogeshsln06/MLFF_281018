@@ -123,7 +123,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
 
             transaction.CreationDate = System.DateTime.Now;
             transaction.ModificationDate = System.DateTime.Now;
-
+            transaction.VehicleSpeed = nfp.VehicleSpeed;
             transaction.IsRegistered = isRegistered;
 
             return TransactionDAL.InsertByNFPFront(transaction);
@@ -151,7 +151,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             transaction.IsTransfered = Convert.ToInt32(Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred);
             transaction.IsViolation = -1;
             //transaction.ModifierId = 0;//will be updated later
-
+            transaction.VehicleSpeed = nfp.VehicleSpeed;
             transaction.CreationDate = System.DateTime.Now;
             transaction.ModificationDate = System.DateTime.Now;
 

@@ -23,7 +23,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <select id="ResidentId" name="ResidentId" class="form-control" onchange="GetCustomerDetails(this);" data-val="true" data-val-required="The Resident ID field is required." value="">
-                            <option value="0">Select Resident Id</option>
+                            <option value="0"></option>
                         </select>
                         @Html.ValidationMessageFor(model => model.ResidentId, "", new { @class = "text-danger" })
                     </div>
@@ -377,7 +377,7 @@
     </fieldset>
 }
 <div class="modal-footer">
-    <div class="alert alert-warning" role="alert" id="warning">
+    <div class="alert-warning" role="alert" id="warning">
     </div>
     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
     <button type="button" class="btn btn-outline-danger" id="btnpopupCancel" onclick="ResetCustFildes();">Cancel</button>

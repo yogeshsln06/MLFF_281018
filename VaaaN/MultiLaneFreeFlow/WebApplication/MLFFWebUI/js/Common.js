@@ -156,13 +156,13 @@ function GetCityList() {
             $('#PostalCode').val('');
 
             $("#CityId").append
-               ($('<option></option>').val(0).html('--Select Kabupaten/Kota--'));
+               ($('<option></option>').val(0).html(''));
 
             $("#DistrictId").append
-           ($('<option></option>').val(0).html('--Select Kecamatan--'));
+           ($('<option></option>').val(0).html(''));
 
             $("#SubDistrictId").append
-          ($('<option zipcode=""></option>').val(0).html('--Select Kelurahan/Desa--'));
+          ($('<option zipcode=""></option>').val(0).html(''));
 
             $.each($.parseJSON(result), function (i, city) {
                 $("#CityId").append
@@ -196,10 +196,10 @@ function GetDistrictList() {
             $("#SubDistrictId").html("");
             $('#PostalCode').val('');
             $("#DistrictId").append
-            ($('<option></option>').val(0).html('--Select Kecamatan--'));
+            ($('<option></option>').val(0).html(''));
 
             $("#SubDistrictId").append
-        ($('<option zipcode=""></option>').val(0).html('--Select Kelurahan/Desa--'));
+        ($('<option zipcode=""></option>').val(0).html(''));
             $.each($.parseJSON(result), function (i, district) {
                 $("#DistrictId").append
                 ($('<option></option>').val(district.DistrictId).html(district.DistrictName))
@@ -233,7 +233,7 @@ function GetSubDistrictList() {
             $("#SubDistrictId").html("");
             $('#PostalCode').val('');
             $("#SubDistrictId").append
-            ($('<option zipcode=""></option>').val(0).html('--Select Kelurahan/Desa--'));
+            ($('<option zipcode=""></option>').val(0).html(''));
             $.each($.parseJSON(result), function (i, subdistrict) {
                 $("#SubDistrictId").append
                 ($('<option zipcode="' + subdistrict.ZipCode + '"></option>').val(subdistrict.SubDistrictId).html(subdistrict.SubDistrictName))

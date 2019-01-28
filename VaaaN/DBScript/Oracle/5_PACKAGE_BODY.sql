@@ -1,4 +1,4 @@
-/* Formatted on 1/27/2019 4:53:07 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 28/01/2019 23:27:58 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2281,11 +2281,25 @@ AS
                                    P_PLAZA_ID            IN NUMBER,
                                    P_LANE_ID             IN NUMBER,
                                    P_TRANSACTION_ID      IN NUMBER,
-                                   P_NF_ENTRY_ID_FRONT   IN NUMBER)
+                                   P_NF_ENTRY_ID_FRONT   IN NUMBER,
+                                   P_VEHICLESPEED        IN NUMBER)
    AS
+      LastSpeed   NUMBER;
    BEGIN
+      SELECT NVL (VEHICLESPEED, 0)
+        INTO LastSpeed
+        FROM TBL_TRANSACTION
+       WHERE TRANSACTION_ID = P_TRANSACTION_ID;
+
+      IF (P_VEHICLESPEED > LastSpeed)
+      THEN
+         LastSpeed := P_VEHICLESPEED;
+      END IF;
+
       UPDATE TBL_TRANSACTION
-         SET NF_ENTRY_ID_FRONT = P_NF_ENTRY_ID_FRONT
+         SET NF_ENTRY_ID_FRONT = P_NF_ENTRY_ID_FRONT,
+             LANE_ID = P_LANE_ID,
+             VEHICLESPEED = LastSpeed
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
@@ -2298,11 +2312,25 @@ AS
                                   P_PLAZA_ID           IN NUMBER,
                                   P_LANE_ID            IN NUMBER,
                                   P_TRANSACTION_ID     IN NUMBER,
-                                  P_NF_ENTRY_ID_REAR   IN NUMBER)
+                                  P_NF_ENTRY_ID_REAR   IN NUMBER,
+                                  P_VEHICLESPEED       IN NUMBER)
    AS
+      LastSpeed   NUMBER;
    BEGIN
+      SELECT NVL (VEHICLESPEED, 0)
+        INTO LastSpeed
+        FROM TBL_TRANSACTION
+       WHERE TRANSACTION_ID = P_TRANSACTION_ID;
+
+      IF (P_VEHICLESPEED > LastSpeed)
+      THEN
+         LastSpeed := P_VEHICLESPEED;
+      END IF;
+
       UPDATE TBL_TRANSACTION
-         SET NF_ENTRY_ID_REAR = P_NF_ENTRY_ID_REAR
+         SET NF_ENTRY_ID_REAR = P_NF_ENTRY_ID_REAR,
+             LANE_ID = P_LANE_ID,
+             VEHICLESPEED = LastSpeed
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
@@ -3172,7 +3200,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
        T.LANE_ID,
        T.LANE_NAME,
        T.TRANSACTION_ID,
-       T.TRANSACTION_DATETIME,
+       T.F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
        T.CT_ENTRY_ID,
        CTP.OBJECT_ID AS TAG_ID,
        CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
@@ -6548,7 +6576,187 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 AND LOWER (CA.RESIDENT_ID) = LOWER (P_RESIDENT_ID);
    END VALIDATE_VEHICLE_DETAILS;
 
+   PROCEDURE VEHICLE_DETAILS_RESIDENTID (P_RESIDENT_ID   IN     NVARCHAR2,
+                                         CUR_OUT            OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                VC.VEHICLE_CLASS_NAME,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                CV.VEHICLE_RC_NO,
+                CV.OWNER_NAME,
+                CV.OWNER_ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                (CASE CV.FUEL_TYPE
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
+                    ELSE 'Unknown'
+                 END)
+                   FUEL_TYPE_NAME,
+                CV.LICENCE_PLATE_COLOR,
+                (CASE CV.LICENCE_PLATE_COLOR
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
+                    ELSE 'Unknown'
+                 END)
+                   LICENCE_PLATE_COLOR_NAME,
+                CV.REGISTRATION_YEAR,
+                CV.VEHICLE_OWNERSHIP_NO,
+                CV.LOCATION_CODE,
+                CV.REG_QUEUE_NO,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_RIGHT,
+                CV.VEHICLEIMAGE_LEFT,
+                CV.VEHICLE_RC_NO_PATH,
+                CV.EXCEPTION_FLAG,
+                (CASE CV.EXCEPTION_FLAG
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
+                    ELSE 'Unknown'
+                 END)
+                   EXCEPTION_FLAG_NAME,
+                CV.STATUS,
+                CV.VALID_UNTIL,
+                CV.TID_FRONT,
+                CV.TID_REAR,
+                CV.ACCOUNT_BALANCE,
+                CV.REGISTRATION_THROUGH,
+                CV.IS_DOC_VERIFIED,
+                CV.QUEUE_STATUS,
+                (CASE CV.QUEUE_STATUS
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
+                    ELSE 'Unknown'
+                 END)
+                   QUEUE_STATUS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CA.RESIDENT_ID,
+                CA.EMAIL_ID,
+                CA.MOB_NUMBER
+           FROM TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                   ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                   ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+          WHERE LOWER (CA.RESIDENT_ID) = LOWER (P_RESIDENT_ID);
+   END VEHICLE_DETAILS_RESIDENTID;
 
+   PROCEDURE VEHICLE_DETAILS_TID (P_TID IN NVARCHAR2, CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                VC.VEHICLE_CLASS_NAME,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                CV.VEHICLE_RC_NO,
+                CV.OWNER_NAME,
+                CV.OWNER_ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                (CASE CV.FUEL_TYPE
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
+                    ELSE 'Unknown'
+                 END)
+                   FUEL_TYPE_NAME,
+                CV.LICENCE_PLATE_COLOR,
+                (CASE CV.LICENCE_PLATE_COLOR
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
+                    ELSE 'Unknown'
+                 END)
+                   LICENCE_PLATE_COLOR_NAME,
+                CV.REGISTRATION_YEAR,
+                CV.VEHICLE_OWNERSHIP_NO,
+                CV.LOCATION_CODE,
+                CV.REG_QUEUE_NO,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_RIGHT,
+                CV.VEHICLEIMAGE_LEFT,
+                CV.VEHICLE_RC_NO_PATH,
+                CV.EXCEPTION_FLAG,
+                (CASE CV.EXCEPTION_FLAG
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
+                    ELSE 'Unknown'
+                 END)
+                   EXCEPTION_FLAG_NAME,
+                CV.STATUS,
+                CV.VALID_UNTIL,
+                CV.TID_FRONT,
+                CV.TID_REAR,
+                CV.ACCOUNT_BALANCE,
+                CV.REGISTRATION_THROUGH,
+                CV.IS_DOC_VERIFIED,
+                CV.QUEUE_STATUS,
+                (CASE CV.QUEUE_STATUS
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
+                    ELSE 'Unknown'
+                 END)
+                   QUEUE_STATUS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CA.RESIDENT_ID,
+                CA.EMAIL_ID,
+                CA.MOB_NUMBER
+           FROM TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                   ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                   ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+          WHERE    LOWER (CV.TID_FRONT) = LOWER (P_TID)
+                OR LOWER (CV.TID_REAR) = LOWER (P_TID);
+   END VEHICLE_DETAILS_TID;
 
    PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
                                     CUR_OUT                 OUT T_CURSOR)
@@ -6993,8 +7201,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   NVL (ACC_HIST.AMOUNT, 0) AS AMOUNT_CHARGED,
                   NVL (CUST_ACC.ACCOUNT_BALANCE, 0) AS BALANCE,
                   (CASE NVL (ACC_HIST.SMS_SENT, 0)
-                      WHEN 1 THEN 'TRUE'
-                      ELSE 'FALSE'
+                      WHEN 1 THEN 'SENT'
+                      ELSE 'NOT SENT'
                    END)
                      AS SMS_NOTIFICATION,
                   NFP.PLATE_THUMBNAIL AS FRONT_PLATE_IMAGE,

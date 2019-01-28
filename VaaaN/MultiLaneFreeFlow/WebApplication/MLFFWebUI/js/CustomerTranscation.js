@@ -523,7 +523,7 @@ function BindAssociatedData(Seconds, dtCount) {
                         },
                         processing: true,
                         scrollCollapse: true,
-                        stateSave: true,
+                        stateSave: false,
                         autoWidth: false,
                         paging: false,
                         info: false,
@@ -718,7 +718,7 @@ function Complete() {
             vehicleClassID: $('#ddlAuditedVehicleClass').val(),
             Seconds: Seconds,
         }
-        $('#loader').show('fadeOut');
+        $(".animationload").show();
         $.ajax({
             type: "POST",
             url: "CompleteReviewed",
@@ -890,6 +890,7 @@ function BindReviewedFirstLoad() {
     thId = 'tblReviewedDataTR';
     myVar = setInterval("myclick()", 500);
 }
+
 function BindReviewedFirstLoad1() {
     pageload = 1;
     $(".animationload").show();

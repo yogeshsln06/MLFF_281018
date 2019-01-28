@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -132,6 +133,20 @@ namespace MobileWebAPI.Models
 
     }
 
+    public class CustomerInformation
+    {
+        [Display(Name = "Resident Identity Number")]
+        [Required(ErrorMessage = "The resident identity number is required")]
+        public String ResidentIdentityNumber { get; set; }
+    }
+
+    public class CustomerTIDDetails
+    {
+        [Display(Name = "TID")]
+        [Required(ErrorMessage = "The TID is required")]
+        public String TID { get; set; }
+    }
+
     public class VehicleTransactionHistorySummary
     {
         public string ResidentIdentityNumber { get; set; }
@@ -180,7 +195,37 @@ namespace MobileWebAPI.Models
         public string TIDRear { get; set; }
         public Int32 Classification { get; set; }
         public Decimal Balance { get; set; }
+        public Int32 VehicleId { get; set; }
 
+    }
+
+
+    public class CustomerVehicleDetailCollection : CollectionBase
+    {
+        public CustomerVehicleDetailCollection()
+        {
+        }
+        public CustomerVehicleDetails this[int index]
+        {
+            get { return (CustomerVehicleDetails)List[index]; }
+            set { List[index] = value; }
+        }
+        public int Add(CustomerVehicleDetails value)
+        {
+            return (List.Add(value));
+        }
+        public int IndexOf(CustomerVehicleDetails value)
+        {
+            return (List.IndexOf(value));
+        }
+        public void Insert(int index, CustomerVehicleDetails value)
+        {
+            List.Insert(index, value);
+        }
+        public void Remove(CustomerVehicleDetails value)
+        {
+            List.Remove(value);
+        }
     }
 
     public class ResponseMessage
