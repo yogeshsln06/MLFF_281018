@@ -714,7 +714,7 @@ namespace MLFFWebUI.Controllers
             List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
             vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-            vehicleclassList.Add(new SelectListItem() { Text = "All Class", Value = "0" });
+            vehicleclassList.Add(new SelectListItem() { Text = "", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
             {
                 vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -726,7 +726,7 @@ namespace MLFFWebUI.Controllers
             #region Queue Status
             List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
             Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
-            customerQueueStatus.Add(new SelectListItem() { Text = "All Status", Value = "0" });
+            customerQueueStatus.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < arStatus.Length; i++)
             {
                 customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
@@ -738,7 +738,7 @@ namespace MLFFWebUI.Controllers
             #region Exception Flag
             List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
             Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
-            ExceptionFlagList.Add(new SelectListItem() { Text = "All Exception", Value = "0" });
+            ExceptionFlagList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < ExceptionFlagListart.Length; i++)
             {
                 ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
@@ -747,7 +747,8 @@ namespace MLFFWebUI.Controllers
 
             #endregion
 
-            ViewData["CustomerAccount"] = CustomerAccountBLL.GetAllAsList();
+            List<CustomerAccountCBE> SortedList = CustomerAccountBLL.GetAllAsList().OrderBy(o => o.ResidentId).ToList();
+            ViewData["CustomerAccount"] = SortedList;//CustomerAccountBLL.GetAllAsList();
             return View();
 
         }
@@ -1146,9 +1147,13 @@ namespace MLFFWebUI.Controllers
                             if (customerVehicleEntryId > 0)
                             {
                                 if (objCustomerVehicleModel.SendEmail)
-
                                 {
-                                    BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                    if (objCustomerVehicleModel.SendEmail)
+                                    {
+                                        objCustomerVehicleModel.EntryId = customerVehicleEntryId;
+                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
+                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                    }
                                 }
                                 ModelStateList objModelState = new ModelStateList();
                                 objModelState.ErrorMessage = "success";
@@ -1204,7 +1209,9 @@ namespace MLFFWebUI.Controllers
 
                                     if (objCustomerVehicleModel.SendEmail)
                                     {
-                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                        objCustomerVehicleModel.EntryId = customerVehicleEntryId;
+                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
+                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                     }
                                     ModelStateList objModelState = new ModelStateList();
                                     objModelState.ErrorMessage = "success";
@@ -1281,10 +1288,10 @@ namespace MLFFWebUI.Controllers
                             if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
                                 objCustomerVehicleCBE.TagId = string.Empty;
                             CustomerVehicleBLL.Update(objCustomerVehicleCBE);
-
                             if (objCustomerVehicleModel.SendEmail)
                             {
                                 BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                             }
 
                             ModelStateList objModelState = new ModelStateList();
@@ -1325,11 +1332,10 @@ namespace MLFFWebUI.Controllers
                                 if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
                                     objCustomerVehicleCBE.TagId = string.Empty;
                                 CustomerVehicleBLL.Update(objCustomerVehicleCBE);
-
-
                                 if (objCustomerVehicleModel.SendEmail)
                                 {
-                                    BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                    BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
+                                    BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                 }
 
                                 ModelStateList objModelState = new ModelStateList();
@@ -1960,12 +1966,11 @@ namespace MLFFWebUI.Controllers
         public StringBuilder EmailBody(string Name, string VRN)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Kepada " + Name + ",");
+            sb.Append("Hai " + Name + ",");
             sb.Append("");
             sb.Append("");
             sb.Append("");
-            sb.Append("Terimakasih telah melakukan verifikasi dokumen pada kendaraan " + VRN + " anda.");
-            sb.Append("Kendaraan anda sudah bisa digunakan untuk melewati SJBE (Sistem Jalan Berbayar Elektronik).");
+            sb.Append("Selamat kendaraan " + VRN + " anda telah kami verifikasi.Kendaraan tersebut sudah bisa digunakan untuk melewati SJBE (Sistem Jalan Berbayar Elektronik).");
             sb.Append("");
             sb.Append("");
             sb.Append("Salam,");

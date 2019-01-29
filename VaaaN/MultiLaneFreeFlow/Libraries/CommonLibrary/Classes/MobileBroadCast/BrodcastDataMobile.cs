@@ -74,9 +74,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
         }
 
 
-        public static string BroadCastNotification(DataRow row)
+        public static string BroadCastNotification(string residentId, string vehicleId, string title, string body)
         {
-            string TransId = row["ENTRY_ID"].ToString(); //objSMSCommunicationHistoryCBE.EntryId.ToString();
+            string TransId = vehicleId;  //objSMSCommunicationHistoryCBE.EntryId.ToString();
             var responseString = "";
             try
             {
@@ -85,10 +85,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                 request.Headers.Add("Authorization", "1adbb3178591fd5bb0c248518f39bf6d");
                 request.Headers.Add("Accept-Language", "en");
                 request.Accept = "application/json";
-                var postData = "residentId=" + row["RESIDENT_ID"].ToString() + "";
-                postData = "&vehicleId=" + row["VehicleId"].ToString() + "";
-                postData += "&title=" + row["TRANSACTION_SUBJECT"].ToString() + "";
-                postData += "&body=" + row["MESSAGE_BODY"].ToString() + "";
+                var postData = "residentId=" + residentId + "";
+                postData = "&vehicleId=" + vehicleId + "";
+                postData += "&title=" + title + "";
+                postData += "&body=" + body + "";
 
                 var data = Encoding.ASCII.GetBytes(postData);
 

@@ -534,11 +534,11 @@ namespace SMSService
             try
             {
                 DataTable unsentNotification = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.GetAllPendindNotification();
-                foreach (DataRow noti in unsentNotification.Rows)
+                foreach (DataRow row in unsentNotification.Rows)
                 {
-                    string responseString = BrodcastDataMobile.BroadCastNotification(noti);
+                    string responseString = BrodcastDataMobile.BroadCastNotification(row["RESIDENT_ID"].ToString(),row["ENTRY_ID"].ToString(), row["TRANSACTION_SUBJECT"].ToString(), row["MESSAGE_BODY"].ToString());
                     SendBrodcastStatus(responseString);
-                    LogMessageMobile("Account Entry Id:" + noti["ENTRY_ID"].ToString() + " Responce :" + responseString);
+                    LogMessageMobile("Account Entry Id:" + row["ENTRY_ID"].ToString() + " Responce :" + responseString);
                 }
             }
             catch (Exception ex)
