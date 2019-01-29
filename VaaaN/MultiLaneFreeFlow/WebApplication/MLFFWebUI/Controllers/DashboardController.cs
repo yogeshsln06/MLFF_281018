@@ -99,6 +99,7 @@ namespace MLFFWebUI.Controllers
                                     liveEvent.VRN = ctp.VRN;
                                     liveEvent.TagId = ctp.TagId;
                                     liveEvent.Datepacket = ctp.Timestamp.ToString("dd-MMM-yyyy hh:mm:ss tt");
+                                    liveEvent.DeviceLocation = ctp.ReaderPosition.ToString();
                                     liveEvents.Add(liveEvent);
                                     #endregion
                                 }
@@ -113,7 +114,7 @@ namespace MLFFWebUI.Controllers
                                     liveEvent.LaneName = ntp.LaneName;
                                     liveEvent.VehicleClassName = ntp.VehicleClassName;
                                     liveEvent.VRN = ntp.VRN;
-                                    liveEvent.CameraLocation = ntp.CameraLocation;
+                                    liveEvent.DeviceLocation = ntp.CameraLocation;
                                     liveEvent.NumberPlatePath = ntp.NumberPlatePath.Replace('\\', '^'); ;
                                     liveEvent.VehiclePath = ntp.VehiclePath.Replace('\\', '^');
                                     liveEvent.VideoURL = ntp.VideoURL.Replace('\\', '^'); ;

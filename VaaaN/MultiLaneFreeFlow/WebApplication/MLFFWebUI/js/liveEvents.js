@@ -46,12 +46,19 @@ function GetMSMQData() {
 
 function BindEventList(data) {
     var TR;
+    var loc="Front"
     if (data.length > 0) {
         TR = '';
         for (var i = 0; i < data.length; i++) {
             if (data[i].PacketName.toLowerCase() == 'crosstalk') {
+                if (data[i].DeviceLocation == "1") {
+                    loc = "Front";
+                }
+                else {
+                    loc = "Rear";
+                }
                 TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].PlazaName + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td style='text-align:left'>" + replacenull(data[i].VehicleClassName) + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
-              "<td>" + data[i].Datepacket + "</td><td>" + data[i].TagId + "</td></tr>"
+              "<td>" + data[i].Datepacket + "</td><td>" + data[i].TagId + "</td><td>" + loc + "</td></tr>"
 
                 if ($("#tableCrossTalk tbody tr").length > 0) {
                     $('#tableCrossTalk tbody tr:first').before(TR);

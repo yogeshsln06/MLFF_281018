@@ -9,22 +9,22 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 {
     public class LiveEventCBE : CrossTalkEvent
     {
-        string cameraLocation;
+        string deviceLocation;
         string numberPlatePath;
         string vehiclePath;
         string packetName;
         string videoURL;
         string datepacket;
 
-        public string CameraLocation
+        public string DeviceLocation
         {
             get
             {
-                return this.cameraLocation;
+                return this.deviceLocation;
             }
             set
             {
-                this.cameraLocation = value;
+                this.deviceLocation = value;
             }
         }
         public string NumberPlatePath
