@@ -41,6 +41,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.Update(account);
         }
 
+        public static void UpdateMobileResponce(int AccountId, int SentStatus, string Response)
+        {
+            VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.UpdateMobileResponce(AccountId, SentStatus, Response);
+        }
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection GetAllAsCollection()
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerAccountDAL.GetAllAsCollection();

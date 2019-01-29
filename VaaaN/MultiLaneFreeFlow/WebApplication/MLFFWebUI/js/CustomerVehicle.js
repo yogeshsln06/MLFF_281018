@@ -19,6 +19,7 @@ var VRCN = '';
 var VehicleClassId = 0;
 var QueueStatus = 0;
 var ExceptionFlag = 0;
+var Status = 0;
 
 $(document).ready(function () {
     $("#sidebar-toggle").bind("click", function () {
@@ -527,6 +528,7 @@ function NewCustomerVehicle() {
             $("#btnpopupClose").text('Cancel').removeClass('btn-outline-secondary').addClass('btn-outline-danger').show();
             $("#btnpopupCancel").removeClass('btn-outline-danger').addClass('btn-outline-secondary').hide();
             $("#btnSaveNew").show();
+            Status = 0;
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -755,6 +757,12 @@ function SaveData(action) {
         }
 
         if (validateCustomerVehicle()) {
+            var SendEmail = false;
+            if ($("#QueueStatus").val() == 3) {
+                if (Status != $("#QueueStatus").val()) {
+                    SendEmail = true;
+                }
+            }
             var EntryId = $("#EntryId").val() || '';
             var AccountId = $("#AccountId").val() || '';
             var ImageFrontChnage = true;
@@ -846,6 +854,7 @@ function SaveData(action) {
                 ImageLeftChnage: ImageLeftChnage,
                 ImageRightChnage: ImageRightChnage,
                 RCNumberImageChnage: RCNumberImageChnage,
+                SendEmail: SendEmail
             }
 
             $(".animationload").show();

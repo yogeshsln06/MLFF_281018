@@ -115,6 +115,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 throw ex;
             }
         }
+
+        public static void UpdateMobileResponce(int AccountId,int SentStatus,string Response)
+        {
+            try
+            {
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "MOBILE_CUST_STATUS_UPDATE";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_ACCOUNT_ID", DbType.Int32, AccountId, ParameterDirection.InputOutput));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SENT_STATUS", DbType.Int32, SentStatus, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RESPONSE", DbType.String, Response, ParameterDirection.Input));
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
 
         #region Update Customer Account

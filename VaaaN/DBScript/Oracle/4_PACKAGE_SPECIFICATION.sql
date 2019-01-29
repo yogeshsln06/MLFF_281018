@@ -1,4 +1,4 @@
-/* Formatted on 28/01/2019 23:27:30 (QP5 v5.215.12089.38647) */
+/* Formatted on 29/01/2019 10:56:08 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -1101,7 +1101,9 @@ AS
    PROCEDURE VEHICLE_DETAILS_RESIDENTID (P_RESIDENT_ID   IN     NVARCHAR2,
                                          CUR_OUT            OUT T_CURSOR);
 
-   PROCEDURE VEHICLE_DETAILS_TID (P_TID IN NVARCHAR2, CUR_OUT OUT T_CURSOR);
+   PROCEDURE VEHICLE_DETAILS_TID (P_TID           IN     NVARCHAR2,
+                                  P_RESIDENT_ID   IN     NVARCHAR2,
+                                  CUR_OUT            OUT T_CURSOR);
 
    PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
                                     CUR_OUT                 OUT T_CURSOR);
@@ -1335,5 +1337,9 @@ AS
 
    PROCEDURE MOBILE_NOTI_STATUS_UPDATE (P_ENTRY_ID      IN NUMBER,
                                         P_SENT_STATUS   IN NUMBER);
+
+   PROCEDURE MOBILE_CUST_STATUS_UPDATE (P_ACCOUNT_ID    IN NUMBER,
+                                        P_SENT_STATUS   IN NUMBER,
+                                        P_RESPONSE      IN NVARCHAR2);
 END MLFF_PACKAGE;
 /

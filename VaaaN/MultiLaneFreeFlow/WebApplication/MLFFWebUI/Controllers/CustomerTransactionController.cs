@@ -902,7 +902,7 @@ namespace MLFFWebUI.Controllers
                                                     #region process for audit
                                                     objtransaction.TransactionId = ParentTransactionId;
                                                     FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
-                                                    if (ParentViolation)
+                                                    if (Violation)
                                                     {
                                                         #region violation occured
                                                         TransactionBLL.MarkAsViolation(objtransaction);

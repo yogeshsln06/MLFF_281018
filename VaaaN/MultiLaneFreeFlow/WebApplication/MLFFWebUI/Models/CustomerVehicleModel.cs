@@ -73,5 +73,6 @@ namespace MLFFWebUI.Models
         public bool ImageRightChnage { get; set; }
         public bool RCNumberImageChnage { get; set; }
         public bool SearchEnable { get; set; }
+        public bool SendEmail { get; set; }
     }
 }

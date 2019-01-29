@@ -28,7 +28,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/account");
                 request.Headers.Add("Authorization", Authorization);
                 request.Accept = "application/json";
-                var postData = "vehicle_registration_certificate_number=" + objCustomerVehicleCBE.VehicleRCNumber + "";
+                var postData = "residentId=" + objCustomerVehicleCBE.VehicleRCNumber + "";
+                postData = "&vehicleId=" + objCustomerVehicleCBE.VehicleRCNumber + "";
                 postData += "&amount=" + objCustomerVehicleCBE.AccountBalance + "";
                 var data = Encoding.ASCII.GetBytes(postData);
 
@@ -81,7 +82,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/notification");
                 request.Headers.Add("Authorization", Authorization);
                 request.Accept = "application/json";
-                var postData = "vehicle_registration_certificate_number=" + objSMSCommunicationHistoryCBE.VehicleRCNumber + "";
+                var postData = "residentId=" + objSMSCommunicationHistoryCBE.VehicleRCNumber + "";
+                postData = "&vehicleId=" + objSMSCommunicationHistoryCBE.VehicleRCNumber + "";
                 postData += "&title=" + objSMSCommunicationHistoryCBE.Subject + "";
                 postData += "&body=" + objSMSCommunicationHistoryCBE.MessageBody + "";
                 var data = Encoding.ASCII.GetBytes(postData);
@@ -137,7 +139,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                 postData += "&name=" + objCustomerAccount.FirstName + "";
                 postData += "&address=" + objCustomerAccount.Address + "";
                 postData += "&phone=" + objCustomerAccount.MobileNo + "";
-                postData += "&password=" + Constants.SMSTranscationId(objCustomerAccount.AccountId) + "";
+                //postData += "&password=" + Constants.SMSTranscationId(objCustomerAccount.AccountId) + "";
                 postData += "&source=1";
                 var data = Encoding.ASCII.GetBytes(postData);
 
@@ -234,7 +236,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
             return responseString;
         }
 
-        public static bool SendEmail(string body, string SendTo, string Subject)
+        public static bool SendEmail(StringBuilder body, string SendTo, string Subject)
         {
             bool isSuccess = false;
 
@@ -243,7 +245,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                 string fromMail = "mlff@balitower.co.id";
                 string mailPassword = "SXA$9c#*!";
                 int port = 587;
-                string hostName = "";
+                string hostName = "mail.balitower.co.id";
 
                 using (MailMessage mailMessage = new MailMessage())
                 {
@@ -260,7 +262,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                     MailMessage mail = new MailMessage();
                     mail.From = new MailAddress(fromMail);
                     mail.Subject = Subject;
-                    mail.Body = body;
+                    mail.Body = body.ToString();
                     mail.To.Add(SendTo);
                     mail.IsBodyHtml = false;
 
@@ -284,5 +286,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
         {
             VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(message, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.MobileWebAPI);
         }
+
+
     }
 }

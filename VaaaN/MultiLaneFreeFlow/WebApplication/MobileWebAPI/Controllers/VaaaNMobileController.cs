@@ -636,45 +636,43 @@ namespace MobileWebAPI.Controllers
                         {
                             List<CustomerVehicleDetails> objCustomerVehicleDetails = new List<CustomerVehicleDetails>();
                             CustomerVehicleDetails objCustomerVehicleDetail = new CustomerVehicleDetails();
+
                             objCustomerVehicleDetails = ConvertDataTableToList(dt);
                             objCustomerVehicleDetail = objCustomerVehicleDetails[0];
-                            //objCustomerVehicleDetails.Balance = Convert.ToDecimal(dt.Rows[0]["ACCOUNT_BALANCE"].ToString());
-                            //objCustomerVehicleDetails.Brand = dt.Rows[0]["BRAND"].ToString();
-                            //objCustomerVehicleDetails.Category = dt.Rows[0]["VEHICLE_CATEGORY"].ToString();
-                            //objCustomerVehicleDetails.Classification = Convert.ToInt32(dt.Rows[0]["VEHICLE_CLASS_ID"].ToString());
-                            //objCustomerVehicleDetails.Color = dt.Rows[0]["VEHICLE_COLOR"].ToString();
-                            //objCustomerVehicleDetails.CylinderCapacity = dt.Rows[0]["CYCLINDER_CAPACITY"].ToString();
-                            //objCustomerVehicleDetails.EngineNumber = dt.Rows[0]["ENGINE_NUMBER"].ToString();
-                            //objCustomerVehicleDetails.ExceptionFlag = dt.Rows[0]["EXCEPTION_FLAG_NAME"].ToString();
-                            //objCustomerVehicleDetails.FrameNumber = dt.Rows[0]["FRAME_NUMBER"].ToString();
-                            //objCustomerVehicleDetails.FuelType = dt.Rows[0]["FUEL_TYPE_NAME"].ToString();
-                            //objCustomerVehicleDetails.LicensePlateColor = dt.Rows[0]["LICENCE_PLATE_COLOR_NAME"].ToString();
-                            //objCustomerVehicleDetails.LocationCode = dt.Rows[0]["LOCATION_CODE"].ToString();
-                            //objCustomerVehicleDetails.ManufactureYear = Convert.ToInt32(dt.Rows[0]["MANUFACTURING_YEAR"].ToString());
-                            //objCustomerVehicleDetails.Model = dt.Rows[0]["MODEL_NO"].ToString();
-                            //objCustomerVehicleDetails.OwnerAddress = dt.Rows[0]["OWNER_ADDRESS"].ToString();
-                            //objCustomerVehicleDetails.OwnerName = dt.Rows[0]["OWNER_NAME"].ToString();
-                            //objCustomerVehicleDetails.RegistrationQueueNumber = dt.Rows[0]["REG_QUEUE_NO"].ToString();
-                            //objCustomerVehicleDetails.RegistrationYear = Convert.ToInt32(dt.Rows[0]["REGISTRATION_YEAR"].ToString());
-                            //objCustomerVehicleDetails.ResidentIdentityNumber = dt.Rows[0]["RESIDENT_ID"].ToString();
-                            //objCustomerVehicleDetails.Status = dt.Rows[0]["QUEUE_STATUS"].ToString();
-                            //objCustomerVehicleDetails.TIDFront = dt.Rows[0]["TID_FRONT"].ToString();
-                            //objCustomerVehicleDetails.TIDRear = dt.Rows[0]["TID_REAR"].ToString();
-                            //objCustomerVehicleDetails.Type = dt.Rows[0]["VEHICLE_TYPE"].ToString();
-                            //objCustomerVehicleDetails.ValidUntil = dt.Rows[0]["VALID_UNTIL"].ToString();
-                            //if (!string.IsNullOrEmpty(objCustomerVehicleDetails.ValidUntil))
-                            //{
-                            //    objCustomerVehicleDetails.ValidUntil = Convert.ToDateTime(objCustomerVehicleDetails.ValidUntil).ToString("yyyy-MM-dd");
-                            //}
-                            //objCustomerVehicleDetails.VehicleImageFront = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_FRONT"].ToString();
-                            //objCustomerVehicleDetails.VehicleImageLeft = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_LEFT"].ToString();
-                            //objCustomerVehicleDetails.VehicleImageRear = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_REAR"].ToString();
-                            //objCustomerVehicleDetails.VehicleImageRight = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLEIMAGE_RIGHT"].ToString();
-                            //objCustomerVehicleDetails.VehicleOwnershipDocumentNumber = dt.Rows[0]["VEHICLE_OWNERSHIP_NO"].ToString();
-                            //objCustomerVehicleDetails.VehicleRegistrationCertificateImage = "http://poc-erp.balitower.co.id:5556/Attachment/VehicleImage/" + dt.Rows[0]["VEHICLE_RC_NO_PATH"].ToString();
-                            //objCustomerVehicleDetails.VehicleRegistrationCertificateNumber = dt.Rows[0]["VEHICLE_RC_NO"].ToString();
-                            //objCustomerVehicleDetails.VehicleRegistrationNumber = dt.Rows[0]["VEH_REG_NO"].ToString();
-                            sJSONResponse = JsonConvert.SerializeObject(objCustomerVehicleDetails);
+                            //objCustomerVehicleDetail.Balance = objCustomerVehicleDetails[0].Balance;
+                            //objCustomerVehicleDetail.Brand = objCustomerVehicleDetails[0].Brand;
+                            //objCustomerVehicleDetail.Category = objCustomerVehicleDetails[0].Category;
+                            //objCustomerVehicleDetail.Classification = objCustomerVehicleDetails[0].Classification;
+                            //objCustomerVehicleDetail.Color = objCustomerVehicleDetails[0].Color;
+                            //objCustomerVehicleDetail.CylinderCapacity = objCustomerVehicleDetails[0].CylinderCapacity;
+                            //objCustomerVehicleDetail.EngineNumber = objCustomerVehicleDetails[0].EngineNumber;
+                            //objCustomerVehicleDetail.ExceptionFlag = objCustomerVehicleDetails[0].ExceptionFlag;
+                            //objCustomerVehicleDetail.FrameNumber = objCustomerVehicleDetails[0].FrameNumber;
+                            //objCustomerVehicleDetail.FuelType = objCustomerVehicleDetails[0].FuelType;
+                            //objCustomerVehicleDetail.LicensePlateColor = objCustomerVehicleDetails[0].LicensePlateColor;
+                            //objCustomerVehicleDetail.LocationCode = objCustomerVehicleDetails[0].LocationCode;
+                            //objCustomerVehicleDetail.ManufactureYear = objCustomerVehicleDetails[0].ManufactureYear;
+                            //objCustomerVehicleDetail.Model = objCustomerVehicleDetails[0].Model;
+                            //objCustomerVehicleDetail.OwnerAddress = objCustomerVehicleDetails[0].OwnerAddress;
+                            //objCustomerVehicleDetail.OwnerName = objCustomerVehicleDetails[0].OwnerName;
+                            //objCustomerVehicleDetail.RegistrationQueueNumber = objCustomerVehicleDetails[0].RegistrationQueueNumber;
+                            //objCustomerVehicleDetail.RegistrationYear = objCustomerVehicleDetails[0].RegistrationYear;
+                            //objCustomerVehicleDetail.ResidentIdentityNumber = objCustomerVehicleDetails[0].ResidentIdentityNumber;
+                            //objCustomerVehicleDetail.Status = objCustomerVehicleDetails[0].Status;
+                            //objCustomerVehicleDetail.TIDFront = objCustomerVehicleDetails[0].TIDFront;
+                            //objCustomerVehicleDetail.TIDRear = objCustomerVehicleDetails[0].TIDRear;
+                            //objCustomerVehicleDetail.Type = objCustomerVehicleDetails[0].Type;
+                            //objCustomerVehicleDetail.ValidUntil = objCustomerVehicleDetails[0].ValidUntil;
+                            //objCustomerVehicleDetail.VehicleImageFront = objCustomerVehicleDetails[0].VehicleImageFront;
+                            //objCustomerVehicleDetail.VehicleImageLeft = objCustomerVehicleDetails[0].VehicleImageLeft;
+                            //objCustomerVehicleDetail.VehicleImageRear = objCustomerVehicleDetails[0].VehicleImageRear;
+                            //objCustomerVehicleDetail.VehicleImageRight = objCustomerVehicleDetails[0].VehicleImageRight;
+                            //objCustomerVehicleDetail.VehicleOwnershipDocumentNumber = objCustomerVehicleDetails[0].VehicleOwnershipDocumentNumber;
+                            //objCustomerVehicleDetail.VehicleRegistrationCertificateImage = objCustomerVehicleDetails[0].VehicleRegistrationCertificateImage;
+                            //objCustomerVehicleDetail.VehicleRegistrationCertificateNumber = objCustomerVehicleDetails[0].VehicleRegistrationCertificateNumber;
+                            //objCustomerVehicleDetail.VehicleRegistrationNumber = objCustomerVehicleDetails[0].VehicleRegistrationNumber;
+                            //objCustomerVehicleDetail.VehicleId = objCustomerVehicleDetails[0].VehicleId;
+                            sJSONResponse = JsonConvert.SerializeObject(objCustomerVehicleDetail);
                             return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
                         }
                         catch (Exception ex)
@@ -779,15 +777,19 @@ namespace MobileWebAPI.Controllers
             {
                 try
                 {
-                    dt = CustomerVehicleBLL.CustomerVehicleDetailsByTID(objCustomerTIDDetails.TID);
+                    dt = CustomerVehicleBLL.CustomerVehicleDetailsByTID(objCustomerTIDDetails.TID, objCustomerTIDDetails.ResidentIdentityNumber);
                     if (dt.Rows.Count > 0)
                     {
 
                         try
                         {
-                            List<CustomerVehicleDetails> customerVehicleList = new List<CustomerVehicleDetails>();
-                            customerVehicleList = ConvertDataTableToList(dt);
-                            sJSONResponse = JsonConvert.SerializeObject(customerVehicleList);
+                            List<CustomerVehicleDetails> objCustomerVehicleDetails = new List<CustomerVehicleDetails>();
+                            CustomerVehicleDetails objCustomerVehicleDetail = new CustomerVehicleDetails();
+
+                            objCustomerVehicleDetails = ConvertDataTableToList(dt);
+                            objCustomerVehicleDetail = objCustomerVehicleDetails[0];
+
+                            sJSONResponse = JsonConvert.SerializeObject(objCustomerVehicleDetail);
                             return Request.CreateErrorResponse(HttpStatusCode.OK, sJSONResponse);
                         }
                         catch (Exception ex)

@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using VaaaN.MLFF.Libraries.CommonLibrary;
 using VaaaN.MLFF.Libraries.CommonLibrary.BLL;
 using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
+using VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast;
 using static MLFFWebUI.Models.HelperClass;
 
 namespace MLFFWebUI.Controllers
@@ -148,7 +150,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> provincelist = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE> province = VaaaN.MLFF.Libraries.CommonLibrary.BLL.ProvinceBLL.GetAll().Cast<VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE>().ToList();
 
-            provincelist.Add(new SelectListItem() { Text = "--Select--", Value = "0" });
+            provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
             {
                 provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
@@ -159,7 +161,7 @@ namespace MLFFWebUI.Controllers
             #region Gender
             List<SelectListItem> genderList = new List<SelectListItem>();
             Array argender = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Gender));
-
+            genderList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < argender.Length; i++)
             {
                 genderList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GenderName[i], Value = System.Convert.ToString((int)argender.GetValue(i)) });
@@ -171,7 +173,7 @@ namespace MLFFWebUI.Controllers
             #region MaritalStatus
             List<SelectListItem> maritalstatusList = new List<SelectListItem>();
             Array armaritalstatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatus));
-
+            maritalstatusList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < armaritalstatus.Length; i++)
             {
                 maritalstatusList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MaritalStatusName[i], Value = System.Convert.ToString((int)armaritalstatus.GetValue(i)) });
@@ -183,7 +185,7 @@ namespace MLFFWebUI.Controllers
             #region Nationality
             List<SelectListItem> nationalityList = new List<SelectListItem>();
             Array arnationality = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.Nationality));
-
+            nationalityList.Add(new SelectListItem() { Text = "", Value = "0" });
             for (int i = 0; i < arnationality.Length; i++)
             {
                 nationalityList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.NationalityName[i], Value = System.Convert.ToString((int)arnationality.GetValue(i)) });
@@ -324,7 +326,7 @@ namespace MLFFWebUI.Controllers
                         customerAccount.RegistartionThrough = 1;
                         customerAccount.EmailId = customerAccount.EmailId.Trim();
                         customerAccount.ResidentId = customerAccount.ResidentId.Trim();
-                        if (customerAccount.BirthPlace.Contains("--"))
+                        if (string.IsNullOrEmpty(customerAccount.BirthPlace))
                         {
                             customerAccount.BirthPlace = string.Empty;
                         }
@@ -350,6 +352,25 @@ namespace MLFFWebUI.Controllers
                         int customerEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.Insert(customerAccount);
                         if (customerEntryId > 0)
                         {
+                            customerAccount.AccountId = customerEntryId;
+                            string responseString = BrodcastDataMobile.SignUp(customerAccount);
+                            MobileResponce objMobileResponce = JsonConvert.DeserializeObject<MobileResponce>(responseString);
+                            try
+                            {
+                                if (objMobileResponce.status == "success")
+                                {
+                                    CustomerAccountBLL.UpdateMobileResponce(objMobileResponce.trans_id, 1, objMobileResponce.message);
+                                }
+                                else
+                                {
+                                    CustomerAccountBLL.UpdateMobileResponce(objMobileResponce.trans_id, 2, objMobileResponce.message);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                HelperClass.LogMessage("Failed to get responce from mobile API" + ex);
+                            }
+
                             ModelStateList objModelState = new ModelStateList();
                             objModelState.ErrorMessage = "success";
                             objResponseMessage.Add(objModelState);
@@ -508,10 +529,14 @@ namespace MLFFWebUI.Controllers
                         customerAccount.TmsId = tmsId;
                         customerAccount.EmailId = customerAccount.EmailId.Trim();
                         customerAccount.ResidentId = customerAccount.ResidentId.Trim();
-                        customerAccount.BirthPlace = customerAccount.BirthPlace.Trim();
-                        if (customerAccount.BirthPlace.Contains("--"))
+
+                        if (string.IsNullOrEmpty(customerAccount.BirthPlace))
                         {
                             customerAccount.BirthPlace = string.Empty;
+                        }
+                        else
+                        {
+                            customerAccount.BirthPlace = customerAccount.BirthPlace.Trim();
                         }
                         if (string.IsNullOrEmpty(customerAccount.RT))
                             customerAccount.RT = customer.RT.Trim();
@@ -534,6 +559,24 @@ namespace MLFFWebUI.Controllers
                         else
                             customerAccount.RT_RW = customerAccount.RT + "/" + customerAccount.RW;
                         CustomerAccountBLL.Update(customerAccount);
+
+                        string responseString = BrodcastDataMobile.UpdateUser(customerAccount);
+                        MobileResponce objMobileResponce = JsonConvert.DeserializeObject<MobileResponce>(responseString);
+                        try
+                        {
+                            if (objMobileResponce.status == "success")
+                            {
+                                CustomerAccountBLL.UpdateMobileResponce(objMobileResponce.trans_id, 1, objMobileResponce.message);
+                            }
+                            else
+                            {
+                                CustomerAccountBLL.UpdateMobileResponce(objMobileResponce.trans_id, 2, objMobileResponce.message);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            HelperClass.LogMessage("Failed to get responce from mobile API" + ex);
+                        }
                         ModelStateList objModelState = new ModelStateList();
                         objModelState.ErrorMessage = "success";
                         objResponseMessage.Add(objModelState);
@@ -999,7 +1042,7 @@ namespace MLFFWebUI.Controllers
                 List<VehicleClassCBE> vehicleclassDataList = new List<VehicleClassCBE>();
                 vehicleclassDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.VehicleClassBLL.GetAll();
 
-                vehicleclassList.Add(new SelectListItem() { Text = "All Class", Value = "0" });
+                vehicleclassList.Add(new SelectListItem() { Text = "", Value = "0" });
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE cr in vehicleclassDataList)
                 {
                     vehicleclassList.Add(new SelectListItem() { Text = cr.Name, Value = System.Convert.ToString(cr.Id) });
@@ -1011,7 +1054,7 @@ namespace MLFFWebUI.Controllers
                 #region Queue Status
                 List<SelectListItem> customerQueueStatus = new List<SelectListItem>();
                 Array arStatus = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatus));
-
+                customerQueueStatus.Add(new SelectListItem() { Text = "", Value = "0" });
                 for (int i = 0; i < arStatus.Length; i++)
                 {
                     customerQueueStatus.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.CustomerQueueStatusName[i], Value = System.Convert.ToString((int)arStatus.GetValue(i)) });
@@ -1023,7 +1066,7 @@ namespace MLFFWebUI.Controllers
                 #region Exception Flag
                 List<SelectListItem> ExceptionFlagList = new List<SelectListItem>();
                 Array ExceptionFlagListart = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlag));
-
+                ExceptionFlagList.Add(new SelectListItem() { Text = "", Value = "0" });
                 for (int i = 0; i < ExceptionFlagListart.Length; i++)
                 {
                     ExceptionFlagList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.ExceptionFlagName[i], Value = System.Convert.ToString((int)ExceptionFlagListart.GetValue(i)) });
@@ -1035,7 +1078,7 @@ namespace MLFFWebUI.Controllers
                 #region Fuel Type
                 List<SelectListItem> fuelTypeList = new List<SelectListItem>();
                 Array arcfuelType = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelType));
-
+                fuelTypeList.Add(new SelectListItem() { Text = "", Value = "0" });
                 for (int i = 0; i < arcfuelType.Length; i++)
                 {
                     fuelTypeList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.FuelTypeName[i], Value = System.Convert.ToString((int)arcfuelType.GetValue(i)) });
@@ -1047,7 +1090,7 @@ namespace MLFFWebUI.Controllers
                 #region Licence Plate Color
                 List<SelectListItem> licencePlateColorList = new List<SelectListItem>();
                 Array arlicencePlateColor = Enum.GetValues(typeof(VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColor));
-
+                licencePlateColorList.Add(new SelectListItem() { Text = "", Value = "0" });
                 for (int i = 0; i < arlicencePlateColor.Length; i++)
                 {
                     licencePlateColorList.Add(new SelectListItem() { Text = VaaaN.MLFF.Libraries.CommonLibrary.Constants.LicencePlateColorName[i], Value = System.Convert.ToString((int)arlicencePlateColor.GetValue(i)) });
@@ -1102,6 +1145,11 @@ namespace MLFFWebUI.Controllers
                             int customerVehicleEntryId = CustomerVehicleBLL.Insert(objCustomerVehicleCBE);
                             if (customerVehicleEntryId > 0)
                             {
+                                if (objCustomerVehicleModel.SendEmail)
+
+                                {
+                                    BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                }
                                 ModelStateList objModelState = new ModelStateList();
                                 objModelState.ErrorMessage = "success";
                                 objResponseMessage.Add(objModelState);
@@ -1153,6 +1201,11 @@ namespace MLFFWebUI.Controllers
                                 int customerVehicleEntryId = CustomerVehicleBLL.Insert(objCustomerVehicleCBE);
                                 if (customerVehicleEntryId > 0)
                                 {
+
+                                    if (objCustomerVehicleModel.SendEmail)
+                                    {
+                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                    }
                                     ModelStateList objModelState = new ModelStateList();
                                     objModelState.ErrorMessage = "success";
                                     objResponseMessage.Add(objModelState);
@@ -1228,6 +1281,12 @@ namespace MLFFWebUI.Controllers
                             if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
                                 objCustomerVehicleCBE.TagId = string.Empty;
                             CustomerVehicleBLL.Update(objCustomerVehicleCBE);
+
+                            if (objCustomerVehicleModel.SendEmail)
+                            {
+                                BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                            }
+
                             ModelStateList objModelState = new ModelStateList();
                             objModelState.ErrorMessage = "success";
                             objResponseMessage.Add(objModelState);
@@ -1266,6 +1325,13 @@ namespace MLFFWebUI.Controllers
                                 if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
                                     objCustomerVehicleCBE.TagId = string.Empty;
                                 CustomerVehicleBLL.Update(objCustomerVehicleCBE);
+
+
+                                if (objCustomerVehicleModel.SendEmail)
+                                {
+                                    BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                }
+
                                 ModelStateList objModelState = new ModelStateList();
                                 objModelState.ErrorMessage = "success";
                                 objResponseMessage.Add(objModelState);
@@ -1882,5 +1948,29 @@ namespace MLFFWebUI.Controllers
             return PartialView("TransactionHistory");
         }
 
+
+        public class MobileResponce
+        {
+            public string Apifor { get; set; }
+            public Int32 trans_id { get; set; }
+            public string status { get; set; }
+            public string message { get; set; }
+        }
+
+        public StringBuilder EmailBody(string Name, string VRN)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Kepada " + Name + ",");
+            sb.Append("");
+            sb.Append("");
+            sb.Append("");
+            sb.Append("Terimakasih telah melakukan verifikasi dokumen pada kendaraan " + VRN + " anda.");
+            sb.Append("Kendaraan anda sudah bisa digunakan untuk melewati SJBE (Sistem Jalan Berbayar Elektronik).");
+            sb.Append("");
+            sb.Append("");
+            sb.Append("Salam,");
+            sb.Append("SmartERP");
+            return sb;
+        }
     }
 }
