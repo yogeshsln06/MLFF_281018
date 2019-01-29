@@ -742,7 +742,7 @@ namespace MobileWebAPI.Controllers
                     }
                     else {
                         ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "No vehcile found.";
+                        objModelState.ErrorMessage = "No vehicle found.";
                         objResponseMessage.Add(objModelState);
                         sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                         return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
@@ -802,7 +802,7 @@ namespace MobileWebAPI.Controllers
                     }
                     else {
                         ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "No vehcile found.";
+                        objModelState.ErrorMessage = "No vehicle found.";
                         objResponseMessage.Add(objModelState);
                         sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                         return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
