@@ -491,7 +491,7 @@ namespace MobileWebAPI.Controllers
         }
         #endregion
 
-        #region API for Customer Vehicle Recharge
+        #region API for Customer Vehicle Top-Up
         [Route("VaaaN/IndonesiaMLFFMobileApi/TopUPVehcileAccount")]
         [HttpPost]
         [Filters.ValidateModel]
@@ -709,7 +709,7 @@ namespace MobileWebAPI.Controllers
         #endregion
 
 
-        #region API for Customer Vehicle Details
+        #region API for Customer Vehicle Details List
         [Route("VaaaN/IndonesiaMLFFMobileApi/InquiryCustomerVehicleList")]
         [HttpPost]
         [Filters.ValidateModel]
