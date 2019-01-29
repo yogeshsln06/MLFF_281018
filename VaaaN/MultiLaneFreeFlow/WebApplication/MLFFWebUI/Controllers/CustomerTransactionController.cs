@@ -462,7 +462,7 @@ namespace MLFFWebUI.Controllers
                                 TransactionBLL.MarkAsUnregistred(objtransaction);
                                 objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                 TransactionBLL.UpdateAuditSection(objtransaction);
-                                Meassage = "yes!Transactions ID" + TransactionId + " set as VIOLATION!!!";
+                                Meassage = "yes!Transactions ID " + TransactionId + " set as VIOLATION!!!";
                                 if (AssociatedTransactionCount > 0)
                                 {
                                     if (FirstChildTranasactionId > 0)
@@ -817,7 +817,7 @@ namespace MLFFWebUI.Controllers
                                             {
                                                 #region Selected transactions already reviewed
                                                 ModelStateList objModelState = new ModelStateList();
-                                                objModelState.ErrorMessage = "Transactions ID" + TransactionId + " already REVIEWED!!!";
+                                                objModelState.ErrorMessage = "Transactions ID " + TransactionId + " already REVIEWED!!!";
                                                 objResponseMessage.Add(objModelState);
                                                 #endregion
                                             }
@@ -884,7 +884,7 @@ namespace MLFFWebUI.Controllers
                                                             objtransaction.TransactionId = ParentTransactionId;
                                                             TransactionBLL.UpdateAuditSection(objtransaction);
                                                             ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID" + TransactionId + " already CHARGED!!!";
+                                                            objModelState.ErrorMessage = "yes!Transactions ID " + TransactionId + " already CHARGED!!!";
                                                             objResponseMessage.Add(objModelState);
                                                         }
                                                         #endregion

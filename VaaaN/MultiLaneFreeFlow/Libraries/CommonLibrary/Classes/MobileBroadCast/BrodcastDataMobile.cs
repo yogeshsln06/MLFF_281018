@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -18,19 +19,20 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
         static HttpWebResponse response = null;
         #endregion
 
-        public static string BroadCastBalance(CustomerVehicleCBE objCustomerVehicleCBE)
+        public static string BroadCastBalance(DataRow row)
         {
-            string TransId = objCustomerVehicleCBE.EntryId.ToString();
+            string TransId = row["ENTRY_ID"].ToString();
             var responseString = "";
             try
             {
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/account");
-                request.Headers.Add("Authorization", Authorization);
+                request.Headers.Add("Authorization", "1adbb3178591fd5bb0c248518f39bf6d");
+                request.Headers.Add("Accept-Language", "en");
                 request.Accept = "application/json";
-                var postData = "residentId=" + objCustomerVehicleCBE.VehicleRCNumber + "";
-                postData = "&vehicleId=" + objCustomerVehicleCBE.VehicleRCNumber + "";
-                postData += "&amount=" + objCustomerVehicleCBE.AccountBalance + "";
+                var postData = "residentId=" + row["RESIDENT_ID"].ToString() + "";
+                postData = "&vehicleId=" + row["ENTRY_ID"].ToString() + "";
+                postData += "&amount=" + row["ACCOUNT_BALANCE"].ToString() + "";
                 var data = Encoding.ASCII.GetBytes(postData);
 
                 request.Method = "POST";
@@ -72,20 +74,22 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
         }
 
 
-        public static string BroadCastNotification(SMSCommunicationHistoryCBE objSMSCommunicationHistoryCBE)
+        public static string BroadCastNotification(DataRow row)
         {
-            string TransId = objSMSCommunicationHistoryCBE.EntryId.ToString();
+            string TransId = row["ENTRY_ID"].ToString(); //objSMSCommunicationHistoryCBE.EntryId.ToString();
             var responseString = "";
             try
             {
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/notification");
-                request.Headers.Add("Authorization", Authorization);
+                request.Headers.Add("Authorization", "1adbb3178591fd5bb0c248518f39bf6d");
+                request.Headers.Add("Accept-Language", "en");
                 request.Accept = "application/json";
-                var postData = "residentId=" + objSMSCommunicationHistoryCBE.VehicleRCNumber + "";
-                postData = "&vehicleId=" + objSMSCommunicationHistoryCBE.VehicleRCNumber + "";
-                postData += "&title=" + objSMSCommunicationHistoryCBE.Subject + "";
-                postData += "&body=" + objSMSCommunicationHistoryCBE.MessageBody + "";
+                var postData = "residentId=" + row["RESIDENT_ID"].ToString() + "";
+                postData = "&vehicleId=" + row["VehicleId"].ToString() + "";
+                postData += "&title=" + row["TRANSACTION_SUBJECT"].ToString() + "";
+                postData += "&body=" + row["MESSAGE_BODY"].ToString() + "";
+
                 var data = Encoding.ASCII.GetBytes(postData);
 
                 request.Method = "POST";

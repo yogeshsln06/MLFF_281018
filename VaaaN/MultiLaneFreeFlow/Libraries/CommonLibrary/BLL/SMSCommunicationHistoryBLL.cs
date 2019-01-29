@@ -68,7 +68,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.GetAllSendSMSPendindStatus();
         }
 
-        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetAllPendindNotification()
+        public static DataTable GetAllPendindNotification()
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.SMSCommunicationHistoryDAL.GetAllPendindNotification();
         }

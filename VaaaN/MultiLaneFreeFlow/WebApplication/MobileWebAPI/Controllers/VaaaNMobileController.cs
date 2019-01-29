@@ -14,6 +14,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Data;
 using System.Globalization;
+using System.Messaging;
 
 namespace MobileWebAPI.Controllers
 {
@@ -28,6 +29,7 @@ namespace MobileWebAPI.Controllers
         CustomerVehicleCBE objCustomerVehicleCBE = new CustomerVehicleCBE();
         ResponseMessage objResponse = new ResponseMessage();
         List<ModelStateList> objResponseMessage = new List<ModelStateList>();
+        private MessageQueue smsMessageQueue;
         #endregion
 
 
@@ -544,35 +546,31 @@ namespace MobileWebAPI.Controllers
                             customerAccount.TmsId = 1;
                             customerAccount.AccountId = objCustomerVehicleCBE.AccountId;
                             customerAccount = CustomerAccountBLL.GetCustomerById(customerAccount);
-                            VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE smsOutgoing = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
-                            smsOutgoing.EntryId = 0;
-                            smsOutgoing.TmsId = 1;
-                            smsOutgoing.CustomerAccountId = customerAccount.AccountId;
-                            smsOutgoing.CustomerVehicleId = objCustomerVehicleCBE.EntryId;
-                            smsOutgoing.CustomerName = customerAccount.FirstName + " " + customerAccount.LastName;
-                            smsOutgoing.MobileNumber = customerAccount.MobileNo;
-                            smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+
+
+                            System.Messaging.Message smsMessage = new System.Messaging.Message();
+                            smsMessage.Formatter = new BinaryMessageFormatter();
+                            VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail smsDetail = new VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail();
+                            CultureInfo culture = new CultureInfo("id-ID");
+
+                          
 
                             string Topup = Constants.TopUp;
-                            CultureInfo culture = new CultureInfo("id-ID");
                             Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(objCustomerVehicleInformation.TopUpAmount.ToString()).ToString("C", culture).Replace("Rp", ""));
                             Topup = Topup.Replace("[vehregno]", objCustomerVehicleInformation.VehicleRegistrationNumber);
                             Topup = Topup.Replace("[balance]", Decimal.Parse(objCustomerVehicleCBE.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
                             Topup = Topup.Replace("[transactiondatetime]", transcationDateTime.ToString());
                             Topup = Topup.Replace("tid", entryId.ToString());
 
-                            smsOutgoing.MessageBody = Topup;
-                            smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
-                            smsOutgoing.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
-                            smsOutgoing.MessageSendDateTime = DateTime.Now;
-                            smsOutgoing.MessageReceiveTime = DateTime.Now;
-                            smsOutgoing.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
-                            smsOutgoing.AttemptCount = 0;
-                            smsOutgoing.CreationDate = DateTime.Now;
-                            smsOutgoing.ModificationDate = DateTime.Now;
-                            smsOutgoing.ModifiedBy = 0;
+                            smsDetail.SMSMessage = Topup;
+                            smsDetail.AccountId = customerAccount.AccountId;
+                            smsDetail.CustomerName = customerAccount.FirstName;
+                            smsDetail.SenderMobileNumber = customerAccount.MobileNo;
+                            smsDetail.AccountHistoryId = entryId;
+                            smsMessage.Body = smsDetail;
+                            smsMessageQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.smsMessageQueue);
+                            smsMessageQueue.Send(smsMessage);
 
-                            VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(smsOutgoing);
                             Log("outbound message inserted successfully.");
                             ModelStateList objModelState = new ModelStateList();
                             objModelState.ErrorMessage = "successful.";

@@ -298,7 +298,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
-        public static DataTable CustomerVehicleDetailsByTID(string TID,string ResidentId)
+        public static DataTable CustomerVehicleDetailsByTID(string TID, string ResidentId)
         {
             try
             {
@@ -598,16 +598,16 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return ds;
         }
 
-        public static CBE.CustomerVehicleCollection GetCustomerbalanceUpdateMobile() //what user ???? CJS
+        public static DataTable GetCustomerbalanceUpdateMobile() //what user ???? CJS
         {
-            CBE.CustomerVehicleCollection vehicles = new CBE.CustomerVehicleCollection();
+            DataTable vehicles = new DataTable();
             try
             {
                 //Stored procedure must have cur_out parameter.
                 //There is no need to add ref cursor for oracle in code.
                 string spName = Constants.oraclePackagePrefix + "CUSTOMER_VEHICLE_BALANCE";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-                vehicles = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
+                vehicles = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName];
             }
             catch (Exception ex)
             {

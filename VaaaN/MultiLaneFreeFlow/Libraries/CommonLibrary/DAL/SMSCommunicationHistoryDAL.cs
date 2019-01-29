@@ -224,9 +224,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return smses;
         }
 
-        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection GetAllPendindNotification()
+        public static DataTable GetAllPendindNotification()
         {
-            VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection smses = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection();
+            DataTable smses = new DataTable();
             try
             {
                 //Stored procedure must have cur_out parameter.
@@ -234,8 +234,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "MOBILE_PENDING_NOTI_ALL";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
                 DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
-                DataTable dt = ds.Tables[tableName];
-                smses = ConvertDataTableToCollection(dt);
+                smses = ds.Tables[tableName];
             }
             catch (Exception ex)
             {

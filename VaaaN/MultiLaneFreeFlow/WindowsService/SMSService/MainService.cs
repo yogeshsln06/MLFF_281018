@@ -491,12 +491,12 @@ namespace SMSService
         {
             try
             {
-                VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCollection unsentBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerbalanceUpdateMobile();
-                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE vb in unsentBalance)
+                DataTable unsentBalance = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetCustomerbalanceUpdateMobile();
+                foreach (DataRow dr in unsentBalance.Rows)
                 {
-                    string responseString = BrodcastDataMobile.BroadCastBalance(vb);
+                    string responseString = BrodcastDataMobile.BroadCastBalance(dr);
                     SendBrodcastStatus(responseString);
-                    LogMessageMobile("Account Entry Id:" + vb.EntryId + " Responce :" + responseString);
+                    LogMessageMobile("Account Entry Id:" + dr["ENTRY_ID"].ToString() + " Responce :" + responseString);
 
                 }
             }
@@ -533,12 +533,12 @@ namespace SMSService
         {
             try
             {
-                VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCollection unsentNotification = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.GetAllPendindNotification();
-                foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE noti in unsentNotification)
+                DataTable unsentNotification = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.GetAllPendindNotification();
+                foreach (DataRow noti in unsentNotification.Rows)
                 {
                     string responseString = BrodcastDataMobile.BroadCastNotification(noti);
                     SendBrodcastStatus(responseString);
-                    LogMessageMobile("Account Entry Id:" + noti.EntryId + " Responce :" + responseString);
+                    LogMessageMobile("Account Entry Id:" + noti["ENTRY_ID"].ToString() + " Responce :" + responseString);
                 }
             }
             catch (Exception ex)
