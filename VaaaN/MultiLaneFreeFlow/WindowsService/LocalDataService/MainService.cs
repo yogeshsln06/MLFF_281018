@@ -422,7 +422,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     ctEvent.PlazaName = GetPlazaNameById(ctp.PlazaId);
                                                     ctEvent.LaneId = ctp.LaneId;
                                                     ctEvent.LaneName = GetLaneNameById(ctp.LaneId);
-
+                                                    ctEvent.ReaderPosition = ctp.ReaderPosition;
                                                 }
                                                 else
                                                 {
@@ -430,6 +430,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     ctEvent.PlazaName = "NA";
                                                     ctEvent.LaneId = 0;
                                                     ctEvent.LaneName = "NA";
+                                                    ctEvent.ReaderPosition = ctp.ReaderPosition;
                                                 }
                                                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE VehicleClass = GetVehicleClassById(eviClass);
                                                 if (VehicleClass != null)
@@ -1601,7 +1602,7 @@ namespace VaaaN.MLFF.WindowsServices
                     accountHistory.TransferStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.TransferStatus.NotTransferred;
                     accountHistory.OpeningBalance = currentAccountBalance;
                     accountHistory.ClosingBalance = afterDeduction;
-                    entryId=VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
+                    entryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.AccountHistoryBLL.Insert(accountHistory);
                     LogMessage("Recorded in account history table successfully.");
                 }
                 catch (Exception ex)
@@ -1657,7 +1658,7 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
 
-        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Decimal tollToDeduct, Decimal AfterDeduction,int entryId)
+        private void NotificationProcessing(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo, VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Decimal tollToDeduct, Decimal AfterDeduction, int entryId)
         {
             try
             {
@@ -2532,7 +2533,7 @@ namespace VaaaN.MLFF.WindowsServices
         public DateTime CurrentDateTime { get; set; }
         public DateTime TransactionDateTime { get; set; }
 
-       // public Int32 IKEVechileClassId { get; set; }
+        // public Int32 IKEVechileClassId { get; set; }
     }
     #endregion
 }

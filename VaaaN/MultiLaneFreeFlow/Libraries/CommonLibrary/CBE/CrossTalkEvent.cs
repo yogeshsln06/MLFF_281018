@@ -17,7 +17,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         string vehicleClassName;
         string vrn;
         string tagid;
-      
+        Int32 readerPosition;
+
 
         public DateTime Timestamp
         {
@@ -109,6 +110,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.tagid = value;
+            }
+        }
+
+        public Int32 ReaderPosition
+        {
+            get
+            {
+                return this.readerPosition;
+            }
+            set
+            {
+                this.readerPosition = value;
             }
         }
 
