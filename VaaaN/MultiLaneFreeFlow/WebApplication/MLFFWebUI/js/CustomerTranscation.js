@@ -18,8 +18,11 @@ var ReviewerStatus = 0;
 var TransactionCategory = 0;
 var StartDate = '';
 var EndDate = '';
+var TranscationId = '';
 
-
+$(document).ready(function () {
+    $("#TranscationId").attr("type", "text");
+});
 /***************************** UnReviewed Start ****************/
 function BindUnreviewedFirstLoad() {
     $("#tblUnreviewedData").removeClass('my-table-bordered').addClass('table-bordered');
@@ -295,6 +298,7 @@ function reloadUnreviewedData() {
     $("#ddlTransactionCategory").val(TransactionCategory);
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
+    $('#TranscationId').val(TranscationId);
     FilteUnreviewedData();
     //if (searchEnable) {
     //    $("#ddlGantry").val(GantryId)
@@ -363,6 +367,7 @@ function openFilterpopupUnReviewed() {
     $("#ddlTransactionCategory").val(TransactionCategory);
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
+    $('#TranscationId').val(TranscationId);
     var modal = $("#filterModel");
     var body = $(window);
     var w = modal.width();
@@ -378,10 +383,10 @@ function openFilterpopupUnReviewed() {
     $(".modal-backdrop.show").hide();
 }
 
-function FilteUnreviewedData() {
+function FilterUnreviewedData() {
     var StartDate1 = '';
     var EndDate1 = '';
-
+    var TraId = 0;
     StartDate = $('#StartDate').val() || ''
     if (StartDate != '') {
         var StartDate1 = DateFormatTime(StartDate);
@@ -411,11 +416,23 @@ function FilteUnreviewedData() {
     else {
         TransactionCategory = 0;
     }
+
+    if ($("#TranscationId").val() != '') {
+        TraId = $("#TranscationId").val();
+        TranscationId = TraId;
+    }
+    else {
+        TraId = 0;
+        TranscationId = '';
+    }
+
+
     var Inputdata = {
         StartDate: StartDate1,
         EndDate: EndDate1,
         GantryId: GantryId,
-        TransactionCategoryId: TransactionCategory
+        TransactionCategoryId: TransactionCategory,
+        TranscationId: TraId
     }
 
     $(".animationload").show();
@@ -1049,6 +1066,7 @@ function reloadReviewedData() {
     $("#VehicleClassId").val(VehicleClassId);
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
+    $('#TranscationId').val(TranscationId);
     FilteReviewedData();
     //if (searchEnable) {
     //    $("#ddlGantry").val(GantryId);
@@ -1129,6 +1147,7 @@ function openFilterpopupReviewed() {
         $("#ParentTranscationId").val('');
 
     $("#ReviewerId").val(ReviewerId);
+    $('#TranscationId').val(TranscationId);
 
     $("#ReviewerStatus").val(ReviewerStatus);
     $("#PlateNumber").val(VRN);
@@ -1153,7 +1172,7 @@ function openFilterpopupReviewed() {
 function FilteReviewedData() {
     var StartDate1 = '';
     var EndDate1 = '';
-
+    var TraId = 0;
     StartDate = $('#StartDate').val() || ''
     if (StartDate != '') {
         var StartDate1 = DateFormatTime(StartDate);
@@ -1205,6 +1224,14 @@ function FilteReviewedData() {
     else {
         VehicleClassId = 0;
     }
+    if ($("#TranscationId").val() != '') {
+        TraId = $("#TranscationId").val();
+        TranscationId = TraId;
+    }
+    else {
+        TraId = 0;
+        TranscationId = '';
+    }
 
     var Inputdata = {
         GantryId: GantryId,
@@ -1214,7 +1241,8 @@ function FilteReviewedData() {
         VehicleClassId: VehicleClassId,
         ParentTranscationId: ParentTranscationId,
         ReviewerId: ReviewerId,
-        ReviewerStatus: ReviewerStatus
+        ReviewerStatus: ReviewerStatus,
+        TranscationId: TraId
 
     }
     inProgress = true;
@@ -1575,6 +1603,7 @@ function reloadChargedData() {
     $("#VehicleClassId").val(VehicleClassId);
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
+    $('#TranscationId').val(TranscationId);
     FilterChargedData();
     //if (searchEnable) {
     //    $("#ddlGantry").val(GantryId)
@@ -1651,7 +1680,9 @@ function openFilterpopupCharged() {
     $("#VehicleClassId").val(VehicleClassId);
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
+    $('#TranscationId').val(TranscationId);
     var modal = $("#filterModel");
+
     var body = $(window);
     var w = modal.width();
     var h = modal.height();
@@ -1667,6 +1698,7 @@ function openFilterpopupCharged() {
 }
 
 function FilterChargedData() {
+    var TraId = 0;
     var StartDate1 = '';
     var EndDate1 = '';
 
@@ -1721,6 +1753,15 @@ function FilterChargedData() {
     else {
         VehicleClassId = 0;
     }
+    if ($("#TranscationId").val() != '') {
+        TraId = $("#TranscationId").val();
+        TranscationId = TraId;
+    }
+    else {
+        TraId = 0;
+        TranscationId = '';
+    }
+
     var Inputdata = {
         GantryId: GantryId,
         StartDate: StartDate1,
@@ -1729,7 +1770,8 @@ function FilterChargedData() {
         Name: Name,
         Email: EmailId,
         PlateNumber: VRN,
-        VehicleClassId: VehicleClassId
+        VehicleClassId: VehicleClassId,
+        TranscationId: TraId
     }
     inProgress = true;
     $(".animationload").show();
@@ -1935,6 +1977,7 @@ function reloadTopUpData() {
     $("#VehicleClassId").val(VehicleClassId);
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
+    $('#TranscationId').val(TranscationId);
     FilterTopUpData();
     //if (searchEnable) {
     //    $("#ResidentId").val(ResidentID);
@@ -2010,6 +2053,7 @@ function openFilterpopupTopup() {
     $("#VehicleClassId").val(VehicleClassId);
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
+    $('#TranscationId').val(TranscationId);
     var modal = $("#filterModel");
     var body = $(window);
     var w = modal.width();
@@ -2026,6 +2070,7 @@ function openFilterpopupTopup() {
 }
 
 function FilterTopUpData() {
+    var TraId = 0;
     var StartDate1 = '';
     var EndDate1 = '';
 
@@ -2074,6 +2119,14 @@ function FilterTopUpData() {
     else {
         VehicleClassId = 0;
     }
+    if ($("#TranscationId").val() != '') {
+        TraId = $("#TranscationId").val();
+        TranscationId = TraId;
+    }
+    else {
+        TraId = 0;
+        TranscationId = '';
+    }
     var Inputdata = {
         StartDate: StartDate1,
         EndDate: EndDate1,
@@ -2081,7 +2134,8 @@ function FilterTopUpData() {
         Name: Name,
         Email: EmailId,
         PlateNumber: VRN,
-        VehicleClassId: VehicleClassId
+        VehicleClassId: VehicleClassId,
+        TranscationId: TraId
     }
     inProgress = true;
     $(".animationload").show();

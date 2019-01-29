@@ -109,6 +109,10 @@ namespace MLFFWebUI.Controllers
             {
                 strQuery += " AND T.PLAZA_ID = " + transaction.GantryId;
             }
+            if (transaction.TranscationId > 0)
+            {
+                strQuery += " AND T.TRANSACTION_ID = " + transaction.TranscationId;
+            }
             if (transaction.TransactionCategoryId == 1)// IKE Only
             {
                 strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0  AND NVL(T.NF_ENTRY_ID_REAR,0) = 0";
@@ -1493,6 +1497,10 @@ namespace MLFFWebUI.Controllers
             {
                 strQuery += " AND (T.PLAZA_ID = " + transaction.GantryId + ")";
             }
+            if (transaction.TranscationId > 0)
+            {
+                strQuery += " AND T.TRANSACTION_ID = " + transaction.TranscationId;
+            }
             if (transaction.ReviewerId > 0)
             {
                 strQuery += " AND (T.AUDITOR_ID = " + transaction.ReviewerId + ")";
@@ -1608,6 +1616,10 @@ namespace MLFFWebUI.Controllers
             {
                 strQuery += " AND (T.PLAZA_ID = " + transaction.GantryId + ")";
             }
+            if (transaction.TranscationId > 0)
+            {
+                strQuery += " AND T.TRANSACTION_ID = " + transaction.TranscationId;
+            }
             dt = TransactionBLL.GetChargedDataTableFilteredRecords(strQuery);
             string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Det.Replace("\r", "").Replace("\n", "");
@@ -1695,6 +1707,10 @@ namespace MLFFWebUI.Controllers
             if (transaction.VehicleClassId > 0)
             {
                 strQuery += " AND (CV.VEHICLE_CLASS_ID = " + transaction.VehicleClassId + ")";
+            }
+            if (transaction.TranscationId > 0)
+            {
+                strQuery += " AND T.ENTRY_ID = " + transaction.TranscationId;
             }
             dt = AccountHistoryBLL.GetTopUpDataTableFilteredRecords(strQuery);
             string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
