@@ -60,7 +60,7 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> vehicleClass = new List<SelectListItem>();
             List<VehicleClassCBE> vehicle = VehicleClassBLL.GetAll();
 
-            vehicleClass.Add(new SelectListItem() { Text = "--Select All--", Value = "0" });
+            vehicleClass.Add(new SelectListItem() { Text = "", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicle)
             {
                 vehicleClass.Add(new SelectListItem() { Text = vc.Name, Value = System.Convert.ToString(vc.Id) });
@@ -1307,15 +1307,15 @@ namespace MLFFWebUI.Controllers
                                         #region Customer Document Not Verified its marked AS Violation
                                         #region process for audit
                                         objtransaction.TransactionId = ParentTransactionId;
-                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
-                                        Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED";
+                                        //FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
+                                        Meassage = "yes!Transactions ID " + ParentTransactionId + "";
 
                                         #region violation Parent
                                         objtransaction.TransactionId = ParentTransactionId;
                                         TransactionBLL.MarkAsViolation(objtransaction);
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
-                                        Meassage = Meassage + " and set as VIOLATION!!!";
+                                        Meassage = Meassage + " set as VIOLATION!!!";
                                         #endregion
 
                                         #region No violation Child

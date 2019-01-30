@@ -261,14 +261,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                     SmtpServer.Port = port;
                     SmtpServer.Host = hostName;
                     SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    SmtpServer.EnableSsl = true;
+                    SmtpServer.EnableSsl = false;
 
                     MailMessage mail = new MailMessage();
                     mail.From = new MailAddress(fromMail);
                     mail.Subject = Subject;
                     mail.Body = body.ToString();
                     mail.To.Add(SendTo);
-                    mail.IsBodyHtml = false;
+                    mail.IsBodyHtml = true;
 
                     mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
 

@@ -53,19 +53,34 @@ function encodeImagetoBase64(element) {
     var ParentDiv = $(element).parent();
     if (element.files.length > 0) {
         var file = element.files[0];
-        var filesize = file.size;
+        //var filesize = file.size;
         var filename = file.name || '';
+        var fileSize = Math.round(file.size / 1024);
+        if (fileSize > 500) {
+            $(ParentDiv).find('input:file').val('');
+            alert("Please select image less than 500 KB.");
+            return false;
+        }
+        //else {
+        //    debugger;
+        //    var url = URL.createObjectURL(file);
+        //    var img = new Image();
+        //    img.src = url;
+
+
+        //    img.onload = function () {
+        //        img_width = img.width;
+        //        img_height = img.height;
+        //        context.drawImage(img, 0, 0, 300, 600);
+        //    }
+        //}
         $(element).parent().find('.filespan').text('Update File');
         $(element).parent().find('.text-danger').text('');
         if ($(element).parent().find('br').length == 0) {
             $("<br/>").insertAfter($(element));
         }
         $(element).prev().removeAttr('onclick').attr("onclick", "trigerImg(this)").show();
-        if (filesize > 1500000) {
-            $(ParentDiv).find('input:file').val('');
-            alert("Please Select less than 1.5 MB.");
-            return false;
-        }
+
 
         var ancoreTag = $(element).parent().find('a');
         var ValidateFile = file;

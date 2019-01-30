@@ -1,17 +1,21 @@
 ﻿var ResponceData = [];
 $(document).ready(function () {
-    $('.prev i').removeClass();
-    $('.prev i').addClass("fa fa-chevron-left");
-    $('.next i').removeClass();
-    $('.next i').addClass("fa fa-chevron-right");
-    //$('#module_4').css({ "background-color": "#00B4CE" });
-    //$('#module_4').css({ "font-weight": "bold" });
-    $("#tableCrossTalk").freezeHeader({ 'height': '150px' });
-    $("#tableNodeFluxFront").freezeHeader({ 'height': '150px' });
-    $("#tableNodeFluxRear").freezeHeader({ 'height': '150px' });
+    //function setHeight() {
+    //    windowHeight = $(window).innerHeight() - 113;
+    //    $('.container-fluid').css('max-height', windowHeight);
+    //};
+    //setHeight();
+
+    //$(window).resize(function () {
+    //    setHeight();
+    //});
+
+    $("#tblIKE").freezeHeader({ 'height': '400px' });
+    $("#tblANPRFront").freezeHeader({ 'height': '400px' });
+    $("#tblANPRRear").freezeHeader({ 'height': '400px' });
     myVar = setInterval("GetMSMQData()", 2000);
     //GetMSMQData()
-    $('body').attr("style", "");
+    //$('body').attr("style", "");
 });
 
 function filterData() {
@@ -46,7 +50,7 @@ function GetMSMQData() {
 
 function BindEventList(data) {
     var TR;
-    var loc="Front"
+    var loc = "Front"
     if (data.length > 0) {
         TR = '';
         for (var i = 0; i < data.length; i++) {
@@ -57,37 +61,39 @@ function BindEventList(data) {
                 else {
                     loc = "Rear";
                 }
-                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].PlazaName + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td style='text-align:left'>" + replacenull(data[i].VehicleClassName) + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
-              "<td>" + data[i].Datepacket + "</td><td>" + data[i].TagId + "</td><td>" + loc + "</td></tr>"
+                //
+                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].Datepacket + "</td><td style='text-align:left'>" + data[i].LaneName + "-" + loc + "</td><td style='text-align:left'>" + data[i].TagId + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
+              "<td>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
 
-                if ($("#tableCrossTalk tbody tr").length > 0) {
-                    $('#tableCrossTalk tbody tr:first').before(TR);
+                if ($("#tblIKE tbody tr").length > 0) {
+                    $('#tblIKE tbody tr:first').before(TR);
                 }
                 else {
-                    $("#tableCrossTalk tbody:last-child").append(TR);
+                    $("#tblIKE tbody:last-child").append(TR);
                 }
-                $("#tableCrossTalk").freezeHeader({ 'height': '200px' });
+                //$("#tblIKE").freezeHeader({ 'height': '200px' });
             }
             else if (data[i].PacketName.toLowerCase() == "nodeflux - front") {
-                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].PlazaName + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td style='text-align:left'>" + replacenull(data[i].VehicleClassName) + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
-"<td>" + data[i].Datepacket + "</td><td><a class='dropdown-item' href='javascript:void(0);' onclick='ViewFiles('" + data[i].NumberPlatePath + "','" + data[i].VehiclePath + "','" + data[i].VideoURL + "');'<span class='icon-holder'><i class='c-blue-500 ti-clip'></i></span></a></td></tr>"
-                if ($("#tableNodeFluxFront tbody tr").length > 0) {
-                    $('#tableNodeFluxFront tbody tr:first').before(TR);
+                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].Datepacket + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
+              "<td>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                if ($("#tblANPRFront tbody tr").length > 0) {
+                    $('#tblANPRFront tbody tr:first').before(TR);
                 }
                 else {
-                    $("#tableNodeFluxFront tbody:last-child").append(TR);
+                    $("#tblANPRFront tbody:last-child").append(TR);
                 }
             }
             else if (data[i].PacketName.toLowerCase() == 'nodeflux - rear') {
-                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].PlazaName + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td style='text-align:left'>" + replacenull(data[i].VehicleClassName) + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
-               "<td>" + data[i].Datepacket + "</td><td><a class='dropdown-item' href='javascript:void(0);' onclick='ViewFiles('" + data[i].NumberPlatePath + "','" + data[i].VehiclePath + "','" + data[i].VideoURL + "');'<span class='icon-holder'><i class='c-blue-500 ti-clip'></i></span></a></td></tr>"
+                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].Datepacket + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
+              "<td>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
 
-                if ($("#tableNodeFluxRear tbody tr").length > 0) {
-                    $('#tableNodeFluxRear tbody tr:first').before(TR);
+                if ($("#tblANPRRear tbody tr").length > 0) {
+                    $('#tblANPRRear tbody tr:first').before(TR);
                 }
                 else {
-                    $("#tableNodeFluxRear tbody:last-child").append(TR);
+                    $("#tblANPRRear tbody:last-child").append(TR);
                 }
+                $("#tblANPRRear").freezeHeader({ 'height': '400px' });
             }
         }
     }

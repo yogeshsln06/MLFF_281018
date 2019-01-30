@@ -153,16 +153,19 @@ function BindCustmerVehicleAccount() {
                     {
                         'data': 'AccountBalance',
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                            if (oData.AccountBalance != '' && oData.AccountBalance != null) {
-                                if (oData.AccountBalance < 0) {
-                                    $(nTd).html("<span class='text-right red'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
+                            var bal = oData.AccountBalance;
+
+                            if (bal != '' && bal != null) {
+                                if (bal < 0) {
+                                    bal = (bal) * (-1);
+                                    $(nTd).html("<span class='text-right red'>(" + bal.toLocaleString('id-ID', {
                                         maximumFractionDigits: 0,
                                         style: 'currency',
                                         currency: 'IDR'
                                     }) + ")</span>");
                                 }
                                 else {
-                                    $(nTd).html("<span class='text-right'>" + oData.AccountBalance.toLocaleString('id-ID', {
+                                    $(nTd).html("<span class='text-right'>" + bal.toLocaleString('id-ID', {
                                         maximumFractionDigits: 0,
                                         style: 'currency',
                                         currency: 'IDR'
@@ -1381,9 +1384,9 @@ function MakeCSV() {
 
 
 function ResetFilter() {
-    $("#filterbox").find('input:text').val('');
-    $("#filterbox").find('input:file').val('');
-    $("#filterbox").find('select').val(0);
+    $("#filterModel").find('input:text').val('');
+    $("#filterModel").find('input:file').val('');
+    $("#filterModel").find('select').val(0);
 
 }
 

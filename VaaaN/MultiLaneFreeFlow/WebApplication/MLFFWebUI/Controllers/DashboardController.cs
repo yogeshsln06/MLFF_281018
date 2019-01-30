@@ -41,7 +41,7 @@ namespace MLFFWebUI.Controllers
                 List<SelectListItem> gantryList = new List<SelectListItem>();
                 List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
 
-                gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
+                gantryList.Add(new SelectListItem() { Text = "", Value = "0" });
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
                 {
                     gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });

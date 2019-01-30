@@ -37,6 +37,7 @@ function BindUnreviewedFirstLoad() {
         autoWidth: true,
         paging: false,
         info: false,
+        processing: true,
         columns: [
             { 'data': 'ROWNUMBER' },
             {
@@ -48,9 +49,9 @@ function BindUnreviewedFirstLoad() {
             {
                 'data': 'TRANSACTION_DATETIME',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
-                        oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
-                        $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                    if (oData.F_TRANSACTION_DATETIME != '' && oData.F_TRANSACTION_DATETIME != null) {
+                        oData.F_TRANSACTION_DATETIME = oData.F_TRANSACTION_DATETIME.replace('T', ' ');
+                        $(nTd).html("" + oData.F_TRANSACTION_DATETIME + "");
                     }
                 }
 
@@ -299,7 +300,7 @@ function reloadUnreviewedData() {
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
     $('#TranscationId').val(TranscationId);
-    FilteUnreviewedData();
+    FilterUnreviewedData();
     //if (searchEnable) {
     //    $("#ddlGantry").val(GantryId)
     //    $("#ddlTransactionCategory").val(TransactionCategory);
@@ -806,9 +807,9 @@ function BindReviewedFirstLoad() {
             {
                 'data': 'TRANSACTION_DATETIME',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
-                        oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
-                        $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                    if (oData.F_TRANSACTION_DATETIME != '' && oData.F_TRANSACTION_DATETIME != null) {
+                        oData.F_TRANSACTION_DATETIME = oData.F_TRANSACTION_DATETIME.replace('T', ' ');
+                        $(nTd).html("" + oData.F_TRANSACTION_DATETIME + "");
                     }
                 }
 
@@ -1299,9 +1300,9 @@ function BindChargedFirstLoad() {
             {
                 'data': 'TRANSACTION_DATETIME',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
-                        oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
-                        $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                    if (oData.F_TRANSACTION_DATETIME != '' && oData.F_TRANSACTION_DATETIME != null) {
+                        oData.F_TRANSACTION_DATETIME = oData.F_TRANSACTION_DATETIME.replace('T', ' ');
+                        $(nTd).html("" + oData.F_TRANSACTION_DATETIME + "");
                     }
                 }
 
@@ -1824,9 +1825,9 @@ function BindTopUpFirstLoad() {
             {
                 'data': 'CREATION_DATE',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    if (oData.CREATION_DATE != '' && oData.CREATION_DATE != null) {
-                        oData.CREATION_DATE = oData.CREATION_DATE.replace('T', ' ');
-                        $(nTd).html("" + oData.CREATION_DATE + "");
+                    if (oData.F_CREATION_DATE != '' && oData.F_CREATION_DATE != null) {
+                        oData.F_CREATION_DATE = oData.F_CREATION_DATE.replace('T', ' ');
+                        $(nTd).html("" + oData.F_CREATION_DATE + "");
                     }
                 }
 

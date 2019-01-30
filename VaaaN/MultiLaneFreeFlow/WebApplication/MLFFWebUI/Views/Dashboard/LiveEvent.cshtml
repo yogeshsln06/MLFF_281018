@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @*<link href="~/Scripts/le/Bootstrap/css/bootstrap.css" rel="stylesheet" />*@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css">
 <link href="~/Scripts/bootstrap3/css/bootstrap.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.freezeheader.js"></script>
 <script src="~/js/liveEvents.js"></script>
@@ -11,82 +12,12 @@
         padding: 10px 10px 10px !important;
     }
 
-    .well {
-        min-height: 20px;
-        padding: 5px;
-        background-color: #f5f5f5;
-        border: 1px solid #e3e3e3;
-        border-radius: 4px;
-        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+    thead {
+        /*position: fixed !important;*/
+        background: #f5f5f5 !important;
     }
 
-    .panel-default > .panel-heading {
-        color: #fff;
-        font-weight: bold;
-        background-color: #40b2cd;
-        border-color: #40b2cd;
-        text-decoration: none;
-    }
-
-    a:hover {
-        text-decoration: none;
-    }
-
-    a:active {
-        text-decoration: none;
-    }
-    /**/
-    /* The Modal (background) */
-
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
-
-    /* Modal Content/Box */
-    .modal-content {
-        background-color: #fefefe;
-        margin: 5% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 800px;
-        height: 300px;
-    }
-
-    /* The Close Button */
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-    .videoDiv {
-        height: 150px;
-        width: 200px;
-    }
-
-    .panel-body {
-        padding: 0px;
-    }
-
-    .dropdown-item:hover {
+    /*.dropdown-item:hover {
         display: block;
         width: 100%;
         padding: 4px 24px;
@@ -98,133 +29,120 @@
         white-space: nowrap;
         background-color: transparent !important;
         border-color: none !important;
-    }
+    }*/
 </style>
-<div class="container-fluid">
+<div class="container-fluid" style="overflow:hidden;">
     <div class="row">
         <div class="col-md-12">
             <div class="bgc-white bd bdrs-3 p-20 mB-20">
-                <div class="panel-group" id="accordion">
-                    <div class="panel panel-default">
-                        <h5 class="c-mygrey-900 heading"><strong>IKE </strong>Information<span></span></h5>
-                        <div id="collapse1" class="panel-collapse collapse in">
-                            <div class="panel-body table-responsive">
-                                <table id="tableCrossTalk" class="table table-condensed table-striped my-table-bordered">
-                                    <thead style="background:#f5f5f5;">
-                                        <tr>
-                                            <th style="text-align:left; width:60px;">
-                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry
-                                            </th>
-                                            <th style="text-align:left; width:60px;">
-                                                Lajur
-                                            </th>
-                                            <th style="text-align:left; width:60px;">
-                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
-                                            </th>
-                                            <th style="width:60px;">
-                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
-                                            </th>
-                                            <th style="width:60px;">
-                                                Date Time
-                                            </th>
-                                            <th style="width:60px;">
-                                                Tag Id
-                                            </th>
-                                            <th style="width:60px;">
-                                                Location
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
+                <div class="form-row">
+                    <div class="col-md-8">
+                        <div class="mT-10">
+                            <h4 class="c-mygrey-900 mB-20">Live Monitoring</h4>
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <h5 class="c-mygrey-900 heading"><strong>ANPR Front </strong>Information<span></span></h5>
-                        <div id="collapse2" class="panel-collapse collapse in">
-                            <div class="panel-body table-responsive">
-                                <table id="tableNodeFluxFront" class="table table-condensed table-striped my-table-bordered">
-                                    <thead style="background:#f5f5f5;">
-                                        <tr>
-                                            <th style="text-align:left; width:60px;">
-                                                Gantry
-                                            </th>
-                                            <th style="text-align:left; width:60px;">
-                                                Lajur
-                                            </th>
-                                            <th style="text-align:left; width:60px;">
-                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
-                                            </th>
-                                            <th style="width:60px;">
-                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
-                                            </th>
-                                            <th style="width:60px;">
-                                                Date Time
-                                            </th>
-                                            <th style="width:60px;">
-                                                Files
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <h5 class="c-mygrey-900 heading"><strong>ANPR Reat </strong>Information<span></span></h5>
-                        <div id="collapse3" class="panel-collapse collapse in">
-                            <div class="panel-body table-responsive">
-                                <table id="tableNodeFluxRear" class="table table-condensed table-striped my-table-bordered">
-                                    <thead style="background:#f5f5f5;">
-                                        <tr>
-                                            <th style="text-align:left; width:60px;">
-                                                Gantry
-                                            </th>
-                                            <th style="text-align:left; width:60px;">
-                                                Lajur
-                                            </th>
-                                            <th style="text-align:left; width:60px;">
-                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleClass
-                                            </th>
-                                            <th style="width:60px;">
-                                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.VehicleRegNo
-                                            </th>
-                                            <th style="width:60px;">
-                                                Date Time
-                                            </th>
-                                            <th style="width:60px;">
-                                                Files
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                    <div class="col-md-4">
+                        <div class="mT-10">
+                            <div class="gap-5 peers" style="float:right;overflow: visible !important;">
+                                <div class="peer">
+                                    <div class="col-md-12">
+                                        @Html.DropDownList("ddlGantry", (IEnumerable<SelectListItem>)ViewBag.Gantry, new { @class = "form-control", @onchange = "filterData()" })
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="myModal" class="modal">
-    <!-- Modal content -->
-    <div class="modal-content">
-        <span class="close" onclick="imageclose()">&times;</span>
-        <div class="col-md-12">
-            <div class="col-md-4">
-                <img src="" id="myimageVrn" height="150" width="200" />
-            </div>
-            <div class="col-md-4">
-                <img src="" id="myimageVehicle" height="150" width="200" />
-            </div>
-            <div id="rearvideo" class="col-md-4">
-                <video controls class="videoDiv">
-                    <source src="#" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div class="table-responsive">
+                            <table id="tblIKE" class="table table-condensed my-table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;" colspan="5">
+                                            RFID
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Date Time
+                                        </th>
+                                        <th>
+                                            Lane & Position
+                                        </th>
+                                        <th>
+                                            EPC
+                                        </th>
+                                        <th>
+                                            VRN
+                                        </th>
+                                        <th>
+                                            Class
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="table-responsive">
+                            <table id="tblANPRFront" class="table table-condensed my-table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;" colspan="4">
+                                            Front ANPR
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Date Time
+                                        </th>
+                                        <th>
+                                            Lane
+                                        </th>
+                                        <th>
+                                            VRN
+                                        </th>
+                                        <th>
+                                            Class
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="table-responsive">
+                            <table id="tblANPRRear" class="table table-condensed my-table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;" colspan="4">
+                                            Rear ANPR
+                                        </th>
+                                    </tr>
+                                    <tr>
+
+                                        <th>
+                                            Date Time
+                                        </th>
+                                        <th>
+                                            Lane
+                                        </th>
+                                        <th>
+                                            VRN
+                                        </th>
+                                        <th>
+                                            Class
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

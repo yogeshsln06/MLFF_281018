@@ -1067,7 +1067,7 @@ function MakeCSV() {
 
 function ResetFilter() {
 
-    $("#filterbox").find('input:text').val('');
+    $("#filterModel").find('input:text').val('');
     //reloadData();
 }
 

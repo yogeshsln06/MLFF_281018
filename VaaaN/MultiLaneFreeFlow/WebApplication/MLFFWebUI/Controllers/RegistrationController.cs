@@ -294,7 +294,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         Directory.CreateDirectory(CustomerFilepath);
                                     }
-                                    string customerImageName = customerAccount.ResidentId.ToString().Trim() + "_Document_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    string customerImageName = customerAccount.ResidentId.ToString().Trim() + "_Document_" + String.Format("{0:yyyyMMddHHmmss}", DateTime.Now) + ".jpeg";
                                     customerAccount.ResidentidcardImagePath = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
                                 }
                                 catch (Exception ex)
@@ -488,7 +488,7 @@ namespace MLFFWebUI.Controllers
                                         {
                                             Directory.CreateDirectory(CustomerFilepath);
                                         }
-                                        string customerImageName = customerAccount.ResidentId.ToString().Trim() + "_Document_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                        string customerImageName = customerAccount.ResidentId.ToString().Trim() + "_Document_" + String.Format("{0:yyyyMMddHHmmss}", DateTime.Now) + ".jpeg";
                                         customerAccount.ResidentidcardImagePath = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
                                     }
                                     catch (Exception ex)
@@ -1478,7 +1478,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         Directory.CreateDirectory(CustomerFilepath);
                                     }
-                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Front_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Front_" + String.Format("{0:yyyyMMddHHmmss}", DateTime.Now) + ".jpeg";
                                     objCustomerVehicleModel.VehicleImageFront = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
                                 }
                                 catch (Exception ex)
@@ -1531,7 +1531,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         Directory.CreateDirectory(CustomerFilepath);
                                     }
-                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Rear_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Rear_" + String.Format("{0:yyyyMMddHHmmss}", DateTime.Now) + ".jpeg";
                                     objCustomerVehicleModel.VehicleImageRear = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
                                 }
                                 catch (Exception ex)
@@ -1584,7 +1584,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         Directory.CreateDirectory(CustomerFilepath);
                                     }
-                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Left_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Left_" + String.Format("{0:yyyyMMddHHmmss}", DateTime.Now) + ".jpeg";
                                     objCustomerVehicleModel.VehicleImageLeft = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
                                 }
                                 catch (Exception ex)
@@ -1637,7 +1637,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         Directory.CreateDirectory(CustomerFilepath);
                                     }
-                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Right_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_Right_" + String.Format("{0:yyyyMMddHHmmss}", DateTime.Now) + ".jpeg";
                                     objCustomerVehicleModel.VehicleImageRight = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
                                 }
                                 catch (Exception ex)
@@ -1690,7 +1690,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         Directory.CreateDirectory(CustomerFilepath);
                                     }
-                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_RC_" + String.Format("{0:yyyyMMdd}", DateTime.Now) + ".jpeg";
+                                    string customerImageName = objCustomerVehicleModel.VehRegNo.ToString().Trim() + "_Document_RC_" + String.Format("{0:yyyyMMddHHmmss}", DateTime.Now) + ".jpeg";
                                     objCustomerVehicleModel.VehicleRCNumberImagePath = Constants.SaveByteArrayAsImage(CustomerFilepath + customerImageName, realData, customerImageName);
                                 }
                                 catch (Exception ex)

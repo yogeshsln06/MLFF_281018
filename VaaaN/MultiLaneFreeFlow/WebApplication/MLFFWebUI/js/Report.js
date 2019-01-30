@@ -225,8 +225,16 @@ function openFilterpopupVechile() {
     $(".modal-backdrop.show").hide();
 }
 
+function ReloadData() {
+    $("#vrnList").val(VehicleId)
+    $("#monthList").val(MonthId);
+    $("#yearList").val(YearId);
+    FilterVBRData();
+}
+
 function FilterVBRData() {
-    $(".animationload").show();
+  
+
     VehicleId = $("#vrnList").val();
     MonthId = $("#monthList").val();
     YearId = $("#yearList").val();

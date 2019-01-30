@@ -1,4 +1,4 @@
-/* Formatted on 29/01/2019 10:56:25 (QP5 v5.215.12089.38647) */
+/* Formatted on 30-01-2019 17:01:00 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2817,7 +2817,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
        T.LANE_ID,
        T.LANE_NAME,
        T.TRANSACTION_ID,
-       T.F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
+       T.F_TRANSACTION_DATETIME, 
+       T.TRANSACTION_DATETIME,
        T.CT_ENTRY_ID,
        CTP.OBJECT_ID AS TAG_ID,
        CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
@@ -3039,7 +3040,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   T.LANE_ID,
                   T.LANE_NAME,
                   T.TRANSACTION_ID,
-                  F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
+                  T.F_TRANSACTION_DATETIME, 
+                  T.TRANSACTION_DATETIME,
                   T.CT_ENTRY_ID,
                   CTP.OBJECT_ID AS TAG_ID,
                   CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
@@ -3200,7 +3202,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
        T.LANE_ID,
        T.LANE_NAME,
        T.TRANSACTION_ID,
-       T.F_TRANSACTION_DATETIME AS TRANSACTION_DATETIME,
+       T.F_TRANSACTION_DATETIME, 
+       T.TRANSACTION_DATETIME,
        T.CT_ENTRY_ID,
        CTP.OBJECT_ID AS TAG_ID,
        CTP.VEHICLE_CLASS_ID AS CTP_VEHICLE_CLASS_ID,
@@ -3258,7 +3261,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
        LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
           ON T.TRANSACTION_ID = AH.TRANSACTION_ID'
          || P_FILTER
-         || ' ORDER BY TRANSACTION_DATETIME DESC';
+         || ' ORDER BY T.TRANSACTION_DATETIME DESC';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_CHARGED_FILTERED;
@@ -6210,7 +6213,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            CV.VALID_UNTIL,
                            CV.TID_FRONT,
                            CV.TID_REAR,
-                           CV.ACCOUNT_BALANCE,
+                           NVL(CV.ACCOUNT_BALANCE,0) ACCOUNT_BALANCE,
                            CV.REGISTRATION_THROUGH,
                            CV.IS_DOC_VERIFIED,
                            CV.QUEUE_STATUS,
@@ -8070,7 +8073,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
       SQLQUERY :=
             ' SELECT ROWNUM AS ROWNUMBER,
                   T.ENTRY_ID,
-                  F_CREATION_DATE AS CREATION_DATE,
+                  T.F_CREATION_DATE, 
+                  T.CREATION_DATE,
                   CV.VEH_REG_NO,
                   VC.VEHICLE_CLASS_NAME,
                   CA.FIRST_NAME,
@@ -8263,7 +8267,16 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                   'Beginning' TRANSACTION_TYPE,
                                   NULL AS PLAZA_NAME,
                                   NULL LANE_ID,
-                                  NVL (SUM (AMOUNT), 0) AMOUNT,
+                                  NVL (
+                                     SUM (
+                                        (CASE TRANSACTION_TYPE
+                                            WHEN 1 THEN AMOUNT
+                                            WHEN 2 THEN AMOUNT
+                                            WHEN 3 THEN -1 * AMOUNT
+                                            WHEN 4 THEN -1 * AMOUNT
+                                         END)),
+                                     0)
+                                     AMOUNT,
                                   0 AS OPENING_BALANCE,
                                   0 AS CLOSING_BALANCE,
                                   NULL AS FRONT_IMAGE,
@@ -8312,7 +8325,15 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                      TRANSACTION_TYPE,
                                   P.PLAZA_NAME,
                                   T.LANE_ID,
-                                  AH.AMOUNT,
+                                  NVL (
+                                     (CASE TRANSACTION_TYPE
+                                         WHEN 1 THEN AH.AMOUNT
+                                         WHEN 2 THEN AH.AMOUNT
+                                         WHEN 3 THEN -1 * AH.AMOUNT
+                                         WHEN 4 THEN -1 * AH.AMOUNT
+                                      END),
+                                     0)
+                                     AMOUNT,
                                   AH.OPENING_BALANCE,
                                   AH.CLOSING_BALANCE,
                                   NFP.PLATE_THUMBNAIL AS FRONT_IMAGE,
@@ -8353,7 +8374,16 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                   'Ending' TRANSACTION_TYPE,
                                   NULL AS PLAZA_NAME,
                                   NULL LANE_ID,
-                                  SUM (AMOUNT) AMOUNT,
+                                  NVL (
+                                     SUM (
+                                        (CASE TRANSACTION_TYPE
+                                            WHEN 1 THEN AMOUNT
+                                            WHEN 2 THEN AMOUNT
+                                            WHEN 3 THEN -1 * AMOUNT
+                                            WHEN 4 THEN -1 * AMOUNT
+                                         END)),
+                                     0)
+                                     AMOUNT,
                                   0 AS OPENING_BALANCE,
                                   0 AS CLOSING_BALANCE,
                                   NULL AS FRONT_IMAGE,

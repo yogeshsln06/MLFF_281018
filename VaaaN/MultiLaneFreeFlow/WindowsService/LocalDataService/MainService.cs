@@ -422,8 +422,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     ctEvent.PlazaName = GetPlazaNameById(ctp.PlazaId);
                                                     ctEvent.LaneId = ctp.LaneId;
                                                     ctEvent.LaneName = GetLaneNameById(ctp.LaneId);
-                                                    ctEvent.ReaderPosition = ctp.ReaderPosition;
-                                                    ctEvent.VRN = ctp.PlateNumber;
+                                                   
                                                 }
                                                 else
                                                 {
@@ -431,8 +430,6 @@ namespace VaaaN.MLFF.WindowsServices
                                                     ctEvent.PlazaName = "NA";
                                                     ctEvent.LaneId = 0;
                                                     ctEvent.LaneName = "NA";
-                                                    ctEvent.ReaderPosition = ctp.ReaderPosition;
-                                                    ctEvent.VRN = ctp.PlateNumber;
                                                 }
                                                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE VehicleClass = GetVehicleClassById(eviClass);
                                                 if (VehicleClass != null)
@@ -443,7 +440,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 {
                                                     LogMessage("Vehicle class name might be wrong in IKE packet. (1, 2, 3, 4)" + eviClass);
                                                 }
-
+                                                ctEvent.ReaderPosition = ctp.ReaderPosition;
                                                 ctEvent.VRN = eviVRN;
 
                                                 crosstalkEventMessage.Body = ctEvent;
