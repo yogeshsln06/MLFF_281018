@@ -240,7 +240,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
             return responseString;
         }
 
-        public static bool SendEmail(StringBuilder body, string SendTo, string Subject)
+        public static bool SendEmail(string body, string SendTo, string Subject)
         {
             bool isSuccess = false;
 

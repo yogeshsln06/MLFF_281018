@@ -1151,7 +1151,7 @@ namespace MLFFWebUI.Controllers
                                     if (objCustomerVehicleModel.SendEmail)
                                     {
                                         objCustomerVehicleModel.EntryId = customerVehicleEntryId;
-                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
+                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
                                         BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                     }
                                 }
@@ -1210,7 +1210,7 @@ namespace MLFFWebUI.Controllers
                                     if (objCustomerVehicleModel.SendEmail)
                                     {
                                         objCustomerVehicleModel.EntryId = customerVehicleEntryId;
-                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
+                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
                                         BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                     }
                                     ModelStateList objModelState = new ModelStateList();
@@ -1290,7 +1290,7 @@ namespace MLFFWebUI.Controllers
                             CustomerVehicleBLL.Update(objCustomerVehicleCBE);
                             if (objCustomerVehicleModel.SendEmail)
                             {
-                                BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
                                 BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                             }
 
@@ -1334,7 +1334,7 @@ namespace MLFFWebUI.Controllers
                                 CustomerVehicleBLL.Update(objCustomerVehicleCBE);
                                 if (objCustomerVehicleModel.SendEmail)
                                 {
-                                    BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
+                                    BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
                                     BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                 }
 

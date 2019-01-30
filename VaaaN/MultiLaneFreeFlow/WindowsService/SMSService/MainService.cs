@@ -93,19 +93,19 @@ namespace SMSService
                 LogMessage("threadSendSMSStatus started successfully.");
 
 
-                //LogMessage("Trying to start threadAccountBalanceUpdate...");
-                //threadAccountBalanceUpdate = new Thread(threadAccountBalanceUpdateFunction);
-                //threadAccountBalanceUpdate.IsBackground = true;
-                //threadAccountBalanceUpdate.Name = "threadSendAccountBalance";
-                //threadAccountBalanceUpdate.Start();
-                //LogMessage("threadAccountBalanceUpdate started successfully.");
+                LogMessage("Trying to start threadAccountBalanceUpdate...");
+                threadAccountBalanceUpdate = new Thread(threadAccountBalanceUpdateFunction);
+                threadAccountBalanceUpdate.IsBackground = true;
+                threadAccountBalanceUpdate.Name = "threadSendAccountBalance";
+                threadAccountBalanceUpdate.Start();
+                LogMessage("threadAccountBalanceUpdate started successfully.");
 
-                //LogMessage("Trying to start threadNotificationBoradCast...");
-                //threadNotificationBoradCast = new Thread(threadNotificationBoradCastFunction);
-                //threadNotificationBoradCast.IsBackground = true;
-                //threadNotificationBoradCast.Name = "threadNotificationBoradCast";
-                //threadNotificationBoradCast.Start();
-                //LogMessage("threadNotificationBoradCast started successfully.");
+                LogMessage("Trying to start threadNotificationBoradCast...");
+                threadNotificationBoradCast = new Thread(threadNotificationBoradCastFunction);
+                threadNotificationBoradCast.IsBackground = true;
+                threadNotificationBoradCast.Name = "threadNotificationBoradCast";
+                threadNotificationBoradCast.Start();
+                LogMessage("threadNotificationBoradCast started successfully.");
 
                 LogMessage("SMS service started successfully.");
             }

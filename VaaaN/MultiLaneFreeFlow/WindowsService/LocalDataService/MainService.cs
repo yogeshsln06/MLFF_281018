@@ -423,6 +423,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     ctEvent.LaneId = ctp.LaneId;
                                                     ctEvent.LaneName = GetLaneNameById(ctp.LaneId);
                                                     ctEvent.ReaderPosition = ctp.ReaderPosition;
+                                                    ctEvent.VRN = ctp.PlateNumber;
                                                 }
                                                 else
                                                 {
@@ -431,6 +432,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     ctEvent.LaneId = 0;
                                                     ctEvent.LaneName = "NA";
                                                     ctEvent.ReaderPosition = ctp.ReaderPosition;
+                                                    ctEvent.VRN = ctp.PlateNumber;
                                                 }
                                                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE VehicleClass = GetVehicleClassById(eviClass);
                                                 if (VehicleClass != null)
