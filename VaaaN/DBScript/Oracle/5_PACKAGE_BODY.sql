@@ -1,4 +1,4 @@
-/* Formatted on 30-01-2019 17:01:00 (QP5 v5.215.12089.38647) */
+/* Formatted on 2/1/2019 6:05:48 PM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -3231,7 +3231,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
        T.TSOURCE,
        T.GATEWAY_RESPONSE_CODE,
        T.OPERATOR_RESPONSE_CODE,
-       T.OPERATOR_RESPONSE_TEXT
+       T.OPERATOR_RESPONSE_TEXT,
+       T.GATEWAY_RESPONSE_CODE || ''
+            - '' || T.OPERATOR_RESPONSE_TEXT AS SMSSTATUS
        
   FROM TRANS_CHARGED T
        LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
@@ -6213,7 +6215,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            CV.VALID_UNTIL,
                            CV.TID_FRONT,
                            CV.TID_REAR,
-                           NVL(CV.ACCOUNT_BALANCE,0) ACCOUNT_BALANCE,
+                           NVL (CV.ACCOUNT_BALANCE, 0) ACCOUNT_BALANCE,
                            CV.REGISTRATION_THROUGH,
                            CV.IS_DOC_VERIFIED,
                            CV.QUEUE_STATUS,
@@ -6759,9 +6761,101 @@ ORDER BY TRANSACTION_DATETIME DESC';
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
                 LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
                    ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+          WHERE     (   LOWER (CV.TID_FRONT) = LOWER (P_TID)
+                     OR LOWER (CV.TID_REAR) = LOWER (P_TID))
+                AND CA.RESIDENT_ID = P_RESIDENT_ID;
+   END VEHICLE_DETAILS_TID;
+
+   PROCEDURE VALIDATE_TID (P_TID IN NVARCHAR2, CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                VC.VEHICLE_CLASS_NAME,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                CV.VEHICLE_RC_NO,
+                CV.OWNER_NAME,
+                CV.OWNER_ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                (CASE CV.FUEL_TYPE
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
+                    ELSE 'Unknown'
+                 END)
+                   FUEL_TYPE_NAME,
+                CV.LICENCE_PLATE_COLOR,
+                (CASE CV.LICENCE_PLATE_COLOR
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
+                    ELSE 'Unknown'
+                 END)
+                   LICENCE_PLATE_COLOR_NAME,
+                CV.REGISTRATION_YEAR,
+                CV.VEHICLE_OWNERSHIP_NO,
+                CV.LOCATION_CODE,
+                CV.REG_QUEUE_NO,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_RIGHT,
+                CV.VEHICLEIMAGE_LEFT,
+                CV.VEHICLE_RC_NO_PATH,
+                CV.EXCEPTION_FLAG,
+                (CASE CV.EXCEPTION_FLAG
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
+                    ELSE 'Unknown'
+                 END)
+                   EXCEPTION_FLAG_NAME,
+                CV.STATUS,
+                CV.VALID_UNTIL,
+                CV.TID_FRONT,
+                CV.TID_REAR,
+                CV.ACCOUNT_BALANCE,
+                CV.REGISTRATION_THROUGH,
+                CV.IS_DOC_VERIFIED,
+                CV.QUEUE_STATUS,
+                (CASE CV.QUEUE_STATUS
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
+                    ELSE 'Unknown'
+                 END)
+                   QUEUE_STATUS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CA.RESIDENT_ID,
+                CA.EMAIL_ID,
+                CA.MOB_NUMBER
+           FROM TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                   ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                   ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
           WHERE    LOWER (CV.TID_FRONT) = LOWER (P_TID)
                 OR LOWER (CV.TID_REAR) = LOWER (P_TID);
-   END VEHICLE_DETAILS_TID;
+   END VALIDATE_TID;
 
    PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
                                     CUR_OUT                 OUT T_CURSOR)
@@ -7162,7 +7256,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AND TRANSACTION_DATETIME <= P_END_TIME
                            AND IS_REGISTERED = 1
                   ORDER BY TRANSACTION_ID)
-           SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
+           SELECT TRAN.TRANSACTION_ID,
+                  TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
                   UPPER (CTP.PLATE_NUMBER) AS EVI_VRN_FRONT,
                   UPPER (CTP_REAR.PLATE_NUMBER) AS EVI_VRN_REAR,
                   UPPER (NFP.PLATE_NUMBER) AS FRONT_VRN,
@@ -7172,7 +7267,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                       WHEN 2 THEN 'Small'
                       WHEN 3 THEN 'Medium'
                       WHEN 4 THEN 'Large'
-                      ELSE ''
+                      ELSE 'blank'
                    END)
                      EVI_CLASS_FRONT,
                   (CASE NVL (CTP_REAR.VEHICLE_CLASS_ID, 0)
@@ -7180,7 +7275,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                       WHEN 2 THEN 'Small'
                       WHEN 3 THEN 'Medium'
                       WHEN 4 THEN 'Large'
-                      ELSE ''
+                      ELSE 'blank'
                    END)
                      EVI_CLASS_REAR,
                   (CASE NVL (NFP.VEHICLE_CLASS_ID, 0)
@@ -7188,7 +7283,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                       WHEN 2 THEN 'Small'
                       WHEN 3 THEN 'Medium'
                       WHEN 4 THEN 'Large'
-                      ELSE ''
+                      ELSE 'blank'
                    END)
                      ANPR_CLASS_FRONT,
                   (CASE NVL (NFP1.VEHICLE_CLASS_ID, 0)
@@ -7196,7 +7291,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                       WHEN 2 THEN 'Small'
                       WHEN 3 THEN 'Medium'
                       WHEN 4 THEN 'Large'
-                      ELSE ''
+                      ELSE 'blank'
                    END)
                      ANPR_CLASS_REAR,
                   TRAN.LANE_ID AS LANE_ID,
@@ -7249,7 +7344,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AND TRANSACTION_DATETIME <= P_END_TIME
                            AND IS_REGISTERED = 2
                   ORDER BY TRANSACTION_ID)
-           SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
+           SELECT TRAN.TRANSACTION_ID,
+                  TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
                   NFP.PLATE_NUMBER AS FRONT_VRN,
                   NFP1.PLATE_NUMBER AS REAR_VRN,
                   (CASE NVL (NFP.VEHICLE_CLASS_ID, 0)
@@ -7257,7 +7353,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                       WHEN 2 THEN 'Small'
                       WHEN 3 THEN 'Medium'
                       WHEN 4 THEN 'Large'
-                      ELSE ''
+                      ELSE 'blank'
                    END)
                      ANPR_CLASS_FRONT,
                   (CASE NVL (NFP1.VEHICLE_CLASS_ID, 0)
@@ -7265,7 +7361,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                       WHEN 2 THEN 'Small'
                       WHEN 3 THEN 'Medium'
                       WHEN 4 THEN 'Large'
-                      ELSE ''
+                      ELSE 'blank'
                    END)
                      ANPR_CLASS_REAR,
                   TRAN.LANE_ID AS LANE_ID,
@@ -7291,7 +7387,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
    AS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
+           SELECT TRAN.TRANSACTION_ID,
+                  TRAN.TRANSACTION_DATETIME AS TIME_STAMP,
                   CUST_VEH.VEH_REG_NO AS EVI_VEH_NO,
                   NFP.PLATE_NUMBER AS FRONT_VRN,
                   NFP1.PLATE_NUMBER AS REAR_VRN,
@@ -8226,6 +8323,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                      CUR_OUT           OUT T_CURSOR)
    IS
       C_COUNT   NUMBER;
+      C_BAL     NUMBER;
    BEGIN
       SELECT COUNT (*)
         INTO C_COUNT
@@ -8233,6 +8331,39 @@ ORDER BY TRANSACTION_DATETIME DESC';
        WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
              AND TO_CHAR (CREATION_DATE, 'MM') = P_MONTH_ID
              AND TO_CHAR (CREATION_DATE, 'YYYY') = P_YEAR_ID;
+
+
+      SELECT SUM (AMOUNT)
+        INTO C_BAL
+        FROM (SELECT NVL (
+                        SUM (
+                           (CASE TRANSACTION_TYPE
+                               WHEN 1 THEN AMOUNT
+                               WHEN 2 THEN AMOUNT
+                               WHEN 3 THEN -1 * AMOUNT
+                               WHEN 4 THEN -1 * AMOUNT
+                            END)),
+                        0)
+                        AMOUNT
+                FROM TBL_ACCOUNT_HISTORY
+               WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
+                     AND TO_CHAR (CREATION_DATE, 'MM') = P_PMONTH_ID
+                     AND TO_CHAR (CREATION_DATE, 'YYYY') = P_PYEAR_ID
+              UNION ALL
+              SELECT NVL (
+                        SUM (
+                           (CASE TRANSACTION_TYPE
+                               WHEN 1 THEN AMOUNT
+                               WHEN 2 THEN AMOUNT
+                               WHEN 3 THEN -1 * AMOUNT
+                               WHEN 4 THEN -1 * AMOUNT
+                            END)),
+                        0)
+                        AMOUNT
+                FROM TBL_ACCOUNT_HISTORY
+               WHERE     CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
+                     AND TO_CHAR (CREATION_DATE, 'MM') = P_MONTH_ID
+                     AND TO_CHAR (CREATION_DATE, 'YYYY') = P_YEAR_ID) TAB1;
 
       OPEN CUR_OUT FOR
            SELECT ROWNUMBER,
@@ -8374,16 +8505,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                   'Ending' TRANSACTION_TYPE,
                                   NULL AS PLAZA_NAME,
                                   NULL LANE_ID,
-                                  NVL (
-                                     SUM (
-                                        (CASE TRANSACTION_TYPE
-                                            WHEN 1 THEN AMOUNT
-                                            WHEN 2 THEN AMOUNT
-                                            WHEN 3 THEN -1 * AMOUNT
-                                            WHEN 4 THEN -1 * AMOUNT
-                                         END)),
-                                     0)
-                                     AMOUNT,
+                                  C_BAL AS AMOUNT,
                                   0 AS OPENING_BALANCE,
                                   0 AS CLOSING_BALANCE,
                                   NULL AS FRONT_IMAGE,

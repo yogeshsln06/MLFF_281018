@@ -57,6 +57,7 @@ function BindUnreviewedFirstLoad() {
 
             },
             { 'data': 'PLAZA_NAME' },
+             { 'data': 'LANE_ID' },
             { 'data': 'CTP_VRN' },
             { 'data': 'CTP_VEHICLE_CLASS_NAME' },
             { 'data': 'FRONT_VRN' },
@@ -111,28 +112,33 @@ function BindUnreviewedFirstLoad() {
             },
             {
                 'data': 'VEHICLESPEED',
+            },
+            {
+                'data': 'F_TRANSACTION_DATETIME',
+                "visible": false,
+                "searchable": true
             }
         ],
         'columnDefs': [
         {
-            "targets": 8,
+            "targets": 9,
             "className": "text-center",
         },
          {
-             "targets": 9,
+             "targets": 10,
              "className": "text-center",
          },
           {
-              "targets": 12,
+              "targets": 13,
               "className": "text-center",
           },
         {
-            "targets": 13,
+            "targets": 14,
             "className": "text-center",
         },
         {
             'searchable': false,
-            'targets': [0, 8, 9, 12, 13]
+            'targets': [0, 9, 10, 13, 14]
         }],
         width: "100%"
     });
@@ -534,36 +540,34 @@ function BindAssociatedData(Seconds, dtCount) {
                         data: data,
                         "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                         "bScrollInfinite": true,
-                        "bScrollCollapse": true,
+                        "bScrollCollapse": false,
                         scrollY: 230,
-                        scroller: {
-                            loadingIndicator: true
-                        },
-                        processing: true,
-                        scrollCollapse: true,
-                        stateSave: false,
-                        autoWidth: false,
+                        scrollX: true,
+                        scrollCollapse: false,
+                        autoWidth: true,
                         paging: false,
                         info: false,
+                        processing: true,
                         columns: [
+                            { 'data': 'ROWNUMBER' },
                             {
                                 'data': 'TRANSACTION_ID',
                                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                    $(nTd).html("<input type='checkbox' class='checkBox' value=" + oData.TRANSACTION_ID + " />");
+                                    $(nTd).html("<a href='javascript:void(0);' onclick='GetAssociatedTranscation(this," + oData.TRANSACTION_ID + ")'>" + oData.TRANSACTION_ID + "</a>");
                                 }
                             },
-                            { 'data': 'TRANSACTION_ID' },
                             {
                                 'data': 'TRANSACTION_DATETIME',
                                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                    if (oData.TRANSACTION_DATETIME != '' && oData.TRANSACTION_DATETIME != null) {
-                                        oData.TRANSACTION_DATETIME = oData.TRANSACTION_DATETIME.replace('T', ' ');
-                                        $(nTd).html("" + oData.TRANSACTION_DATETIME + "");
+                                    if (oData.F_TRANSACTION_DATETIME != '' && oData.F_TRANSACTION_DATETIME != null) {
+                                        oData.F_TRANSACTION_DATETIME = oData.F_TRANSACTION_DATETIME.replace('T', ' ');
+                                        $(nTd).html("" + oData.F_TRANSACTION_DATETIME + "");
                                     }
                                 }
 
                             },
                             { 'data': 'PLAZA_NAME' },
+                             { 'data': 'LANE_ID' },
                             { 'data': 'CTP_VRN' },
                             { 'data': 'CTP_VEHICLE_CLASS_NAME' },
                             { 'data': 'FRONT_VRN' },
@@ -586,6 +590,7 @@ function BindAssociatedData(Seconds, dtCount) {
                                 'data': 'FRONT_VIDEO_URL',
                                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                     if (oData.FRONT_VIDEO_URL != '' && oData.FRONT_VIDEO_URL != null) {
+
                                         $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.FRONT_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                                     }
                                 }
@@ -610,34 +615,40 @@ function BindAssociatedData(Seconds, dtCount) {
                                 'data': 'REAR_VIDEO_URL',
                                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                     if (oData.REAR_VIDEO_URL != '' && oData.REAR_VIDEO_URL != null) {
+
                                         $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openVideo(this);' style='font-size: 18px;' path=" + oData.REAR_VIDEO_URL + "><i class='c-blue-500 ti-video-camera'></i></span>");
                                     }
                                 }
                             },
                             {
                                 'data': 'VEHICLESPEED',
+                            },
+                            {
+                                'data': 'F_TRANSACTION_DATETIME',
+                                "visible": false,
+                                "searchable": true
                             }
                         ],
                         'columnDefs': [
                         {
-                            "targets": 8,
+                            "targets": 9,
                             "className": "text-center",
                         },
-                            {
-                                "targets": 9,
-                                "className": "text-center",
-                            },
-                            {
-                                "targets": 12,
-                                "className": "text-center",
-                            },
+                         {
+                             "targets": 10,
+                             "className": "text-center",
+                         },
+                          {
+                              "targets": 13,
+                              "className": "text-center",
+                          },
                         {
-                            "targets": 13,
+                            "targets": 14,
                             "className": "text-center",
                         },
                         {
                             'searchable': false,
-                            'targets': [0, 1, 8, 9, 12, 13]
+                            'targets': [0, 9, 10, 13, 14]
                         }],
                         width: "100%"
                     });
@@ -804,17 +815,18 @@ function BindReviewedFirstLoad() {
         columns: [
             { 'data': 'ROWNUMBER' },
             { 'data': 'TRANSACTION_ID' },
-            {
-                'data': 'TRANSACTION_DATETIME',
-                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    if (oData.F_TRANSACTION_DATETIME != '' && oData.F_TRANSACTION_DATETIME != null) {
-                        oData.F_TRANSACTION_DATETIME = oData.F_TRANSACTION_DATETIME.replace('T', ' ');
-                        $(nTd).html("" + oData.F_TRANSACTION_DATETIME + "");
-                    }
-                }
+           {
+               'data': 'TRANSACTION_DATETIME',
+               fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                   if (oData.F_TRANSACTION_DATETIME != '' && oData.F_TRANSACTION_DATETIME != null) {
+                       oData.F_TRANSACTION_DATETIME = oData.F_TRANSACTION_DATETIME.replace('T', ' ');
+                       $(nTd).html("" + oData.F_TRANSACTION_DATETIME + "");
+                   }
+               }
 
-            },
+           },
             { 'data': 'PLAZA_NAME' },
+             { 'data': 'LANE_ID' },
             { 'data': 'CTP_VRN' },
             { 'data': 'CTP_VEHICLE_CLASS_NAME' },
             { 'data': 'FRONT_VRN' },
@@ -873,28 +885,33 @@ function BindReviewedFirstLoad() {
             { 'data': 'MEARGED_TRAN_ID' },
             { 'data': 'AUDITOR_NAME' },
             { 'data': 'TRANS_STATUS_NAME' },
+            {
+                'data': 'F_TRANSACTION_DATETIME',
+                "visible": false,
+                "searchable": true
+            }
         ],
         'columnDefs': [
-       {
-           "targets": 8,
-           "className": "text-center",
-       },
         {
             "targets": 9,
             "className": "text-center",
         },
          {
-             "targets": 12,
+             "targets": 10,
              "className": "text-center",
          },
-       {
-           "targets": 13,
-           "className": "text-center",
-       },
-         {
-             'searchable': false,
-             'targets': [0, 8, 9, 12, 13]
-         }],
+          {
+              "targets": 13,
+              "className": "text-center",
+          },
+        {
+            "targets": 14,
+            "className": "text-center",
+        },
+        {
+            'searchable': false,
+            'targets': [0, 9, 10, 13, 14]
+        }],
         width: "100%"
     });
     $('.dataTables_filter input').attr("placeholder", "Search this list…");
@@ -1308,6 +1325,7 @@ function BindChargedFirstLoad() {
 
             },
             { 'data': 'PLAZA_NAME' },
+              { 'data': 'LANE_ID' },
             { 'data': 'CTP_VRN' },
             { 'data': 'CTP_VEHICLE_CLASS_NAME' },
             { 'data': 'FRONT_VRN' },
@@ -1369,7 +1387,7 @@ function BindChargedFirstLoad() {
                  fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                      if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                          $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
-                             maximumFractionDigits: 0,
+                             maximumFractionDigits: 10,
                              style: 'currency',
                              currency: 'IDR'
                          }) + "</span>");
@@ -1378,34 +1396,40 @@ function BindChargedFirstLoad() {
                  }
              },
              {
-                 'data': 'GATEWAY_RESPONSE_CODE',
-                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                     if (oData.GATEWAY_RESPONSE_CODE != 0) {
-                         $(nTd).html(oData.GATEWAY_RESPONSE_CODE + ' - ' + oData.OPERATOR_RESPONSE_TEXT);
-                     }
-                     else {
-                         $(nTd).html('');
-                     }
+                 'data': 'SMSSTATUS',
+                 //fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                 //    if (oData.SMSStatus != 0) {
+                 //        $(nTd).html(oData.GATEWAY_RESPONSE_CODE + ' - ' + oData.OPERATOR_RESPONSE_TEXT);
+                 //    }
+                 //    else {
+                 //        $(nTd).html('');
+                 //    }
 
-                 }
+                 //}
              },
              { 'data': 'TSOURCE' },
+             {
+                 'data': 'F_TRANSACTION_DATETIME',
+                 "visible": false,
+                 "searchable": true
+             }
+
         ],
         'columnDefs': [
-       {
-           "targets": 8,
-           "className": "text-center",
-       },
        {
            "targets": 9,
            "className": "text-center",
        },
        {
-           "targets": 12,
+           "targets": 10,
            "className": "text-center",
        },
        {
            "targets": 13,
+           "className": "text-center",
+       },
+       {
+           "targets": 14,
            "className": "text-center",
        },
        {
@@ -1414,8 +1438,9 @@ function BindChargedFirstLoad() {
        },
         {
             'searchable': false,
-            'targets': [0, 8, 9, 12, 13]
-        }
+            'targets': [0, 9, 10, 13, 14]
+        },
+
         ],
         width: "100%"
     });
@@ -1536,7 +1561,7 @@ function BindChargedFirstLoad1() {
                          fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                              if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                                  $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
-                                     maximumFractionDigits: 0,
+                                     maximumFractionDigits: 10,
                                      style: 'currency',
                                      currency: 'IDR'
                                  }) + "</span>");
@@ -1840,7 +1865,7 @@ function BindTopUpFirstLoad() {
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                     if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                         $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
-                            maximumFractionDigits: 0,
+                            maximumFractionDigits: 10,
                             style: 'currency',
                             currency: 'IDR'
                         }) + "</span>");
@@ -1848,6 +1873,11 @@ function BindTopUpFirstLoad() {
 
                 }
             },
+             {
+                 'data': 'F_CREATION_DATE',
+                 "visible": false,
+                 "searchable": true
+             }
 
         ],
         'columnDefs': [
@@ -1925,7 +1955,7 @@ function BindTopUpFirstLoad1() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                                 $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
-                                    maximumFractionDigits: 0,
+                                    maximumFractionDigits: 10,
                                     style: 'currency',
                                     currency: 'IDR'
                                 }) + "</span>");
@@ -2311,4 +2341,39 @@ function openVideo(ctrl) {
     })
     $('#VideoModal').modal({ backdrop: 'static', keyboard: false })
     $('#VideoModal').modal('show');
+}
+
+
+function DownLoadData() {
+    if ($("#TranscationId").val() == 0) {
+        alert("Please select Device Type!!!");
+        return;
+    }
+    var Inputdata = {
+        GantryId: $("#ddlGantry").val(),
+        StartDate: $("#StartDate").val(),
+        EndDate: $("#EndDate").val(),
+        TranscationId: $("#TranscationId").val()
+    }
+    inProgress = true;
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "DownloadTransactionData",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $('#filterModel').modal('hide');
+            searchEnable = true;
+            $(".animationload").hide();
+            TopUpdatatableVariable.clear().draw();
+            TopUpdatatableVariable.rows.add(data);
+            TopUpdatatableVariable.columns.adjust().draw();
+            inProgress = false;
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
 }

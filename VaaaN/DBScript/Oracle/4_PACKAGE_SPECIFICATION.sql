@@ -1,4 +1,4 @@
-/* Formatted on 29/01/2019 10:56:08 (QP5 v5.215.12089.38647) */
+/* Formatted on 31/01/2019 18:21:10 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -1104,6 +1104,8 @@ AS
    PROCEDURE VEHICLE_DETAILS_TID (P_TID           IN     NVARCHAR2,
                                   P_RESIDENT_ID   IN     NVARCHAR2,
                                   CUR_OUT            OUT T_CURSOR);
+
+   PROCEDURE VALIDATE_TID (P_TID IN NVARCHAR2, CUR_OUT OUT T_CURSOR);
 
    PROCEDURE VEHICLE_LATEST_GETALL (P_LAST_UPDATE_TIME   IN     DATE,
                                     CUR_OUT                 OUT T_CURSOR);

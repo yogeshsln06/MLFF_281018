@@ -151,6 +151,14 @@ namespace MobileWebAPI.Models
         public String ResidentIdentityNumber { get; set; }
     }
 
+    public class TIDDetails
+    {
+        [Display(Name = "TID")]
+        [Required(ErrorMessage = "The TID is required")]
+        public String TID { get; set; }
+       
+    }
+
     public class VehicleTransactionHistorySummary
     {
         public string ResidentIdentityNumber { get; set; }

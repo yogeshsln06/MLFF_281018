@@ -80,7 +80,12 @@ function FirstLoadVehicleBalance() {
                         'data': 'FRONT_IMAGE',
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.FRONT_IMAGE != '' && oData.FRONT_IMAGE != null) {
-                                oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                                if (oData.FRONT_IMAGE.indexOf('http') > -1) {
+                                    oData.FRONT_IMAGE = oData.FRONT_IMAGE;
+                                }
+                                else {
+                                    oData.FRONT_IMAGE = "\\" + oData.FRONT_IMAGE;
+                                }
                                 $(nTd).html("<img src=" + oData.FRONT_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
                             }
                         }
@@ -98,7 +103,12 @@ function FirstLoadVehicleBalance() {
                         'data': 'REAR_IMAGE',
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.REAR_IMAGE != '' && oData.REAR_IMAGE != null) {
-                                oData.REAR_IMAGE = "\\" + oData.REAR_IMAGE;
+                                if (oData.REAR_IMAGE.indexOf('http') > -1) {
+                                    oData.REAR_IMAGE = oData.REAR_IMAGE;
+                                }
+                                else {
+                                    oData.REAR_IMAGE = "\\" + oData.v;
+                                }
                                 $(nTd).html("<img src=" + oData.REAR_IMAGE + " height='40' width='60' onclick='openImagePreview(this);' />");
                             }
                         }
@@ -117,14 +127,14 @@ function FirstLoadVehicleBalance() {
                            if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                                if (oData.AMOUNT < 0) {
                                    $(nTd).html("<span class='text-right red'>(" + ((oData.AMOUNT) * (-1)).toLocaleString('id-ID', {
-                                       maximumFractionDigits: 0,
+                                       maximumFractionDigits: 10,
                                        style: 'currency',
                                        currency: 'IDR'
                                    }) + ")</span>");
                                }
                                else {
                                    $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
-                                       maximumFractionDigits: 0,
+                                       maximumFractionDigits: 10,
                                        style: 'currency',
                                        currency: 'IDR'
                                    }) + "</span>");
@@ -167,6 +177,7 @@ function FirstLoadVehicleBalance() {
                     "targets": 10,
                     "className": 'dt-body-right',
                 },
+                { targets: 'no-sort', orderable: false }
                 ],
                 width: "100%"
             });
@@ -247,6 +258,7 @@ function FilterVBRData() {
         url: "VehicleBalanceReportFilter",
         contentType: "application/json; charset=utf-8",
         success: function (result) {
+            $('#filterModel').modal('hide');
             BindVehcileDeatils(result.TBL_CUSTOMER_VEHICLE);
             var bindDate = result.TranscationDeatils;
             VBRDataVariable.clear().draw();

@@ -1,21 +1,6 @@
 ﻿var ResponceData = [];
 $(document).ready(function () {
-    //function setHeight() {
-    //    windowHeight = $(window).innerHeight() - 113;
-    //    $('.container-fluid').css('max-height', windowHeight);
-    //};
-    //setHeight();
-
-    //$(window).resize(function () {
-    //    setHeight();
-    //});
-
-    $("#tblIKE").freezeHeader({ 'height': '400px' });
-    $("#tblANPRFront").freezeHeader({ 'height': '400px' });
-    $("#tblANPRRear").freezeHeader({ 'height': '400px' });
     myVar = setInterval("GetMSMQData()", 2000);
-    //GetMSMQData()
-    //$('body').attr("style", "");
 });
 
 function filterData() {
@@ -62,8 +47,8 @@ function BindEventList(data) {
                     loc = "Rear";
                 }
                 //
-                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].Datepacket + "</td><td style='text-align:left'>" + data[i].LaneName + "-" + loc + "</td><td style='text-align:left'>" + data[i].TagId + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
-              "<td>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-xs-2'>" + data[i].Datepacket + "</td><td class='col-xs-3'>" + data[i].LaneName + "-" + loc + "</td><td class='col-xs-3'>" + data[i].TagId + "</td><td class='col-xs-2'>" + replacenull(data[i].VRN) + "</td>" +
+              "<td class='col-xs-2'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
 
                 if ($("#tblIKE tbody tr").length > 0) {
                     $('#tblIKE tbody tr:first').before(TR);
@@ -71,11 +56,10 @@ function BindEventList(data) {
                 else {
                     $("#tblIKE tbody:last-child").append(TR);
                 }
-                //$("#tblIKE").freezeHeader({ 'height': '200px' });
             }
             else if (data[i].PacketName.toLowerCase() == "nodeflux - front") {
-                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].Datepacket + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
-              "<td>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-xs-3'>" + data[i].Datepacket + "</td><td class='col-xs-3'>" + data[i].LaneName + "</td><td class='col-xs-3'>" + replacenull(data[i].VRN) + "</td>" +
+              "<td class='col-xs-3'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
                 if ($("#tblANPRFront tbody tr").length > 0) {
                     $('#tblANPRFront tbody tr:first').before(TR);
                 }
@@ -84,8 +68,8 @@ function BindEventList(data) {
                 }
             }
             else if (data[i].PacketName.toLowerCase() == 'nodeflux - rear') {
-                TR = "<tr style='cursor:pointer;'><td style='text-align:left'>" + data[i].Datepacket + "</td><td style='text-align:left'>" + data[i].LaneName + "</td><td>" + replacenull(data[i].VRN) + "</td>" +
-              "<td>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-xs-3'>" + data[i].Datepacket + "</td><td class='col-xs-3'>" + data[i].LaneName + "</td><td class='col-xs-3'>" + replacenull(data[i].VRN) + "</td>" +
+                "<td class='col-xs-3'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
 
                 if ($("#tblANPRRear tbody tr").length > 0) {
                     $('#tblANPRRear tbody tr:first').before(TR);
@@ -93,7 +77,6 @@ function BindEventList(data) {
                 else {
                     $("#tblANPRRear tbody:last-child").append(TR);
                 }
-                $("#tblANPRRear").freezeHeader({ 'height': '400px' });
             }
         }
     }

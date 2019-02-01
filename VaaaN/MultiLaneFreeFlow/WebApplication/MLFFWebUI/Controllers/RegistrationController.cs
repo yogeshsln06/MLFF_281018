@@ -1152,7 +1152,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         objCustomerVehicleModel.EntryId = customerVehicleEntryId;
                                         BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
-                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                     }
                                 }
                                 ModelStateList objModelState = new ModelStateList();
@@ -1211,7 +1211,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         objCustomerVehicleModel.EntryId = customerVehicleEntryId;
                                         BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
-                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                     }
                                     ModelStateList objModelState = new ModelStateList();
                                     objModelState.ErrorMessage = "success";
@@ -1291,7 +1291,7 @@ namespace MLFFWebUI.Controllers
                             if (objCustomerVehicleModel.SendEmail)
                             {
                                 BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
-                                BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                             }
 
                             ModelStateList objModelState = new ModelStateList();
@@ -1335,7 +1335,7 @@ namespace MLFFWebUI.Controllers
                                 if (objCustomerVehicleModel.SendEmail)
                                 {
                                     BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
-                                    BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                    BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                 }
 
                                 ModelStateList objModelState = new ModelStateList();
@@ -1432,6 +1432,8 @@ namespace MLFFWebUI.Controllers
                 customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
                 List<CustomerVehicleCBE> VehRegNofiltered = customerVehicleDataList.FindAll(x => x.VehRegNo.ToLower() == objCustomerVehicleModel.VehRegNo.ToString().ToLower() && x.EntryId != objCustomerVehicleModel.EntryId);
                 List<CustomerVehicleCBE> TagIdfiltered = customerVehicleDataList.FindAll(x => x.TagId == objCustomerVehicleModel.TagId.ToString() && x.EntryId != objCustomerVehicleModel.EntryId);
+                List<CustomerVehicleCBE> TIDFrontfiltered = customerVehicleDataList.FindAll(x => (x.TidFront == objCustomerVehicleModel.TidFront.ToString() || x.TidRear == objCustomerVehicleModel.TidFront.ToString()) && x.EntryId != objCustomerVehicleModel.EntryId);
+                List<CustomerVehicleCBE> TIDRearfiltered = customerVehicleDataList.FindAll(x => (x.TidFront == objCustomerVehicleModel.TidRear.ToString() || x.TidRear == objCustomerVehicleModel.TidRear.ToString()) && x.EntryId != objCustomerVehicleModel.EntryId);
                 if (VehRegNofiltered.Count > 0)
                 {
                     ModelStateList objModelState = new ModelStateList();
@@ -1443,6 +1445,20 @@ namespace MLFFWebUI.Controllers
                 {
                     ModelStateList objModelState = new ModelStateList();
                     objModelState.ErrorMessage = "EPC already exists.";
+                    objResponseMessage.Add(objModelState);
+
+                }
+                else if (TIDFrontfiltered.Count > 0)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Front TID already exists.";
+                    objResponseMessage.Add(objModelState);
+
+                }
+                else if (TIDRearfiltered.Count > 0)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Rear TID already exists.";
                     objResponseMessage.Add(objModelState);
 
                 }
@@ -1963,19 +1979,35 @@ namespace MLFFWebUI.Controllers
             public string message { get; set; }
         }
 
-        public StringBuilder EmailBody(string Name, string VRN)
+        public string EmailBody(string Name, string VRN)
+        {
+
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader(Server.MapPath("~/assets/custom/EmailTemplate.html")))
+            {
+                body = reader.ReadToEnd();
+            }
+            body = body.Replace("[name]", Name);
+            body = body.Replace("[VRN]", VRN);
+            return body;
+
+            //StringBuilder sb = new StringBuilder();
+            //sb.Append("Hai " + Name + ",");
+            //sb.Append("");
+            //sb.Append("");
+            //sb.Append("");
+            //sb.Append("Selamat kendaraan " + VRN + " anda telah kami verifikasi.Kendaraan tersebut sudah bisa digunakan untuk melewati SJBE (Sistem Jalan Berbayar Elektronik).");
+            //sb.Append("");
+            //sb.Append("");
+            //sb.Append("Salam,");
+            //sb.Append("SmartERP");
+        }
+
+        public string NotificationBody(string Name, string VRN)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Hai " + Name + ",");
-            sb.Append("");
-            sb.Append("");
-            sb.Append("");
             sb.Append("Selamat kendaraan " + VRN + " anda telah kami verifikasi.Kendaraan tersebut sudah bisa digunakan untuk melewati SJBE (Sistem Jalan Berbayar Elektronik).");
-            sb.Append("");
-            sb.Append("");
-            sb.Append("Salam,");
-            sb.Append("SmartERP");
-            return sb;
+            return sb.ToString();
         }
     }
 }

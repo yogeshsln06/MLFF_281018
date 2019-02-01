@@ -68,10 +68,33 @@ namespace MobileWebAPI.Controllers
                         List<CustomerVehicleCBE> customerVehicleDataList = new List<CustomerVehicleCBE>();
                         customerVehicleDataList = CustomerVehicleBLL.GetAllAsList();
                         List<CustomerVehicleCBE> VehRegNofiltered = customerVehicleDataList.FindAll(x => x.VehRegNo.ToLower() == objVehicleRegistration.VehicleRegistrationNumber.ToString().Trim().ToLower());
+                        List<CustomerVehicleCBE> TIDFrontfiltered = customerVehicleDataList.FindAll(x => (x.TidFront == objVehicleRegistration.TIDFront.ToString() || x.TidRear == objVehicleRegistration.TIDFront.ToString()));
+                        List<CustomerVehicleCBE> TIDRearfiltered = customerVehicleDataList.FindAll(x => (x.TidFront == objVehicleRegistration.TIDRear.ToString() || x.TidRear == objVehicleRegistration.TIDRear.ToString()));
+                        if (objVehicleRegistration.TIDFront == objVehicleRegistration.TIDRear)
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Rear TID must be different from Front TID.";
+                            objResponseMessage.Add(objModelState);
+                        }
+
                         if (VehRegNofiltered.Count > 0)
                         {
                             ModelStateList objModelState = new ModelStateList();
                             objModelState.ErrorMessage = "Vehicle Registration Number already exists.";
+                            objResponseMessage.Add(objModelState);
+                        }
+
+                        if (TIDFrontfiltered.Count > 0)
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Front TID already exists.";
+                            objResponseMessage.Add(objModelState);
+                        }
+
+                        if (TIDRearfiltered.Count > 0)
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Rear TID already exists.";
                             objResponseMessage.Add(objModelState);
                         }
 
@@ -553,14 +576,14 @@ namespace MobileWebAPI.Controllers
                             VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail smsDetail = new VaaaN.MLFF.Libraries.CommonLibrary.Classes.SmsNotification.SMSDetail();
                             CultureInfo culture = new CultureInfo("id-ID");
 
-                          
+
 
                             string Topup = Constants.TopUp;
-                            Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(objCustomerVehicleInformation.TopUpAmount.ToString()).ToString("C", culture).Replace("Rp", ""));
+                            Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(objCustomerVehicleInformation.TopUpAmount.ToString()).ToString("C", culture));
                             Topup = Topup.Replace("[vehregno]", objCustomerVehicleInformation.VehicleRegistrationNumber);
-                            Topup = Topup.Replace("[balance]", Decimal.Parse(objCustomerVehicleCBE.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
+                            Topup = Topup.Replace("[balance]", Decimal.Parse(objCustomerVehicleCBE.AccountBalance.ToString()).ToString("C", culture));
                             Topup = Topup.Replace("[transactiondatetime]", transcationDateTime.ToString());
-                            Topup = Topup.Replace("tid", entryId.ToString());
+                            Topup = Topup.Replace("[tid]", entryId.ToString());
 
                             smsDetail.SMSMessage = Topup;
                             smsDetail.AccountId = customerAccount.AccountId;
@@ -803,6 +826,52 @@ namespace MobileWebAPI.Controllers
                     else {
                         ModelStateList objModelState = new ModelStateList();
                         objModelState.ErrorMessage = "No vehicle found.";
+                        objResponseMessage.Add(objModelState);
+                        sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log("Exception in Start Driving. : " + ex.ToString());
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "Something went wrong.";
+                    objResponseMessage.Add(objModelState);
+                    sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                }
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+        }
+        #endregion
+
+
+        #region API for Customer Validate TID
+        [Route("VaaaN/IndonesiaMLFFMobileApi/ValidateTID")]
+        [HttpPost]
+        [Filters.ValidateModel]
+        public HttpResponseMessage ValidateTID(TIDDetails objCustomerTIDDetails)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    dt = CustomerVehicleBLL.ValidateTID(objCustomerTIDDetails.TID);
+                    if (dt.Rows.Count > 0)
+                    {
+
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "vehicle found.";
+                        objResponseMessage.Add(objModelState);
+                        sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);
+                    }
+                    else {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "vehicle not found.";
                         objResponseMessage.Add(objModelState);
                         sJSONResponse = JsonConvert.SerializeObject(objResponseMessage);
                         return Request.CreateErrorResponse(HttpStatusCode.BadRequest, sJSONResponse);

@@ -13,6 +13,9 @@ using static MLFFWebUI.Models.HelperClass;
 using System.Messaging;
 using System.Globalization;
 using Newtonsoft.Json;
+using VaaaN.MLFF.Libraries.CommonLibrary.Common;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace MLFFWebUI.Controllers
 {
@@ -26,6 +29,9 @@ namespace MLFFWebUI.Controllers
         DataTable dt = new DataTable();
         List<ModelStateList> objResponseMessage = new List<ModelStateList>();
         private MessageQueue smsMessageQueue;
+        static MessageQueue failedQueue;
+
+
         #endregion
 
         // GET: CustomerTransaction
@@ -1718,6 +1724,63 @@ namespace MLFFWebUI.Controllers
         }
         #endregion
 
+        public ActionResult GetFile()
+        {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
+            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Transaction", "GetFile");
+            #region Gantry Class Dropdown
+            List<SelectListItem> gantryList = new List<SelectListItem>();
+            List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
+
+            gantryList.Add(new SelectListItem() { Text = "All Gantry", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
+            {
+                gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
+            }
+
+            ViewBag.Gantry = gantryList;
+
+            #endregion
+
+            #region Gantry Class Dropdown
+            List<SelectListItem> DeviceType = new List<SelectListItem>();
+
+            DeviceType.Add(new SelectListItem() { Text = "", Value = "0" });
+            DeviceType.Add(new SelectListItem() { Text = "RFID", Value = "1" });
+            DeviceType.Add(new SelectListItem() { Text = "ANPR", Value = "1" });
+            ViewBag.DeviceType = DeviceType;
+
+            #endregion
+
+            return View();
+        }
+
+
+        [HttpPost]
+        public string DownloadTransactionData(ViewTransactionCBE transaction)
+        {
+            string result = "";
+            CSVController ExportCSV = new CSVController();
+            if (transaction.TranscationId == 1)
+            {
+                result = ExportCSV.ExportCSVRFID();
+            }
+            else if (transaction.TranscationId == 2)
+            {
+                result = ExportCSV.ExportCSVANPR();
+            }
+            else
+            {
+                string Det = JsonConvert.SerializeObject("No Data to Export.", Formatting.Indented);
+                result = Det.Replace("\r", "").Replace("\n", "");
+            }
+            return result;
+        }
+
+
         #region Helper Methord
         private static void MarkAsViolation(Int32 TranscationId, TransactionCBE transaction)
         {
@@ -1826,24 +1889,26 @@ namespace MLFFWebUI.Controllers
                 if (AfterDeduction > 0)
                 {
                     string AFTERDEDUCTION = Constants.AfterDeduction;
-                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[tolltodeduct]", Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", ""));
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[tolltodeduct]", Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture));
                     AFTERDEDUCTION = AFTERDEDUCTION.Replace("[vehregno]", customerVehicleInfo.VehRegNo);
-                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[transactiondatetime]", transaction.TransactionDateTime.ToString(Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS));
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[transactiondatetime]", transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS));
                     AFTERDEDUCTION = AFTERDEDUCTION.Replace("[plazaid]", GetPlazaNameById(transaction.PlazaId));
-                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[balance]", Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture).Replace("Rp", ""));
-                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("tid", transaction.TransactionId.ToString());
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[laneid]", transaction.LaneId.ToString());
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[balance]", Decimal.Parse(AfterDeduction.ToString()).ToString("C", culture));
+                    AFTERDEDUCTION = AFTERDEDUCTION.Replace("[tid]", transaction.TransactionId.ToString());
                     smsDetail.SMSMessage = AFTERDEDUCTION;
                 }
                 else
                 {
-                    string NOTIFICATION = Constants.Notification;
-                    NOTIFICATION = NOTIFICATION.Replace("[tolltodeduct]", Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture).Replace("Rp", ""));
+                    string NOTIFICATION = Constants.AfterDeductionInsufficientBalance;
+                    NOTIFICATION = NOTIFICATION.Replace("[tolltodeduct]", Decimal.Parse(tollToDeduct.ToString()).ToString("C", culture));
                     NOTIFICATION = NOTIFICATION.Replace("[vehregno]", customerVehicleInfo.VehRegNo);
-                    NOTIFICATION = NOTIFICATION.Replace("[transactiondatetime]", transaction.TransactionDateTime.ToString(Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS));
+                    NOTIFICATION = NOTIFICATION.Replace("[transactiondatetime]", transaction.TransactionDateTime.ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.DATETIME_FORMAT_WITHOUT_SECONDSForSMS));
                     NOTIFICATION = NOTIFICATION.Replace("[plazaid]", GetPlazaNameById(transaction.PlazaId));
+                    NOTIFICATION = NOTIFICATION.Replace("[laneid]", transaction.LaneId.ToString());
                     NOTIFICATION = NOTIFICATION.Replace("[recharedate]", RechareDate);
-                    NOTIFICATION = NOTIFICATION.Replace("[balance]", Decimal.Parse((AfterDeduction + tollToDeduct).ToString()).ToString("C", culture).Replace("Rp", ""));
-                    NOTIFICATION = NOTIFICATION.Replace("tid", transaction.TransactionId.ToString());
+                    NOTIFICATION = NOTIFICATION.Replace("[liability]", Decimal.Parse(Math.Abs(AfterDeduction).ToString()).ToString("C", culture));
+                    NOTIFICATION = NOTIFICATION.Replace("[tid]", transaction.TransactionId.ToString());
                     smsDetail.SMSMessage = NOTIFICATION;
                 }
 
@@ -2098,7 +2163,129 @@ namespace MLFFWebUI.Controllers
 
         #endregion
 
+        public ActionResult FailedQueueData()
+        {
+            string filepath = "";
+            string rootpath = HttpContext.Server.MapPath("~/events/failed/" + DateTime.Now.ToString("dd-MMM-yyyy") + "/");
+            JsonResult result = new JsonResult();
+            try
+            {
+                //failedQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueName);
+                //failedQueue.PeekCompleted += new PeekCompletedEventHandler(failedQueue_PeekCompleted);
+                //failedQueue.BeginPeek();
+                //MessageQueue[] myQueueArray = MessageQueue.GetPrivateQueuesByMachine("10.213.0.33");
+                System.Messaging.Message[] msgs = failedQueue.GetAllMessages();
+                //failedQueue.Purge();
+
+                if (msgs.Length > 0)
+                {
+
+                    foreach (System.Messaging.Message msg in msgs)
+                    {
+
+                        System.Messaging.Message m = msg;
+                        m.Formatter = new BinaryMessageFormatter();
+                       
+                        if (m != null)
+                        {
+                            HelperClass.LogMessage("M is not null ");
+                            if (m.Body != null)
+                            {
+                                HelperClass.LogMessage("M is not null ");
+                                #region Processing packets
+                                if (m.Body is CrossTalkEvent)
+                                {
+                                    #region CrossTalk packet
+                                    CrossTalkPacket ctp = (CrossTalkPacket)m.Body;
+                                    string jsonString = JsonConvert.SerializeObject(ctp);
+
+                                    #region Create Physical Path to save CrossTalk XML Data as file
+                                    if (!Directory.Exists(rootpath))
+                                    {
+                                        Directory.CreateDirectory(rootpath);
+                                    }
+                                    filepath = rootpath + "CrossTalk/";
+                                    if (!Directory.Exists(filepath))
+                                    {
+                                        Directory.CreateDirectory(filepath);
+                                    }
+                                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".xml";
+                                    if (!System.IO.File.Exists(filepath))
+                                    {
+                                        System.IO.File.Create(filepath).Dispose();
+                                        System.IO.File.WriteAllText(filepath, jsonString);
+                                    }
+                                    else
+                                    {
+                                        var guid = Guid.NewGuid().ToString();
+                                        filepath = rootpath + "CrossTalk/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".xml";
+                                        System.IO.File.Create(filepath).Dispose();
+                                        System.IO.File.WriteAllText(filepath, jsonString);
+                                    }
+                                    #endregion
+                                    #endregion
+                                }
+                                else if (m.Body is NodeFluxEvent)
+                                {
+                                    #region NodeFlux packet
+                                    NodeFluxPacket ntp = (NodeFluxPacket)m.Body;
+                                    string jsonString = JsonConvert.SerializeObject(ntp);
+                                    #endregion
+
+                                    #region Create Physical Path to save nodeflux JSON Data as file
+                                    if (!Directory.Exists(rootpath))
+                                    {
+                                        Directory.CreateDirectory(rootpath);
+                                    }
+                                    filepath = rootpath + "Hikvision/";
+                                    if (!Directory.Exists(filepath))
+                                    {
+                                        Directory.CreateDirectory(filepath);
+                                    }
+                                    filepath = filepath + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".json";
+                                    if (!System.IO.File.Exists(filepath))
+                                    {
+                                        System.IO.File.Create(filepath).Dispose();
+                                        System.IO.File.WriteAllText(filepath, jsonString);
+                                    }
+                                    else {
+                                        var guid = Guid.NewGuid().ToString();
+                                        filepath = rootpath + "Hikvision/" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + "-GUID-" + guid + ".json";
+                                        System.IO.File.Create(filepath).Dispose();
+                                        System.IO.File.WriteAllText(filepath, jsonString);
+                                    }
 
 
+
+                                    #endregion
+                                }
+                                #endregion
+                            }
+                            else
+                            {
+                                HelperClass.LogMessage("Body null");
+                            }
+                        }
+                        else
+                        {
+                            HelperClass.LogMessage("Failed Formatter null");
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to read MSMQ failed  data. " + ex.Message);
+            }
+
+            return View();
+        }
+
+        void failedQueue_PeekCompleted(object sender, PeekCompletedEventArgs e)
+        {
+
+        }
     }
 }

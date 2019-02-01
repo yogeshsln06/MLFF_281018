@@ -183,5 +183,45 @@ namespace MLFFWebUI.Controllers
             return Det.Replace("\r", "").Replace("\n", "");
         }
         #endregion
+
+        #region Transaction Export
+        public string ExportCSVRFID()
+        {
+            var filename = "Transaction_RFID_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            try
+            {
+                FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
+                Int16 IsDataFound = CSVUtility.CreateCsv(file.FullName, CustomerVehicleBLL.GetAllAsCSV());
+                if (IsDataFound == 0)
+                    filename = "No Data to Export.";
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed Export RFID CSV " + ex);
+            }
+            string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+
+        [HttpPost]
+        public string ExportCSVANPR()
+        {
+            var filename = "Transaction_ANPR_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            try
+            {
+                FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
+                Int16 IsDataFound = CSVUtility.CreateCsv(file.FullName, CustomerVehicleBLL.GetAllAsCSV());
+                if (IsDataFound == 0)
+                    filename = "No Data to Export.";
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed Export Customer CSV " + ex);
+            }
+            string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+        #endregion
+
     }
 }

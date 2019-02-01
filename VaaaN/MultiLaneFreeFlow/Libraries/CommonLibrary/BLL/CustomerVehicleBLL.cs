@@ -99,9 +99,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.CustomerVehicleDetailsByResidentId(ResidentId);
         }
 
-        public static DataTable CustomerVehicleDetailsByTID(string TID,string ResidentId)
+        public static DataTable CustomerVehicleDetailsByTID(string TID, string ResidentId)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.CustomerVehicleDetailsByTID(TID, ResidentId);
+        }
+
+        public static DataTable ValidateTID(string TID)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.ValidateTID(TID);
         }
 
         public static DataTable GetAllVehicleinDataTable()

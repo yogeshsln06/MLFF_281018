@@ -159,14 +159,14 @@ function BindCustmerVehicleAccount() {
                                 if (bal < 0) {
                                     bal = (bal) * (-1);
                                     $(nTd).html("<span class='text-right red'>(" + bal.toLocaleString('id-ID', {
-                                        maximumFractionDigits: 0,
+                                        maximumFractionDigits: 10,
                                         style: 'currency',
                                         currency: 'IDR'
                                     }) + ")</span>");
                                 }
                                 else {
                                     $(nTd).html("<span class='text-right'>" + bal.toLocaleString('id-ID', {
-                                        maximumFractionDigits: 0,
+                                        maximumFractionDigits: 10,
                                         style: 'currency',
                                         currency: 'IDR'
                                     }) + "</span>");
@@ -753,6 +753,7 @@ function OpenUpdatepopUp(id) {
 }
 
 function SaveData(action) {
+    $("#warning").html("");
     if ($("#needs-validation").valid()) {
         var ValidUntil = $('#ValidUntil').val() || ''
         if (ValidUntil != '') {
@@ -760,151 +761,161 @@ function SaveData(action) {
         }
 
         if (validateCustomerVehicle()) {
-            var SendEmail = false;
-            if ($("#QueueStatus").val() == 3) {
-                if (Status != $("#QueueStatus").val()) {
-                    SendEmail = true;
+            if ($("#TidFront").val() != $("#TidRear").val()) {
+                var SendEmail = false;
+                if ($("#QueueStatus").val() == 3) {
+                    if (Status != $("#QueueStatus").val()) {
+                        SendEmail = true;
+                    }
                 }
-            }
-            var EntryId = $("#EntryId").val() || '';
-            var AccountId = $("#AccountId").val() || '';
-            var ImageFrontChnage = true;
-            var ImageRearChnage = true;
-            var ImageLeftChnage = true;
-            var ImageRightChnage = true;
-            var RCNumberImageChnage = true;
-            var PostURL = '/Registration/CustomerVehicleUpdate';
-            var VehicleImageFront = $("#VehicleImageFrontPath").attr('href');//$("#VehicleImageFrontPath").text().trim();
-            var VehicleImageRear = $("#VehicleImageRearPath").attr('href'); //$("#VehicleImageRearPath").text().trim();
-            var VehicleImageRight = $("#VehicleImageRightPath").attr('href'); //$("#VehicleImageRightPath").text().trim();
-            var VehicleImageLeft = $("#VehicleImageLeftPath").attr('href'); //$("#VehicleImageLeftPath").text().trim();
-            var VehicleRCNumberImagePath = $("#VehicleRCNumberImagePathPath").text().trim();
-            if (EntryId == '') {
-                EntryId = 0;
-                PostURL = '/Registration/CustomerVehicleAdd'
+                var EntryId = $("#EntryId").val() || '';
+                var AccountId = $("#AccountId").val() || '';
+                var ImageFrontChnage = true;
+                var ImageRearChnage = true;
+                var ImageLeftChnage = true;
+                var ImageRightChnage = true;
+                var RCNumberImageChnage = true;
+                var PostURL = '/Registration/CustomerVehicleUpdate';
+                var VehicleImageFront = $("#VehicleImageFrontPath").attr('href');//$("#VehicleImageFrontPath").text().trim();
+                var VehicleImageRear = $("#VehicleImageRearPath").attr('href'); //$("#VehicleImageRearPath").text().trim();
+                var VehicleImageRight = $("#VehicleImageRightPath").attr('href'); //$("#VehicleImageRightPath").text().trim();
+                var VehicleImageLeft = $("#VehicleImageLeftPath").attr('href'); //$("#VehicleImageLeftPath").text().trim();
+                var VehicleRCNumberImagePath = $("#VehicleRCNumberImagePathPath").text().trim();
+                if (EntryId == '') {
+                    EntryId = 0;
+                    PostURL = '/Registration/CustomerVehicleAdd'
+                }
+                else {
+                    if ($("#VehicleImageFrontPath").text().trim() == '') {
+                        VehicleImageFront = $("#hfVehicleImageFront").val();
+                        ImageFrontChnage = false;
+                    }
+
+                    if ($("#VehicleImageRearPath").text().trim() == '') {
+                        VehicleImageRear = $("#hfVehicleImageRear").val();
+                        ImageRearChnage = false;
+                    }
+
+                    if ($("#VehicleImageRightPath").text().trim() == '') {
+                        VehicleImageRight = $("#hfVehicleImageRight").val();
+                        ImageRightChnage = false;
+                    }
+
+                    if ($("#VehicleImageLeftPath").text().trim() == '') {
+                        VehicleImageLeft = $("#hfVehicleImageLeft").val();
+                        ImageLeftChnage = false;
+                    }
+
+                    if ($("#VehicleRCNumberImagePathPath").text().trim() == '') {
+                        VehicleRCNumberImagePath = $("#hfVehicleRCNumberImage").val();
+                        RCNumberImageChnage = false;
+                    }
+
+                }
+
+                var Inputdata = {
+                    EntryId: EntryId,
+                    AccountId: AccountId,
+                    ResidentId: $("#ResidentId").val(),
+                    FirstName: $("#FirstName").val(),
+                    Address: $('#Address').val(),
+                    MobileNo: $('#MobileNo').val(),
+                    EmailId: $('#EmailId').val(),
+                    VehicleRCNumber: $('#VehicleRCNumber').val(),
+                    VehRegNo: $('#VehRegNo').val(),
+                    OwnerName: $("#OwnerName").val(),
+                    OwnerAddress: $("#OwnerAddress").val(),
+                    Brand: $("#Brand").val(),
+                    VehicleType: $("#VehicleType").val(),
+                    VehicleCategory: $("#VehicleCategory").val(),
+                    Model: $("#Model").val(),
+                    ManufacturingYear: $("#ManufacturingYear").val(),
+                    CyclinderCapacity: $("#CyclinderCapacity").val(),
+                    FrameNumber: $("#FrameNumber").val(),
+                    EngineNumber: $("#EngineNumber").val(),
+                    VehicleColor: $("#VehicleColor").val(),
+                    FuelType: $("#FuelType").val(),
+                    LicencePlateColor: $("#LicencePlateColor").val(),
+                    RegistrationYear: $("#RegistrationYear").val(),
+                    VehicleOwnershipDocumentNumber: $('#VehicleOwnershipDocumentNumber').val(),
+                    LocationCode: $('#LocationCode').val(),
+                    RegistrationQueueNumber: $('#RegistrationQueueNumber').val(),
+                    ValidUntil: ValidUntil,
+                    VehicleImageFront: VehicleImageFront,
+                    VehicleImageRear: VehicleImageRear,
+                    VehicleImageRight: VehicleImageRight,
+                    VehicleImageLeft: VehicleImageLeft,
+                    VehicleRCNumberImagePath: VehicleRCNumberImagePath,
+                    ExceptionFlag: $("#ExceptionFlag").val(),
+                    TidFront: $("#TidFront").val(),
+                    TidRear: $("#TidRear").val(),
+                    VehicleClassId: $("#VehicleClassId").val(),
+                    TagId: $("#TagId").val(),
+                    QueueStatus: $("#QueueStatus").val(),
+                    AccountBalance: $("#AccountBalance").val(),
+
+                    ImageFrontChnage: ImageFrontChnage,
+                    ImageRearChnage: ImageRearChnage,
+                    ImageLeftChnage: ImageLeftChnage,
+                    ImageRightChnage: ImageRightChnage,
+                    RCNumberImageChnage: RCNumberImageChnage,
+                    SendEmail: SendEmail
+                }
+
+                $(".animationload").show();
+                $.ajax({
+                    type: "POST",
+                    url: PostURL,
+                    dataType: "JSON",
+                    async: true,
+                    data: JSON.stringify(Inputdata),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (resultData) {
+                        $(".animationload").hide();
+                        var meassage = '';
+                        for (var i = 0; i < resultData.length; i++) {
+                            if (resultData[i].ErrorMessage == "success") {
+                                if (action == 'close') {
+                                    refreshData();
+                                    closePopup();
+                                }
+
+                                else {
+                                    $("#warning").hide();
+                                    refreshData();
+                                    ResetCustFildes();
+                                }
+                                break;
+                            }
+                            else if (resultData[i].ErrorMessage == 'logout') {
+                                location.href = "../Login/Logout";
+                                break;
+                            }
+                            else {
+                                meassage = meassage + "<li>" + resultData[i].ErrorMessage + "</li>"
+                            }
+                        }
+                        if (meassage != '') {
+                            $("#warning").html("<ul>" + meassage + "</ul>");
+                            $("#warning").show();
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseText.toLowerCase().indexOf('length') > 0)
+                            alert("Please select small size image")
+                        else {
+                            alert('somthing went wrong!')
+                        }
+                        // alert(xhr.responseText)
+                        $(".animationload").hide();
+                    }
+                });
             }
             else {
-                if ($("#VehicleImageFrontPath").text().trim() == '') {
-                    VehicleImageFront = $("#hfVehicleImageFront").val();
-                    ImageFrontChnage = false;
-                }
-
-                if ($("#VehicleImageRearPath").text().trim() == '') {
-                    VehicleImageRear = $("#hfVehicleImageRear").val();
-                    ImageRearChnage = false;
-                }
-
-                if ($("#VehicleImageRightPath").text().trim() == '') {
-                    VehicleImageRight = $("#hfVehicleImageRight").val();
-                    ImageRightChnage = false;
-                }
-
-                if ($("#VehicleImageLeftPath").text().trim() == '') {
-                    VehicleImageLeft = $("#hfVehicleImageLeft").val();
-                    ImageLeftChnage = false;
-                }
-
-                if ($("#VehicleRCNumberImagePathPath").text().trim() == '') {
-                    VehicleRCNumberImagePath = $("#hfVehicleRCNumberImage").val();
-                    RCNumberImageChnage = false;
-                }
-
+                $("#warning").html("<ul><li>Rear TID must be different from Front TID.</li></ul>");
+                $("#warning").show();
             }
 
-            var Inputdata = {
-                EntryId: EntryId,
-                AccountId: AccountId,
-                ResidentId: $("#ResidentId").val(),
-                FirstName: $("#FirstName").val(),
-                Address: $('#Address').val(),
-                MobileNo: $('#MobileNo').val(),
-                EmailId: $('#EmailId').val(),
-                VehicleRCNumber: $('#VehicleRCNumber').val(),
-                VehRegNo: $('#VehRegNo').val(),
-                OwnerName: $("#OwnerName").val(),
-                OwnerAddress: $("#OwnerAddress").val(),
-                Brand: $("#Brand").val(),
-                VehicleType: $("#VehicleType").val(),
-                VehicleCategory: $("#VehicleCategory").val(),
-                Model: $("#Model").val(),
-                ManufacturingYear: $("#ManufacturingYear").val(),
-                CyclinderCapacity: $("#CyclinderCapacity").val(),
-                FrameNumber: $("#FrameNumber").val(),
-                EngineNumber: $("#EngineNumber").val(),
-                VehicleColor: $("#VehicleColor").val(),
-                FuelType: $("#FuelType").val(),
-                LicencePlateColor: $("#LicencePlateColor").val(),
-                RegistrationYear: $("#RegistrationYear").val(),
-                VehicleOwnershipDocumentNumber: $('#VehicleOwnershipDocumentNumber').val(),
-                LocationCode: $('#LocationCode').val(),
-                RegistrationQueueNumber: $('#RegistrationQueueNumber').val(),
-                ValidUntil: ValidUntil,
-                VehicleImageFront: VehicleImageFront,
-                VehicleImageRear: VehicleImageRear,
-                VehicleImageRight: VehicleImageRight,
-                VehicleImageLeft: VehicleImageLeft,
-                VehicleRCNumberImagePath: VehicleRCNumberImagePath,
-                ExceptionFlag: $("#ExceptionFlag").val(),
-                TidFront: $("#TidFront").val(),
-                TidRear: $("#TidRear").val(),
-                VehicleClassId: $("#VehicleClassId").val(),
-                TagId: $("#TagId").val(),
-                QueueStatus: $("#QueueStatus").val(),
-                AccountBalance: $("#AccountBalance").val(),
-
-                ImageFrontChnage: ImageFrontChnage,
-                ImageRearChnage: ImageRearChnage,
-                ImageLeftChnage: ImageLeftChnage,
-                ImageRightChnage: ImageRightChnage,
-                RCNumberImageChnage: RCNumberImageChnage,
-                SendEmail: SendEmail
-            }
-
-            $(".animationload").show();
-            $.ajax({
-                type: "POST",
-                url: PostURL,
-                dataType: "JSON",
-                async: true,
-                data: JSON.stringify(Inputdata),
-                contentType: "application/json; charset=utf-8",
-                success: function (resultData) {
-                    $(".animationload").hide();
-                    var meassage = '';
-                    for (var i = 0; i < resultData.length; i++) {
-                        if (resultData[i].ErrorMessage == "success") {
-                            if (action == 'close')
-                                closePopup();
-
-                            else {
-                                $("#warning").hide();
-                                ResetCustFildes();
-                            }
-                            break;
-                        }
-                        else if (resultData[i].ErrorMessage == 'logout') {
-                            location.href = "../Login/Logout";
-                            break;
-                        }
-                        else {
-                            meassage = meassage + "<li>" + resultData[i].ErrorMessage + "</li>"
-                        }
-                    }
-                    if (meassage != '') {
-                        $("#warning").html("<ul>" + meassage + "</ul>");
-                        $("#warning").show();
-                    }
-                },
-                error: function (xhr) {
-                    if (xhr.responseText.toLowerCase().indexOf('length') > 0)
-                        alert("Please select small size image")
-                    else {
-                        alert('somthing went wrong!')
-                    }
-                    // alert(xhr.responseText)
-                    $(".animationload").hide();
-                }
-            });
         }
         else {
             $("#warning").html("<ul><li>Please fill the mandatory fields</li></ul>");
@@ -999,7 +1010,7 @@ function BindHistoryRecords() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                                 $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
-                                    maximumFractionDigits: 0,
+                                    maximumFractionDigits: 10,
                                     style: 'currency',
                                     currency: 'IDR'
                                 }) + "</span>");

@@ -480,6 +480,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             // Add header line
             if (dt.Rows.Count > 0)
             {
+                sb.Append("Transaction ID,");
                 sb.Append("Timestamp,");
                 sb.Append("VRN (Front EVI),");
                 sb.Append("VRN (Rear EVI),");
@@ -489,7 +490,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("Class (Rear EVI),");
                 sb.Append("Class (Front ANPR),");
                 sb.Append("Class (Rear ANPR),");
-                sb.Append("Total Record,");
+                //sb.Append("Total Record,");
                 sb.Append("Lane,");
                 sb.Append("EVI ID,");
                 sb.Append("Resident ID,");
@@ -507,6 +508,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             foreach (DataRow dr in dt.Rows)
             {
                 sb.AppendLine();
+                //TIME_STAMP
+                if (dr["TRANSACTION_ID"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["TRANSACTION_ID"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
                 //TIME_STAMP
                 if (dr["TIME_STAMP"] != DBNull.Value)
                 {
@@ -560,7 +570,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Class (Front EVI)
                 if (dr["EVI_CLASS_FRONT"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["EVI_CLASS_FRONT"]) + ",");
+                    sb.Append(Convert.ToString(dr["EVI_CLASS_FRONT"]).Replace("blank", "") + ",");
                 }
                 else
                 {
@@ -570,7 +580,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Class (Rear EVI)
                 if (dr["EVI_CLASS_REAR"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["EVI_CLASS_REAR"]) + ",");
+                    sb.Append(Convert.ToString(dr["EVI_CLASS_REAR"]).Replace("blank", "") + ",");
                 }
                 else
                 {
@@ -580,7 +590,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Class (Front ANPR)
                 if (dr["ANPR_CLASS_FRONT"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["ANPR_CLASS_FRONT"]) + ",");
+                    sb.Append(Convert.ToString(dr["ANPR_CLASS_FRONT"]).Replace("blank", "") + ",");
                 }
                 else
                 {
@@ -590,7 +600,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //Class (Rear ANPR)
                 if (dr["ANPR_CLASS_REAR"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["ANPR_CLASS_REAR"]) + ",");
+                    sb.Append(Convert.ToString(dr["ANPR_CLASS_REAR"]).Replace("blank", "") + ",");
                 }
                 else
                 {
@@ -598,14 +608,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 }
 
                 //Total Record
-                if (dt.Rows.Count > 0)
-                {
-                    sb.Append(Convert.ToString(dt.Rows.Count) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
+                //if (dt.Rows.Count > 0)
+                //{
+                //    sb.Append(Convert.ToString(dt.Rows.Count) + ",");
+                //}
+                //else
+                //{
+                //    sb.Append(",");
+                //}
 
                 //Lane
                 if (dr["LANE_ID"] != DBNull.Value)
@@ -717,13 +727,89 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 }
 
             }
-            //if (dt.Rows.Count > 0)
-            //{
-            //    sb.AppendLine();
-            //    sb.AppendLine();
-            //    sb.AppendLine();
-            //    sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
-            //}
+            if (dt.Rows.Count > 0)
+            {
+
+                DataRow[] filteredRows1 = dt.Select("EVI_CLASS_FRONT ='Two-wheeled'");
+                DataRow[] filteredRows2 = dt.Select("EVI_CLASS_REAR ='Two-wheeled'");
+                DataRow[] filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='Two-wheeled'");
+                DataRow[] filteredRows4 = dt.Select("ANPR_CLASS_REAR ='Two-wheeled' ");
+
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.Append("Total Two-wheeled,,,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows1.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows2.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+                filteredRows1 = dt.Select("EVI_CLASS_FRONT ='Small'");
+                filteredRows2 = dt.Select("EVI_CLASS_REAR ='Small'");
+                filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='Small'");
+                filteredRows4 = dt.Select("ANPR_CLASS_REAR ='Small' ");
+
+                sb.Append("Total Small,,,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows1.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows2.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+                filteredRows1 = dt.Select("EVI_CLASS_FRONT ='Medium'");
+                filteredRows2 = dt.Select("EVI_CLASS_REAR ='Medium'");
+                filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='Medium'");
+                filteredRows4 = dt.Select("ANPR_CLASS_REAR ='Medium' ");
+
+                sb.Append("Total Medium,,,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows1.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows2.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+                filteredRows1 = dt.Select("EVI_CLASS_FRONT ='Large'");
+                filteredRows2 = dt.Select("EVI_CLASS_REAR ='Large'");
+                filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='Large'");
+                filteredRows4 = dt.Select("ANPR_CLASS_REAR ='Large' ");
+
+                sb.Append("Total Large,,,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows1.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows2.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+
+                filteredRows1 = dt.Select("EVI_CLASS_FRONT ='blank'");
+                filteredRows2 = dt.Select("EVI_CLASS_REAR ='blank'");
+                filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='blank'");
+                filteredRows4 = dt.Select("ANPR_CLASS_REAR ='blank'");
+
+                sb.Append("Total Unidentified,,,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows1.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows2.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+
+
+                sb.Append("Total Record,,,,,,");
+                sb.Append(
+                    (Convert.ToInt32(dt.Rows.Count).ToString()) + "," +
+                    (Convert.ToInt32(dt.Rows.Count).ToString()) + "," +
+                    (Convert.ToInt32(dt.Rows.Count).ToString()) + "," +
+                    (Convert.ToInt32(dt.Rows.Count).ToString()));
+                sb.AppendLine();
+
+            }
 
             return sb;
         }
@@ -735,12 +821,13 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             // Add header line
             if (dt.Rows.Count > 0)
             {
+                sb.Append("Transaction ID,");
                 sb.Append("Timestamp,");
                 sb.Append("VRN (Front ANPR),");
                 sb.Append("VRN (Rear ANPR),");
                 sb.Append("Class (Front ANPR),");
                 sb.Append("Class (Rear ANPR),");
-                sb.Append("Total Record,");
+                //sb.Append("Total Record,");
                 sb.Append("Lane,");
                 sb.Append("Image URL (Front ANPR),");
                 sb.Append("Image URL (Rear ANPR),");
@@ -751,7 +838,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             foreach (DataRow dr in dt.Rows)
             {
                 sb.AppendLine();
-
+                if (dr["TRANSACTION_ID"] != DBNull.Value)
+                {
+                    sb.Append(Convert.ToString(dr["TRANSACTION_ID"]) + ",");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
                 //TIME_STAMP
                 if (dr["TIME_STAMP"] != DBNull.Value)
                 {
@@ -785,7 +879,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //VEH_NAME_EVI
                 if (dr["ANPR_CLASS_FRONT"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["ANPR_CLASS_FRONT"]) + ",");
+                    sb.Append(Convert.ToString(dr["ANPR_CLASS_FRONT"]).Replace("blank", "") + ",");
                 }
                 else
                 {
@@ -795,21 +889,21 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //VEH_NAME_NODEFLUX
                 if (dr["ANPR_CLASS_REAR"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToString(dr["ANPR_CLASS_REAR"]) + ",");
+                    sb.Append(Convert.ToString(dr["ANPR_CLASS_REAR"]).Replace("blank", "") + ",");
                 }
                 else
                 {
                     sb.Append(",");
                 }
                 //Total Record
-                if (dt.Rows.Count > 0)
-                {
-                    sb.Append(Convert.ToString(dt.Rows.Count) + ",");
-                }
-                else
-                {
-                    sb.Append(",");
-                }
+                //if (dt.Rows.Count > 0)
+                //{
+                //    sb.Append(Convert.ToString(dt.Rows.Count) + ",");
+                //}
+                //else
+                //{
+                //    sb.Append(",");
+                //}
                 //LANE_ID
                 if (dr["LANE_ID"] != DBNull.Value)
                 {
@@ -860,13 +954,70 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 }
 
             }
-            //if (dt.Rows.Count > 0)
-            //{
-            //    sb.AppendLine();
-            //    sb.AppendLine();
-            //    sb.AppendLine();
-            //    sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
-            //}
+            if (dt.Rows.Count > 0)
+            {
+                //sb.AppendLine();
+                //sb.AppendLine();
+                //sb.AppendLine();
+                //sb.Append("Total : " + (Convert.ToInt32(dt.Rows.Count)).ToString());
+
+                DataRow[] filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='Two-wheeled'");
+                DataRow[] filteredRows4 = dt.Select("ANPR_CLASS_REAR ='Two-wheeled' ");
+
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.Append("Total Two-wheeled,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+                filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='Small'");
+                filteredRows4 = dt.Select("ANPR_CLASS_REAR ='Small' ");
+
+                sb.Append("Total Small,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+                filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='Medium'");
+                filteredRows4 = dt.Select("ANPR_CLASS_REAR ='Medium' ");
+
+                sb.Append("Total Medium,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+                filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='Large'");
+                filteredRows4 = dt.Select("ANPR_CLASS_REAR ='Large' ");
+
+                sb.Append("Total Large,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+
+                filteredRows3 = dt.Select("ANPR_CLASS_FRONT ='blank'");
+                filteredRows4 = dt.Select("ANPR_CLASS_REAR ='blank'");
+
+                sb.Append("Total Unidentified,,,,");
+                sb.Append(
+                    (Convert.ToInt32(filteredRows3.Length).ToString()) + "," +
+                    (Convert.ToInt32(filteredRows4.Length).ToString()));
+                sb.AppendLine();
+
+
+
+                sb.Append("Total Record,,,,");
+                sb.Append(
+                    (Convert.ToInt32(dt.Rows.Count).ToString()) + "," +
+                    (Convert.ToInt32(dt.Rows.Count).ToString()));
+                sb.AppendLine();
+            }
             return sb;
         }
         #endregion

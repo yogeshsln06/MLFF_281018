@@ -23,52 +23,61 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
         {
             string TransId = row["ENTRY_ID"].ToString();
             var responseString = "";
-            try
+            if (!string.IsNullOrEmpty(row["RESIDENT_ID"].ToString()))
             {
 
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/account");
-                request.Headers.Add("Authorization", "1adbb3178591fd5bb0c248518f39bf6d");
-                request.Headers.Add("Accept-Language", "en");
-                request.Accept = "application/json";
-                var postData = "residentId=" + row["RESIDENT_ID"].ToString() + "";
-                postData = "&vehicleId=" + row["ENTRY_ID"].ToString() + "";
-                postData += "&amount=" + row["ACCOUNT_BALANCE"].ToString() + "";
-                var data = Encoding.ASCII.GetBytes(postData);
-
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = data.Length;
-                using (var stream = request.GetRequestStream())
+                try
                 {
-                    stream.Write(data, 0, data.Length);
+
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/account");
+                    request.Headers.Add("Authorization", "1adbb3178591fd5bb0c248518f39bf6d");
+                    request.Headers.Add("Accept-Language", "en");
+                    request.Accept = "application/json";
+
+                    var postData = "residentId=" + row["RESIDENT_ID"].ToString() + "";
+                    postData += "&vehicleId=" + row["ACCOUNT_BALANCE"].ToString() + "";
+                    postData += "&amount=" + row["ACCOUNT_BALANCE"].ToString() + "";
+                    var data = Encoding.ASCII.GetBytes(postData);
+
+                    request.Method = "POST";
+                    request.ContentType = "application/x-www-form-urlencoded";
+                    request.ContentLength = data.Length;
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(data, 0, data.Length);
+                    }
+                    response = (HttpWebResponse)request.GetResponse();
                 }
-                response = (HttpWebResponse)request.GetResponse();
-            }
-            catch (WebException e)
-            {
-                if (e.Status == WebExceptionStatus.ProtocolError)
+                catch (WebException e)
                 {
-                    response = (HttpWebResponse)e.Response;
+                    if (e.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        response = (HttpWebResponse)e.Response;
+                    }
+                    else
+                    {
+                        LogMessage("Transcation Id = " + TransId + " WebException " + e.Message + ".");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogMessage("Transcation Id = " + TransId + " Exception " + ex.Message + ".");
+                }
+
+                if (response != null)
+                {
+                    int code = (int)response.StatusCode;
+                    responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                    responseString = responseString.Replace("\"status\"", "\"Apifor\": \"balance\",\"trans_id\": \"" + TransId + "\", \"status\" ");
                 }
                 else
                 {
-                    LogMessage("Transcation Id = " + TransId + " WebException " + e.Message + ".");
+                    LogMessage("Transcation Id = " + TransId + " response is null.");
                 }
-            }
-            catch (Exception ex)
-            {
-                LogMessage("Transcation Id = " + TransId + " Exception " + ex.Message + ".");
-            }
-
-            if (response != null)
-            {
-                int code = (int)response.StatusCode;
-                responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                responseString = responseString.Replace("\"status\"", "\"Apifor\": \"balance\",\"trans_id\": \"" + TransId + "\", \"status\" ");
             }
             else
             {
-                LogMessage("Transcation Id = " + TransId + " response is null.");
+                responseString = "{\"Apifor\": \"balance\",\"trans_id\": \"" + TransId + "\", \"status\" :\"failed\",\"message\":\"The resident id blank\"}";
             }
             return responseString;
         }
@@ -78,54 +87,61 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
         {
             string TransId = vehicleId;  //objSMSCommunicationHistoryCBE.EntryId.ToString();
             var responseString = "";
-            try
+            if (!string.IsNullOrEmpty(residentId))
             {
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/notification");
-                request.Headers.Add("Authorization", "1adbb3178591fd5bb0c248518f39bf6d");
-                request.Headers.Add("Accept-Language", "en");
-                request.Accept = "application/json";
-                var postData = "residentId=" + residentId + "";
-                postData = "&vehicleId=" + vehicleId + "";
-                postData += "&title=" + title + "";
-                postData += "&body=" + body + "";
-
-                var data = Encoding.ASCII.GetBytes(postData);
-
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = data.Length;
-                using (var stream = request.GetRequestStream())
+                try
                 {
-                    stream.Write(data, 0, data.Length);
+
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/notification");
+                    request.Headers.Add("Authorization", "1adbb3178591fd5bb0c248518f39bf6d");
+                    request.Headers.Add("Accept-Language", "en");
+                    request.Accept = "application/json";
+                    var postData = "residentId=" + residentId + "";
+                    postData = "&vehicleId=" + vehicleId + "";
+                    postData += "&title=" + title + "";
+                    postData += "&body=" + body + "";
+
+                    var data = Encoding.ASCII.GetBytes(postData);
+
+                    request.Method = "POST";
+                    request.ContentType = "application/x-www-form-urlencoded";
+                    request.ContentLength = data.Length;
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(data, 0, data.Length);
+                    }
+                    response = (HttpWebResponse)request.GetResponse();
                 }
-                response = (HttpWebResponse)request.GetResponse();
-            }
-            catch (WebException e)
-            {
-                if (e.Status == WebExceptionStatus.ProtocolError)
+                catch (WebException e)
                 {
-                    response = (HttpWebResponse)e.Response;
+                    if (e.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        response = (HttpWebResponse)e.Response;
+                    }
+                    else
+                    {
+                        LogMessage("Transcation Id = " + TransId + " WebException " + e.Message + ".");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogMessage("Transcation Id = " + TransId + " Exception " + ex.Message + ".");
+                }
+
+                if (response != null)
+                {
+                    int code = (int)response.StatusCode;
+                    responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                    responseString = responseString.Replace("\"status\"", "\"Apifor\": \"notification\",\"trans_id\": \"" + TransId + "\", \"status\" ");
                 }
                 else
                 {
-                    LogMessage("Transcation Id = " + TransId + " WebException " + e.Message + ".");
+                    LogMessage("Transcation Id = " + TransId + " response is null.");
                 }
-            }
-            catch (Exception ex)
-            {
-                LogMessage("Transcation Id = " + TransId + " Exception " + ex.Message + ".");
-            }
-
-            if (response != null)
-            {
-                int code = (int)response.StatusCode;
-                responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                responseString = responseString.Replace("\"status\"", "\"Apifor\": \"notification\",\"trans_id\": \"" + TransId + "\", \"status\" ");
             }
             else
             {
-                LogMessage("Transcation Id = " + TransId + " response is null.");
+                responseString = "{\"Apifor\": \"balance\",\"trans_id\": \"" + TransId + "\", \"status\" :\"failed\",\"message\":\"The resident id blank\"}";
             }
             return responseString;
         }

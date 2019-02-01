@@ -150,7 +150,7 @@ function BindCustmerAccount() {
                 ],
                 columnDefs: [
                     { "orderable": false, "targets": 7 },
-                    { 'searchable': false, 'targets': [0, 6] }
+                    { 'searchable': false, 'targets': [0, 7] }
                 ],
                 order: [[1, 'asc']],
             });
@@ -670,7 +670,7 @@ function BindHistoryRecords() {
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.AMOUNT != '' && oData.AMOUNT != null) {
                                 $(nTd).html("<span class='text-right'>" + oData.AMOUNT.toLocaleString('id-ID', {
-                                    maximumFractionDigits: 0,
+                                    maximumFractionDigits: 10,
                                     style: 'currency',
                                     currency: 'IDR'
                                 }) + "</span>");
@@ -824,14 +824,14 @@ function BindCustmerVehicleAccount() {
                             if (oData.AccountBalance != '' && oData.AccountBalance != null) {
                                 if (oData.AccountBalance < 0) {
                                     $(nTd).html("<span class='text-right red'>(" + ((oData.AccountBalance) * (-1)).toLocaleString('id-ID', {
-                                        maximumFractionDigits: 0,
+                                        maximumFractionDigits: 10,
                                         style: 'currency',
                                         currency: 'IDR'
                                     }) + ")</span>");
                                 }
                                 else {
                                     $(nTd).html("<span class='text-right'>" + oData.AccountBalance.toLocaleString('id-ID', {
-                                        maximumFractionDigits: 0,
+                                        maximumFractionDigits: 10,
                                         style: 'currency',
                                         currency: 'IDR'
                                     }) + "</span>");

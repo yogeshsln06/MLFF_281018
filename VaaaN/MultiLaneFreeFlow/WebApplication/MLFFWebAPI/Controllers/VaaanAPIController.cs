@@ -551,7 +551,14 @@ namespace MLFFWebAPI.Controllers
                 {
                     #region Pass data to CBE Liberrary
                     NodeFluxPacketCBE nodeFluxCBE = new NodeFluxPacketCBE();
-                    nodeFluxCBE.EventType = objNodeFluxPacketJSON.Event_Type;
+                    if (objNodeFluxPacketJSON.Event_Type == null)
+                    {
+                        nodeFluxCBE.EventType = string.Empty;
+                    }
+                    else
+                    {
+                        nodeFluxCBE.EventType = objNodeFluxPacketJSON.Event_Type;
+                    }
                     nodeFluxCBE.TimeStamp = Constants.ConversionDateTime(objNodeFluxPacketJSON.TimeStamp);
                     nodeFluxCBE.GantryId = 0;// objNodeFluxPacketJSON.Gantry_Id;
                     nodeFluxCBE.LaneId = objNodeFluxPacketJSON.Camera.Lane_Id;
@@ -562,11 +569,14 @@ namespace MLFFWebAPI.Controllers
                         nodeFluxCBE.CameraPosition = objNodeFluxPacketJSON.Camera.Camera_Position.ToString();
 
                     nodeFluxCBE.CameraId = objNodeFluxPacketJSON.Camera.Id;
+
                     nodeFluxCBE.CameraName = objNodeFluxPacketJSON.Camera.Name;
+
                     if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Camera.Address))
                         nodeFluxCBE.CameraAddress = string.Empty;
                     else
                         nodeFluxCBE.CameraAddress = objNodeFluxPacketJSON.Camera.Address;
+
                     if (objNodeFluxPacketJSON.Camera.Coordinate.Length == 2)
                     {
                         nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString() + "," + objNodeFluxPacketJSON.Camera.Coordinate[1].ToString();
@@ -575,43 +585,44 @@ namespace MLFFWebAPI.Controllers
                     {
                         nodeFluxCBE.CamaraCoordinate = objNodeFluxPacketJSON.Camera.Coordinate[0].ToString();
                     }
-                    else {
+                    else
+                    {
                         nodeFluxCBE.CamaraCoordinate = string.Empty;
                     }
+
                     if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Plate))
                     {
                         objNodeFluxPacketJSON.Data.Plate = "Not Detected";
                     }
                     nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate.Replace("Unknown", "Not Detected");
-                    nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
+
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Vehicle_Type))
+                    {
+                        nodeFluxCBE.VehicleClassName = "Not Detected";
+                    }
+                    else
+                    {
+                        nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
+                    }
+
                     nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
-
-                    #region Convert 64 bit String into PNG Image
-                    filepath = Constants.EventPath + @"Thumbnail\Plates\";
-                    //filepath = rootpath + @"Thumbnail\Plates\";
-                    if (!Directory.Exists(filepath))
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Thumbnail))
                     {
-                        Directory.CreateDirectory(filepath);
+                        nodeFluxCBE.PlateThumbnail = "Not Detected";
                     }
-                    string imgfilepath = string.Empty;
-                    string FileName = string.Empty;
-                    FileName = "VRN_HV_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
-                    imgfilepath = filepath + FileName;
-                    nodeFluxCBE.PlateThumbnail = objNodeFluxPacketJSON.Data.Thumbnail;//SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Thumbnail, FileName);
-
-                    imgfilepath = string.Empty;
-                    FileName = string.Empty;
-                    filepath = Constants.EventPath + @"Thumbnail\Vehicle\";
-                    //filepath = rootpath + @"Thumbnail\Vehicle\";
-                    if (!Directory.Exists(filepath))
+                    else
                     {
-                        Directory.CreateDirectory(filepath);
+                        nodeFluxCBE.PlateThumbnail = objNodeFluxPacketJSON.Data.Thumbnail;
                     }
-                    FileName = "Vehicle_HV_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".png";
-                    imgfilepath = filepath + FileName;
-                    nodeFluxCBE.VehicleThumbnail = objNodeFluxPacketJSON.Data.Vehicle_Thumbnail;//SaveByteArrayAsImage(imgfilepath, objNodeFluxPacketJSON.Data.Vehicle_Thumbnail, FileName);
 
-                    #endregion
+                    if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Vehicle_Thumbnail))
+                    {
+                        nodeFluxCBE.VehicleThumbnail = "Not Detected";
+                    }
+                    else
+                    {
+                        nodeFluxCBE.VehicleThumbnail = objNodeFluxPacketJSON.Data.Vehicle_Thumbnail;
+                    }
 
                     if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Video_URL))
                         nodeFluxCBE.VideoURL = string.Empty;
@@ -702,6 +713,7 @@ namespace MLFFWebAPI.Controllers
                 string mobileNumber = "";
                 string messageBody = "";
                 string VRN = "";
+                string format = "";
 
                 DateTime messageReceiveTime = DateTime.Now;
                 DateTime transcationDateTime = DateTime.Now;
@@ -790,6 +802,7 @@ namespace MLFFWebAPI.Controllers
                         {
                             // Search account id by mobile number
                             LogInboundSMS("Searching account number by mobile number. Mobile nbr.:" + mobileNumber);
+                            format = messageBodyFormat[0].ToString();
                             VRN = messageBodyFormat[2].ToString();
                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetByMobileNumber(mobileNumber);
                             CustomerVehicleCBE objCustomerVehicle = new CustomerVehicleCBE();
@@ -872,7 +885,7 @@ namespace MLFFWebAPI.Controllers
                             {
 
                                 // Top up
-                                if (messageBody.ToUpper().Contains("TOP-UP"))
+                                if (format.ToUpper() == "TOP-UP")
                                 {
                                     #region Process TOP UP message
                                     LogInboundSMS("===============TOP-UP=============");
@@ -991,7 +1004,7 @@ namespace MLFFWebAPI.Controllers
                                 }
 
                                 // Balance check
-                                if (messageBody.ToUpper().Contains("SALDO"))
+                                else if (format.ToUpper() == "SALDO")
                                 {
                                     #region Process SALDO message
 
@@ -1036,10 +1049,60 @@ namespace MLFFWebAPI.Controllers
 
                                     #endregion
                                 }
+                                else
+                                {
+                                    LogInboundSMS("Invalid Format of SMS.");
+                                    #region Invalid Format
+                                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                                    sms.EntryId = 0;
+                                    sms.TmsId = 1;
+                                    sms.CustomerAccountId = 0;
+                                    sms.CustomerVehicleId = 0;
+                                    sms.CustomerName = "";
+                                    sms.MobileNumber = mobileNumber;
+                                    sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                                    string INVALID = Constants.InValidFormat;
+                                    sms.MessageBody = INVALID;
+                                    sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                                    sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                                    sms.MessageSendDateTime = DateTime.Now;
+                                    sms.MessageReceiveTime = DateTime.Now;
+                                    sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                                    sms.AttemptCount = 0;
+                                    sms.CreationDate = DateTime.Now;
+                                    sms.ModificationDate = DateTime.Now;
+                                    sms.ModifiedBy = 0;
+                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
+                                    LogInboundSMS("Outbound message inserted successfully in database for invalid format of sms.");
+                                    #endregion
+                                }
                             }
                             else
                             {
                                 LogInboundSMS("Customer account found null.");
+                                #region Invalid Format of SMS
+                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                                sms.EntryId = 0;
+                                sms.TmsId = 1;
+                                sms.CustomerAccountId = 0;
+                                sms.CustomerVehicleId = 0;
+                                sms.CustomerName = "";
+                                sms.MobileNumber = mobileNumber;
+                                sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                                string INVALID = Constants.NoCustomerFound;
+                                sms.MessageBody = INVALID;
+                                sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                                sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                                sms.MessageSendDateTime = DateTime.Now;
+                                sms.MessageReceiveTime = DateTime.Now;
+                                sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                                sms.AttemptCount = 0;
+                                sms.CreationDate = DateTime.Now;
+                                sms.ModificationDate = DateTime.Now;
+                                sms.ModifiedBy = 0;
+                                VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
+                                LogInboundSMS("Outbound message inserted successfully in database for invalid format of sms.");
+                                #endregion
                             }
                         }
                         catch (Exception ex)
@@ -1052,7 +1115,7 @@ namespace MLFFWebAPI.Controllers
                     else
                     {
                         LogInboundSMS("Invalid Format of SMS.");
-                        #region Customer Account and Vehicle Found
+                        #region Invalid Format of SMS
                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
                         sms.EntryId = 0;
                         sms.TmsId = 1;
@@ -1061,7 +1124,7 @@ namespace MLFFWebAPI.Controllers
                         sms.CustomerName = "";
                         sms.MobileNumber = mobileNumber;
                         sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                        string INVALID = Constants.InValid;
+                        string INVALID = Constants.InValidFormat;
                         sms.MessageBody = INVALID;
                         sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                         sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
@@ -1158,6 +1221,7 @@ namespace MLFFWebAPI.Controllers
                 string mobileNumber = objSMSInboand.sender.Replace("+", "").Trim();
                 string messageBody = objSMSInboand.content.Trim();
                 string VRN = "";
+                string format = "";
 
                 DateTime messageReceiveTime = DateTime.Now;
                 DateTime transcationDateTime = DateTime.Now;
@@ -1180,6 +1244,7 @@ namespace MLFFWebAPI.Controllers
                             // Search account id by mobile number
                             LogInboundSMS("Searching account number by mobile number. Mobile nbr.:" + mobileNumber);
                             VRN = messageBodyFormat[1].ToString();
+                            format = messageBodyFormat[0].ToString();
                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCollection customerAccounts = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerAccountBLL.GetByMobileNumber(mobileNumber);
                             CustomerVehicleCBE objCustomerVehicle = new CustomerVehicleCBE();
                             objCustomerVehicle.VehRegNo = VRN;
@@ -1261,7 +1326,7 @@ namespace MLFFWebAPI.Controllers
                             {
 
                                 // Top up
-                                if (messageBody.ToUpper().Contains("TOP-UP"))
+                                if (format.ToUpper() == "TOP-UP")
                                 {
                                     #region Process TOP UP message
                                     LogInboundSMS("===============TOP-UP=============");
@@ -1342,15 +1407,13 @@ namespace MLFFWebAPI.Controllers
                                             smsOutgoing.CustomerName = customerAccount.FirstName + " " + customerAccount.LastName;
                                             smsOutgoing.MobileNumber = customerAccount.MobileNo;
                                             smsOutgoing.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                                            //smsOutgoing.MessageBody = "Thanks for Top-Up with amount " + rechargeAmount + ". Your saldo is " + customerAccount.AccountBalance + ".";// Update message content TO DO
                                             string Topup = Constants.TopUp;
-                                            Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                            Topup = Topup.Replace("[rechargeamount]", Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture));
                                             Topup = Topup.Replace("[vehregno]", VRN);
-                                            Topup = Topup.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                            Topup = Topup.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture));
                                             Topup = Topup.Replace("[transactiondatetime]", transcationDateTime.ToString());
-                                            Topup = Topup.Replace("tid", entryId.ToString());
+                                            Topup = Topup.Replace("[tid]", entryId.ToString());
                                             smsOutgoing.MessageBody = Topup;
-                                            //smsOutgoing.MessageBody = "Pelanggan Yth, terima kasih telah melakukan pengisian ulang saldo SJBE senilai Rp " + Decimal.Parse(rechargeAmount.ToString()).ToString("C", culture).Replace("Rp", "") + ". Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ". Ref: [" + entryId + "]";// Update message content TO DO
                                             smsOutgoing.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                                             smsOutgoing.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
                                             smsOutgoing.MessageSendDateTime = DateTime.Now;
@@ -1378,9 +1441,8 @@ namespace MLFFWebAPI.Controllers
 
                                     #endregion
                                 }
-
                                 // Balance check
-                                if (messageBody.ToUpper().Contains("SALDO"))
+                                else if (format.ToUpper() == "SALDO")
                                 {
                                     #region Process SALDO message
 
@@ -1400,9 +1462,8 @@ namespace MLFFWebAPI.Controllers
                                         sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
                                         string SALDO = Constants.Saldo;
                                         SALDO = SALDO.Replace("[vehregno]", VRN);
-                                        SALDO = SALDO.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", ""));
+                                        SALDO = SALDO.Replace("[balance]", Decimal.Parse(customerVehicle.AccountBalance.ToString()).ToString("C", culture));
                                         sms.MessageBody = SALDO;
-                                        //sms.MessageBody = "Pelanggan Yth, Saldo SJBE anda saat ini Rp " + Decimal.Parse(customerAccount.AccountBalance.ToString()).ToString("C", culture).Replace("Rp", "") + ".";
                                         sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                                         sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
                                         sms.MessageSendDateTime = DateTime.Now;
@@ -1425,10 +1486,60 @@ namespace MLFFWebAPI.Controllers
 
                                     #endregion
                                 }
+                                else
+                                {
+                                    LogInboundSMS("Invalid Format of SMS.");
+                                    #region Invalid Format
+                                    VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                                    sms.EntryId = 0;
+                                    sms.TmsId = 1;
+                                    sms.CustomerAccountId = 0;
+                                    sms.CustomerVehicleId = 0;
+                                    sms.CustomerName = "";
+                                    sms.MobileNumber = mobileNumber;
+                                    sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                                    string INVALID = Constants.InValidFormat;
+                                    sms.MessageBody = INVALID;
+                                    sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                                    sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                                    sms.MessageSendDateTime = DateTime.Now;
+                                    sms.MessageReceiveTime = DateTime.Now;
+                                    sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                                    sms.AttemptCount = 0;
+                                    sms.CreationDate = DateTime.Now;
+                                    sms.ModificationDate = DateTime.Now;
+                                    sms.ModifiedBy = 0;
+                                    VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
+                                    LogInboundSMS("Outbound message inserted successfully in database for invalid format of sms.");
+                                    #endregion
+                                }
                             }
                             else
                             {
                                 LogInboundSMS("Customer account found null.");
+                                #region Invalid Format
+                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
+                                sms.EntryId = 0;
+                                sms.TmsId = 1;
+                                sms.CustomerAccountId = 0;
+                                sms.CustomerVehicleId = 0;
+                                sms.CustomerName = "";
+                                sms.MobileNumber = mobileNumber;
+                                sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
+                                string INVALID = Constants.NoCustomerFound;
+                                sms.MessageBody = INVALID;
+                                sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                                sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
+                                sms.MessageSendDateTime = DateTime.Now;
+                                sms.MessageReceiveTime = DateTime.Now;
+                                sms.MessageDeliveryStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDeliveryStatus.UnDelivered; //DELIVERED=1,UNDELIVERED=2
+                                sms.AttemptCount = 0;
+                                sms.CreationDate = DateTime.Now;
+                                sms.ModificationDate = DateTime.Now;
+                                sms.ModifiedBy = 0;
+                                VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.Insert(sms);
+                                LogInboundSMS("Outbound message inserted successfully in database for invalid format of sms.");
+                                #endregion
                             }
                         }
                         catch (Exception ex)
@@ -1441,7 +1552,7 @@ namespace MLFFWebAPI.Controllers
                     else
                     {
                         LogInboundSMS("Invalid Format of SMS.");
-                        #region Customer Account and Vehicle Found
+                        #region Invalid Format
                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE sms = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SMSCommunicationHistoryCBE();
                         sms.EntryId = 0;
                         sms.TmsId = 1;
@@ -1450,7 +1561,7 @@ namespace MLFFWebAPI.Controllers
                         sms.CustomerName = "";
                         sms.MobileNumber = mobileNumber;
                         sms.MessageDirection = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSDirection.Outgoing;
-                        string INVALID = Constants.InValid;
+                        string INVALID = Constants.InValidFormat;
                         sms.MessageBody = INVALID;
                         sms.SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
                         sms.ReceivedProcessStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSReceivedMessageProcessStatus.UnProcessed;
