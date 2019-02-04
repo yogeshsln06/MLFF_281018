@@ -35,6 +35,7 @@ namespace MLFFWebUI.Controllers
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Users");
                 int userId = Convert.ToInt32(Session["LoggedUserId"]);
                 userList = UserBLL.GetUserAll().Cast<UserCBE>().ToList();
+                ViewData["UserDataList"]= UserBLL.GetUserAll().Cast<UserCBE>().ToList();
                 UserSubModuleActivityRightCBE submodule_right = new UserSubModuleActivityRightCBE();
                 submodule_right = UserSubModuleActivityRightBLL.GetSubModuleRightByUserIdandSubmoduleId(userId, 1);
 

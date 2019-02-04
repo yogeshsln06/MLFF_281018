@@ -1065,7 +1065,7 @@ function BindGantryData(GantryDataList) {
             "</span>" +
         "</a>" +
         " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
-        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditLane(this," + oData.PlazaId + ")'>" +
+        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditGantry(this," + oData.PlazaId + ")'>" +
 
         "        <span class='title'>Update</span>" +
         "    </a>" +
@@ -1075,9 +1075,71 @@ function BindGantryData(GantryDataList) {
             },
         ],
         columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+
     });
+    tblGantryData.on('order.dt search.dt', function () {
+        tblGantryData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    tblGantryData.columns.adjust();
+    thId = 'tblGantryDataTR';
+    myVar = setInterval("myclick()", 500);
 }
 
+/********Gantry End**********/
+
+//******User Start ******
+
+function BindUserData(UserDataList) {
+    tblUserData = $('#tblUserData').DataTable({
+        data: UserDataList,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        scrollY: "42vh",
+        scrollX: false,
+        paging: false,
+        info: false,
+        columns: [
+             {
+                 'data': 'UserId',
+                 orderable: false
+             },
+           {'data': 'LoginName', },
+           {'data': 'FirstName', },
+           { 'data': 'RoleName', },
+           {
+               'data': 'UserId',
+               fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                   $(nTd).html("<div class='dropdown' style='padding-left: 14px;'>" +
+                       "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
+           "<span class='icon-holder'>" +
+               "<i class='c-blue-500 ti-menu-alt'></i>" +
+           "</span>" +
+       "</a>" +
+       " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
+       "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditUser(this," + oData.UserId + ")'>" +
+
+       "        <span class='title'>Update</span>" +
+       "    </a>" +
+       "</div>" +
+   "</div>");
+               }
+           },
+        ],
+        //columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+    });
+    tblUserData.on('order.dt search.dt', function () {
+        tblUserData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    tblUserData.columns.adjust();
+    thId = 'tblUserDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+/********User End**********/
 function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();
