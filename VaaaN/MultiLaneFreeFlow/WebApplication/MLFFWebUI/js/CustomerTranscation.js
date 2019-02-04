@@ -549,13 +549,13 @@ function BindAssociatedData(Seconds, dtCount) {
                         info: false,
                         processing: true,
                         columns: [
-                            { 'data': 'ROWNUMBER' },
-                            {
-                                'data': 'TRANSACTION_ID',
-                                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                                    $(nTd).html("<a href='javascript:void(0);' onclick='GetAssociatedTranscation(this," + oData.TRANSACTION_ID + ")'>" + oData.TRANSACTION_ID + "</a>");
-                                }
-                            },
+                          {
+                              'data': 'TRANSACTION_ID',
+                              fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                  $(nTd).html("<input type='checkbox' class='checkBox' value=" + oData.TRANSACTION_ID + " />");
+                              }
+                          },
+                            { 'data': 'TRANSACTION_ID' },
                             {
                                 'data': 'TRANSACTION_DATETIME',
                                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -567,7 +567,7 @@ function BindAssociatedData(Seconds, dtCount) {
 
                             },
                             { 'data': 'PLAZA_NAME' },
-                             { 'data': 'LANE_ID' },
+                            { 'data': 'LANE_ID' },
                             { 'data': 'CTP_VRN' },
                             { 'data': 'CTP_VEHICLE_CLASS_NAME' },
                             { 'data': 'FRONT_VRN' },

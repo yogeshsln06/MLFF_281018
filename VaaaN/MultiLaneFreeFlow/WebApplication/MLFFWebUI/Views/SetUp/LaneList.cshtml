@@ -1,5 +1,4 @@
-﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE>
-@{
+﻿@{
     ViewBag.Title = "Lane List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -24,85 +23,43 @@
                         </div>
                     </div>
                 </div>
-                @{ int rowNo = 0; }
-                <table id="dataTable" class="table table-striped my-table-bordered" cellspacing="0" width="100%">
+                <table id="tblLaneData" class="table table-striped table-bordered table-condensed table-hover" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>
-                                No.
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.PlazaName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.LaneName)
-                            </th>
-
-                            <th>
-                                @Html.DisplayNameFor(model => model.CameraNameFront)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CameraNameRear)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.EtcAntennaNameFront)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.EtcAntennaNameRear)
-                            </th>
-                            <th>
-                                @VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Actions
-                            </th>
+                            <th id="tblLaneData" style="text-align: center; vertical-align: middle; " rowspan="2">No</th>
+                            <th style="text-align:center; vertical-align: middle;" rowspan="2">Lane Id</th>
+                            <th style="text-align:center; vertical-align: middle;" rowspan="2">Lane Name</th>
+                            <th style="text-align:center; vertical-align: middle;" rowspan="2">Gantry Id</th>
+                            <th style="text-align:center; vertical-align: middle;" rowspan="2">Gantry Name</th>
+                            <th style="text-align:center; vertical-align: middle;" colspan="2">Camera - Front</th>
+                            <th style="text-align:center; vertical-align: middle;" colspan="2">Camera - Rear</th>
+                            <th style="text-align:center; vertical-align: middle;" colspan="2">ETC Reader - Front</th>
+                            <th style="text-align:center; vertical-align: middle;" colspan="2">ETC Reader - Rear</th>
+                            <th style="text-align:center; vertical-align: middle;" rowspan="2">Lane Type</th>
+                            <th style="text-align:center; vertical-align: middle;" rowspan="2" class="no-rt-border"></th>
+                        </tr>
+                        <tr>
+                            <th style="text-align:center;" data-field="price">ID</th>
+                            <th style="text-align:center;" data-field="price">Name</th>
+                            <th style="text-align:center;" data-field="price">ID</th>
+                            <th style="text-align:center;" data-field="price">Name</th>
+                            <th style="text-align:center;" data-field="price">ID</th>
+                            <th style="text-align:center;" data-field="price">Name</th>
+                            <th style="text-align:center;" data-field="price">ID</th>
+                            <th style="text-align:center;" data-field="price">Name</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-            {
-                var token = "";
-
-                if (item.LaneId > 0)
-                {
-                    token = VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.generateUrlToken("Home", "LaneEdit", Convert.ToString(item.LaneId), VaaaN.MLFF.Libraries.CommonLibrary.Common.CommonClass.urlProtectPassword);
-                }
-                <tr>
-                    <td>
-                        @(rowNo += 1)
-
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PlazaName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LaneName)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CameraNameFront)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CameraNameRear)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EtcAntennaNameFront)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EtcAntennaNameRear)
-                    </td>
-                    <td>
-                        <a class="edit" href="@Url.Action("LaneEdit", "Home", new { id = item.LaneId, urltoken = token })">
-                            <i class="fa fa-pencil-square-o" style="@ViewBag.Visibility" aria-hidden="true" title="Edit"></i>
-                        </a>
-                    </td>
-                </tr>
-
-                        }
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-
 <script src="~/js/SetUp.js"></script>
-
+<script>
+    $(document).ready(function () {
+        LaneDataList = @Html.Raw(Json.Encode(ViewData["LaneDataList"]));
+        BindLaneData(LaneDataList);
+    });
+</script>
 
