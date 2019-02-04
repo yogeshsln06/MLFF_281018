@@ -153,8 +153,7 @@ namespace MLFFWebUI.Controllers
             {
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Plaza");
                 plazaDataList = PlazaBLL.GetAllAsList();
-
-
+                ViewData["GantryDataList"] = PlazaBLL.GetAllAsList().Cast<PlazaCBE>().ToList();
             }
             catch (Exception ex)
             {

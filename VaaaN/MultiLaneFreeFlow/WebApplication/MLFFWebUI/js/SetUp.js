@@ -1032,6 +1032,53 @@ function LaneDetail(ctrl, Id) {
 
 /********Lane End**********/
 
+//******Gantry Start ******
+function BindGantryData(GantryDataList) {
+    tblGantryData = $('#tblGantryData').DataTable({
+        data: GantryDataList,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        scrollY: "42vh",
+        scrollX: false,
+        paging: false,
+        info: false,
+        columns: [
+             {
+                 'data': 'PlazaId',
+                 orderable: false
+             },
+            {
+                'data': 'PlazaId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<a href='javascript:void(0);' onclick='LaneDetail(this," + oData.PlazaId + ")'>" + oData.PlazaId + "</a>");
+                }
+            },
+            { 'data': 'PlazaId' },
+            { 'data': 'PlazaName' },
+            { 'data': 'Location' },
+            { 'data': 'IpAddress' },
+            {
+                'data': 'PlazaId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<div class='dropdown' style='padding-left: 14px;'>" +
+                        "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
+            "<span class='icon-holder'>" +
+                "<i class='c-blue-500 ti-menu-alt'></i>" +
+            "</span>" +
+        "</a>" +
+        " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
+        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditLane(this," + oData.PlazaId + ")'>" +
+
+        "        <span class='title'>Update</span>" +
+        "    </a>" +
+        "</div>" +
+    "</div>");
+                }
+            },
+        ],
+        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+    });
+}
+
 function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();
