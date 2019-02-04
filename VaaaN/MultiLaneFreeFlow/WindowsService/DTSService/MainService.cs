@@ -160,8 +160,8 @@ namespace DTSService
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
                 {
                     // Create file path
-                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE1.csv";
-                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE1_s.csv";
+                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-IKE.csv";
+                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-IKE_s.csv";
 
                     SaveNormalCSVFile(startDateTime, endDateTime, csvFilePath, csvSentFilePath);
                 }
@@ -184,8 +184,10 @@ namespace DTSService
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
                 {
                     // Create file path
-                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE2.csv";
-                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE2_s.csv";
+                    //string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE2.csv";
+                    //string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE2_s.csv";
+                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-IKE.csv";
+                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-IKE_s.csv";
 
                     SaveNormalCSVFile(startDateTime, endDateTime, csvFilePath, csvSentFilePath);
                 }
@@ -208,8 +210,11 @@ namespace DTSService
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
                 {
                     // Create file path
-                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE3.csv";
-                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE3_s.csv";
+                    //string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE3.csv";
+                    //string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-IKE3_s.csv";
+
+                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-IKE.csv";
+                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-IKE_s.csv";
 
                     SaveNormalCSVFile(startDateTime, endDateTime, csvFilePath, csvSentFilePath);
                 }
@@ -296,8 +301,11 @@ namespace DTSService
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
                 {
                     //BaliTower - yyyymmdd - IKE - less.csv
-                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE1.csv";
-                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE1_s.csv";
+                    //string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE1.csv";
+                    //string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE1_s.csv";
+
+                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-Non-IKE.csv";
+                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-Non-IKE_s.csv";
 
                     SaveViolationCSVFile(startDateTime, endDateTime, csvFilePath, csvSentFilePath);
                 }
@@ -318,8 +326,11 @@ namespace DTSService
 
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
                 {
-                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE2.csv";
-                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE2_s.csv";
+                    //string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE2.csv";
+                    //string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE2_s.csv";
+
+                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-Non-IKE.csv";
+                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-Non-IKE_s.csv";
 
                     SaveViolationCSVFile(startDateTime, endDateTime, csvFilePath, csvSentFilePath);
                 }
@@ -341,8 +352,11 @@ namespace DTSService
 
                 if (currentDateTime > endDateTime)// Send data after completing the the imaginary 8 hrs shift
                 {
-                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE3.csv";
-                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE3_s.csv";
+                    //string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE3.csv";
+                    //string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd") + "-non-IKE3_s.csv";
+
+                    string csvFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-Non-IKE.csv";
+                    string csvSentFilePath = csvDirectory + nameOfBidder + "-" + startDateTime.ToString("yyyyMMdd HH.mm") + "-" + endDateTime.ToString("HH.mm") + "-Non-IKE_s.csv";
 
                     SaveViolationCSVFile(startDateTime, endDateTime, csvFilePath, csvSentFilePath);
                 }

@@ -798,7 +798,7 @@ namespace MobileWebAPI.Controllers
             {
                 try
                 {
-                    dt = CustomerVehicleBLL.CustomerVehicleDetailsByTID(objCustomerTIDDetails.TID, objCustomerTIDDetails.ResidentIdentityNumber);
+                    dt = CustomerVehicleBLL.CustomerVehicleDetailsByTID(objCustomerTIDDetails.TID, string.Empty);
                     if (dt.Rows.Count > 0)
                     {
 

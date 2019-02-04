@@ -1052,7 +1052,6 @@ function BindGantryData(GantryDataList) {
                     $(nTd).html("<a href='javascript:void(0);' onclick='LaneDetail(this," + oData.PlazaId + ")'>" + oData.PlazaId + "</a>");
                 }
             },
-            { 'data': 'PlazaId' },
             { 'data': 'PlazaName' },
             { 'data': 'Location' },
             { 'data': 'IpAddress' },

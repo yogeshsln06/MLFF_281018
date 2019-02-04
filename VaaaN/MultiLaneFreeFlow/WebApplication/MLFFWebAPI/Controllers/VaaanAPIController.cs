@@ -292,7 +292,7 @@ namespace MLFFWebAPI.Controllers
                         objNodeFluxPacketJSON.Data.Plate = "Not Detected";
                     }
                     nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
-                    nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
+                    nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type.Replace("Motorcycle", "Two-wheeled").Replace("Big", "Large");
                     nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
 
                     #region Convert 64 bit String into PNG Image
@@ -602,7 +602,7 @@ namespace MLFFWebAPI.Controllers
                     }
                     else
                     {
-                        nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type;
+                        nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type.Replace("Motorcycle", "Two-wheeled").Replace("Big", "Large");
                     }
 
                     nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
@@ -630,6 +630,8 @@ namespace MLFFWebAPI.Controllers
                         nodeFluxCBE.VideoURL = objNodeFluxPacketJSON.Data.Video_URL;
                     else
                         nodeFluxCBE.VideoURL = "http://" + objNodeFluxPacketJSON.Data.Video_URL;
+
+                   
                     #endregion
 
                     #region Send data to MSMQ

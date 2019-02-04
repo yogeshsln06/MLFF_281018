@@ -146,9 +146,9 @@ namespace MobileWebAPI.Models
         [Required(ErrorMessage = "The TID is required")]
         public String TID { get; set; }
 
-        [Display(Name = "Resident Identity Number")]
-        [Required(ErrorMessage = "The resident identity number is required")]
-        public String ResidentIdentityNumber { get; set; }
+        //[Display(Name = "Resident Identity Number")]
+        //[Required(ErrorMessage = "The resident identity number is required")]
+        //public String ResidentIdentityNumber { get; set; }
     }
 
     public class TIDDetails
