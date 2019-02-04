@@ -1030,7 +1030,7 @@ function LaneDetail(ctrl, Id) {
     });
 }
 
-/********Hardware End**********/
+/********Lane End**********/
 
 function myclick() {
     document.getElementById(thId).click();
