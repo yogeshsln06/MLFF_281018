@@ -1188,53 +1188,53 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
-        public static void UpdateNodefluxSectionFront(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Int32 ntpEntryIdFront)
-        {
-            try
-            {
-                //Stored procedure must have cur_out parameter.
-                //There is no need to add ref cursor for oracle in code.
-                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UPDATE_NF_FRONT";
-                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-                //where clause part
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, transaction.TMSId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLAZA_ID", DbType.Int32, transaction.PlazaId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, transaction.LaneId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_ID", DbType.Int32, transaction.TransactionId, ParameterDirection.Input));
-                //update part
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_ENTRY_ID_FRONT", DbType.Int32, ntpEntryIdFront, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLESPEED", DbType.Int32, transaction.VehicleSpeed, ParameterDirection.Input));
-                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //public static void UpdateNodefluxSectionFront(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Int32 ntpEntryIdFront)
+        //{
+        //    try
+        //    {
+        //        //Stored procedure must have cur_out parameter.
+        //        //There is no need to add ref cursor for oracle in code.
+        //        string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UPDATE_NF_FRONT";
+        //        DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+        //        //where clause part
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, transaction.TMSId, ParameterDirection.Input));
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLAZA_ID", DbType.Int32, transaction.PlazaId, ParameterDirection.Input));
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, transaction.LaneId, ParameterDirection.Input));
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_ID", DbType.Int32, transaction.TransactionId, ParameterDirection.Input));
+        //        //update part
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_ENTRY_ID_FRONT", DbType.Int32, ntpEntryIdFront, ParameterDirection.Input));
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLESPEED", DbType.Int32, transaction.VehicleSpeed, ParameterDirection.Input));
+        //        VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
-        public static void UpdateNodefluxSectionRear(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Int32 ntpEntryIdRear)
-        {
-            try
-            {
-                //Stored procedure must have cur_out parameter.
-                //There is no need to add ref cursor for oracle in code.
-                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UPDATE_NF_REAR";
-                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-                //where clause part
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, transaction.TMSId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLAZA_ID", DbType.Int32, transaction.PlazaId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, transaction.LaneId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_ID", DbType.Int32, transaction.TransactionId, ParameterDirection.Input));
-                //update part
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_ENTRY_ID_REAR", DbType.Int32, ntpEntryIdRear, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLESPEED", DbType.Int32, transaction.VehicleSpeed, ParameterDirection.Input));
-                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //public static void UpdateNodefluxSectionRear(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction, Int32 ntpEntryIdRear)
+        //{
+        //    try
+        //    {
+        //        //Stored procedure must have cur_out parameter.
+        //        //There is no need to add ref cursor for oracle in code.
+        //        string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_UPDATE_NF_REAR";
+        //        DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+        //        //where clause part
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, transaction.TMSId, ParameterDirection.Input));
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PLAZA_ID", DbType.Int32, transaction.PlazaId, ParameterDirection.Input));
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LANE_ID", DbType.Int32, transaction.LaneId, ParameterDirection.Input));
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TRANSACTION_ID", DbType.Int32, transaction.TransactionId, ParameterDirection.Input));
+        //        //update part
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_NF_ENTRY_ID_REAR", DbType.Int32, ntpEntryIdRear, ParameterDirection.Input));
+        //        command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_VEHICLESPEED", DbType.Int32, transaction.VehicleSpeed, ParameterDirection.Input));
+        //        VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         public static void MarkAsViolation(VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction)
         {

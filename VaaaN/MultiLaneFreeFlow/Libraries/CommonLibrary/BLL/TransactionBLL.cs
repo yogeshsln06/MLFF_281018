@@ -232,15 +232,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             TransactionDAL.UpdateCrossTalkSectionRear(transaction, ctpEntryId);
         }
 
-        public static void UpdateNodefluxSectionFront(CBE.TransactionCBE transaction, Int32 ntpEntryId)
-        {
-            TransactionDAL.UpdateNodefluxSectionFront(transaction, ntpEntryId);
-        }
+        //public static void UpdateNodefluxSectionFront(CBE.TransactionCBE transaction, Int32 ntpEntryId)
+        //{
+        //    TransactionDAL.UpdateNodefluxSectionFront(transaction, ntpEntryId);
+        //}
 
-        public static void UpdateNodefluxSectionRear(CBE.TransactionCBE transaction, Int32 ntpEntryId)
-        {
-            TransactionDAL.UpdateNodefluxSectionRear(transaction, ntpEntryId);
-        }
+        //public static void UpdateNodefluxSectionRear(CBE.TransactionCBE transaction, Int32 ntpEntryId)
+        //{
+        //    TransactionDAL.UpdateNodefluxSectionRear(transaction, ntpEntryId);
+        //}
 
         public static DataTable Transaction_LiveData()
         {

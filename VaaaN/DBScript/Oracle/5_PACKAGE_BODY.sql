@@ -1,4 +1,4 @@
-/* Formatted on 2/1/2019 6:05:48 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 05/02/2019 13:22:53 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2150,17 +2150,7 @@ AS
              VEHICLESPEED = LastSpeed
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
-             AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
-   -- IF (P_VEHICLESPEED > 0)
-   -- THEN
-   -- UPDATE TBL_TRANSACTION
-   -- SET VEHICLESPEED = P_VEHICLESPEED
-   -- WHERE     TMS_ID = P_TMS_ID
-   -- AND PLAZA_ID = P_PLAZA_ID
-   -- AND LANE_ID = P_LANE_ID
-   -- AND TRANSACTION_ID = P_TRANSACTION_ID;
-   -- END IF;
    END TRAN_UPDATE_BY_NFP_FRONT;
 
 
@@ -2176,12 +2166,29 @@ AS
                                       P_VEHICLESPEED       IN DECIMAL,
                                       P_NF_ENTRY_ID_REAR   IN NUMBER)
    AS
-      LastSpeed   NUMBER;
+      LastSpeed       NUMBER;
+      NFFrontId       NUMBER;
+      NFFrontLaneId   NUMBER;
    BEGIN
+      NFFrontLaneId := P_LANE_ID;
+
       SELECT NVL (VEHICLESPEED, 0)
         INTO LastSpeed
         FROM TBL_TRANSACTION
        WHERE TRANSACTION_ID = P_TRANSACTION_ID;
+
+      SELECT NVL (NF_ENTRY_ID_FRONT, 0)
+        INTO NFFrontId
+        FROM TBL_TRANSACTION
+       WHERE TRANSACTION_ID = P_TRANSACTION_ID;
+
+      IF (NFFrontId > 0)
+      THEN
+         SELECT NVL (LANE_ID, 0)
+           INTO NFFrontLaneId
+           FROM TBL_NODEFLUX_PACKET
+          WHERE ENTRY_ID = NFFrontId;
+      END IF;
 
       IF (P_VEHICLESPEED > LastSpeed)
       THEN
@@ -2191,21 +2198,11 @@ AS
 
       UPDATE TBL_TRANSACTION
          SET NF_ENTRY_ID_REAR = P_NF_ENTRY_ID_REAR,
-             LANE_ID = P_LANE_ID,
+             LANE_ID = NFFrontLaneId,
              VEHICLESPEED = LastSpeed
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
-             AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
-   -- IF (P_VEHICLESPEED > 0)
-   -- THEN
-   -- UPDATE TBL_TRANSACTION
-   -- SET VEHICLESPEED = P_VEHICLESPEED
-   -- WHERE     TMS_ID = P_TMS_ID
-   -- AND PLAZA_ID = P_PLAZA_ID
-   -- AND LANE_ID = P_LANE_ID
-   -- AND TRANSACTION_ID = P_TRANSACTION_ID;
-   -- END IF;
    END TRAN_UPDATE_BY_NFP_REAR;
 
 
@@ -2256,7 +2253,6 @@ AS
          SET CT_ENTRY_ID = P_CT_ENTRY_ID
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
-             AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_UPDATE_CTP;
 
@@ -2271,7 +2267,6 @@ AS
          SET CT_ENTRY_ID_REAR = P_CT_ENTRY_ID
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
-             AND LANE_ID = P_LANE_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
    END TRAN_UPDATE_CTP_REAR;
 
@@ -6761,8 +6756,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                    ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
                 LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
                    ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
-          WHERE     (   LOWER (CV.TID_FRONT) = LOWER (P_TID)
-                     OR LOWER (CV.TID_REAR) = LOWER (P_TID));
+          WHERE (   LOWER (CV.TID_FRONT) = LOWER (P_TID)
+                 OR LOWER (CV.TID_REAR) = LOWER (P_TID));
    END VEHICLE_DETAILS_TID;
 
    PROCEDURE VALIDATE_TID (P_TID IN NVARCHAR2, CUR_OUT OUT T_CURSOR)

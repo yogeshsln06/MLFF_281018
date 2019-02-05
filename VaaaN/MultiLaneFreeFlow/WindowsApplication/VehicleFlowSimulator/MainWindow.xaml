@@ -46,18 +46,18 @@
         <Button x:Name="buttonStopMLFF" Content="Stop MLFF" Canvas.Left="340" Canvas.Top="415" Width="140" Click="buttonStopMLFF_Click" Visibility="Visible" IsEnabled="False"/>
         <ComboBox x:Name="comboBoxFrontClass" Canvas.Left="99" Canvas.Top="276" Width="100">
             <ComboBoxItem>Not Detected</ComboBoxItem>
-            <ComboBoxItem>motorcycle</ComboBoxItem>
+            <ComboBoxItem>two-wheeled</ComboBoxItem>
             <ComboBoxItem>small</ComboBoxItem>
             <ComboBoxItem>medium</ComboBoxItem>
-            <ComboBoxItem>big</ComboBoxItem>
+            <ComboBoxItem>large</ComboBoxItem>
         </ComboBox>
 
         <ComboBox x:Name="comboBoxRearClass" Canvas.Left="339" Canvas.Top="276" Width="100">
             <ComboBoxItem>Not Detected</ComboBoxItem>
-            <ComboBoxItem>motorcycle</ComboBoxItem>
+            <ComboBoxItem>two-wheeled</ComboBoxItem>
             <ComboBoxItem>small</ComboBoxItem>
             <ComboBoxItem>medium</ComboBoxItem>
-            <ComboBoxItem>big</ComboBoxItem>
+            <ComboBoxItem>large</ComboBoxItem>
         </ComboBox>
         <TextBox x:Name="textBoxNFFText" Height="23" Canvas.Left="99" TextWrapping="Wrap" Text="" Canvas.Top="246" Width="100"/>
         <TextBox x:Name="textBoxNFRText" Height="23" Canvas.Left="339" TextWrapping="Wrap" Text="" Canvas.Top="246" Width="100"/>
