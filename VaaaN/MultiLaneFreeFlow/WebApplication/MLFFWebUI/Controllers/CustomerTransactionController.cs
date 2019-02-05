@@ -1781,6 +1781,15 @@ namespace MLFFWebUI.Controllers
         }
 
 
+
+        [HttpPost]
+        public string ReportTransactionData(ViewTransactionCBE transaction)
+        {
+            CSVController ExportCSV = new CSVController();
+            return ExportCSV.ExportCSVTranscations();
+        }
+
+
         #region Helper Methord
         private static void MarkAsViolation(Int32 TranscationId, TransactionCBE transaction)
         {
@@ -2185,7 +2194,7 @@ namespace MLFFWebUI.Controllers
 
                         System.Messaging.Message m = msg;
                         m.Formatter = new BinaryMessageFormatter();
-                       
+
                         if (m != null)
                         {
                             HelperClass.LogMessage("M is not null ");

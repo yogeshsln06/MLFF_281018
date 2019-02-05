@@ -384,5 +384,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         }
 
 
+        public static DataTable TransDeatils(string filter)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.TransDeatils(filter);
+        }
+
+
     }
 }

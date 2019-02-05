@@ -1654,6 +1654,32 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return transactions;
         }
 
+
+        public static DataTable TransDeatils(string filter)
+        {
+            DataTable dt = new DataTable();
+            VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "TRAN_DEATILS";
+
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_FILTER", DbType.String, filter, ParameterDirection.Input, 2000));
+
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dt;
+        }
+
         #endregion
 
         #region Helper Methods

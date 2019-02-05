@@ -221,6 +221,24 @@ namespace MLFFWebUI.Controllers
             string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
             return Det.Replace("\r", "").Replace("\n", "");
         }
+
+        public string ExportCSVTranscations()
+        {
+            var filename = "Transaction_Details_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            try
+            {
+                FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
+                Int16 IsDataFound = CSVUtility.CreateCsv(file.FullName, CustomerVehicleBLL.GetAllAsCSV());
+                if (IsDataFound == 0)
+                    filename = "No Data to Export.";
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed Export Transaction Details_ CSV " + ex);
+            }
+            string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
         #endregion
 
     }
