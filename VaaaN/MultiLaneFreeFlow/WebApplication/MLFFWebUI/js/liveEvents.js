@@ -9,11 +9,11 @@ function filterData() {
         var FilteredData = $.grep(ResponceData, function (element, index) {
             return element.PlazaId == GantryId;
         });
-        BindUserList(FilteredData);
+        BindEventList(FilteredData);
     }
-    else {
-        GetMSMQData();
-    }
+    //else {
+    //    GetMSMQData();
+    //}
 }
 
 function GetMSMQData() {
@@ -25,7 +25,16 @@ function GetMSMQData() {
         success: function (data) {
             //ResponceData = JSON.parse(data.Data);
             ResponceData = data.Data;
-            BindEventList(ResponceData);
+
+            var GantryId = $("#ddlGantry").val();
+            if (GantryId > 0) {
+                var FilteredData = $.grep(ResponceData, function (element, index) {
+                    return element.PlazaId == GantryId;
+                });
+                BindEventList(FilteredData);
+            }
+
+            //BindEventList(ResponceData);
         },
         error: function (ex) {
             //$("#SearchUserModal").modal(show);
@@ -47,8 +56,8 @@ function BindEventList(data) {
                     loc = "Rear";
                 }
                 //
-                TR = "<tr style='cursor:pointer;'><td class='col-xs-2'>" + data[i].Datepacket + "</td><td class='col-xs-3'>" + data[i].LaneName + "-" + loc + "</td><td class='col-xs-3'>" + data[i].TagId + "</td><td class='col-xs-2'>" + replacenull(data[i].VRN) + "</td>" +
-              "<td class='col-xs-2'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-md-2'>" + data[i].Datepacket + "</td><td class='col-md-3'>" + data[i].LaneName + "-" + loc + "</td><td class='col-md-3'>" + data[i].TagId + "</td><td class='col-md-2'>" + replacenull(data[i].VRN) + "</td>" +
+              "<td class='col-md-2'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
 
                 if ($("#tblIKE tbody tr").length > 0) {
                     $('#tblIKE tbody tr:first').before(TR);
@@ -58,8 +67,8 @@ function BindEventList(data) {
                 }
             }
             else if (data[i].PacketName.toLowerCase() == "nodeflux - front") {
-                TR = "<tr style='cursor:pointer;'><td class='col-xs-3'>" + data[i].Datepacket + "</td><td class='col-xs-3'>" + data[i].LaneName + "</td><td class='col-xs-3'>" + replacenull(data[i].VRN) + "</td>" +
-              "<td class='col-xs-3'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-3'>" + data[i].LaneName + "</td><td class='col-md-3'>" + replacenull(data[i].VRN) + "</td>" +
+              "<td class='col-md-3'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
                 if ($("#tblANPRFront tbody tr").length > 0) {
                     $('#tblANPRFront tbody tr:first').before(TR);
                 }
@@ -68,8 +77,8 @@ function BindEventList(data) {
                 }
             }
             else if (data[i].PacketName.toLowerCase() == 'nodeflux - rear') {
-                TR = "<tr style='cursor:pointer;'><td class='col-xs-3'>" + data[i].Datepacket + "</td><td class='col-xs-3'>" + data[i].LaneName + "</td><td class='col-xs-3'>" + replacenull(data[i].VRN) + "</td>" +
-                "<td class='col-xs-3'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-3'>" + data[i].LaneName + "</td><td class='col-md-3'>" + replacenull(data[i].VRN) + "</td>" +
+                "<td class='col-md-3'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
 
                 if ($("#tblANPRRear tbody tr").length > 0) {
                     $('#tblANPRRear tbody tr:first').before(TR);
