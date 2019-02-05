@@ -35,6 +35,7 @@ namespace MLFFWebUI.Controllers
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Users");
                 int userId = Convert.ToInt32(Session["LoggedUserId"]);
                 userList = UserBLL.GetUserAll().Cast<UserCBE>().ToList();
+                ViewData["UserDataList"]= UserBLL.GetUserAll().Cast<UserCBE>().ToList();
                 UserSubModuleActivityRightCBE submodule_right = new UserSubModuleActivityRightCBE();
                 submodule_right = UserSubModuleActivityRightBLL.GetSubModuleRightByUserIdandSubmoduleId(userId, 1);
 
@@ -57,15 +58,114 @@ namespace MLFFWebUI.Controllers
             return View("UsersList", userList);
         }
 
+        //[HttpGet]
+        //public ActionResult NewUserMaster()
+        //{
+        //    ViewBag.RoleId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.RoleBLL.GetAll().Select(x => new SelectListItem { Text = x.RoleName, Value = x.RoleId.ToString() });
+        //    return View("UserPopUp");
+        //}
         [HttpGet]
-        public ActionResult NewUserMaster()
+        public ActionResult UserNew()
         {
-
             ViewBag.RoleId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.RoleBLL.GetAll().Select(x => new SelectListItem { Text = x.RoleName, Value = x.RoleId.ToString() });
+            return View("UserPopUp");
+        }
+        [HttpPost]
+        public ActionResult GetUser(int id)
+        {
+            UserCBE hardwareData = new UserCBE();
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
 
-            return View("UserMaster");
+                }
+                else {
+
+                    //#region Gantry Class Dropdown
+                    //List<SelectListItem> gantryList = new List<SelectListItem>();
+                    //List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
+
+                    //gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
+                    //foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
+                    //{
+                    //    gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
+                    //}
+
+                    //ViewBag.Gantry = gantryList;
+
+                    //#endregion
+
+                    //#region Hardware Type
+                    //ViewBag.HardwareType = HelperClass.GetHardwareType();
+                    //#endregion
+
+                    //#region Hardware Position
+                    //ViewBag.HardwarePosition = HelperClass.GetHardwarePosition();
+                    //#endregion
+
+                    //hardwareData.HardwareId = id;
+                    //hardwareData = HardwareBLL.GetHardwareById(hardwareData);
+                    //#region ViewBag for DDL Values
+                    //ViewBag.hfHardwarePosition = hardwareData.HardwarePosition;
+                    //ViewBag.hfHardwareType = hardwareData.HardwareType;
+                    //#endregion
+
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("GetHardware " + ex);
+            }
+            return View("HardwarePopUp", hardwareData);
         }
 
+        [HttpPost]
+        public JsonResult AddUser(UserCBE User)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+
+                }
+                else {
+                    #region Insert Into Hardware Data
+                   // hardware.TMSId = 1;
+                   // hardware.TransferStatus = 1;
+                    User.CreationDate = DateTime.Now;
+                    int userId = UserBLL.Insert(User);
+                    if (userId > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "success";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    else
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Something went wrong";
+                        objResponseMessage.Add(objModelState);
+                    }
+
+                    #endregion
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to Insert Hardware in Registration Controller" + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
         #region Chnage Password
