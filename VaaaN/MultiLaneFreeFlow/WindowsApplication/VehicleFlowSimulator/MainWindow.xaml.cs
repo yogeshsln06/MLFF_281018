@@ -184,7 +184,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 23, " +
+                                "\"Id\": 24, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Simulator\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +
@@ -278,7 +278,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 24, " +
+                                "\"Id\": 21, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Simulator\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +

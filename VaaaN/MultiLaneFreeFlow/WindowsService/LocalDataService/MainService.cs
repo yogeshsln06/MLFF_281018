@@ -332,20 +332,22 @@ namespace VaaaN.MLFF.WindowsServices
                                 ctp.ObjectId = ctp.ObjectId.Trim(); //otherwise trailing and leading spaces create problems
 
                                 LogMessage("Validity checking. " + ctp.ObjectId);
-                                if (IsValidTag(ctp.ObjectId))
+                                //if (IsValidTag(ctp.ObjectId))
+                                if (true)
                                 {
                                     LogMessage("Valid tag. Trying to parse...");
 
                                     #region parsing tagid
-                                    TagStructure ts = ParseEPC(ctp.ObjectId); //this function also should validate the tag so that we need not go further processing-CJS
+                                    //TagStructure ts = ParseEPC(ctp.ObjectId); //this function also should validate the tag so that we need not go further processing-CJS
 
-                                    int eviClass = -1;
-                                    string eviVRN = "";
-                                    if (ts != null)
+                                    //int eviClass = -1;
+                                    //string eviVRN = "";
+                                    // if (ts != null)
+                                    if (true)
                                     {
                                         //these two parsed out things are not used anywhere else - CJS
-                                        eviClass = ts.ClassId;
-                                        eviVRN = ts.VRN;
+                                        //eviClass = ts.ClassId;
+                                        //eviVRN = ts.VRN;
 
                                         LogMessage("Checking the tag exists in the system or not. " + ctp.ObjectId); //it should not check existance, but isregistered or not with status "processed"
                                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE associatedCVCT = DoesTagExist(ctp.ObjectId);
@@ -379,8 +381,8 @@ namespace VaaaN.MLFF.WindowsServices
                                                     LogMessage("No lane detail found against the hardware id: " + ctp.LocationId);
                                                     //future processing should be closed here
                                                 }
-                                                ctp.PlateNumber = eviVRN;
-                                                ctp.VehicleClassId = eviClass;
+                                                ctp.PlateNumber = associatedCVCT.VehRegNo;
+                                                ctp.VehicleClassId = associatedCVCT.VehicleClassId;
                                                 ctp.CreationDate = System.DateTime.Now;
                                                 ctp.ModifierId = 1;
                                                 ctp.ModificationDate = System.DateTime.Now;
@@ -431,17 +433,17 @@ namespace VaaaN.MLFF.WindowsServices
                                                     ctEvent.LaneId = 0;
                                                     ctEvent.LaneName = "NA";
                                                 }
-                                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE VehicleClass = GetVehicleClassById(eviClass);
+                                                VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE VehicleClass = GetVehicleClassById(associatedCVCT.VehicleClassId);
                                                 if (VehicleClass != null)
                                                 {
                                                     ctEvent.VehicleClassName = VehicleClass.Name;
                                                 }
                                                 else
                                                 {
-                                                    LogMessage("Vehicle class name might be wrong in IKE packet. (1, 2, 3, 4)" + eviClass);
+                                                    LogMessage("Vehicle class name might be wrong in IKE packet. (1, 2, 3, 4)" + associatedCVCT.VehicleClassId);
                                                 }
                                                 ctEvent.ReaderPosition = ctp.ReaderPosition;
-                                                ctEvent.VRN = eviVRN;
+                                                ctEvent.VRN = associatedCVCT.VehRegNo;
 
                                                 crosstalkEventMessage.Body = ctEvent;
 

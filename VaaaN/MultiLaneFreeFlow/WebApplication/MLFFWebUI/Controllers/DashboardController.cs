@@ -35,7 +35,7 @@ namespace MLFFWebUI.Controllers
                 {
                     return RedirectToAction("Logout", "Login");
                 }
-                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Dashboard", "LiveMonitoring");
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Dashboard", "liveevent");
 
                 #region Gantry Class Dropdown
                 List<SelectListItem> gantryList = new List<SelectListItem>();

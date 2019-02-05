@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -217,6 +218,40 @@ namespace MLFFWebUI.Controllers
             catch (Exception ex)
             {
                 HelperClass.LogMessage("Failed Export Customer CSV " + ex);
+            }
+            string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+
+        public string ExportCSVTranscations(ViewTransactionCBE transaction)
+        {
+            Int16 IsDataFound = 0;
+            var filename = "TransactionDetails_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
+            try
+            {
+                string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+                string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+                string strQuery = " WHERE 1=1 ";
+                if (strstarttime != null && strendtime != null)
+                {
+                    strQuery += " AND  TRANSACTION_DATETIME BETWEEN TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS') AND  TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+                }
+                else if (strstarttime != null)
+                {
+                    strQuery += " AND  TRANSACTION_DATETIME >= TO_DATE('" + strstarttime + "','DD/MM/YYYY HH24:MI:SS')";
+                }
+                else if (strendtime != null)
+                {
+                    strQuery += " AND  TRANSACTION_DATETIME <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
+                }
+                IsDataFound = CSVUtility.CreateCsv(file.FullName, TransactionBLL.TransDeatils(strQuery));
+                if (IsDataFound == 0)
+                    filename = "No Data to Export.";
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed Export Transaction Details_ CSV " + ex);
             }
             string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
             return Det.Replace("\r", "").Replace("\n", "");

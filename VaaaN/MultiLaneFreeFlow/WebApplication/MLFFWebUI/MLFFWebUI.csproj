@@ -366,6 +366,7 @@
     <Content Include="Scripts\bootstrap3\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Views\CustomerTransaction\GetFile.cshtml" />
     <Content Include="Views\CustomerTransaction\FailedQueueData.cshtml" />
+    <Content Include="Views\CustomerTransaction\ReportTransactionData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

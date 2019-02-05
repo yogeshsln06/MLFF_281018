@@ -232,15 +232,15 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             TransactionDAL.UpdateCrossTalkSectionRear(transaction, ctpEntryId);
         }
 
-        public static void UpdateNodefluxSectionFront(CBE.TransactionCBE transaction, Int32 ntpEntryId)
-        {
-            TransactionDAL.UpdateNodefluxSectionFront(transaction, ntpEntryId);
-        }
+        //public static void UpdateNodefluxSectionFront(CBE.TransactionCBE transaction, Int32 ntpEntryId)
+        //{
+        //    TransactionDAL.UpdateNodefluxSectionFront(transaction, ntpEntryId);
+        //}
 
-        public static void UpdateNodefluxSectionRear(CBE.TransactionCBE transaction, Int32 ntpEntryId)
-        {
-            TransactionDAL.UpdateNodefluxSectionRear(transaction, ntpEntryId);
-        }
+        //public static void UpdateNodefluxSectionRear(CBE.TransactionCBE transaction, Int32 ntpEntryId)
+        //{
+        //    TransactionDAL.UpdateNodefluxSectionRear(transaction, ntpEntryId);
+        //}
 
         public static DataTable Transaction_LiveData()
         {
@@ -381,6 +381,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         public static void MeargedAuditTransaction(Int32 ParentId, Int32 ChildId, int TranscationStatus)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.MeargedAuditTransaction(ParentId, ChildId, TranscationStatus);
+        }
+
+
+        public static DataTable TransDeatils(string filter)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.TransDeatils(filter);
         }
 
 

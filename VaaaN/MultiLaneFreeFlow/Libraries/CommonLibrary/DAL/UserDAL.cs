@@ -39,10 +39,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         #region Insert/Update/Delete
         public static int Insert(CBE.UserCBE user)
         {
+            int userId = 0;
             try
             {
-                int userId = 0;
-                userId = GetNextValue();
+               
                 string spName = Constants.oraclePackagePrefix + "User_Insert";
 
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);

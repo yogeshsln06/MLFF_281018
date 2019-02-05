@@ -2377,3 +2377,37 @@ function DownLoadData() {
         }
     });
 }
+
+function DownLoadTransactionReport() {
+    var StartDate = DateFormatTime($("#StartDate").val());
+    var EndDate = DateFormatTime($("#EndDate").val());
+    var Inputdata = {
+        StartDate: StartDate,
+        EndDate: EndDate,
+    }
+    inProgress = true;
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "ReportTransactionData",
+        url: "/CSV/ExportCSVTranscations",
+        contentType: "application/json; charset=utf-8",
+        success: function (Path) {
+            $('#filterModel').modal('hide');
+            $('.animationload').hide();
+            if (Path.toLowerCase() == "no data to export." || Path.toLowerCase() == "file exported successfully") {
+                alert(Path)
+                return;
+            }
+            if (Path.toLowerCase().search(".csv") > -1 || Path.toLowerCase().search(".pdf") > -1 || Path.toLowerCase().search(".zip") > -1)
+                window.location.href = "../Attachment/ExportFiles/" + Path;
+            else
+                alert(Path);
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
+}
