@@ -5,7 +5,7 @@ AS
 
 
 
-   PROCEDURE USER_INSERT (P_USER_ID             IN NUMBER,
+   PROCEDURE USER_INSERT (P_USER_ID             OUT NUMBER,
                           P_LOGIN_NAME          IN NVARCHAR2,
                           P_FIRST_NAME          IN NVARCHAR2,
                           P_LAST_NAME           IN NVARCHAR2 := NULL,
