@@ -14,14 +14,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.MSMQ
         //public static string failedQueueNameANPR = ".\\Private$\\failedQueueANPR";
 
         public static string eventQueue = ".\\Private$\\eventQueue";
-        public static TimeSpan eventQueueTimeOut = new TimeSpan(0, 0, 20);
+        public static TimeSpan eventQueueTimeOut = new TimeSpan(0, 0, 0, 10);
 
         public static string localEventQueue = ".\\Private$\\localEventQueue";
         public static TimeSpan localEventQueueTimeOut = new TimeSpan(1, 0, 10);
-              
+
         public static string hardwareStatusEventQueue = ".\\Private$\\hardwareStatusEventQueue";
         public static TimeSpan hardwareStatusEventQueueTimeOut = new TimeSpan(1, 0, 10);
-      
+
         public static string vmsMessageQueue = ".\\Private$\\vmsMessageQueue";
         public static TimeSpan vmsMessageQueueTimeOut = new TimeSpan(0, 0, 10);
 
