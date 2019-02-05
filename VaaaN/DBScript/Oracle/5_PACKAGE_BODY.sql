@@ -1,27 +1,27 @@
-/* Formatted on 05/02/2019 16:22:04 (QP5 v5.215.12089.38647) */
+/* Formatted on 05/02/2019 17:40:29 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
 
 
 
-   PROCEDURE USER_INSERT (P_USER_ID             OUT NUMBER,
-                          P_LOGIN_NAME          IN NVARCHAR2,
-                          P_FIRST_NAME          IN NVARCHAR2,
-                          P_LAST_NAME           IN NVARCHAR2 := NULL,
-                          P_DESCRIPTION         IN NVARCHAR2,
-                          P_PASSWORD            IN NVARCHAR2,
-                          P_ADDRESS             IN NVARCHAR2 := NULL,
-                          P_ROLE_ID             IN NUMBER,
-                          P_ACC_EXPIRY_DATE     IN DATE,
-                          P_MODIFIER_ID         IN NUMBER,
-                          P_CREATION_DATE       IN DATE,
-                          P_MODIFICATION_DATE   IN DATE,
-                          P_FINGER_PRINT_1      IN NVARCHAR2,
-                          P_MOBILE_NO           IN NVARCHAR2,
-                          P_EMAIL_ID            IN NVARCHAR2,
-                          P_USER_STATUS         IN NUMBER,
-                          P_DOB                 IN DATE)
+   PROCEDURE USER_INSERT (P_USER_ID                OUT NUMBER,
+                          P_LOGIN_NAME          IN     NVARCHAR2,
+                          P_FIRST_NAME          IN     NVARCHAR2,
+                          P_LAST_NAME           IN     NVARCHAR2 := NULL,
+                          P_DESCRIPTION         IN     NVARCHAR2,
+                          P_PASSWORD            IN     NVARCHAR2,
+                          P_ADDRESS             IN     NVARCHAR2 := NULL,
+                          P_ROLE_ID             IN     NUMBER,
+                          P_ACC_EXPIRY_DATE     IN     DATE,
+                          P_MODIFIER_ID         IN     NUMBER,
+                          P_CREATION_DATE       IN     DATE,
+                          P_MODIFICATION_DATE   IN     DATE,
+                          P_FINGER_PRINT_1      IN     NVARCHAR2,
+                          P_MOBILE_NO           IN     NVARCHAR2,
+                          P_EMAIL_ID            IN     NVARCHAR2,
+                          P_USER_STATUS         IN     NUMBER,
+                          P_DOB                 IN     DATE)
    AS
    BEGIN
       INSERT INTO TBL_USER (USER_ID,
@@ -59,7 +59,7 @@ AS
                    P_USER_STATUS,
                    P_DOB);
 
-	
+
 
       INSERT INTO TBL_USER_MODULE_RIGHT (USER_ID,
                                          ENTRY_ID,
@@ -96,9 +96,8 @@ AS
                 SUB_MODULE_DELETE
            FROM TBL_ROLE_SUBMODULE_RIGHT
           WHERE ROLE_ID = P_ROLE_ID;
-		  
-		  P_USER_ID := USER_SEQ.CURRVAL;
-		  
+
+      P_USER_ID := USER_SEQ.CURRVAL;
    END USER_INSERT;
 
 
@@ -8676,8 +8675,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
          ' SELECT *
   FROM TRANS_DEATILS ' || P_FILTER || '
 ORDER BY CREATION_DATE DESC ';
- WITH CTE_USER
-           AS ( SQLQUERY )
+
 
 
       OPEN CUR_OUT FOR SQLQUERY;

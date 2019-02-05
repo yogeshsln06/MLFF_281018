@@ -1,27 +1,27 @@
-/* Formatted on 05/02/2019 15:56:52 (QP5 v5.215.12089.38647) */
+/* Formatted on 05/02/2019 17:40:14 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
 
 
    /*USER*/
-   PROCEDURE USER_INSERT (P_USER_ID             IN NUMBER,
-                          P_LOGIN_NAME          IN NVARCHAR2,
-                          P_FIRST_NAME          IN NVARCHAR2,
-                          P_LAST_NAME           IN NVARCHAR2 := NULL,
-                          P_DESCRIPTION         IN NVARCHAR2,
-                          P_PASSWORD            IN NVARCHAR2,
-                          P_ADDRESS             IN NVARCHAR2 := NULL,
-                          P_ROLE_ID             IN NUMBER,
-                          P_ACC_EXPIRY_DATE     IN DATE,
-                          P_MODIFIER_ID         IN NUMBER,
-                          P_CREATION_DATE       IN DATE,
-                          P_MODIFICATION_DATE   IN DATE,
-                          P_FINGER_PRINT_1      IN NVARCHAR2,
-                          P_MOBILE_NO           IN NVARCHAR2,
-                          P_EMAIL_ID            IN NVARCHAR2,
-                          P_USER_STATUS         IN NUMBER,
-                          P_DOB                 IN DATE);
+   PROCEDURE USER_INSERT (P_USER_ID                OUT NUMBER,
+                          P_LOGIN_NAME          IN     NVARCHAR2,
+                          P_FIRST_NAME          IN     NVARCHAR2,
+                          P_LAST_NAME           IN     NVARCHAR2 := NULL,
+                          P_DESCRIPTION         IN     NVARCHAR2,
+                          P_PASSWORD            IN     NVARCHAR2,
+                          P_ADDRESS             IN     NVARCHAR2 := NULL,
+                          P_ROLE_ID             IN     NUMBER,
+                          P_ACC_EXPIRY_DATE     IN     DATE,
+                          P_MODIFIER_ID         IN     NUMBER,
+                          P_CREATION_DATE       IN     DATE,
+                          P_MODIFICATION_DATE   IN     DATE,
+                          P_FINGER_PRINT_1      IN     NVARCHAR2,
+                          P_MOBILE_NO           IN     NVARCHAR2,
+                          P_EMAIL_ID            IN     NVARCHAR2,
+                          P_USER_STATUS         IN     NUMBER,
+                          P_DOB                 IN     DATE);
 
    PROCEDURE USER_UPDATE (P_USER_ID             IN NUMBER,
                           P_LOGIN_NAME          IN NVARCHAR2,
