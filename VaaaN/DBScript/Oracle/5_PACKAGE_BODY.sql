@@ -1,4 +1,4 @@
-/* Formatted on 05/02/2019 15:57:11 (QP5 v5.215.12089.38647) */
+/* Formatted on 05/02/2019 16:22:04 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -59,7 +59,7 @@ AS
                    P_USER_STATUS,
                    P_DOB);
 
-
+	
 
       INSERT INTO TBL_USER_MODULE_RIGHT (USER_ID,
                                          ENTRY_ID,
@@ -96,6 +96,9 @@ AS
                 SUB_MODULE_DELETE
            FROM TBL_ROLE_SUBMODULE_RIGHT
           WHERE ROLE_ID = P_ROLE_ID;
+		  
+		  P_USER_ID := USER_SEQ.CURRVAL;
+		  
    END USER_INSERT;
 
 
@@ -8672,8 +8675,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
       SQLQUERY :=
          ' SELECT *
   FROM TRANS_DEATILS ' || P_FILTER || '
-ORDER BY T.CREATION_DATE DESC';
-
+ORDER BY CREATION_DATE DESC ';
+ WITH CTE_USER
+           AS ( SQLQUERY )
 
 
       OPEN CUR_OUT FOR SQLQUERY;

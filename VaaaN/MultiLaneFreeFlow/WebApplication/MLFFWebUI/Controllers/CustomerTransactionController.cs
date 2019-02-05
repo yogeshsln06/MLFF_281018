@@ -1781,14 +1781,10 @@ namespace MLFFWebUI.Controllers
         }
 
 
-
-        [HttpPost]
-        public string ReportTransactionData(ViewTransactionCBE transaction)
+        public ActionResult ReportTransactionData()
         {
-            CSVController ExportCSV = new CSVController();
-            return ExportCSV.ExportCSVTranscations();
+            return View();
         }
-
 
         #region Helper Methord
         private static void MarkAsViolation(Int32 TranscationId, TransactionCBE transaction)
