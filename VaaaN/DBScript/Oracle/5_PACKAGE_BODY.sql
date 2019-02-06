@@ -8680,6 +8680,67 @@ ORDER BY CREATION_DATE DESC ';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_DEATILS;
+   
+   
+   PROCEDURE TRAN_DEATILS (P_STARTDATE IN DATE,P_ENDDATE IN DATE CUR_OUT OUT T_CURSOR)
+   IS
+      
+   BEGIN
+     OPEN CUR_OUT FOR
+      WITH CTE_DETAILS
+           AS (  SELECT TMS_ID,
+		  PLAZA_ID,
+          LANE_ID,
+          TRANSACTION_ID,
+          TRANSACTION_DATETIME,
+          CREATION_DATE,
+          VEHICLESPEED,
+          RFID_FRONT_ID,
+          RFID_FRONT_TIMESTAMP,
+          RFID_FRONT_TAG_ID,
+          RFID_FRONT_CLASS_ID,
+          RFID_FRONT_VRN,
+          RFID_REAR_ID,
+          RFID_REAR_TIMESTAMP,
+          RFID_REAR_TAG_ID,
+          RFID_REAR_CLASS_ID,
+          RFID_REAR_VRN,
+          ANPR_FRONT_ID,
+          ANPR_FRONT_VRN,
+          ANPR_FRONT_CLASS_ID,
+          ANPR_FRONT_IMAGE,
+          ANPR_FRONT_VIDEO_URL,
+          ANPR_FRONT_SPEED,
+          ANPR_REAR_ID,
+          ANPR_REAR_VRN,
+          ANPR_REAR_CLASS_ID,
+          ANPR_REAR_IMAGE,
+          ANPR_REAR_VIDEO_URL,
+          ANPR_REAR_SPEED,
+          IS_BALANCE_UPDATED,
+          IS_VIOLATION,
+          IS_REGISTERED,
+          AUDIT_STATUS,
+          AUDITOR_ID,
+          AUDIT_DATE,
+          AUDITED_VEHICLE_CLASS_ID,
+          AUDITED_VRN,
+          AMOUNT,
+          CLOSING_BALANCE,
+          ParentId,
+          TRANS_STATUS,
+          GATEWAY_RESPONSE_CODE,
+          OPERATOR_RESPONSE_CODE FROM TRANS_DEATILS
+                  WHERE    TRANSACTION_DATETIME BETWEEN TO_DATE (P_STARTDATE,
+                                                   'DD/MM/YYYY HH24:MI:SS')
+                                      AND TO_DATE (P_ENDDATE,
+                                                   'DD/MM/YYYY HH24:MI:SS'))
+SELECT * FROM CTE_DETAILS;
+
+
+     
+   END TRAN_DEATILS;
+   
 END MLFF_PACKAGE;
 /
 /

@@ -332,8 +332,8 @@ namespace VaaaN.MLFF.WindowsServices
                                 ctp.ObjectId = ctp.ObjectId.Trim(); //otherwise trailing and leading spaces create problems
 
                                 LogMessage("Validity checking. " + ctp.ObjectId);
-                                //if (IsValidTag(ctp.ObjectId))
-                                if (true)
+                                //
+                                if (IsValidTag(ctp.ObjectId))
                                 {
                                     LogMessage("Valid tag. Trying to parse...");
 
