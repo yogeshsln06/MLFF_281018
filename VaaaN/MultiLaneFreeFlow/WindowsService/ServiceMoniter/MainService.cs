@@ -49,6 +49,7 @@ namespace ServiceMonitor
         {
             InitializeComponent();
 
+
             //OnStart(new string[] { "SM" });
         }
 
