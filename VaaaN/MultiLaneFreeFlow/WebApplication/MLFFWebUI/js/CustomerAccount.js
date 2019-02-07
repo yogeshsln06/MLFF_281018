@@ -649,7 +649,7 @@ function BindHistoryRecords() {
                 columns: [
                     { 'data': 'ROWNUMBER' },
                     {
-                        'data': 'ENTRY_ID'
+                        'data': 'MYTRANID'
                     },
                     {
                         'data': 'CREATION_DATE',

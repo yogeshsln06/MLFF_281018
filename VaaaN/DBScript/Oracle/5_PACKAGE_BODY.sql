@@ -7139,7 +7139,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   AH.TRANSACTION_TYPE_NAME,
                   AH.ENTRY_ID,
                   AH.TRANSACTION_ID,
-                  (CASE AH.TRANSACTION_ID
+                  (CASE NVL(AH.TRANSACTION_ID,0)
                       WHEN 0 THEN AH.ENTRY_ID
                       ELSE AH.TRANSACTION_ID
                    END)

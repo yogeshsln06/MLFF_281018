@@ -12,139 +12,142 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/11/2018 22:04:00</publishTime>
     </File>
     <File Include="assets/admin/a1ecc3b826d01251edddf29c3e4e1e97.woff">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/admin/af7ae505a9eed503f8b8e6982036873e.woff2">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/admin/bundle.js">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/admin/fee66e712a8a08eef5805a46892932ad.woff">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/admin/reset.css">
-      <publishTime>12/27/2018 15:00:07</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/admin/style.css">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/admin/vendor.js">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/bootstrap/bootstrap.min.css">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/bootstrap/bootstrap.min.js">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/bootstrap/jquery.min.js">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/bootstrap/popper.min.js">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/custom/custom.css">
-      <publishTime>01/04/2019 12:11:16</publishTime>
+      <publishTime>02/05/2019 10:17:59</publishTime>
+    </File>
+    <File Include="assets/custom/EmailTemplate.html">
+      <publishTime>02/01/2019 15:15:08</publishTime>
     </File>
     <File Include="assets/custom/reset.css">
-      <publishTime>12/27/2018 15:02:28</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/custom/style.css">
-      <publishTime>12/27/2018 16:59:46</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/datatable/bootstrap.min.css">
-      <publishTime>12/31/2018 17:19:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/datatable/bootstrap.min.js">
-      <publishTime>12/31/2018 15:24:28</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/datatable/dataTables.bootstrap.min.js">
-      <publishTime>12/31/2018 11:41:27</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/datatable/jquery.dataTables.min.css">
-      <publishTime>12/31/2018 11:41:27</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/datatable/jquery.dataTables.min.js">
-      <publishTime>12/31/2018 11:41:27</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/jqueryslims/bootstrap.min.js">
-      <publishTime>01/03/2019 10:27:42</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/jqueryslims/jquery-3.2.1.slim.min.js">
-      <publishTime>01/03/2019 10:27:42</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/jqueryslims/popper.min.js">
-      <publishTime>01/03/2019 10:27:42</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/fontawesome/fontawesome-webfont.eot">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/fontawesome/fontawesome-webfont.svg">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/fontawesome/fontawesome-webfont.ttf">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/fontawesome/fontawesome-webfont.woff">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/fontawesome/fontawesome-webfont.woff2">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/fontawesome/FontAwesome.otf">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/themify/themify.eot">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/themify/themify.svg">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/themify/themify.ttf">
-      <publishTime>12/27/2018 10:06:48</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/fonts/icons/themify/themify.woff">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/images/404.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/images/500.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/images/bg.jpg">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/images/datatables/sort_asc.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/images/datatables/sort_asc_disabled.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/images/datatables/sort_both.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:44</publishTime>
     </File>
     <File Include="assets/static/images/datatables/sort_desc.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="assets/static/images/datatables/sort_desc_disabled.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="assets/static/images/logo.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="assets/static/images/logo.svg">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="assets/static/images/SmartERP.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="assets/static/images/SmartERPtext.png">
-      <publishTime>01/03/2019 09:39:49</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="assets/static/images/SMlogo.png">
-      <publishTime>12/27/2018 10:06:49</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>12/27/2018 13:31:55</publishTime>
@@ -153,10 +156,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/11/2018 22:04:00</publishTime>
     </File>
     <File Include="bin/en/VaaaN.MLFF.CommonLibrary.resources.dll">
-      <publishTime>01/04/2019 14:27:54</publishTime>
+      <publishTime>02/06/2019 14:53:48</publishTime>
     </File>
     <File Include="bin/id/VaaaN.MLFF.CommonLibrary.resources.dll">
-      <publishTime>01/04/2019 14:27:54</publishTime>
+      <publishTime>02/06/2019 14:53:48</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.Agent.Intercept.dll">
       <publishTime>12/27/2018 13:31:57</publishTime>
@@ -192,7 +195,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 13:31:57</publishTime>
     </File>
     <File Include="bin/MLFFWebUI.dll">
-      <publishTime>01/04/2019 14:27:58</publishTime>
+      <publishTime>02/06/2019 17:54:17</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>12/27/2018 13:32:00</publishTime>
@@ -255,7 +258,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 13:31:55</publishTime>
     </File>
     <File Include="bin/VaaaN.MLFF.CommonLibrary.dll">
-      <publishTime>01/04/2019 14:27:54</publishTime>
+      <publishTime>02/06/2019 14:53:47</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>12/27/2018 13:31:55</publishTime>
@@ -369,16 +372,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/20/2018 12:42:19</publishTime>
     </File>
     <File Include="Content/images/ui-icons_444444_256x240.png">
-      <publishTime>12/20/2018 12:42:19</publishTime>
+      <publishTime>01/28/2019 20:27:05</publishTime>
     </File>
     <File Include="Content/images/ui-icons_454545_256x240.png">
       <publishTime>12/20/2018 12:42:19</publishTime>
     </File>
+    <File Include="Content/images/ui-icons_555555_256x240.png">
+      <publishTime>01/28/2019 20:27:05</publishTime>
+    </File>
+    <File Include="Content/images/ui-icons_777620_256x240.png">
+      <publishTime>01/28/2019 20:27:05</publishTime>
+    </File>
+    <File Include="Content/images/ui-icons_777777_256x240.png">
+      <publishTime>01/28/2019 20:27:05</publishTime>
+    </File>
     <File Include="Content/images/ui-icons_bf3030_256x240.png">
       <publishTime>12/20/2018 12:42:19</publishTime>
     </File>
+    <File Include="Content/images/ui-icons_cc0000_256x240.png">
+      <publishTime>01/28/2019 20:27:05</publishTime>
+    </File>
     <File Include="Content/images/ui-icons_ffffff_256x240.png">
-      <publishTime>12/20/2018 12:42:19</publishTime>
+      <publishTime>01/28/2019 20:27:05</publishTime>
     </File>
     <File Include="Content/imageviewer.css">
       <publishTime>12/20/2018 12:42:19</publishTime>
@@ -453,22 +468,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/17/2018 23:46:42</publishTime>
     </File>
     <File Include="js/Common.js">
-      <publishTime>01/04/2019 12:41:44</publishTime>
+      <publishTime>01/30/2019 14:47:23</publishTime>
     </File>
     <File Include="js/CustomerAccount.js">
-      <publishTime>01/04/2019 13:35:31</publishTime>
+      <publishTime>02/06/2019 12:49:51</publishTime>
     </File>
     <File Include="js/CustomerTranscation.js">
-      <publishTime>12/27/2018 14:24:01</publishTime>
+      <publishTime>02/06/2019 16:31:35</publishTime>
     </File>
     <File Include="js/CustomerVehicle.js">
-      <publishTime>01/04/2019 13:13:24</publishTime>
+      <publishTime>02/06/2019 16:07:04</publishTime>
     </File>
     <File Include="js/liveEvents.js">
-      <publishTime>12/27/2018 10:06:44</publishTime>
+      <publishTime>02/05/2019 09:51:26</publishTime>
+    </File>
+    <File Include="js/Report.js">
+      <publishTime>02/01/2019 11:27:54</publishTime>
     </File>
     <File Include="js/SetUp.js">
-      <publishTime>01/03/2019 12:14:59</publishTime>
+      <publishTime>02/05/2019 17:43:33</publishTime>
     </File>
     <File Include="packages.config">
       <publishTime>12/12/2018 16:03:03</publishTime>
@@ -487,6 +505,39 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Scripts/bootstrap.min.js">
       <publishTime>12/27/2018 10:06:45</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/css/bootstrap-datepicker.css">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/css/bootstrap-theme.css">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/css/bootstrap-theme.min.css">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/css/bootstrap.css">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/css/bootstrap.min.css">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/fonts/glyphicons-halflings-regular.eot">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/fonts/glyphicons-halflings-regular.svg">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/fonts/glyphicons-halflings-regular.ttf">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/fonts/glyphicons-halflings-regular.woff">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/js/bootstrap.js">
+      <publishTime>01/19/2019 22:47:35</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap3/js/bootstrap.min.js">
+      <publishTime>01/19/2019 22:47:35</publishTime>
     </File>
     <File Include="Scripts/imageviewer.min.js">
       <publishTime>12/27/2018 10:06:45</publishTime>
@@ -549,94 +600,130 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/27/2018 10:06:46</publishTime>
     </File>
     <File Include="Scripts/_references.js">
-      <publishTime>01/03/2019 14:29:47</publishTime>
+      <publishTime>01/19/2019 23:33:21</publishTime>
     </File>
     <File Include="scss/style.scss">
       <publishTime>12/27/2018 15:00:46</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/AssociatedTransaction.cshtml">
-      <publishTime>12/27/2018 11:12:02</publishTime>
+      <publishTime>01/31/2019 15:01:42</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/Charged.cshtml">
-      <publishTime>12/27/2018 12:06:15</publishTime>
+      <publishTime>01/31/2019 19:50:51</publishTime>
+    </File>
+    <File Include="Views/CustomerTransaction/FailedQueueData.cshtml">
+      <publishTime>01/31/2019 15:57:57</publishTime>
+    </File>
+    <File Include="Views/CustomerTransaction/GetFile.cshtml">
+      <publishTime>01/31/2019 09:15:14</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/Index.cshtml">
-      <publishTime>12/27/2018 10:06:46</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
+    </File>
+    <File Include="Views/CustomerTransaction/ReportTransactionData.cshtml">
+      <publishTime>02/05/2019 16:11:52</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/Reviewed.cshtml">
-      <publishTime>12/27/2018 11:47:57</publishTime>
+      <publishTime>01/31/2019 15:08:57</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/TopUP.cshtml">
-      <publishTime>12/27/2018 12:08:16</publishTime>
+      <publishTime>01/31/2019 19:53:26</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/TranscationList.cshtml">
-      <publishTime>12/27/2018 10:06:46</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/Unidentified.cshtml">
       <publishTime>12/27/2018 10:06:46</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/Unreviewed.cshtml">
-      <publishTime>12/27/2018 13:51:27</publishTime>
+      <publishTime>01/31/2019 14:46:47</publishTime>
     </File>
     <File Include="Views/CustomerTransaction/Violation.cshtml">
       <publishTime>12/27/2018 10:06:46</publishTime>
     </File>
     <File Include="Views/Dashboard/Index.cshtml">
-      <publishTime>01/03/2019 10:48:45</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/Dashboard/LiveEvent.cshtml">
-      <publishTime>12/27/2018 10:06:46</publishTime>
+      <publishTime>02/05/2019 10:03:13</publishTime>
     </File>
     <File Include="Views/Login/Index.cshtml">
-      <publishTime>01/03/2019 16:14:11</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/Registration/Customer.cshtml">
-      <publishTime>01/04/2019 11:46:35</publishTime>
+      <publishTime>01/28/2019 20:22:52</publishTime>
     </File>
     <File Include="Views/Registration/CustomerChildList.cshtml">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/Registration/CustomerVehicle.cshtml">
-      <publishTime>01/04/2019 12:44:03</publishTime>
+      <publishTime>01/19/2019 21:15:51</publishTime>
     </File>
     <File Include="Views/Registration/CustomerVehicleChildList.cshtml">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/Registration/Index.cshtml">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/Registration/TransactionHistory.cshtml">
-      <publishTime>01/02/2019 17:52:27</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/Registration/VihicleList.cshtml">
-      <publishTime>01/02/2019 17:49:37</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/Registration/_CustomerPopUp.cshtml">
-      <publishTime>01/04/2019 13:32:11</publishTime>
+      <publishTime>01/28/2019 20:35:05</publishTime>
     </File>
     <File Include="Views/Registration/_CustomerVehiclePopUp.cshtml">
-      <publishTime>01/04/2019 13:29:02</publishTime>
+      <publishTime>01/28/2019 20:42:36</publishTime>
+    </File>
+    <File Include="Views/Report/VehicleBalanceReport.cshtml">
+      <publishTime>01/30/2019 12:26:06</publishTime>
+    </File>
+    <File Include="Views/SetUp/ClassificationList.cshtml">
+      <publishTime>01/16/2019 21:56:45</publishTime>
+    </File>
+    <File Include="Views/SetUp/ClassificationPopUp.cshtml">
+      <publishTime>01/16/2019 21:56:45</publishTime>
+    </File>
+    <File Include="Views/SetUp/FareList.cshtml">
+      <publishTime>01/16/2019 21:56:45</publishTime>
+    </File>
+    <File Include="Views/SetUp/HardwareList.cshtml">
+      <publishTime>01/16/2019 21:56:45</publishTime>
+    </File>
+    <File Include="Views/SetUp/HardwarePopUp.cshtml">
+      <publishTime>01/16/2019 21:56:45</publishTime>
+    </File>
+    <File Include="Views/SetUp/LaneList.cshtml">
+      <publishTime>02/02/2019 19:39:03</publishTime>
+    </File>
+    <File Include="Views/SetUp/PlazaList.cshtml">
+      <publishTime>02/05/2019 17:43:33</publishTime>
+    </File>
+    <File Include="Views/SetUp/RoleList.cshtml">
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/SetUp/UserMaster.cshtml">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/SetUp/UsersList.cshtml">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>02/05/2019 17:43:33</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>01/04/2019 12:08:46</publishTime>
+      <publishTime>01/19/2019 23:38:20</publishTime>
     </File>
     <File Include="Views/Web.config">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Views/_ViewStart.cshtml">
-      <publishTime>12/27/2018 10:06:47</publishTime>
+      <publishTime>01/16/2019 21:56:45</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>12/27/2018 13:33:06</publishTime>
+      <publishTime>02/05/2019 16:35:29</publishTime>
     </File>
   </ItemGroup>
 </Project>

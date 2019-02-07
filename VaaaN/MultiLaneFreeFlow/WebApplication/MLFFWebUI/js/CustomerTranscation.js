@@ -736,7 +736,6 @@ function Complete() {
         alert('You cannot join more than two trancation.');
         return false;
     }
-
     if (confirm('Are you sure you want to reviewed ?')) {
         var Seconds = $("#filterSec").val();
         Seconds = 60;

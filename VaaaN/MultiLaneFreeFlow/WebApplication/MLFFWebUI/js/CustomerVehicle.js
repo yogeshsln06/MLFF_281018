@@ -988,7 +988,7 @@ function BindHistoryRecords() {
                 columns: [
                     { 'data': 'ROWNUMBER' },
                     {
-                        'data': 'ENTRY_ID'
+                        'data': 'MYTRANID'
                     },
                     {
                         'data': 'CREATION_DATE',
@@ -1048,15 +1048,16 @@ function BindHistoryRecords() {
 }
 
 function AppendHistoryRecords() {
-    $('#loadingdiv').show()
-    var Inputdata = { AccountId: CustomerAccountId, pageindex: Transload, pagesize: 10 }
+    $(".animationload").show();
+    //var Inputdata = { AccountId: CustomerAccountId, pageindex: Transload, pagesize: 10 }
+    var Inputdata = { VehicleId: CustomerVehicleId, AccountId: CustomerAccountId, pageindex: Transload, pagesize: 10 }
     $.ajax({
         type: "POST",
         dataType: "json",
-        url: "GetTranscationHistoryByCustomer",
+        url: "GetTranscationHistoryByCustomereVehicle",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
-            $('#loadingdiv').hide()
+            $(".animationload").hide();
             HNoMoredata = data.length < 10
             Transload++;
             //datatableVariable.clear().draw();
@@ -1065,7 +1066,7 @@ function AppendHistoryRecords() {
 
         },
         error: function (ex) {
-            $('#loadingdiv').hide()
+            $(".animationload").hide();
         }
 
     });
