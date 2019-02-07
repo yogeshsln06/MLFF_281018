@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            @using (Html.BeginForm("AddPlaza", "SetUp", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("GetGantry", "SetUp", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <fieldset id="fildset">
                     <div class="modal-body" style="height:400px; overflow-y:scroll;">
@@ -15,8 +15,9 @@
                         <div class="mT-5">
                             <div class="form-row">
                                 <div class="form-group col-md-2 required">
-                                    @Html.LabelFor(model => model.PlazaId, htmlAttributes: new { @class = "control-label" })
-                                    @Html.EditorFor(model => model.PlazaId, new { htmlAttributes = new { @class = "form-control", placeholder = "Gantry Name", autofocus = "true" } })
+                                    @*@Html.LabelFor(model => model.PlazaId, htmlAttributes: new { @class = "control-label" })*@
+                                    <label for="lblPlazaId" class="form-label">Gantry ID</label>
+                                    @Html.EditorFor(model => model.PlazaId, new { htmlAttributes = new { @class = "form-control", placeholder = "Gantry ID", autofocus = "true" } })
                                 </div>
                                 <div class="form-group col-md-2 required">
                                     <label for="PlazaName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.GantryName</label>
@@ -44,6 +45,6 @@
                 <div class="alert alert-warning" role="alert" id="warning">
                 </div>
                 <button type="button" class="btn btn-outline-danger" id="btnCancel" onclick="ResetFieldes();">Cancel</button>
-                <button type="button" class="btn btn-outline-primary" onclick="SaveData('close')" id="btnSave">Save</button>
+                <button type="button" class="btn btn-outline-primary" onclick="SaveGantryData('close')" id="btnSave">Save</button>
             </div>
 

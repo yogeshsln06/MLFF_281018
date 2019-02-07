@@ -277,12 +277,10 @@ namespace MLFFWebUI.Controllers
                     ModelStateList objModelState = new ModelStateList();
                     objModelState.ErrorMessage = "logout";
                     objResponseMessage.Add(objModelState);
-
                 }
                 else {
                     Roles.RoleId = id;
                     Roles = VaaaN.MLFF.Libraries.CommonLibrary.BLL.RoleBLL.GetRoleByIdcollection(Roles);
-
                 }
             }
             catch (Exception ex)
