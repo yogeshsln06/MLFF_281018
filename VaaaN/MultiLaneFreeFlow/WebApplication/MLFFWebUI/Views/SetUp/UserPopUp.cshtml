@@ -18,7 +18,7 @@
         autoclose: true
     });
 </script>
-@using (Html.BeginForm("AddUser", "SetUp", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("GetUser", "SetUp", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <fieldset id="fildset">
         <input type="hidden" id="SlRoleId" value="@ViewBag.SlRoleId" />
