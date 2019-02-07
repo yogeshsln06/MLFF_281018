@@ -367,6 +367,11 @@
     <Content Include="Views\CustomerTransaction\GetFile.cshtml" />
     <Content Include="Views\CustomerTransaction\FailedQueueData.cshtml" />
     <Content Include="Views\CustomerTransaction\ReportTransactionData.cshtml" />
+    <Content Include="Views\SetUp\LaneListPopUp.cshtml" />
+    <Content Include="Views\SetUp\PlazaListPopUp.cshtml" />
+    <Content Include="Views\SetUp\ProvinceList.cshtml" />
+    <Content Include="Views\SetUp\RoleListPopUp.cshtml" />
+    <Content Include="Views\SetUp\UserPopUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
