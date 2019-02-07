@@ -9,8 +9,8 @@ E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Debu
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Debug\Newtonsoft.Json.xml
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Debug\en\VaaaN.MLFF.CommonLibrary.resources.dll
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\bin\Debug\id\VaaaN.MLFF.CommonLibrary.resources.dll
+E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Debug\DTSService.csprojResolveAssemblyReference.cache
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Debug\DTSService.ProjectInstaller.resources
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Debug\DTSService.csproj.GenerateResource.Cache
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Debug\DTSService.exe
 E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Debug\DTSService.pdb
-E:\GitHub\MLFF_281018\VaaaN\MultiLaneFreeFlow\WindowsService\DTSService\obj\Debug\DTSService.csprojResolveAssemblyReference.cache

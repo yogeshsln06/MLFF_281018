@@ -68,7 +68,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.RoleDAL.GetRoleById(role);
         }
-
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleCBE GetRoleByIdcollection(VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleCBE role)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.RoleDAL.GetRoleByIdCollection(role);
+        }
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleCollection GetRoleByName(VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleCBE role)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.RoleDAL.GetRoleByName(role);

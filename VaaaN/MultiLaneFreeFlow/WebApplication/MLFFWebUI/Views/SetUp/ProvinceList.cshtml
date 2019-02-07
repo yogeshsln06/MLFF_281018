@@ -1,6 +1,6 @@
-﻿@*@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleCBE>*@
+﻿@*@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE>*@
 @{
-    ViewBag.Title = "Role List";
+    ViewBag.Title = "Province List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container-fluid">
@@ -10,28 +10,27 @@
                 <div class="form-row">
                     <div class="col-md-8">
                         <div class="mT-10">
-                            <h4 class="c-mygrey-900 mB-20">User Role</h4>
+                            <h4 class="c-mygrey-900 mB-20">Province</h4>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mT-10">
                             <div class="gap-5 peers" style="float:right;overflow: visible !important;">
                                 <div class="peer">
-                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewRoles();">New</button>
+                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewUser();">New</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <table id="tblRolesData" class="table table-striped table-bordered table-condensed table-hover" cellspacing="0" width="100%">
+                <table id="tblProvinceData" class="table table-striped table-bordered table-condensed table-hover" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th id="tblRolesDataTR" style="text-align: center; vertical-align: middle;">No</th>
-                            <th style="text-align:center; vertical-align: middle;">Role ID</th>
-                            <th style="text-align:center; vertical-align: middle;">Role Name</th>
-                            <th style="text-align:center; vertical-align: middle;">Is Active</th>
+                           <th id="tblProvinceDataTR" style="text-align: center; vertical-align: middle;">No</th>
+                            <th style="text-align:center; vertical-align: middle;">ID</th>
+                            <th style="text-align:center; vertical-align: middle;">Name</th>
                             <th style="text-align:center; vertical-align: middle;" class="no-rt-border"></th>
-                        </tr>
+                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
@@ -40,11 +39,11 @@
         </div>
     </div>
 </div>
+
 <script src="~/js/SetUp.js"></script>
 <script>
     $(document).ready(function () {
-        RolesDataList = @Html.Raw(Json.Encode(ViewData["RolesDataList"]));
-        BindRolesData(RolesDataList);
+        ProvinceDataList = @Html.Raw(Json.Encode(ViewData["ProvinceList"]));
+        BindProvinceData(ProvinceDataList);
     });
 </script>
-
