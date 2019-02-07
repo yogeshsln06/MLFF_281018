@@ -93,8 +93,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.loginName; }
             set { this.loginName = value; }
         }
-        //[Display(Name = "FirstName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
-        [Display(Name = "Name")]
+        [Display(Name = "FirstName")]
         public String FirstName
         {
             get { return this.firstName; }
