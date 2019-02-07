@@ -1152,7 +1152,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         objCustomerVehicleModel.EntryId = customerVehicleEntryId;
                                         BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
-                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                     }
                                 }
                                 ModelStateList objModelState = new ModelStateList();
@@ -1211,7 +1211,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         objCustomerVehicleModel.EntryId = customerVehicleEntryId;
                                         BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
-                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                     }
                                     ModelStateList objModelState = new ModelStateList();
                                     objModelState.ErrorMessage = "success";
@@ -1291,7 +1291,7 @@ namespace MLFFWebUI.Controllers
                             if (objCustomerVehicleModel.SendEmail)
                             {
                                 BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
-                                BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                             }
 
                             ModelStateList objModelState = new ModelStateList();
@@ -1335,7 +1335,7 @@ namespace MLFFWebUI.Controllers
                                 if (objCustomerVehicleModel.SendEmail)
                                 {
                                     BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
-                                    BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
+                                    BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                                 }
 
                                 ModelStateList objModelState = new ModelStateList();

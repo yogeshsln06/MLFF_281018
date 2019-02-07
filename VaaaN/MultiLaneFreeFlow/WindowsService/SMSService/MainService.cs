@@ -41,7 +41,7 @@ namespace SMSService
         {
             InitializeComponent();
 
-            //OnStart(new string[] { "" });
+            OnStart(new string[] { "" });
         }
 
         static void Main()
@@ -538,7 +538,7 @@ namespace SMSService
                 {
                     LogMessageMobile("RESIDENT_ID:" + row["RESIDENT_ID"].ToString() + " ENTRY_ID :" + row["RESIDENT_ID"].ToString());
 
-                    string responseString = BrodcastDataMobile.BroadCastNotification(row["RESIDENT_ID"].ToString(), row["ENTRY_ID"].ToString(), row["TRANSACTION_SUBJECT"].ToString(), row["MESSAGE_BODY"].ToString());
+                    string responseString = BrodcastDataMobile.BroadCastNotification(row["RESIDENT_ID"].ToString(), row["ENTRY_ID"].ToString(), row["VEHICLEID"].ToString(), row["TRANSACTION_SUBJECT"].ToString(), row["MESSAGE_BODY"].ToString());
                     SendBrodcastStatus(responseString);
                     LogMessageMobile("Account Entry Id:" + row["ENTRY_ID"].ToString() + " Responce :" + responseString);
                 }

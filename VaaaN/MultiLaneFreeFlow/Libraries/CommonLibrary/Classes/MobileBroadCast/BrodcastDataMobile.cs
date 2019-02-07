@@ -83,9 +83,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
         }
 
 
-        public static string BroadCastNotification(string residentId, string vehicleId, string title, string body)
+        public static string BroadCastNotification(string residentId, string EntryId, string vehicleId, string title, string body)
         {
-            string TransId = vehicleId;  //objSMSCommunicationHistoryCBE.EntryId.ToString();
+            string TransId = EntryId;  //objSMSCommunicationHistoryCBE.EntryId.ToString();
             var responseString = "";
             if (!string.IsNullOrEmpty(residentId))
             {
@@ -93,14 +93,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                 {
 
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(BaseURL + "/api/vehicles/notification");
+
                     request.Headers.Add("Authorization", "1adbb3178591fd5bb0c248518f39bf6d");
                     request.Headers.Add("Accept-Language", "en");
                     request.Accept = "application/json";
                     var postData = "residentId=" + residentId + "";
-                    postData = "&vehicleId=" + vehicleId + "";
+                    postData += "&vehicleId=" + vehicleId + "";
                     postData += "&title=" + title + "";
                     postData += "&body=" + body + "";
-
                     var data = Encoding.ASCII.GetBytes(postData);
 
                     request.Method = "POST";
