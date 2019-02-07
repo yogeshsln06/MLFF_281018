@@ -35,7 +35,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast
                     request.Accept = "application/json";
 
                     var postData = "residentId=" + row["RESIDENT_ID"].ToString() + "";
-                    postData += "&vehicleId=" + row["ACCOUNT_BALANCE"].ToString() + "";
+                    postData += "&vehicleId=" + row["VEHICLEID"].ToString() + "";
                     postData += "&amount=" + row["ACCOUNT_BALANCE"].ToString() + "";
                     var data = Encoding.ASCII.GetBytes(postData);
 

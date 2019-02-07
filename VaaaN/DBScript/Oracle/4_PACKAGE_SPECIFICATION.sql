@@ -1,4 +1,4 @@
-/* Formatted on 05/02/2019 17:40:14 (QP5 v5.215.12089.38647) */
+/* Formatted on 07/02/2019 13:32:09 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -1345,5 +1345,9 @@ AS
                                         P_RESPONSE      IN NVARCHAR2);
 
    PROCEDURE TRAN_DEATILS (P_FILTER IN NVARCHAR2, CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE TRAN_DEATILSALL (P_STARTDATE   IN     DATE,
+                              P_ENDDATE     IN     DATE,
+                              CUR_OUT          OUT T_CURSOR);
 END MLFF_PACKAGE;
 /

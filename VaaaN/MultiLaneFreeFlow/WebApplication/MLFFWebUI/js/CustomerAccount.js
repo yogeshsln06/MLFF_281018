@@ -621,7 +621,6 @@ function BindHistoryRecords() {
     var Inputdata = { AccountId: CustomerAccountId, pageindex: Transload, pagesize: 10 }
     var count = 0;
     $.ajax({
-
         type: "POST",
         dataType: "json",
         data: JSON.stringify(Inputdata),
@@ -696,15 +695,16 @@ function BindHistoryRecords() {
                     cell.innerHTML = i + 1;
                 });
             }).draw();
-            $('.modal-body').find('.dataTables_scrollBody').on('scroll', function () {
-                console.log($('.modal-body').find('.dataTables_scrollBody').length);
-                if (($('.modal-body').find('.dataTables_scrollBody').scrollTop() + $('.modal-body').find('.dataTables_scrollBody').height() >= $("#tblCustomerHistoryData").height()) && !HNoMoredata) {
+            $("#tblCustomerHistoryData_wrapper").find('.dataTables_scrollBody').on('scroll', function () {
+                var ScrollbarHeight = ($("#tblCustomerHistoryData").height() - $("#tblCustomerHistoryData_wrapper").find('.dataTables_scrollBody').outerHeight())
+                if ($("#tblCustomerHistoryData_wrapper").find('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !HNoMoredata && !inProgress) {
                     AppendHistoryRecords();
                 }
             });
             HdatatableVariable.columns.adjust().draw();
             thId = 'tblCustomerHistoryDataTR';
             myVar = setInterval("myclick()", 500);
+            inProgress = false;
         },
         error: function (ex) {
             $(".animationload").hide();
@@ -714,6 +714,7 @@ function BindHistoryRecords() {
 }
 
 function AppendHistoryRecords() {
+    inProgress = true;
     $(".animationload").show()
     var Inputdata = { AccountId: CustomerAccountId, pageindex: Transload, pagesize: 10 }
     $.ajax({
@@ -726,10 +727,9 @@ function AppendHistoryRecords() {
             $(".animationload").hide()
             HNoMoredata = data.length < 10
             Transload++;
-            //datatableVariable.clear().draw();
             HdatatableVariable.rows.add(data); // Add new data
             HdatatableVariable.columns.adjust().draw();
-
+            inProgress = false;
         },
         error: function (ex) {
             $(".animationload").hide()

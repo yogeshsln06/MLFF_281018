@@ -1,4 +1,4 @@
-/* Formatted on 05/02/2019 17:40:29 (QP5 v5.215.12089.38647) */
+/* Formatted on 2/7/2019 5:59:59 PM (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -7132,14 +7132,13 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            AH.AMOUNT,
                            AH.CREATION_DATE
                       FROM TBL_ACCOUNT_HISTORY AH
-                     WHERE     AH.ACCOUNT_ID = P_ACCOUNT_ID
-                           AND ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
+                     WHERE AH.ACCOUNT_ID = P_ACCOUNT_ID
                   ORDER BY CREATION_DATE DESC)
            SELECT ROWNUMBER,
                   AH.TRANSACTION_TYPE_NAME,
                   AH.ENTRY_ID,
                   AH.TRANSACTION_ID,
-                  (CASE NVL(AH.TRANSACTION_ID,0)
+                  (CASE NVL (AH.TRANSACTION_ID, 0)
                       WHEN 0 THEN AH.ENTRY_ID
                       ELSE AH.TRANSACTION_ID
                    END)
@@ -7198,7 +7197,6 @@ ORDER BY TRANSACTION_DATETIME DESC';
                       FROM TBL_ACCOUNT_HISTORY AH
                      WHERE     AH.ACCOUNT_ID = P_ACCOUNT_ID
                            AND AH.CUSTOMER_VEHICLE_ENTRY_ID = P_VEHICLE_ID
-                           AND ROWNUM <= (P_PAGE_INDEX * P_PAGE_SIZE)
                   ORDER BY CREATION_DATE DESC)
            SELECT ROWNUMBER,
                   AH.TRANSACTION_TYPE_NAME,
@@ -8522,6 +8520,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    BEGIN
       OPEN CUR_OUT FOR
            SELECT CV.TMS_ID,
+                  CV.ENTRY_ID AS VEHICLEID,
                   AH.ENTRY_ID,
                   CV.ACCOUNT_ID,
                   CV.VEH_REG_NO,
@@ -8680,67 +8679,68 @@ ORDER BY CREATION_DATE DESC ';
 
       OPEN CUR_OUT FOR SQLQUERY;
    END TRAN_DEATILS;
-   
-   
-   PROCEDURE TRAN_DEATILS (P_STARTDATE IN DATE,P_ENDDATE IN DATE CUR_OUT OUT T_CURSOR)
+
+
+   PROCEDURE TRAN_DEATILSALL (P_STARTDATE   IN     DATE,
+                              P_ENDDATE     IN     DATE,
+                              CUR_OUT          OUT T_CURSOR)
    IS
-      
    BEGIN
-     OPEN CUR_OUT FOR
-      WITH CTE_DETAILS
-           AS (  SELECT TMS_ID,
-		  PLAZA_ID,
-          LANE_ID,
-          TRANSACTION_ID,
-          TRANSACTION_DATETIME,
-          CREATION_DATE,
-          VEHICLESPEED,
-          RFID_FRONT_ID,
-          RFID_FRONT_TIMESTAMP,
-          RFID_FRONT_TAG_ID,
-          RFID_FRONT_CLASS_ID,
-          RFID_FRONT_VRN,
-          RFID_REAR_ID,
-          RFID_REAR_TIMESTAMP,
-          RFID_REAR_TAG_ID,
-          RFID_REAR_CLASS_ID,
-          RFID_REAR_VRN,
-          ANPR_FRONT_ID,
-          ANPR_FRONT_VRN,
-          ANPR_FRONT_CLASS_ID,
-          ANPR_FRONT_IMAGE,
-          ANPR_FRONT_VIDEO_URL,
-          ANPR_FRONT_SPEED,
-          ANPR_REAR_ID,
-          ANPR_REAR_VRN,
-          ANPR_REAR_CLASS_ID,
-          ANPR_REAR_IMAGE,
-          ANPR_REAR_VIDEO_URL,
-          ANPR_REAR_SPEED,
-          IS_BALANCE_UPDATED,
-          IS_VIOLATION,
-          IS_REGISTERED,
-          AUDIT_STATUS,
-          AUDITOR_ID,
-          AUDIT_DATE,
-          AUDITED_VEHICLE_CLASS_ID,
-          AUDITED_VRN,
-          AMOUNT,
-          CLOSING_BALANCE,
-          ParentId,
-          TRANS_STATUS,
-          GATEWAY_RESPONSE_CODE,
-          OPERATOR_RESPONSE_CODE FROM TRANS_DEATILS
-                  WHERE    TRANSACTION_DATETIME BETWEEN TO_DATE (P_STARTDATE,
-                                                   'DD/MM/YYYY HH24:MI:SS')
-                                      AND TO_DATE (P_ENDDATE,
-                                                   'DD/MM/YYYY HH24:MI:SS'))
-SELECT * FROM CTE_DETAILS;
-
-
-     
-   END TRAN_DEATILS;
-   
+      OPEN CUR_OUT FOR
+         WITH CTE_DETAILS
+              AS (SELECT TMS_ID,
+                         PLAZA_ID,
+                         LANE_ID,
+                         TRANSACTION_ID,
+                         TRANSACTION_DATETIME,
+                         CREATION_DATE,
+                         VEHICLESPEED,
+                         RFID_FRONT_ID,
+                         RFID_FRONT_TIMESTAMP,
+                         RFID_FRONT_TAG_ID,
+                         RFID_FRONT_CLASS_ID,
+                         RFID_FRONT_VRN,
+                         RFID_REAR_ID,
+                         RFID_REAR_TIMESTAMP,
+                         RFID_REAR_TAG_ID,
+                         RFID_REAR_CLASS_ID,
+                         RFID_REAR_VRN,
+                         ANPR_FRONT_ID,
+                         ANPR_FRONT_VRN,
+                         ANPR_FRONT_CLASS_ID,
+                         ANPR_FRONT_IMAGE,
+                         ANPR_FRONT_VIDEO_URL,
+                         ANPR_FRONT_SPEED,
+                         ANPR_REAR_ID,
+                         ANPR_REAR_VRN,
+                         ANPR_REAR_CLASS_ID,
+                         ANPR_REAR_IMAGE,
+                         ANPR_REAR_VIDEO_URL,
+                         ANPR_REAR_SPEED,
+                         IS_BALANCE_UPDATED,
+                         IS_VIOLATION,
+                         IS_REGISTERED,
+                         AUDIT_STATUS,
+                         AUDITOR_ID,
+                         AUDIT_DATE,
+                         AUDITED_VEHICLE_CLASS_ID,
+                         AUDITED_VRN,
+                         AMOUNT,
+                         CLOSING_BALANCE,
+                         ParentId,
+                         TRANS_STATUS,
+                         GATEWAY_RESPONSE_CODE,
+                         OPERATOR_RESPONSE_CODE
+                    FROM TRANS_DEATILS
+                   WHERE TRANSACTION_DATETIME BETWEEN TO_DATE (
+                                                         P_STARTDATE,
+                                                         'DD/MM/YYYY HH24:MI:SS')
+                                                  AND TO_DATE (
+                                                         P_ENDDATE,
+                                                         'DD/MM/YYYY HH24:MI:SS'))
+         SELECT *
+           FROM CTE_DETAILS;
+   END TRAN_DEATILSALL;
 END MLFF_PACKAGE;
 /
 /

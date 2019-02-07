@@ -41,7 +41,7 @@ namespace SMSService
         {
             InitializeComponent();
 
-            OnStart(new string[] { "" });
+            //OnStart(new string[] { "" });
         }
 
         static void Main()
@@ -495,8 +495,8 @@ namespace SMSService
                 foreach (DataRow dr in unsentBalance.Rows)
                 {
                     string responseString = BrodcastDataMobile.BroadCastBalance(dr);
-                    SendBrodcastStatus(responseString);
-                    LogMessageMobile("Account Entry Id:" + dr["ENTRY_ID"].ToString() + " Responce :" + responseString);
+                    SendBrodcastStatus(responseString, dr["ENTRY_ID"].ToString(), "balance");
+                    Thread.Sleep(1000);
 
                 }
             }
@@ -536,11 +536,9 @@ namespace SMSService
                 DataTable unsentNotification = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SMSCommunicationHistoryBLL.GetAllPendindNotification();
                 foreach (DataRow row in unsentNotification.Rows)
                 {
-                    LogMessageMobile("RESIDENT_ID:" + row["RESIDENT_ID"].ToString() + " ENTRY_ID :" + row["RESIDENT_ID"].ToString());
-
                     string responseString = BrodcastDataMobile.BroadCastNotification(row["RESIDENT_ID"].ToString(), row["ENTRY_ID"].ToString(), row["VEHICLEID"].ToString(), row["TRANSACTION_SUBJECT"].ToString(), row["MESSAGE_BODY"].ToString());
-                    SendBrodcastStatus(responseString);
-                    LogMessageMobile("Account Entry Id:" + row["ENTRY_ID"].ToString() + " Responce :" + responseString);
+                    SendBrodcastStatus(responseString, row["ENTRY_ID"].ToString(), "Noti");
+                    Thread.Sleep(1000);
                 }
             }
             catch (Exception ex)
@@ -553,21 +551,28 @@ namespace SMSService
             }
         }
 
-        public void SendBrodcastStatus(string responseString)
+        public void SendBrodcastStatus(string responseString, string Id, string APIfor)
         {
-            int SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
-            MobileResponce objMobileResponce = JsonConvert.DeserializeObject<MobileResponce>(responseString);
-            if (objMobileResponce.Apifor.ToLower() == "balance")
+            try
             {
-                if (objMobileResponce.status.ToLower() == "success")
-                    SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
-                AccountHistoryBLL.UpdateBalanceStatus(objMobileResponce.trans_id, SentStatus, objMobileResponce.message);
+                int SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Unsent;
+                MobileResponce objMobileResponce = JsonConvert.DeserializeObject<MobileResponce>(responseString);
+                if (objMobileResponce.Apifor.ToLower() == "balance")
+                {
+                    if (objMobileResponce.status.ToLower() == "success")
+                        SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
+                    AccountHistoryBLL.UpdateBalanceStatus(objMobileResponce.trans_id, SentStatus, objMobileResponce.message);
+                }
+                if (objMobileResponce.Apifor.ToLower() == "notification")
+                {
+                    if (objMobileResponce.status.ToLower() == "success")
+                        SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
+                    SMSCommunicationHistoryBLL.UpdateNotificationStatus(objMobileResponce.trans_id, SentStatus);
+                }
             }
-            if (objMobileResponce.Apifor.ToLower() == "notification")
+            catch (Exception ex)
             {
-                if (objMobileResponce.status.ToLower() == "success")
-                    SentStatus = (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.SMSSentStatus.Sent;
-                SMSCommunicationHistoryBLL.UpdateNotificationStatus(objMobileResponce.trans_id, SentStatus);
+                LogMessageMobile("Failed to send Mobile." + ex.Message + " Account Entry Id: " + Id + " Responce: " + responseString + " API For " + APIfor);
             }
         }
 

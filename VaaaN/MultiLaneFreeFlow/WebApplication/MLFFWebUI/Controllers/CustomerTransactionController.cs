@@ -857,7 +857,7 @@ namespace MLFFWebUI.Controllers
                                                             objtransaction.TransactionId = ParentTransactionId;
                                                             TransactionBLL.UpdateAuditSection(objtransaction);
                                                             ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED set as VIOLATION!!!";
+                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED also set as VIOLATION!!!";
                                                             objResponseMessage.Add(objModelState);
                                                             #endregion
                                                         }
@@ -983,7 +983,7 @@ namespace MLFFWebUI.Controllers
                                                         //Meassage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED!!!";
                                                         objtransaction.TransactionId = ParentTransactionId;
                                                         TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED set as VIOLATION!!!";
+                                                        Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED also set as VIOLATION!!!";
                                                         #endregion
                                                     }
                                                     else if (Violation)
