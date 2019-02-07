@@ -1522,7 +1522,6 @@ function openpopup() {
     $("#warning").hide();
     $('#SetUp').modal({ backdrop: 'static', keyboard: false })
     $('#SetUp').modal('show');
-    $("#fildset").find('input:text').val('');
 }
 
 function ResetFieldes() {
