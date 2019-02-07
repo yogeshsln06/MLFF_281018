@@ -339,4 +339,10 @@
   <data name="VehicleBalanceReport" xml:space="preserve">
     <value>Vehicle Balance</value>
   </data>
+  <data name="Kabupaten/Kota" xml:space="preserve">
+    <value>Kabupaten-Kota</value>
+  </data>
+  <data name="Province" xml:space="preserve">
+    <value>Province</value>
+  </data>
 </root>

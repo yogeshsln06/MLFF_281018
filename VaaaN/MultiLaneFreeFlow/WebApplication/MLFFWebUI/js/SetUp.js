@@ -24,7 +24,23 @@ function BindUserData(UserDataList) {
              //},
            { 'data': 'LoginName', },
            { 'data': 'FirstName', },
+           { 'data': 'MobileNo', },
+           { 'data': 'EmailId', },
            { 'data': 'RoleName', },
+            { 'data': 'UserDob', },
+           {'data': 'CreationDate',},
+           { 'data': 'AccountExpiryDate', },
+           {
+               'data': 'UserStatus',
+               fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                   if (oData.UserStatus == true) {
+                       $(nTd).html("Active");
+                   }
+                   else {
+                       $(nTd).html("Deactive");
+                   }
+               }
+           },
            {
                'data': 'UserId',
                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -56,76 +72,56 @@ function BindUserData(UserDataList) {
     thId = 'tblUserDataTR';
     myVar = setInterval("myclick()", 500);
 }
-//function NewUser() {
-//    $(".animationload").show();
-//    $.ajax({
-//        type: "GET",
-//        url: "/SetUp/NewUserMaster",
-//        async: true,
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "html",
-//        success: function (result) {
-//            $(".animationload").hide();
-//            $("#exampleModalLabel").text("New User");
-//            $('#partialassociated').html(result);
-//            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
-//            openpopup();
-//            $("#AccountId").attr("disabled", "disabled");
-//            $("#UserDob").attr("data-provide", "datepicker").attr("readolny", true);
-//            $("#AccountExpiryDate").attr("data-provide", "datepicker").attr("readolny", true);
-//            $("#btnSave").show();
-//            $("#btnSave").text("Save");
-//            $("#btnpopupClose").text("Cancel");
-//            $("#btnSaveNew").show();
-//        },
-//        error: function (x, e) {
-//            $(".animationload").hide();
-//        }
-//    });
-//}
-function EditUser(ctrl, id) {
+function NewUser() {
     $(".animationload").show();
     $.ajax({
-        type: "POST",
-        url: "/Registration/GetCustomer?id=" + id,
+        type: "GET",
+        url: "UserNew",
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            $('#partialassociated').html(result);
+            $("#SetUpLabel").text("Register New User");
+            $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
-            $("#exampleModalLabel").text("Update [" + $("#FirstName").val() + "]");
             openpopup();
-            $("#AccountId").attr("disabled", "disabled");
-            $("#ProvinceId").val($("#hfProvinceId").val());
-            $("#imgPreview").attr('src', "../Attachment/Customer/" + $("#hfCustomerDocumentPath").val());
-            GetCityList();
-
-            $("#ValidUntil").attr("data-provide", "datepicker").attr("readolny", true);
-            $("#BirthDate").attr("data-provide", "datepicker").attr("readolny", true);
-            if ($("#hfBirthPlace").val() || '' != '') {
-                $('#BirthPlace option').each(function (index, option) {
-                    if (option.text == $("#hfBirthPlace").val()) {
-                        $(this).attr("selected", "selected");
-                    }
-                    // option will contain your item
-                });
-                //$("#BirthPlace option[text='" + $("#hfBirthPlace").val() + "']").attr("selected", "selected");
-            }
-
+            $("#UserId").val('0').attr("disabled", "disabled");
             $("#btnSave").show();
-            $("#btnSave").text("Update");
-            $("#btnpopupClose").text("Close");
-            $("#btnSaveNew").hide();
+            $("#btnSave").text("Save");
+            $("#btnCancel").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
         }
-
     });
-
 }
+function EditUser(ctrl, id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetUser?id=" + id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialModel').html(result);
+           $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("Update [" + $("#FirstName").val() + "]");
+            openpopup();
+            $("#UserId").attr("disabled", "disabled");
+            $("#RoleId").val($("#SlRoleId").val());
+            
+            $("#btnSave").show();
+            $("#btnSave").text("Update");
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
 function SaveData(action) {
     if ($("#needs-validation").valid()) {
         var UserDob = $('#UserDob').val() || ''
@@ -137,25 +133,15 @@ function SaveData(action) {
             AccountExpiryDate = DateFormat(AccountExpiryDate);
         }
         if (validateUser()) {
-            var AccountId = $("#AccountId").val() || '';
-            var PostURL = '/SetUp/CustomerUpdate';
+            var UserId = $("#UserId").val() || '';
+            var PostURL = '/SetUp/UserUpdate';
            // var ImagePath = $("#ResidentidImagePath").text().trim();
-            if (AccountId == '') {
-                AccountId = 0;
+            if (UserId == '') {
+                UserId = 0;
                 PostURL = '/SetUp/AddUser'
             }
-            //else {
-                //if ($("#ResidentidImagePath").text().trim() == '') {
-                //    ImagePath = $("#hfCustomerDocumentPath").val();
-                //    PostURL = '/Registration/CustomerUpdate?ImageChnage=' + false;
-                //}
-                //else {
-                //    ImagePath = $("#ResidentidImagePath").text().trim();
-                //    PostURL = '/Registration/CustomerUpdate?ImageChnage=' + true;
-                //}
-            //}
             var Inputdata = {
-                UserId: $("#UserId").val(),
+                UserId: UserId,
                 LoginName: $("#LoginName").val(),
                 Password: $("#Password").val(),
                 FirstName: $('#FirstName').val(),
@@ -184,7 +170,6 @@ function SaveData(action) {
                         if (resultData[i].ErrorMessage == "success") {
                             if (action == 'close')
                                 closePopup();
-
                             else {
                                 $("#warning").hide();
                                 $('#needs-validation')[0].reset();
@@ -266,7 +251,6 @@ function validateUser() {
 
     return valid;
 }
-
 
 /********Vehicle Classification Start**********/
 function validateClass() {
@@ -414,7 +398,7 @@ function SaveClassfificationData(action) {
                             }
                             else {
                                 $("#warning").hide();
-                                ResetFildes();
+                                ResetFieldes();
                             }
                             break;
                         }
@@ -679,7 +663,7 @@ function SaveHardwareData(action) {
                             }
                             else {
                                 $("#warning").hide();
-                                ResetFildes();
+                                ResetFieldes();
                             }
                             break;
                         }
@@ -782,26 +766,26 @@ function HardwareDetail(ctrl, Id) {
 /********Lane Start**********/
 function validateLane() {
     var valid = true;
-    if ($("#HardwareName").val() == '') {
-        showError($("#HardwareName"), $("#HardwareName").attr('data-val-required'));
+    if ($("#LaneName").val() == '') {
+        showError($("#LaneName"), $("#LaneName").attr('data-val-required'));
         valid = false;
     }
     else {
-        showError($("#HardwareName"), '');
+        showError($("#LaneName"), '');
     }
-    if ($("#HardwareType").val() == 0) {
-        showError($("#HardwareType"), $("#HardwareType").attr('data-val-required'));
+    if ($("#PlazaName").val() == '') {
+        showError($("#PlazaName"), $("#PlazaName").attr('data-val-required'));
         valid = false;
     }
     else {
-        showError($("#HardwareType"), '');
+        showError($("#PlazaName"), '');
     }
-    if ($("#HardwarePosition").val() == 0) {
-        showError($("#HardwarePosition"), $("#HardwarePosition").attr('data-val-required'));
+    if ($("#CameraNameFront").val() == 0) {
+        showError($("#CameraNameFront"), $("#CameraNameFront").attr('data-val-required'));
         valid = false;
     }
     else {
-        showError($("#HardwarePosition"), '');
+        showError($("#CameraNameFront"), '');
     }
     return valid;
 }
@@ -906,39 +890,37 @@ function NewLane() {
     $(".animationload").show();
     $.ajax({
         type: "GET",
-        url: "HardwareNew",
+        url: "LaneNew",
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            $("#SetUpLabel").text("Register New Hardware");
+            $("#SetUpLabel").text("Register New Lane");
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
-            $("#HardwareId").val('0').attr("disabled", "disabled");
+            $("#LaneId").val('0').attr("disabled", "disabled");
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
             $("#btnClose").hide();
             $("#btnCancel").show();
-            //$("#btnSaveNew").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
         }
-
     });
 }
 
 function SaveLaneData(action) {
     if ($("#needs-validation").valid()) {
-        if (validateHardware()) {
-            var Id = $("#HardwareId").val() || '';
-            var PostURL = '/SetUp/HardwareUpdate';
+        if (validateLane()) {
+            var Id = $("#LaneId").val() || '';
+            var PostURL = '/SetUp/LaneUpdate';
             if (Id == '') {
                 Id = 0;
-                PostURL = '/SetUp/HardwareAdd'
+                PostURL = '/SetUp/LaneAdd'
             }
             var Inputdata = {
                 HardwareId: Id,
@@ -969,7 +951,7 @@ function SaveLaneData(action) {
                             }
                             else {
                                 $("#warning").hide();
-                                ResetFildes();
+                                ResetFieldes();
                             }
                             break;
                         }
@@ -1010,19 +992,19 @@ function EditLane(ctrl, Id) {
     $(".animationload").show();
     $.ajax({
         type: "POST",
-        url: "/SetUp/GetHardware?id=" + Id,
+        url: "/SetUp/GetLane?id=" + Id,
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            $("#SetUpLabel").text("Update " + $("#Name").val() + "");
+            $("#SetUpLabel").text("Update " + $("#LaneName").val() + "");
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
-            $("#HardwareId").attr("disabled", "disabled");
-            $("#HardwareType").val($("#hfHardwareType").val());
-            $("#HardwarePosition").val($("#hfHardwarePosition").val());
+            $("#LaneId").attr("disabled", "disabled");
+            //$("#HardwareType").val($("#hfHardwareType").val());
+            //$("#HardwarePosition").val($("#hfHardwarePosition").val());
             $("#btnSave").show();
             $("#btnClose").hide();
             $("#btnUpdateCancel").show();
@@ -1070,6 +1052,32 @@ function LaneDetail(ctrl, Id) {
 /********Lane End**********/
 
 //******Gantry Start ******
+function validateGantry() {
+    var valid = true;
+    if ($("#PlazaName").val() == '') {
+        showError($("#PlazaName"), $("#PlazaName").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#PlazaName"), '');
+    }
+    if ($("#Location").val() == '') {
+        showError($("#Location"), $("#Location").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#Location"), '');
+    }
+    if ($("#IpAddress").val() == 0) {
+        showError($("#IpAddress"), $("#IpAddress").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#IpAddress"), '');
+    }
+    return valid;
+}
+
 function BindGantryData(GantryDataList) {
     tblGantryData = $('#tblGantryData').DataTable({
         data: GantryDataList,
@@ -1112,7 +1120,6 @@ function BindGantryData(GantryDataList) {
             },
         ],
         columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
-
     });
     tblGantryData.on('order.dt search.dt', function () {
         tblGantryData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -1125,103 +1132,244 @@ function BindGantryData(GantryDataList) {
     myVar = setInterval("myclick()", 500);
 }
 
-/********Gantry End**********/
-
-//******User Start ******
-//function validateUser() {
-//    var valid = true;
-//    if ($("#LoginName").val() == '') {
-//        showError($("#LoginName"), $("#LoginName").attr('data-val-required'));
-//        valid = false;
-//    }
-//    else {
-//        showError($("#LoginName"), '');
-//    }
-//    if ($("#Password").val() == '') {
-//        showError($("#Password"), $("#Password").attr('data-val-required'));
-//        valid = false;
-//    }
-//    else {
-//        showError($("#Password"), '');
-//    }
-//    if ($("#MobileNo").val() == '') {
-//        showError($("#MobileNo"), $("#MobileNo").attr('data-val-required'));
-//        valid = false;
-//    }
-//    else {
-//        showError($("#MobileNo"), '');
-//    }
-//    return valid;
-//}
-//function BindUserData(UserDataList) {
-//    tblUserData = $('#tblUserData').DataTable({
-//        data: UserDataList,
-//        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
-//        scrollY: "42vh",
-//        scrollX: false,
-//        paging: false,
-//        info: false,
-//        columns: [
-//             {
-//                 'data': 'UserId',
-//                 orderable: false
-//             },
-//             //{
-//             //    'data': 'UserId',
-//             //    fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-//             //        $(nTd).html("<a href='javascript:void(0);' onclick='UserDetail(this," + oData.UserId + ")'>" + oData.UserId + "</a>");
-//             //    }
-//             //},
-//           {'data': 'LoginName', },
-//           {'data': 'FirstName', },
-//           { 'data': 'RoleName', },
-//           {
-//               'data': 'UserId',
-//               fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-//                   $(nTd).html("<div class='dropdown' style='padding-left: 14px;'>" +
-//                       "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
-//           "<span class='icon-holder'>" +
-//               "<i class='c-blue-500 ti-menu-alt'></i>" +
-//           "</span>" +
-//       "</a>" +
-//       " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
-//       "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditUser(this," + oData.UserId + ")'>" +
-
-//       "        <span class='title'>Update</span>" +
-//       "    </a>" +
-//       "</div>" +
-//   "</div>");
-//               }
-//           },
-//        ],
-//        //columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
-//    });
-//    tblUserData.on('order.dt search.dt', function () {
-//        tblUserData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-//            cell.innerHTML = i + 1;
-//        });
-//    }).draw();
-//    $('.dataTables_filter input').attr("placeholder", "Search this list…");
-//    tblUserData.columns.adjust();
-//    thId = 'tblUserDataTR';
-//    myVar = setInterval("myclick()", 500);
-//}
-
-function NewUser() {
+function EditGantry(ctrl, Id) {
+    $(ctrl).parent().addClass('hide').removeClass('open').hide();
     $(".animationload").show();
     $.ajax({
-        type: "GET",
-        url: "UserNew",
+        type: "POST",
+        url: "/SetUp/GetGantry?id=" + Id,
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            $("#SetUpLabel").text("Register New User");
+            $("#SetUpLabel").text("Update [" + $("#PlazaName").val() + "]");
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
-            $("#HardwareId").val('0').attr("disabled", "disabled");
+           
+            $("#btnSave").show();
+            $("#btnSave").text("Update");
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function NewGantry() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "GantryNew",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $("#SetUpLabel").text("Register New Plaza");
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+            $("#PlazaId").val('0').attr("disabled", "disabled");
+
+            $("#btnSave").show();
+            $("#btnSave").text("Save");
+            $("#btnCancel").show();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function SaveGantryData(action) {
+    if ($("#needs-validation").valid()) {
+        if (validateGantry()) {
+            var Id = $("#PlazaId").val() || '';
+            var PostURL = '/SetUp/GantryUpdate';
+            if (Id == 0) {
+                Id = 0;
+                PostURL = '/SetUp/GantryAdd'
+            }
+            var Inputdata = {
+                PlazaId: Id,
+                PlazaName: $("#PlazaName").val(),
+                Location: $("#Location").val(),
+                IpAddress: $("#IpAddress").val(),
+            }
+            $(".animationload").show();
+            $.ajax({
+                type: "POST",
+                url: PostURL,
+                dataType: "JSON",
+                async: true,
+                data: JSON.stringify(Inputdata),
+                contentType: "application/json; charset=utf-8",
+                success: function (resultData) {
+                    $(".animationload").hide();
+                    var meassage = '';
+                    for (var i = 0; i < resultData.length; i++) {
+                        if (resultData[i].ErrorMessage == "success") {
+                            if (action == 'close') {
+                                reloadClassfificationData();
+                                closePopup();
+                            }
+                            else {
+                                $("#warning").hide();
+                                ResetFieldes();
+                            }
+                            break;
+                        }
+                        else if (resultData[i].ErrorMessage == 'logout') {
+                            location.href = "../Login/Logout";
+                            break;
+                        }
+                        else {
+                            meassage = meassage + "<li>" + resultData[i].ErrorMessage + "</li>"
+                        }
+                    }
+                    if (meassage != '') {
+                        $("#warning").html("<ul>" + meassage + "</ul>");
+                        $("#warning").show();
+                    }
+                },
+                error: function (ex) {
+                    $(".animationload").hide();
+                }
+            });
+        }
+        else {
+            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").show();
+        }
+    }
+    else {
+        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+        $("#warning").show();
+    }
+}
+/********Gantry End**********/
+
+//******Roles Start ******
+function validateRole() {
+    var valid = true;
+    if ($("#RoleName").val() == '') {
+        showError($("#RoleName"), $("#RoleName").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#RoleName"), '');
+    }
+    return valid;
+}
+
+function BindRolesData(RolesDataList) {
+    tblRolesData = $('#tblRolesData').DataTable({
+        data: RolesDataList,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        scrollY: "42vh",
+        scrollX: false,
+        paging: false,
+        info: false,
+        columns: [
+             {
+                 'data': 'RoleId',
+                 orderable: false
+             },
+            {
+                'data': 'RoleId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<a href='javascript:void(0);' onclick='RolesDetail(this," + oData.RoleId + ")'>" + oData.RoleId + "</a>");
+                }
+            },
+            {
+                'data': 'RoleName',
+            },
+            {
+                'data': 'ISActive',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                if (oData.ISActive == 1) {
+                $(nTd).html("Active");
+                }
+                else {
+                $(nTd).html("Deactive");
+                }
+      }},
+            {
+                'data': 'RoleId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<div class='dropdown' style='padding-left: 14px;'>" +
+                        "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
+            "<span class='icon-holder'>" +
+                "<i class='c-blue-500 ti-menu-alt'></i>" +
+            "</span>" +
+        "</a>" +
+        " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
+        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditRoles(this," + oData.RoleId + ")'>" +
+
+        "        <span class='title'>Update</span>" +
+        "    </a>" +
+        "</div>" +
+    "</div>");
+                }
+            },
+        ],
+        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+    });
+    tblRolesData.on('order.dt search.dt', function () {
+        tblRolesData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    tblRolesData.columns.adjust();
+    thId = 'tblRolesDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+
+function EditRoles(ctrl, Id) {
+    $(ctrl).parent().addClass('hide').removeClass('open').hide();
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetRoles?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $("#SetUpLabel").text("Update " + $("#RoleName").val() + "");
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+           
+            $("#btnSave").show();
+            $("#btnClose").hide();
+            $("#btnUpdateCancel").show();
+            $("#btnCancel").hide();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function NewRoles() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "RolesNew",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $("#SetUpLabel").text("Register New Roles");
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+            $("#RoleId").val('0').attr("disabled", "disabled");
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
@@ -1232,119 +1380,132 @@ function NewUser() {
         error: function (x, e) {
             $(".animationload").hide();
         }
+
     });
 }
 
-//function SaveUserData(action) {
-//    if ($("#needs-validation").valid()) {
-//        if (validateUser()) {
-//            var Id = $("#UserId").val() || '';
-//            var PostURL = '/SetUp/HardwareUpdate';
-//            if (Id == '') {
-//                Id = 0;
-//                PostURL = '/SetUp/HardwareAdd'
-//            }
-//            var Inputdata = {
-//                HardwareId: Id,
-//                LoginName: $("#LoginName").val(),
-//                Password: $("#Password").val(),
-//                FirstName: $("#FirstName").val(),
-//                LastName: $("#LastName").val(),
-//                UserDob: $("#UserDob").val(),
-//                Address: $("#Address").val(),
-//                MobileNo: $("#MobileNo").val(),
-//                EmailId: $("#EmailId").val(),
-//                AccountExpiryDate: $("#AccountExpiryDate").val(),
-//                RoleId: $("#RoleId").val(),
-//                UserStatus: $("#UserStatus").val(),
-//            }
+function SaveRolesData(action) {
+    if ($("#needs-validation").valid()) {
+        if (validateRole()) {
+            var Id = $("#RoleId").val() || '';
+            var PostURL = '/SetUp/RolesUpdate';
+            if (Id == '') {
+                Id = 0;
+                PostURL = '/SetUp/RolesAdd'
+            }
+            var Inputdata = {
+                RoleId: Id,
+                RoleName: $("#RoleName").val(),
+                ISActive: $("#HardwareType").val(),
+            }
+            $(".animationload").show();
+            $.ajax({
+                type: "POST",
+                url: PostURL,
+                dataType: "JSON",
+                async: true,
+                data: JSON.stringify(Inputdata),
+                contentType: "application/json; charset=utf-8",
+                success: function (resultData) {
+                    $(".animationload").hide();
+                    var meassage = '';
+                    for (var i = 0; i < resultData.length; i++) {
+                        if (resultData[i].ErrorMessage == "success") {
+                            if (action == 'close') {
+                                reloadClassfificationData();
+                                closePopup();
+                            }
+                            else {
+                                $("#warning").hide();
+                                ResetFieldes();
+                            }
+                            break;
+                        }
+                        else if (resultData[i].ErrorMessage == 'logout') {
+                            location.href = "../Login/Logout";
+                            break;
+                        }
+                        else {
+                            meassage = meassage + "<li>" + resultData[i].ErrorMessage + "</li>"
+                        }
+                    }
+                    if (meassage != '') {
+                        $("#warning").html("<ul>" + meassage + "</ul>");
+                        $("#warning").show();
+                    }
+                },
+                error: function (ex) {
+                    $(".animationload").hide();
+                }
+            });
+        }
+        else {
+            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").show();
+        }
+    }
+    else {
+        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+        $("#warning").show();
+    }
+}
+/********Roles End**********/
 
-//            $(".animationload").show();
-//            $.ajax({
-//                type: "POST",
-//                url: PostURL,
-//                dataType: "JSON",
-//                async: true,
-//                data: JSON.stringify(Inputdata),
-//                contentType: "application/json; charset=utf-8",
-//                success: function (resultData) {
-//                    $(".animationload").hide();
-//                    var meassage = '';
-//                    for (var i = 0; i < resultData.length; i++) {
-//                        if (resultData[i].ErrorMessage == "success") {
-//                            if (action == 'close') {
-//                                reloadClassfificationData();
-//                                closePopup();
-//                            }
-//                            else {
-//                                $("#warning").hide();
-//                                ResetFildes();
-//                            }
-//                            break;
-//                        }
-//                        else if (resultData[i].ErrorMessage == 'logout') {
-//                            location.href = "../Login/Logout";
-//                            break;
-//                        }
-//                        else {
-//                            meassage = meassage + "<li>" + resultData[i].ErrorMessage + "</li>"
-//                        }
-//                    }
-//                    if (meassage != '') {
-//                        $("#warning").html("<ul>" + meassage + "</ul>");
-//                        $("#warning").show();
-//                    }
-//                },
-//                error: function (ex) {
-//                    $(".animationload").hide();
-//                }
+//******Province Start ******
+function BindProvinceData(ProvinceDataList) {
+    tblProvinceData = $('#tblProvinceData').DataTable({
+        data: ProvinceDataList,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        scrollY: "42vh",
+        scrollX: false,
+        paging: false,
+        info: false,
+        columns: [
+             {
+                 'data': 'ProvinceId',
+                 orderable: false
+             },
+            {
+                'data': 'ProvinceId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<a href='javascript:void(0);' onclick='RolesDetail(this," + oData.ProvinceId + ")'>" + oData.ProvinceId + "</a>");
+                }
+            },
+            {
+                'data': 'ProvinceName',
+            },
+            {
+                'data': 'ProvinceId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<div class='dropdown' style='padding-left: 14px;'>" +
+                        "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
+            "<span class='icon-holder'>" +
+                "<i class='c-blue-500 ti-menu-alt'></i>" +
+            "</span>" +
+        "</a>" +
+        " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
+        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditRoles(this," + oData.ProvinceId + ")'>" +
 
-//            });
-
-//        }
-//        else {
-//            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
-//            $("#warning").show();
-//        }
-
-//    }
-//    else {
-//        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
-//        $("#warning").show();
-//    }
-//}
-//function UserDetail(ctrl, Id) {
-//    $(".animationload").show();
-//    $.ajax({
-//        type: "POST",
-//        url: "/SetUp/GetUser?id=" + Id,
-//        async: true,
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "html",
-//        success: function (result) {
-//            $(".animationload").hide();
-//            $('#partialModel').html(result);
-//            $("#SetUpLabel").text("View " + $("#Name").val() + "");
-//            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
-//            openpopup();
-//            $("#HardwareId").attr("disabled", "disabled");
-//            $("#HardwareType").val($("#hfHardwareType").val());
-//            $("#HardwarePosition").val($("#hfHardwarePosition").val());
-//            $("#btnSave").hide();
-//            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
-//            $("#btnpopupClose").show();
-//            $("#btnCancel").hide();
-//            $("#btnUpdate").hide();
-//            $("#btnUpdateCancel").hide();
-//            $("#fildset").attr("disabled", "disabled");
-//        },
-//        error: function (x, e) {
-//            $(".animationload").hide();
-//        }
-//    });
-//}
-
-/********User End**********/
+        "        <span class='title'>Update</span>" +
+        "    </a>" +
+        "</div>" +
+    "</div>");
+                }
+            },
+        ],
+        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+    });
+    tblProvinceData.on('order.dt search.dt', function () {
+        tblProvinceData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    tblProvinceData.columns.adjust();
+    thId = 'tblProvinceDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+//******Province End ******
 function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();
@@ -1361,12 +1522,14 @@ function openpopup() {
     $("#warning").hide();
     $('#SetUp').modal({ backdrop: 'static', keyboard: false })
     $('#SetUp').modal('show');
-
+    $("#fildset").find('input:text').val('');
 }
 
-function ResetFildes() {
-  
+function ResetFieldes() {
+    $("#Password").val("");
+    $("#UserDob").val("");
+    $("#AccountExpiryDate").val("");
     $("#fildset").find('input:text').val('');
- 
-    $("#fildset").find('select').val(0);
+    $("#fildset").find('select').val(null);
+    $('input[type=checkbox]').prop('checked', false);
 }

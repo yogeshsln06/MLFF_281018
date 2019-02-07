@@ -131,6 +131,28 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             }
         }
 
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.RoleCBE GetRoleByIdCollection(CBE.RoleCBE role)
+        {
+            try
+            {
+                CBE.RoleCollection roles = new CBE.RoleCollection();
+
+                string spName = Constants.oraclePackagePrefix + "Role_GetById";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_role_id", DbType.Int32, role.RoleId, ParameterDirection.Input));
+                //DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                // DataTable dt = ds.Tables[tableName];
+                //roles = ConvertDataTableToCollection(dt);
+                roles = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
+                return roles[0];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public static CBE.RoleCollection GetRoleByName(CBE.RoleCBE role)
         {
             try

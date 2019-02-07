@@ -117,7 +117,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 string spName = Constants.oraclePackagePrefix + "User_Update";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_atms_id", DbType.Int32, Constants.GetCurrentTMSId(), ParameterDirection.Input));
+               // command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_atms_id", DbType.Int32, Constants.GetCurrentTMSId(), ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_user_id", DbType.Int32, user.UserId, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_login_name", DbType.String, user.LoginName, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_first_name", DbType.String, user.FirstName, ParameterDirection.Input, 100));
