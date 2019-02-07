@@ -72,7 +72,7 @@ namespace MLFFWebUI.Controllers
             {
                 eventQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.eventQueue);
                 Message[] msgs = eventQueue.GetAllMessages();
-                eventQueue.Purge();
+                //eventQueue.Purge();
                 if (msgs.Length > 0)
                 {
                     foreach (Message msg in msgs)
