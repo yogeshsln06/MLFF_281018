@@ -1478,7 +1478,7 @@ function BindProvinceData(ProvinceDataList) {
             {
                 'data': 'ProvinceId',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    $(nTd).html("<a href='javascript:void(0);' onclick='RolesDetail(this," + oData.ProvinceId + ")'>" + oData.ProvinceId + "</a>");
+                    $(nTd).html("<a href='javascript:void(0);' onclick='ProvinceDetail(this," + oData.ProvinceId + ")'>" + oData.ProvinceId + "</a>");
                 }
             },
             {
@@ -1494,8 +1494,7 @@ function BindProvinceData(ProvinceDataList) {
             "</span>" +
         "</a>" +
         " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
-        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditRoles(this," + oData.ProvinceId + ")'>" +
-
+        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditProvince(this," + oData.ProvinceId + ")'>" +
         "        <span class='title'>Update</span>" +
         "    </a>" +
         "</div>" +
@@ -1516,6 +1515,7 @@ function BindProvinceData(ProvinceDataList) {
     myVar = setInterval("myclick()", 500);
 }
 //******Province End ******
+
 function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();
