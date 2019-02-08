@@ -22,7 +22,6 @@ namespace MLFFWebUI.Controllers
         }
 
         #region User Section
-
         [HttpGet]
         public ActionResult UsersList()
         {
