@@ -854,6 +854,7 @@ namespace MLFFWebUI.Controllers
                                                         if (ReviewedViolation == 1)
                                                         {
                                                             #region Violation Occured
+                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                                             objtransaction.TransactionId = ParentTransactionId;
                                                             TransactionBLL.UpdateAuditSection(objtransaction);
                                                             ModelStateList objModelState = new ModelStateList();
@@ -914,6 +915,7 @@ namespace MLFFWebUI.Controllers
                                                             else
                                                             {
                                                                 objtransaction.TransactionId = ParentTransactionId;
+                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
                                                                 TransactionBLL.UpdateAuditSection(objtransaction);
                                                                 ModelStateList objModelState = new ModelStateList();
                                                                 objModelState.ErrorMessage = "yes!Transactions ID " + TransactionId + " already CHARGED!!!";
@@ -981,6 +983,7 @@ namespace MLFFWebUI.Controllers
                                                         //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                                         //TransactionBLL.UpdateAuditSection(objtransaction);
                                                         //Meassage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED!!!";
+                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                                         objtransaction.TransactionId = ParentTransactionId;
                                                         TransactionBLL.UpdateAuditSection(objtransaction);
                                                         Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED also set as VIOLATION!!!";
