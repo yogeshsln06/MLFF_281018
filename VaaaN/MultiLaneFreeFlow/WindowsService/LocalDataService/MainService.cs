@@ -262,7 +262,7 @@ namespace VaaaN.MLFF.WindowsServices
                 Message m = (Message)mq.EndPeek(e.AsyncResult);
                 m.Formatter = new BinaryMessageFormatter();
 
-                LogMessage("Going to process InBoxQueue message...");
+                //LogMessage("Going to process InBoxQueue message...");
 
                 ProcessQueueMessage(m);
 
@@ -333,9 +333,10 @@ namespace VaaaN.MLFF.WindowsServices
 
                                 LogMessage("Validity checking. " + ctp.ObjectId);
                                 //
-                                if (IsValidTag(ctp.ObjectId))
+                                //if (IsValidTag(ctp.ObjectId))
+                                if (true)
                                 {
-                                    LogMessage("Valid tag. Trying to parse...");
+                                    //LogMessage("Valid tag. Trying to parse...");
 
                                     #region parsing tagid
                                     //TagStructure ts = ParseEPC(ctp.ObjectId); //this function also should validate the tag so that we need not go further processing-CJS
@@ -349,22 +350,22 @@ namespace VaaaN.MLFF.WindowsServices
                                         //eviClass = ts.ClassId;
                                         //eviVRN = ts.VRN;
 
-                                        LogMessage("Checking the tag exists in the system or not. " + ctp.ObjectId); //it should not check existance, but isregistered or not with status "processed"
+                                        //LogMessage("Checking the tag exists in the system or not. " + ctp.ObjectId); //it should not check existance, but isregistered or not with status "processed"
                                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE associatedCVCT = DoesTagExist(ctp.ObjectId);
                                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE associatedCACT = null;
                                         if (associatedCVCT != null)
                                         {
-                                            LogMessage("Tag exists. Getting the corresponding customer account...");
+                                            //LogMessage("Tag exists. Getting the corresponding customer account...");
 
                                             associatedCACT = GetCustomerAccountById(associatedCVCT.AccountId);
 
-                                            LogMessage("The associated accoount is: " + associatedCACT.FirstName + " " + associatedCACT.LastName);
+                                            LogMessage("The associated accoount is: " + associatedCACT.FirstName + " tag: " + ctp.ObjectId);
 
                                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE lane = null;
                                             #region Update some fields in the CBE
                                             try
                                             {
-                                                LogMessage("Trying to update TMSId, Creation Date etc. in the CBE...");
+                                                //LogMessage("Trying to update TMSId, Creation Date etc. in the CBE...");
                                                 ctp.TMSId = currentTMSId;
                                                 //ctp.TimeStamp = ConversionDateTime(ctp.TimeStamp, "crosstalk"); //this is handled in the API itself
 
@@ -396,7 +397,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     ctp.ReaderPosition = 1;
                                                 }
 
-                                                LogMessage("Crosstalk CBE updated successfully.");
+                                                // LogMessage("Crosstalk CBE updated successfully.");
                                             }
                                             catch (Exception ex)
                                             {
@@ -408,7 +409,7 @@ namespace VaaaN.MLFF.WindowsServices
 
                                             try
                                             {
-                                                LogMessage("Trying to push crosstalk event to event queue...");
+                                                //LogMessage("Trying to push crosstalk event to event queue...");
 
                                                 Message crosstalkEventMessage = new Message();
                                                 crosstalkEventMessage.Formatter = new BinaryMessageFormatter();
@@ -448,7 +449,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 crosstalkEventMessage.Body = ctEvent;
 
                                                 eventQueue.Send(crosstalkEventMessage);
-                                                LogMessage("Crosstalk event pushed to event queue successfully.");
+                                                // LogMessage("Crosstalk event pushed to event queue successfully.");
                                             }
                                             catch (Exception ex)
                                             {
@@ -459,27 +460,27 @@ namespace VaaaN.MLFF.WindowsServices
 
                                             //check most recent transactions of the same plaza, same tag, same hardware id (location id)
                                             #region Check in recent crosstalk packets
-                                            LogMessage("Checking tag has been already inserted..." + ctp.PlazaId + ", " + ctp.ObjectId + ", " + ctp.TimeStamp + ", " + ctp.LocationId);
+                                            //LogMessage("Checking tag has been already inserted..." + ctp.PlazaId + ", " + ctp.ObjectId + ", " + ctp.TimeStamp + ", " + ctp.LocationId);
                                             if (!DoesExistInRecentCrossTalkPackets(ctp.PlazaId, ctp.ObjectId, Convert.ToDateTime(ctp.TimeStamp), ctp.LocationId))
                                             {
                                                 #region Send to local database 
                                                 //same tag but separate location id hoga toh local database main bhejega
                                                 try
                                                 {
-                                                    LogMessage("Sending crosstalk packet to local database. EPC: " + ctp.ObjectId + " Location: " + ctp.LocationId);
+                                                    // LogMessage("Sending crosstalk packet to local database. EPC: " + ctp.ObjectId + " Location: " + ctp.LocationId);
 
                                                     ctpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.Insert(ctp);
                                                     rfidRecentDataList.Add(new IkePktData { LocationId = ctp.LocationId, PktId = ctpEntryId, PacketTimeStamp = Convert.ToDateTime(ctp.TimeStamp), VehicleClassId = associatedCVCT.VehicleClassId, ObjectId = ctp.ObjectId, PlazaId = ctp.PlazaId, currentDateTime = DateTime.Now, ReaderPosition = ctp.ReaderPosition });
 
-                                                    LogMessage("Crosstalk packet inserted successfully.");
+                                                    LogMessage("Crosstalk packet inserted successfully. EPC: " + ctp.ObjectId + " Location: " + ctp.LocationId);
                                                 }
                                                 catch (Exception ex)
                                                 {
                                                     #region Send data to failed queue
-                                                    LogMessage("Failed to insert crosstalk packet." + ex.Message);
+                                                    // LogMessage("Failed to insert crosstalk packet." + ex.Message);
                                                     try
                                                     {
-                                                        LogMessage("Trying to send to failed queue...");
+                                                        // LogMessage("Trying to send to failed queue...");
 
                                                         m.Recoverable = true;
                                                         failedQueue.Send(m);
@@ -494,14 +495,14 @@ namespace VaaaN.MLFF.WindowsServices
                                                 }
                                                 #endregion
 
-                                                LogMessage("Checking this tag is recently transacted... (may come from front and rear antenna both)");
+                                                //LogMessage("Checking this tag is recently transacted... (may come from front and rear antenna both)");
                                                 //if transaction is done for this tag recently (recent 3 minutes) no need to do following things. Check... 
                                                 var objRecentTag = recentlyProcessedTagsList.FirstOrDefault(x => x.TagId == ctp.ObjectId && x.CurrentDateTime > DateTime.Now.AddMinutes(-3));
                                                 if (objRecentTag == null)
                                                 {
                                                     //is the associated VRN is already inserted in the transaction table by nodeflux front or nodeflux rear camera?
                                                     //if inserted look by associated vrn and update, if not create a new transaction
-                                                    LogMessage("Searching associated transaction exists in the transaction table or not...");
+                                                    // LogMessage("Searching associated transaction exists in the transaction table or not...");
                                                     DateTime ctpDateTime = Convert.ToDateTime(ctp.TimeStamp);
                                                     LogMessage("Search criteria: " + ctp.TMSId + ", " + ctp.PlazaId + ", " + ctpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + ", " + associatedCVCT.VehRegNo);
                                                     //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection trans1 = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(ctp.TMSId, ctp.PlazaId, ctpDateTime, associatedCVCT.VehRegNo);
@@ -514,7 +515,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                             try
                                                             {
                                                                 #region Update CTP section in main transaction table
-                                                                LogMessage("Updating in main transaction table...");
+                                                                //LogMessage("Updating in main transaction table...");
                                                                 TranscationData Filtertransaction = filteredTransactionList[0];
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
                                                                 transaction.CrosstalkEntryIdFront = Convert.ToInt32(Filtertransaction.IKEFId);
@@ -609,10 +610,10 @@ namespace VaaaN.MLFF.WindowsServices
                                                                             VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.MarkAsViolation(transaction);
                                                                             LogMessage("Transaction is marked as violation.");
                                                                         }
-                                                                        else
-                                                                        {
-                                                                            LogMessage("Transaction cannot be marked as violation as balance has been already updated.");
-                                                                        }
+                                                                        //else
+                                                                        //{
+                                                                        //    LogMessage("Transaction cannot be marked as violation as balance has been already updated.");
+                                                                        //}
 
                                                                         //violation vms message
                                                                     }
@@ -711,7 +712,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 }
 
 
-                                                                LogMessage("RFID transcation updated successfully.");
+                                                                // LogMessage("RFID transcation updated successfully.");
                                                                 #endregion
 
 
@@ -732,7 +733,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         #region Insert into main transaction table
                                                         try
                                                         {
-                                                            LogMessage("No associated transaction found in transaction table. Inserting into main transaction table...");
+                                                            //LogMessage("No associated transaction found in transaction table. Inserting into main transaction table...");
                                                             if (ctp.ReaderPosition == 1)
                                                             {
                                                                 Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByCTP(ctp, ctpEntryId); //, eviVehicleClassId, eviVRN);
@@ -742,7 +743,8 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByCTPRear(ctp, ctpEntryId); //, eviVehicleClassId, eviVRN);
                                                                 transcationDataList.Add(new TranscationData { TranscationId = TranscationId, LaneId = ctp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = associatedCVCT.VehRegNo, PlazaId = ctp.PlazaId, IKERId = ctpEntryId, CameraPosition = 0, TransactionDateTime = Convert.ToDateTime(ctp.TimeStamp), CurrentDateTime = DateTime.Now, IKERearVehicleClassId = ctp.VehicleClassId });
                                                             }
-                                                            LogMessage("Crosstalk packet inserted successfully.");
+                                                            LogMessage("No associated transaction found in transaction table, Crosstalk packet inserted successfully.");
+                                                            //LogMessage("Crosstalk packet inserted successfully.");
                                                         }
                                                         catch (Exception ex)
                                                         {
@@ -771,7 +773,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 try
                                                                 {
                                                                     #region Update CTP section in main transaction table
-                                                                    LogMessage("Updating in main transaction table...");
+                                                                    //LogMessage("Updating in main transaction table...");
                                                                     TranscationData Filtertransaction = filteredTransactionList[0];
                                                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
                                                                     transaction.CrosstalkEntryIdFront = Convert.ToInt32(Filtertransaction.IKEFId);
@@ -822,7 +824,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                             #region Insert into main transaction table
                                                             try
                                                             {
-                                                                LogMessage("No associated transaction found in transaction table. Inserting into main transaction table...");
+                                                                // LogMessage("No associated transaction found in transaction table. Inserting into main transaction table...");
                                                                 if (ctp.ReaderPosition == 1)
                                                                 {
                                                                     Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByCTP(ctp, ctpEntryId); //, eviVehicleClassId, eviVRN);
@@ -832,7 +834,8 @@ namespace VaaaN.MLFF.WindowsServices
                                                                     Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByCTPRear(ctp, ctpEntryId); //, eviVehicleClassId, eviVRN);
                                                                     transcationDataList.Add(new TranscationData { TranscationId = TranscationId, LaneId = ctp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = associatedCVCT.VehRegNo, PlazaId = ctp.PlazaId, IKERId = ctpEntryId, CameraPosition = 0, TransactionDateTime = Convert.ToDateTime(ctp.TimeStamp), CurrentDateTime = DateTime.Now, IKERearVehicleClassId = ctp.VehicleClassId });
                                                                 }
-                                                                LogMessage("Crosstalk packet inserted successfully.");
+                                                                LogMessage("No associated transaction found in transaction table. Inserting into main transaction table, Crosstalk packet inserted successfully.");
+                                                                //LogMessage("Crosstalk packet inserted successfully.");
                                                             }
                                                             catch (Exception ex)
                                                             {
@@ -858,16 +861,16 @@ namespace VaaaN.MLFF.WindowsServices
                                             LogMessage("Tag " + ctp.ObjectId + " does not exist in the system. So discarded. Such type of vehicles will be detected by ANPR cameras.");
                                         }
                                     }
-                                    else
-                                    {
-                                        LogMessage("Invalid tag. " + ctp.ObjectId);
-                                    }
+                                    //else
+                                    //{
+                                    //    LogMessage("Invalid tag. " + ctp.ObjectId);
+                                    //}
                                     #endregion
                                 }
-                                else
-                                {
-                                    LogMessage("This tag is not valid. " + ctp.ObjectId);
-                                }
+                                //else
+                                //{
+                                //    LogMessage("This tag is not valid. " + ctp.ObjectId);
+                                //}
                             }
                             else
                             {
@@ -903,16 +906,16 @@ namespace VaaaN.MLFF.WindowsServices
                                     else
                                     {
                                         nfp.PlateNumber = "";
-                                        LogMessage("Plate number is comming as blank!");
+                                        // LogMessage("Plate number is comming as blank!");
                                     }
 
                                     #region Update some fields in the CBE
                                     try
                                     {
-                                        LogMessage("Trying to update TMSId, CreationDate etc. in nodeflux packet..");
+                                        //LogMessage("Trying to update TMSId, CreationDate etc. in nodeflux packet..");
                                         nfp.TMSId = currentTMSId;
                                         //nfp.TimeStamp = ConversionDateTime(nfp.TimeStamp.ToString(), "nodeflux"); //already updated in WebAPI
-                                        LogMessage("Camera id is: " + nfp.CameraId);
+                                        //LogMessage("Camera id is: " + nfp.CameraId);
 
                                         //in case of nodeflux not giving lane id and plaza id peek laneid and plazaid by hardwareid. 
                                         //hardwareid is assigned to specific lane of specific plaza.
@@ -950,12 +953,12 @@ namespace VaaaN.MLFF.WindowsServices
                                         nfp.CreationDate = System.DateTime.Now;
                                         nfp.ModifierId = -1;
                                         nfp.ModificationDate = System.DateTime.Now;
-                                        LogMessage("Nodeflux CBE updated successfully");
+                                        //LogMessage("Nodeflux CBE updated successfully");
 
                                         #region event queue
                                         try
                                         {
-                                            LogMessage("Trying to push nodeflux event to event queue...");
+                                            //LogMessage("Trying to push nodeflux event to event queue...");
                                             //plaza id, plaza name, lane id, lane name, vrn, class, timestamp
                                             Message nodeFluxEventMessage = new Message();
                                             nodeFluxEventMessage.Formatter = new BinaryMessageFormatter();
@@ -1004,17 +1007,17 @@ namespace VaaaN.MLFF.WindowsServices
 
                                     //whether the vrn exists or does not exist, we have to push it to local table after checking the case of
                                     //multiple reporting
-                                    LogMessage("Checking existing nodeflux records for: " + nfp.PlateNumber);
+                                    //LogMessage("Checking existing nodeflux records for: " + nfp.PlateNumber);
                                     if (string.IsNullOrEmpty(nfp.PlateNumber) || nfp.PlateNumber == "Not Detected")
                                     {
                                         #region Send to local nodeflux database
                                         try
                                         {
-                                            LogMessage("VRN is blank. Sending to local nodeflux table...");
+                                            //LogMessage("VRN is blank. Sending to local nodeflux table...");
 
                                             nfpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.Insert(nfp);
 
-                                            LogMessage("Nodeflux record with blank VRN inserted successfully.");
+                                            //LogMessage("Nodeflux record with blank VRN inserted successfully.");
                                         }
                                         catch (Exception ex)
                                         {
@@ -1023,13 +1026,13 @@ namespace VaaaN.MLFF.WindowsServices
 
                                             try
                                             {
-                                                LogMessage("Trying to send nodeflux packet to failed queue...");
+                                                //LogMessage("Trying to send nodeflux packet to failed queue...");
 
                                                 m.Recoverable = true;
                                                 //failedQueueANPR.Send(m);
                                                 failedQueue.Send(m);
 
-                                                LogMessage("Message sent nodflux packet to failed queue.");
+                                                //LogMessage("Message sent nodflux packet to failed queue.");
                                             }
                                             catch (Exception exc)
                                             {
@@ -1042,17 +1045,17 @@ namespace VaaaN.MLFF.WindowsServices
                                         #region Create a transaction Main transaction table 
                                         try
                                         {
-                                            LogMessage("VRN is blank. Trying to insert into transaction table...");
+                                            //LogMessage("VRN is blank. Trying to insert into transaction table...");
 
                                             if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                             {
                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.NotRegistered);
-                                                LogMessage("Transaction inserted by nf entry id front.");
+                                                //LogMessage("Transaction inserted by nf entry id front.");
                                             }
                                             else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                             {
                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.NotRegistered);
-                                                LogMessage("Transaction inserted by nf entry id rear.");
+                                                // LogMessage("Transaction inserted by nf entry id rear.");
                                             }
                                             else
                                             {
@@ -1068,12 +1071,12 @@ namespace VaaaN.MLFF.WindowsServices
                                     else if (!DoesExistInRecentNodeFluxPackets(nfp.GantryId, nfp.PlateNumber, Convert.ToDateTime(nfp.TimeStamp), Convert.ToInt32(nfp.CameraPosition)))
                                     {
                                         #region ANPR Data Found 
-                                        LogMessage("Does not exist in local nodeflux list.");
+                                       // LogMessage("Does not exist in local nodeflux list.");
 
                                         #region Send to local nodeflux database
                                         try
                                         {
-                                            LogMessage("Sending to local nodeflux table. Plate number is: " + nfp.PlateNumber);
+                                            //LogMessage("Sending to local nodeflux table. Plate number is: " + nfp.PlateNumber);
 
                                             nfpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.Insert(nfp);
                                             anprRecentDataList.Add(new ANPRPktData { VehicleClassId = nfp.VehicleClassId, PktId = nfpEntryId, PacketTimeStamp = Convert.ToDateTime(nfp.TimeStamp), VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, cameraPosition = Convert.ToInt32(nfp.CameraPosition), currentDateTime = DateTime.Now });
@@ -1087,13 +1090,13 @@ namespace VaaaN.MLFF.WindowsServices
 
                                             try
                                             {
-                                                LogMessage("Trying to send to failed queue...");
+                                               // LogMessage("Trying to send to failed queue...");
 
                                                 m.Recoverable = true;
                                                 //failedQueueANPR.Send(m);
                                                 failedQueue.Send(m);
 
-                                                LogMessage("Message sent to failed queue.");
+                                                //LogMessage("Message sent to failed queue.");
                                             }
                                             catch (Exception exc)
                                             {
@@ -1109,9 +1112,9 @@ namespace VaaaN.MLFF.WindowsServices
                                         if (associatedCVNF != null)
                                         {
                                             #region Checking VRN in recent transactions in tbl_transaction
-                                            LogMessage("VRN exists in the system, checking whether it is in recent transactions or not...");
+                                            //LogMessage("VRN exists in the system, checking whether it is in recent transactions or not...");
 
-                                            LogMessage("Search criteria: " + nfp.TMSId + ", " + nfp.GantryId + ", " + nfpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + " " + nfp.PlateNumber);
+                                            //LogMessage("Search criteria: " + nfp.TMSId + ", " + nfp.GantryId + ", " + nfpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + " " + nfp.PlateNumber);
 
                                             //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedCrossTalkTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInCrossTalk(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
                                             filteredTransactionList = GetAssociatedTransactions(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber, nfp.VehicleClassId, "RFID");
@@ -1122,7 +1125,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 #region Complete transaction, balance update and SMS
                                                 if (filteredTransactionList.Count == 1)
                                                 {
-                                                    LogMessage("Transaction is found to update...");
+                                                    //LogMessage("Transaction is found to update...");
                                                     // VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = associatedCrossTalkTrans[0];
                                                     TranscationData filteredTransaction = filteredTransactionList[0];
                                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
@@ -1140,7 +1143,7 @@ namespace VaaaN.MLFF.WindowsServices
 
                                                     #region Get customer vehicle and customer account
                                                     //Get vehicle details of the associated tagid (VRN, Customer Account id etc)
-                                                    LogMessage("Getting vehicle details...");
+                                                    //LogMessage("Getting vehicle details...");
                                                     var ObjectId = "";
                                                     List<IkePktData> IkePktDataDetails = rfidRecentDataList.Where(trans => (trans.PktId == transaction.CrosstalkEntryIdFront || trans.PktId == transaction.CrosstalkEntryIdRear)).OrderBy(o => o.PacketTimeStamp).ToList();
                                                     if (IkePktDataDetails.Count > 0)
@@ -1152,7 +1155,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     //VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE customerVehicleInfo = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CustomerVehicleBLL.GetByTansactionCrosstalkEntryId(transaction.CrosstalkEntryId);
 
                                                     //Get customer details of the associated tagid
-                                                    LogMessage("Getting customer details...");
+                                                    //LogMessage("Getting customer details...");
                                                     VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerAccountCBE customerAccountInfo = GetCustomerAccountById(customerVehicleInfo.AccountId);
                                                     #endregion
 
@@ -1177,7 +1180,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         }
                                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPFront(transaction, nfpEntryId);
                                                         //VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateNodefluxSectionFront(transaction, nfpEntryId);
-                                                        LogMessage("Transaction updated by nf entry id front.");
+                                                        //LogMessage("Transaction updated by nf entry id front.");
                                                         var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == filteredTransaction.TranscationId);
                                                         if (obj != null) obj.AnprFId = nfpEntryId;
                                                     }
@@ -1202,7 +1205,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         //VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateNodefluxSectionRear(transaction, nfpEntryId);
                                                         var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == filteredTransaction.TranscationId);
                                                         if (obj != null) obj.AnprRId = nfpEntryId;
-                                                        LogMessage("Transaction updated by nf entry id rear.");
+                                                        //LogMessage("Transaction updated by nf entry id rear.");
                                                     }
                                                     else
                                                     {
@@ -1215,17 +1218,17 @@ namespace VaaaN.MLFF.WindowsServices
                                                     //26 Dec, 2012 the following if has been removed
                                                     //if (Filtertransaction.IsViolation == -1) //0 for normal, 1 for violtion, by default -1 (not updated)
                                                     //{
-                                                    LogMessage("Transaction is not marked as violation previously. Going to check violation...");
+                                                    //LogMessage("Transaction is not marked as violation previously. Going to check violation...");
                                                     if (customerVehicleInfo.QueueStatus == 3 && (filteredTransaction.IKEFrontVehicleClassId == nfp.VehicleClassId || filteredTransaction.IKERearVehicleClassId == nfp.VehicleClassId) && customerVehicleInfo.VehicleClassId == nfp.VehicleClassId)
                                                     {
-                                                        LogMessage("Tag class and NF class matched. Going to financial and notification processing...");
+                                                        //LogMessage("Tag class and NF class matched. Going to financial and notification processing...");
                                                         if (filteredTransaction.IsBalanceUpdated == -1) //0 for balance not updated, 1 means balance updated
                                                         {
                                                             var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == filteredTransaction.TranscationId);
                                                             if (obj != null) obj.IsBalanceUpdated = 1;
                                                             //financial operation here
                                                             FinancialProcessing(customerVehicleInfo, customerAccountInfo, transaction);
-                                                            LogMessage("Financial processing has been done.");
+                                                           // LogMessage("Financial processing has been done.");
 
                                                             //notification operation here
                                                             // NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction);
@@ -1238,7 +1241,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     }
                                                     else
                                                     {
-                                                        LogMessage("Tag class and NF class does not match. Transaction will be marked as violation.");
+                                                        //LogMessage("Tag class and NF class does not match. Transaction will be marked as violation.");
                                                         //mark the transaction as violation and leave it for manual review
                                                         var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == filteredTransaction.TranscationId);
                                                         if (obj != null)
@@ -1275,7 +1278,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                 #region Create/ Update a transaction Main transaction table 
                                                 try
                                                 {
-                                                    LogMessage("VRN exists but no associated crosstalk transaction found in transaction table. Checking associated nodeflux transaction...");
+                                                    //LogMessage("VRN exists but no associated crosstalk transaction found in transaction table. Checking associated nodeflux transaction...");
 
                                                     //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
                                                     //1. Jan 2019 --> 
@@ -1286,7 +1289,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                         #region Update Tran Table if ANPR found
                                                         if (filteredTransactionList.Count == 1)
                                                         {
-                                                            LogMessage("Transaction found to update...");
+                                                            //LogMessage("Transaction found to update...");
                                                             //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = associatedNodeFluxTrans[0];
                                                             VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
                                                             TranscationData Filtertransaction = filteredTransactionList[0];
@@ -1316,7 +1319,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                     }
                                                                 }
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPFront(transaction, nfpEntryId);
-                                                                LogMessage("nf entry id front has been updated in transaction.");
+                                                                //LogMessage("nf entry id front has been updated in transaction.");
                                                                 var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
                                                                 if (obj != null) obj.AnprFId = nfpEntryId;
                                                             }
@@ -1341,7 +1344,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                                 VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPRear(transaction, nfpEntryId);
                                                                 var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
                                                                 if (obj != null) obj.AnprRId = nfpEntryId;
-                                                                LogMessage("nf entry id rear has been updated in transaction.");
+                                                                //LogMessage("nf entry id rear has been updated in transaction.");
                                                             }
                                                             else
                                                             {
@@ -1361,13 +1364,13 @@ namespace VaaaN.MLFF.WindowsServices
                                                         {
                                                             Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.Registered);
                                                             transcationDataList.Add(new TranscationData { AnprFrontVehicleClassId = nfp.VehicleClassId, TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 1, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
-                                                            LogMessage("Transaction inserted by nf entry id front.");
+                                                            //LogMessage("Transaction inserted by nf entry id front.");
                                                         }
                                                         else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                         {
                                                             Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.Registered);
                                                             transcationDataList.Add(new TranscationData { AnprRearVehicleClassId = nfp.VehicleClassId, TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 2, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
-                                                            LogMessage("Transaction inserted by nf entry id rear.");
+                                                            //LogMessage("Transaction inserted by nf entry id rear.");
                                                         }
                                                         else
                                                         {
@@ -1389,7 +1392,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             #region Create/ Update a transaction Main transaction table 
                                             try
                                             {
-                                                LogMessage("VRN does not exist. Checking associated nodeflux transaction...");
+                                                //LogMessage("VRN does not exist. Checking associated nodeflux transaction...");
 
                                                 //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
                                                 //2. Jan 2019 -->
@@ -1402,7 +1405,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     {
                                                         #region ANPR Associated Data found in ANPR
                                                         TranscationData Filtertransaction = filteredTransactionList[0];
-                                                        LogMessage("Transaction found to update...");
+                                                        //LogMessage("Transaction found to update...");
                                                         VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCBE transaction = new Libraries.CommonLibrary.CBE.TransactionCBE();
                                                         transaction.CrosstalkEntryIdFront = Convert.ToInt32(Filtertransaction.IKEFId);
                                                         transaction.CrosstalkEntryIdRear = Convert.ToInt32(Filtertransaction.IKERId);
@@ -1434,7 +1437,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                             VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateByNFPFront(transaction, nfpEntryId);
                                                             var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
                                                             if (obj != null) obj.AnprFId = nfpEntryId;
-                                                            LogMessage("nf entry id front has been updated in transaction.");
+                                                            //LogMessage("nf entry id front has been updated in transaction.");
                                                         }
                                                         else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                         {
@@ -1458,7 +1461,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                             var obj = transcationDataList.FirstOrDefault(x => x.TranscationId == Filtertransaction.TranscationId);
                                                             if (obj != null) obj.AnprRId = nfpEntryId;
 
-                                                            LogMessage("nf entry id rear has been updated in transaction.");
+                                                            //LogMessage("nf entry id rear has been updated in transaction.");
                                                         }
                                                         else
                                                         {
@@ -1478,14 +1481,14 @@ namespace VaaaN.MLFF.WindowsServices
                                                     if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                     {
                                                         Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPFront(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.NotRegistered);
-                                                        LogMessage("Transaction inserted by nf entry id front.");
+                                                        //LogMessage("Transaction inserted by nf entry id front.");
                                                         transcationDataList.Add(new TranscationData { AnprFrontVehicleClassId = nfp.VehicleClassId, TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprFId = nfpEntryId, CameraPosition = 1, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
                                                     }
                                                     else if (nfp.CameraPosition == "2") //1 means front, 2 means rear
                                                     {
                                                         Int64 TranscationId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.InsertByNFPRear(nfp, nfpEntryId, (int)VaaaN.MLFF.Libraries.CommonLibrary.Constants.VRNRegistred.NotRegistered);
                                                         transcationDataList.Add(new TranscationData { AnprRearVehicleClassId = nfp.VehicleClassId, TranscationId = TranscationId, LaneId = nfp.LaneId, IsBalanceUpdated = -1, IsViolation = -1, TMSId = 1, VRN = nfp.PlateNumber, PlazaId = nfp.GantryId, AnprRId = nfpEntryId, CameraPosition = 2, TransactionDateTime = Convert.ToDateTime(nfp.TimeStamp), CurrentDateTime = DateTime.Now });
-                                                        LogMessage("Transaction inserted by nf entry id rear.");
+                                                        //LogMessage("Transaction inserted by nf entry id rear.");
                                                     }
                                                     else
                                                     {
