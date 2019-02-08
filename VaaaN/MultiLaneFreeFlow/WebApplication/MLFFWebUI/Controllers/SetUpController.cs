@@ -55,16 +55,9 @@ namespace MLFFWebUI.Controllers
                 TempData["Failedmsg"] = "<script>alert('Failed to login.Try again later..');</script>";
                 return RedirectToAction("Logout", "Login");
             }
-
             return View("UsersList", userList);
         }
 
-        //[HttpGet]
-        //public ActionResult NewUserMaster()
-        //{
-        //    ViewBag.RoleId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.RoleBLL.GetAll().Select(x => new SelectListItem { Text = x.RoleName, Value = x.RoleId.ToString() });
-        //    return View("UserPopUp");
-        //}
         [HttpGet]
         public ActionResult UserNew()
         {
@@ -228,7 +221,6 @@ namespace MLFFWebUI.Controllers
             }
             return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
-
         #endregion
 
         #region Chnage Password
@@ -1341,7 +1333,6 @@ namespace MLFFWebUI.Controllers
         }
         #endregion
 
-
         #region ProvinceList Section
         public ActionResult ProvinceList()
         {
@@ -1361,7 +1352,6 @@ namespace MLFFWebUI.Controllers
             return View();
         }
         #endregion
-
 
         #region Kabupaten/Kota Section
         public ActionResult DistrictList()
