@@ -52,7 +52,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Logger
             POSController,
             DTSService,
             OutboundSMS,
-            ServiceMonitor
+            ServiceMonitor,
+            MobileService
         }
 
         /// <summary>
@@ -170,6 +171,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.Logger
                     case ErrorLogModule.ServiceMonitor:
                         {
                             path = CreateDirectory("Services/ServiceMonitor//") + dt.ToString("yyyy-MM-dd") + ".log";
+                            break;
+                        }
+                    case ErrorLogModule.MobileService:
+                        {
+                            path = CreateDirectory("Services/MobileService//") + dt.ToString("yyyy-MM-dd") + ".log";
                             break;
                         }
                 }
