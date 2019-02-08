@@ -321,6 +321,8 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\CustomerTransaction\AssociatedTransaction.cshtml" />
+    <Content Include="Views\CustomerTransaction\GetFile.cshtml" />
+    <Content Include="Views\CustomerTransaction\ReportTransactionData.cshtml" />
     <Content Include="Views\CustomerTransaction\Unreviewed.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Web.config" />
@@ -364,9 +366,7 @@
     <Content Include="Scripts\bootstrap3\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\bootstrap3\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Scripts\bootstrap3\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Views\CustomerTransaction\GetFile.cshtml" />
     <Content Include="Views\CustomerTransaction\FailedQueueData.cshtml" />
-    <Content Include="Views\CustomerTransaction\ReportTransactionData.cshtml" />
     <Content Include="Views\SetUp\LaneListPopUp.cshtml" />
     <Content Include="Views\SetUp\PlazaListPopUp.cshtml" />
     <Content Include="Views\SetUp\ProvinceList.cshtml" />
