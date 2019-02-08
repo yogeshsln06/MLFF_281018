@@ -4,40 +4,52 @@
 }
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $('#DisplayActive').change(
+      function (e) {
+          if ($('#DisplayActive').is(":checked")) {
+              $("#ISActive").val('1');
+          }
+          else {
+              $("#ISActive").val('0');
+          }
+      }
+      );
+</script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             @using (Html.BeginForm("AddRoles", "SetUp", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
+            { 
                 <fieldset id="fildset">
                     <div class="modal-body" style="height:400px; overflow-y:scroll;">
                         <h5 class="c-mygrey-900 heading"><strong>Roles </strong>Information<span></span></h5>
                         <div class="mT-5">
                             <div class="form-row">
-                                <div class="form-group col-md-2 required">
+                                <div class="form-group col-md-4 required">
                                     @*@Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "control-label" })*@
                                     <label for="lblRoleId" class="form-label">RoleId</label>
                                     @Html.EditorFor(model => model.RoleId, new { htmlAttributes = new { @class = "form-control" } })
                                 </div>
-                                <div class="form-group col-md-2 required">
-                                    @*<label for="txtRoleName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.RoleName</label>*@
-                                    @Html.LabelFor(model => model.RoleName, htmlAttributes: new { @class = "control-label" })
-                                    @Html.EditorFor(model => model.RoleName, new { htmlAttributes = new { @class = "form-control" } })
+                                <div class="form-group col-md-4 required">
+                                    <label for="txtRoleName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.RoleName</label>
+                                    @Html.EditorFor(model => model.RoleName, new { htmlAttributes = new { @class = "form-control required" } })
+                                    @Html.ValidationMessageFor(model => model.RoleName, "", new { @class = "text-danger" })
                                 </div>
                                 <div class="form-group  col-md-4">
-                                    <label for="chkActive" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.IsActive</label>
-                                    @*@Html.CheckBoxFor(model => model.IsActive, new { htmlAttributes = new { @class = "form-control" } })*@
-                                    <input checked="checked" id="isNewlyEnrolled" name="isNewlyEnrolled" type="checkbox" value="true" />
+                                    @*<label for="chkActive" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.IsActive</label>*@
+                                   @Html.LabelFor(model => model.ISActive, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.ISActive, new { htmlAttributes = new { @class = "form-control", style = "display:none" } })
+                                     <input id="DisplayActive" name="DisplayActive" type="checkbox"  />
                                 </div>
                             </div>
-                        </div>
+                            </div>
                     </div>
                 </fieldset>
             }
             </div>
         </div>
 </div>
-
             <div class="modal-footer">
                 <div class="alert alert-warning" role="alert" id="warning">
                 </div>

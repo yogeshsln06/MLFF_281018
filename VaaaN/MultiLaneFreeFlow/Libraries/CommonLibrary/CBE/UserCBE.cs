@@ -93,7 +93,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.loginName; }
             set { this.loginName = value; }
         }
-        [Display(Name = "FirstName")]
+        [Display(Name = "Name")]
         public String FirstName
         {
             get { return this.firstName; }
@@ -126,27 +126,27 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.password = value; }
         }
 
-        [Display(Name = "Address", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+       // [Display(Name = "Address", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public String Address
         {
             get { return this.address; }
             set { this.address = value; }
         }
-        [Display(Name = "RoleName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        //[Display(Name = "RoleName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public Int32 RoleId
         {
             get { return this.roleId; }
             set { this.roleId = value; }
         }
-
-        [Display(Name = "RoleName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Role Name")]
+        // [Display(Name = "RoleName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         public String RoleName
         {
             get { return this.roleName; }
             set { this.roleName = value; }
         }
-
-        [Display(Name = "AccountExpiryDate", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Account Expiry Date")]
+        //[Display(Name = "AccountExpiryDate", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime AccountExpiryDate
         {

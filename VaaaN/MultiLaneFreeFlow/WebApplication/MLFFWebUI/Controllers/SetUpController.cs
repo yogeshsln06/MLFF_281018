@@ -101,26 +101,59 @@ namespace MLFFWebUI.Controllers
                     ModelStateList objModelState = new ModelStateList();
                     objModelState.ErrorMessage = "logout";
                     objResponseMessage.Add(objModelState);
-
                 }
                 else {
-                    #region Insert Into User Data
-                    User.CreationDate = DateTime.Now;
-                    int userId = UserBLL.Insert(User);
-                    if (userId > 0)
+                    #region Mobile No validate by using country code
+                    if (!string.IsNullOrEmpty(User.MobileNo))
+                        {
+                        User.MobileNo = VaaaN.MLFF.Libraries.CommonLibrary.Constants.MobileNoPrefix(User.MobileNo);
+                        }
+                    #endregion
+
+                    #region Validate duplicate 
+                    DataTable dt = VaaaN.MLFF.Libraries.CommonLibrary.BLL.UserBLL.dtGetUserAll();
+                    DataRow[] Loginfiltered = dt.Select("LOGIN_NAME ='" + User.LoginName + "' AND USER_ID<>" + User.UserId + "");
+                    DataRow[] Mobilefiltered = dt.Select("MOBILE_NO ='" + User.MobileNo + "' AND USER_ID<>" + User.UserId + "");
+                    DataRow[] Emailfiltered = dt.Select("EMAIL_ID ='" + User.EmailId + "' AND USER_ID<>" + User.UserId + "");
+                    #endregion
+                    if (Loginfiltered.Length > 0)
                     {
                         ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "success";
+                        objModelState.ErrorMessage = "Username already exists";
                         objResponseMessage.Add(objModelState);
                     }
-                    else
+                    if (Mobilefiltered.Length > 0)
                     {
                         ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "Something went wrong";
+                        objModelState.ErrorMessage = "Mobile Number already exists";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (Emailfiltered.Length > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Email Id already exists";
                         objResponseMessage.Add(objModelState);
                     }
 
-                    #endregion
+                    if (objResponseMessage.Count == 0)
+                    {
+                        #region Insert Into User Data
+                        User.CreationDate = DateTime.Now;
+                        int userId = UserBLL.Insert(User);
+                        if (userId > 0)
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        #endregion
+                    }
                 }
             }
             catch (Exception ex)
@@ -180,6 +213,9 @@ namespace MLFFWebUI.Controllers
                     if (objResponseMessage.Count == 0)
                     {
                         UserBLL.Update(UserAccount);
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "success";
+                        objResponseMessage.Add(objModelState);
                     }
                 }
             }
@@ -308,25 +344,40 @@ namespace MLFFWebUI.Controllers
                     objResponseMessage.Add(objModelState);
                 }
                 else {
-                    #region Insert Into Roles Data
-                    Roles.RoleId = 1;
-                    Roles.TransferStatus = 1;
-                    Roles.CreationDate = DateTime.Now;
-                    string Result = RoleBLL.Insert(Roles);
-                    if (Result != "")
-                    {
-                        ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "success";
-                        objResponseMessage.Add(objModelState);
-                    }
-                    else
-                    {
-                        ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "Something went wrong";
-                        objResponseMessage.Add(objModelState);
-                    }
 
-                    #endregion
+                    List<RoleCBE> RoleDataList = new List<RoleCBE>();
+                    RoleDataList = RoleBLL.GetRoleAll().Cast<RoleCBE>().ToList();
+
+                    List<RoleCBE> RoleNamefiltered = RoleDataList.FindAll(x => x.RoleName.ToLower() == Roles.RoleName.ToLower() && x.RoleId != Roles.RoleId);
+                    //List<PlazaCBE> IpAddressfiltered = PalazaDataList.FindAll(x => x.IpAddress == Plaza.IpAddress);
+                    if (RoleNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Role Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                        #region Insert Into Roles Data
+                        //Roles.RoleId = 1;
+                        Roles.TransferStatus = 1;
+                        Roles.CreationDate = DateTime.Now;
+                        Roles.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        string Result = RoleBLL.Insert(Roles);
+                        if (Result != "")
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        #endregion
+                    }
                 }
             }
             catch (Exception ex)
@@ -352,11 +403,23 @@ namespace MLFFWebUI.Controllers
 
                 }
                 else {
-                    Roles.RoleId = 1;
+                    //Roles.RoleId = 1;
                     Roles.TransferStatus = 1;
                     Roles.ModificationDate = DateTime.Now;
                     Roles.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
-                    RoleBLL.Update(Roles, Roles.RoleName);
+                    string Result = RoleBLL.Update(Roles, Roles.RoleName);
+                        if (Result != "")
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
                 }
             }
             catch (Exception ex)
@@ -436,60 +499,38 @@ namespace MLFFWebUI.Controllers
                     List<PlazaCBE> PalazaDataList = new List<PlazaCBE>();
                     PalazaDataList = PlazaBLL.GetAllAsList().Cast<PlazaCBE>().ToList();
 
-                    //List<LaneCBE> LaneNamefiltered = laneDataList.FindAll(x => x.LaneName.ToLower() == lane.LaneName.ToLower() && x.PlazaId == lane.PlazaId);
-                    //List<LaneCBE> ANPRFrontfiltered = laneDataList.FindAll(x => x.CameraIdFront == lane.CameraIdFront || x.CameraIdRear == lane.CameraIdFront);
-                    //List<LaneCBE> ANPRRearfiltered = laneDataList.FindAll(x => x.CameraIdFront == lane.CameraIdRear || x.CameraIdRear == lane.CameraIdRear);
-                    //List<LaneCBE> RFIDFrontfiltered = laneDataList.FindAll(x => x.AntennaIdFront == lane.AntennaIdFront || x.AntennaIdRear == lane.AntennaIdFront);
-                    //List<LaneCBE> RFIDRearfiltered = laneDataList.FindAll(x => x.AntennaIdFront == lane.AntennaIdRear || x.AntennaIdRear == lane.AntennaIdRear);
-                    //if (LaneNamefiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "Lajur Name already exists with selected Gantry.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //else if (ANPRFrontfiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "Camera Front already exists.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //else if (ANPRRearfiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "Camera Rear already exists.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //else if (RFIDFrontfiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "RFID Front already exists.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //else if (RFIDRearfiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "RFID Rear already exists.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-
-                    //if (objResponseMessage.Count == 0)
-                    //{
-                    //    lane.TMSId = 1;
-                    //    lane.CreationDate = DateTime.Now;
-                    //    int id = LaneBLL.Insert(lane);
-                    //    if (id > 0)
-                    //    {
-                    //        ModelStateList objModelState = new ModelStateList();
-                    //        objModelState.ErrorMessage = "success";
-                    //        objResponseMessage.Add(objModelState);
-                    //    }
-                    //    else
-                    //    {
-                    //        ModelStateList objModelState = new ModelStateList();
-                    //        objModelState.ErrorMessage = "Something went wrong";
-                    //        objResponseMessage.Add(objModelState);
-                    //    }
-                   // }
+                    List<PlazaCBE> PlazaNamefiltered = PalazaDataList.FindAll(x => x.PlazaName.ToLower() == Plaza.PlazaName.ToLower() && x.PlazaId != Plaza.PlazaId);
+                    List<PlazaCBE> IpAddressfiltered = PalazaDataList.FindAll(x => x.IpAddress == Plaza.IpAddress);
+                    if (PlazaNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Gantry Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                     if (IpAddressfiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "IpAddress already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                       // Plaza.TMSId = 1;
+                        Plaza.CreationDate = DateTime.Now;
+                        int id = PlazaBLL.Insert(Plaza);
+                        if (id > 0)
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -515,57 +556,33 @@ namespace MLFFWebUI.Controllers
                 }
                 else
                 {
-                    List<PlazaCBE> PlazaDataList = new List<PlazaCBE>();
-                    PlazaDataList = PlazaBLL.GetAllAsList().Cast<PlazaCBE>().ToList();
+                    List<PlazaCBE> PalazaDataList = new List<PlazaCBE>();
+                    PalazaDataList = PlazaBLL.GetAllAsList().Cast<PlazaCBE>().ToList();
 
-                    //List<LaneCBE> LaneNamefiltered = laneDataList.FindAll(x => (x.LaneName.ToLower() == lane.LaneName.ToLower() && x.PlazaId == lane.PlazaId) && x.LaneId != lane.LaneId);
-                    //List<LaneCBE> ANPRFrontfiltered = laneDataList.FindAll(x => (x.CameraIdFront == lane.CameraIdFront || x.CameraIdRear == lane.CameraIdFront) && x.LaneId != lane.LaneId);
-                    //List<LaneCBE> ANPRRearfiltered = laneDataList.FindAll(x => (x.CameraIdFront == lane.CameraIdRear || x.CameraIdRear == lane.CameraIdRear) && x.LaneId != lane.LaneId);
-                    //List<LaneCBE> RFIDFrontfiltered = laneDataList.FindAll(x => x.AntennaIdFront == lane.AntennaIdFront || x.AntennaIdRear == lane.AntennaIdFront && x.LaneId != lane.LaneId);
-                    //List<LaneCBE> RFIDRearfiltered = laneDataList.FindAll(x => x.AntennaIdFront == lane.AntennaIdRear || x.AntennaIdRear == lane.AntennaIdRear && x.LaneId != lane.LaneId);
-                    //if (LaneNamefiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "Lajur Name already exists with selected Gantry.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //else if (ANPRFrontfiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "Camera Front already exists.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //else if (ANPRRearfiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "Camera Rear already exists.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //else if (RFIDFrontfiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "RFID Front already exists.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //else if (RFIDRearfiltered.Count > 0)
-                    //{
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "RFID Rear already exists.";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-                    //if (objResponseMessage.Count == 0)
-                    //{
-                    //    lane.TMSId = 1;
-                    //    lane.ModificationDate = DateTime.Now;
-                    //    lane.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
-                    //    LaneBLL.Update(lane);
-
-                    //    ModelStateList objModelState = new ModelStateList();
-                    //    objModelState.ErrorMessage = "success";
-                    //    objResponseMessage.Add(objModelState);
-                    //}
-
-
+                    List<PlazaCBE> PlazaNamefiltered = PalazaDataList.FindAll(x => x.PlazaName.ToLower() == Plaza.PlazaName.ToLower() && x.PlazaId != Plaza.PlazaId);
+                    List<PlazaCBE> IpAddressfiltered = PalazaDataList.FindAll(x => x.IpAddress == Plaza.IpAddress && x.PlazaId != Plaza.PlazaId);
+                    if (PlazaNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Gantry Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (IpAddressfiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "IpAddress already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                        // Plaza.TMSId = 1;
+                        Plaza.CreationDate = DateTime.Now;
+                         PlazaBLL.Update(Plaza);
+                       
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                    }
                 }
             }
             catch (Exception ex)
