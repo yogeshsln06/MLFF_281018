@@ -1731,7 +1731,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
                 int index = 0;
                 result[index] = vehicleClass.ToString().PadLeft(2, '0');
                 index = index + 1;
-                string vrn = vehicleRegistrationNumber.ToUpper();
+                string vrn = vehicleRegistrationNumber.Trim().ToUpper();
                 byte[] bytes = System.Text.Encoding.UTF8.GetBytes(vrn);
                 string[] values = BitConverter.ToString(bytes).Split(new char[] { '-' });
                 for (int i = 0; i < values.Length; i++)
@@ -1739,7 +1739,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
                     result[index] = values[i];
                     index = index + 1;
                 }
-                result[index] = "FC";
+                //result[index] = "FC";
+                result[index] = "00";
                 index = index + 1;
                 for (int j = index; j < 12; j++)
                 {

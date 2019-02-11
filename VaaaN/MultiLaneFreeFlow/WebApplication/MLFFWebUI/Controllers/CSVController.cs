@@ -226,8 +226,10 @@ namespace MLFFWebUI.Controllers
         public string ExportCSVTranscations(ViewTransactionCBE transaction)
         {
             Int16 IsDataFound = 0;
-            var filename = "TransactionDetails_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            var filename = "TransactionDetails_Charged_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            var filename1 = "TransactionDetails_UnCharged_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
             FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
+            FileInfo file1 = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename1));
             try
             {
                 string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
@@ -245,7 +247,67 @@ namespace MLFFWebUI.Controllers
                 {
                     strQuery += " AND  TRANSACTION_DATETIME <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
                 }
-                IsDataFound = CSVUtility.CreateCsv(file.FullName, TransactionBLL.TransDeatils(strQuery));
+                DataTable dt = TransactionBLL.TransDeatils(strQuery);
+                DataView dv = new DataView(dt);
+                DataTable Charged = dt.AsEnumerable()
+                            .Where(r => r.Field<decimal>("IS_BALANCE_UPDATED") == 1)
+                            .CopyToDataTable();
+                //DataTable Charged = (DataTable)(dv.RowFilter = "IS_BALANCE_UPDATED=1").;
+                if (Charged.Rows.Count > 0)
+                {
+                    IsDataFound = CSVUtility.CreateCsv(file.FullName, Charged);
+                    if (IsDataFound == 0)
+                        filename = string.Empty;
+                }
+                DataTable UnCharged = dt.AsEnumerable()
+                            .Where(r => r.Field<decimal>("IS_BALANCE_UPDATED") == 0)
+                            .CopyToDataTable();
+                if (UnCharged.Rows.Count > 0)
+                {
+                    IsDataFound = CSVUtility.CreateCsv(file1.FullName, UnCharged);
+                    if (IsDataFound == 0)
+                    {
+                        if (string.IsNullOrEmpty(filename))
+                        {
+                            filename = "No Data to Export.";
+                        }
+                    }
+                    else
+                    {
+                        if (string.IsNullOrEmpty(filename))
+                        {
+                            filename = "No Data to Export.";
+                        }
+                        else
+                        {
+                            filename = filename + ";" + filename1;
+                        }
+                    }
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                filename = "No Data to Export. :" + ex.Message;
+                HelperClass.LogMessage("Failed Export Transaction Details_ CSV " + ex);
+            }
+            string Det = JsonConvert.SerializeObject(filename, Formatting.Indented);
+            return Det.Replace("\r", "").Replace("\n", "");
+        }
+
+        public string ExportCSVTranscationsReport(ViewTransactionCBE transaction)
+        {
+            Int16 IsDataFound = 0;
+            var filename = "TransactionDetails_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
+            try
+            {
+                string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+                string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+
+                IsDataFound = CSVUtility.CreateCsv(file.FullName, TransactionBLL.TransDeatilsReport(strstarttime, strendtime));
                 if (IsDataFound == 0)
                     filename = "No Data to Export.";
             }
