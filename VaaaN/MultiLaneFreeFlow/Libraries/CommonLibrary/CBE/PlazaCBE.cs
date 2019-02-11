@@ -15,6 +15,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private string plazaName;
         private string location;
         private string ipAddress;
+        private string longitude;
+        private string latitude;
         private Int32 modifierId;
         private DateTime creationDate;
         private DateTime modificationDate;
@@ -26,6 +28,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.PlazaName = string.Empty;
             this.Location = string.Empty;
             this.IpAddress = string.Empty;
+            this.longitude = string.Empty;
+            this.latitude = string.Empty;
             this.ModifierId = 0;
             this.CreationDate = DateTime.Now;
             this.ModificationDate = DateTime.Now;
@@ -99,6 +103,33 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
+        [Required]
+        public string Longitude
+        {
+            get
+            {
+                return this.longitude;
+            }
+
+            set
+            {
+                this.longitude = value;
+            }
+        }
+
+        [Required]
+        public string Latitude
+        {
+            get
+            {
+                return this.latitude;
+            }
+
+            set
+            {
+                this.latitude = value;
+            }
+        }
         public int ModifierId
         {
             get

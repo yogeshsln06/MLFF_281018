@@ -3688,6 +3688,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            P_PLAZA_NAME      IN NVARCHAR2,
                            P_LOCATION        IN NVARCHAR2,
                            P_IPADDRESS       IN NVARCHAR2,
+						   P_Longitude       IN NUMBER(9,6),
+						   P_Latitude       IN NUMBER(9,6),
                            P_CREATION_DATE   IN DATE)
    AS
    BEGIN
@@ -3696,12 +3698,16 @@ ORDER BY TRANSACTION_DATETIME DESC';
                              PLAZA_NAME,
                              LOCATION,
                              IPADDRESS,
+							 Longitude,
+							 Latitude,
                              CREATION_DATE)
            VALUES (P_TMS_ID,
                    P_PLAZA_ID,
                    P_PLAZA_NAME,
                    P_LOCATION,
                    P_IPADDRESS,
+				   P_Longitude,
+				   P_Latitude ,
                    P_CREATION_DATE);
    END PLAZA_INSERT;
 
