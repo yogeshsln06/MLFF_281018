@@ -1,4 +1,4 @@
-/* Formatted on 2/7/2019 5:59:59 PM (QP5 v5.215.12089.38647) */
+/* Formatted on 08/02/2019 13:15:50 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2134,22 +2134,22 @@ AS
                                        P_VEHICLESPEED        IN DECIMAL,
                                        P_NF_ENTRY_ID_FRONT   IN NUMBER)
    AS
-      LastSpeed   NUMBER;
+      LASTSPEED   NUMBER;
    BEGIN
       SELECT NVL (VEHICLESPEED, 0)
-        INTO LastSpeed
+        INTO LASTSPEED
         FROM TBL_TRANSACTION
        WHERE TRANSACTION_ID = P_TRANSACTION_ID;
 
-      IF (P_VEHICLESPEED > LastSpeed)
+      IF (P_VEHICLESPEED > LASTSPEED)
       THEN
-         LastSpeed := P_VEHICLESPEED;
+         LASTSPEED := P_VEHICLESPEED;
       END IF;
 
       UPDATE TBL_TRANSACTION
          SET NF_ENTRY_ID_FRONT = P_NF_ENTRY_ID_FRONT,
              LANE_ID = P_LANE_ID,
-             VEHICLESPEED = LastSpeed
+             VEHICLESPEED = LASTSPEED
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
@@ -2168,40 +2168,40 @@ AS
                                       P_VEHICLESPEED       IN DECIMAL,
                                       P_NF_ENTRY_ID_REAR   IN NUMBER)
    AS
-      LastSpeed       NUMBER;
-      NFFrontId       NUMBER;
-      NFFrontLaneId   NUMBER;
+      LASTSPEED       NUMBER;
+      NFFRONTID       NUMBER;
+      NFFRONTLANEID   NUMBER;
    BEGIN
-      NFFrontLaneId := P_LANE_ID;
+      NFFRONTLANEID := P_LANE_ID;
 
       SELECT NVL (VEHICLESPEED, 0)
-        INTO LastSpeed
+        INTO LASTSPEED
         FROM TBL_TRANSACTION
        WHERE TRANSACTION_ID = P_TRANSACTION_ID;
 
       SELECT NVL (NF_ENTRY_ID_FRONT, 0)
-        INTO NFFrontId
+        INTO NFFRONTID
         FROM TBL_TRANSACTION
        WHERE TRANSACTION_ID = P_TRANSACTION_ID;
 
-      IF (NFFrontId > 0)
+      IF (NFFRONTID > 0)
       THEN
          SELECT NVL (LANE_ID, 0)
-           INTO NFFrontLaneId
+           INTO NFFRONTLANEID
            FROM TBL_NODEFLUX_PACKET
-          WHERE ENTRY_ID = NFFrontId;
+          WHERE ENTRY_ID = NFFRONTID;
       END IF;
 
-      IF (P_VEHICLESPEED > LastSpeed)
+      IF (P_VEHICLESPEED > LASTSPEED)
       THEN
-         LastSpeed := P_VEHICLESPEED;
+         LASTSPEED := P_VEHICLESPEED;
       END IF;
 
 
       UPDATE TBL_TRANSACTION
          SET NF_ENTRY_ID_REAR = P_NF_ENTRY_ID_REAR,
-             LANE_ID = NFFrontLaneId,
-             VEHICLESPEED = LastSpeed
+             LANE_ID = NFFRONTLANEID,
+             VEHICLESPEED = LASTSPEED
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND TRANSACTION_ID = P_TRANSACTION_ID;
@@ -2281,22 +2281,22 @@ AS
                                    P_NF_ENTRY_ID_FRONT   IN NUMBER,
                                    P_VEHICLESPEED        IN NUMBER)
    AS
-      LastSpeed   NUMBER;
+      LASTSPEED   NUMBER;
    BEGIN
       SELECT NVL (VEHICLESPEED, 0)
-        INTO LastSpeed
+        INTO LASTSPEED
         FROM TBL_TRANSACTION
        WHERE TRANSACTION_ID = P_TRANSACTION_ID;
 
-      IF (P_VEHICLESPEED > LastSpeed)
+      IF (P_VEHICLESPEED > LASTSPEED)
       THEN
-         LastSpeed := P_VEHICLESPEED;
+         LASTSPEED := P_VEHICLESPEED;
       END IF;
 
       UPDATE TBL_TRANSACTION
          SET NF_ENTRY_ID_FRONT = P_NF_ENTRY_ID_FRONT,
              LANE_ID = P_LANE_ID,
-             VEHICLESPEED = LastSpeed
+             VEHICLESPEED = LASTSPEED
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
@@ -2312,22 +2312,22 @@ AS
                                   P_NF_ENTRY_ID_REAR   IN NUMBER,
                                   P_VEHICLESPEED       IN NUMBER)
    AS
-      LastSpeed   NUMBER;
+      LASTSPEED   NUMBER;
    BEGIN
       SELECT NVL (VEHICLESPEED, 0)
-        INTO LastSpeed
+        INTO LASTSPEED
         FROM TBL_TRANSACTION
        WHERE TRANSACTION_ID = P_TRANSACTION_ID;
 
-      IF (P_VEHICLESPEED > LastSpeed)
+      IF (P_VEHICLESPEED > LASTSPEED)
       THEN
-         LastSpeed := P_VEHICLESPEED;
+         LASTSPEED := P_VEHICLESPEED;
       END IF;
 
       UPDATE TBL_TRANSACTION
          SET NF_ENTRY_ID_REAR = P_NF_ENTRY_ID_REAR,
              LANE_ID = P_LANE_ID,
-             VEHICLESPEED = LastSpeed
+             VEHICLESPEED = LASTSPEED
        WHERE     TMS_ID = P_TMS_ID
              AND PLAZA_ID = P_PLAZA_ID
              AND LANE_ID = P_LANE_ID
@@ -8419,7 +8419,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                   AND TO_CHAR (CREATION_DATE, 'MM') =
                                          P_PMONTH_ID
                                   AND TO_CHAR (CREATION_DATE, 'YYYY') =
-                                         P_PYEAR_ID) tabl1
+                                         P_PYEAR_ID) TABL1
                    UNION
                    SELECT ROWNUMBER,
                           CREATION_DATE,
@@ -8484,7 +8484,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                   AND TO_CHAR (AH.CREATION_DATE, 'MM') =
                                          P_MONTH_ID
                                   AND TO_CHAR (AH.CREATION_DATE, 'YYYY') =
-                                         P_YEAR_ID) tabl2
+                                         P_YEAR_ID) TABL2
                    UNION
                    SELECT ROWNUMBER,
                           CREATION_DATE,
@@ -8517,7 +8517,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                   AND TO_CHAR (CREATION_DATE, 'MM') =
                                          P_MONTH_ID
                                   AND TO_CHAR (CREATION_DATE, 'YYYY') =
-                                         P_YEAR_ID) tabl3) tabl
+                                         P_YEAR_ID) TABL3) TABL
          ORDER BY ROWNUMBER;
    END VEHICLE_BALANCE_REPORT;
 
@@ -8674,7 +8674,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
    PROCEDURE TRAN_DEATILS (P_FILTER IN NVARCHAR2, CUR_OUT OUT T_CURSOR)
    IS
-      SQLQUERY   VARCHAR2 (5000);
+      SQLQUERY   VARCHAR2 (20000);
    BEGIN
       SQLQUERY :=
          ' SELECT *
@@ -8687,13 +8687,13 @@ ORDER BY CREATION_DATE DESC ';
    END TRAN_DEATILS;
 
 
-   PROCEDURE TRAN_DEATILSALL (P_STARTDATE   IN     DATE,
-                              P_ENDDATE     IN     DATE,
+   PROCEDURE TRAN_DEATILSALL (P_STARTDATE   IN     NVARCHAR2,
+                              P_ENDDATE     IN     NVARCHAR2,
                               CUR_OUT          OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
-         WITH CTE_DETAILS
+         WITH CTE_TRANS_DEATILS
               AS (SELECT TMS_ID,
                          PLAZA_ID,
                          LANE_ID,
@@ -8701,28 +8701,10 @@ ORDER BY CREATION_DATE DESC ';
                          TRANSACTION_DATETIME,
                          CREATION_DATE,
                          VEHICLESPEED,
-                         RFID_FRONT_ID,
-                         RFID_FRONT_TIMESTAMP,
-                         RFID_FRONT_TAG_ID,
-                         RFID_FRONT_CLASS_ID,
-                         RFID_FRONT_VRN,
-                         RFID_REAR_ID,
-                         RFID_REAR_TIMESTAMP,
-                         RFID_REAR_TAG_ID,
-                         RFID_REAR_CLASS_ID,
-                         RFID_REAR_VRN,
-                         ANPR_FRONT_ID,
-                         ANPR_FRONT_VRN,
-                         ANPR_FRONT_CLASS_ID,
-                         ANPR_FRONT_IMAGE,
-                         ANPR_FRONT_VIDEO_URL,
-                         ANPR_FRONT_SPEED,
-                         ANPR_REAR_ID,
-                         ANPR_REAR_VRN,
-                         ANPR_REAR_CLASS_ID,
-                         ANPR_REAR_IMAGE,
-                         ANPR_REAR_VIDEO_URL,
-                         ANPR_REAR_SPEED,
+                         CT_ENTRY_ID,
+                         CT_ENTRY_ID_REAR,
+                         NF_ENTRY_ID_FRONT,
+                         NF_ENTRY_ID_REAR,
                          IS_BALANCE_UPDATED,
                          IS_VIOLATION,
                          IS_REGISTERED,
@@ -8731,21 +8713,186 @@ ORDER BY CREATION_DATE DESC ';
                          AUDIT_DATE,
                          AUDITED_VEHICLE_CLASS_ID,
                          AUDITED_VRN,
-                         AMOUNT,
-                         CLOSING_BALANCE,
-                         ParentId,
-                         TRANS_STATUS,
-                         GATEWAY_RESPONSE_CODE,
-                         OPERATOR_RESPONSE_CODE
-                    FROM TRANS_DEATILS
+                         MEARGED_TRAN_ID AS PARENTID,
+                         TRANS_STATUS
+                    FROM TBL_TRANSACTION
                    WHERE TRANSACTION_DATETIME BETWEEN TO_DATE (
                                                          P_STARTDATE,
                                                          'DD/MM/YYYY HH24:MI:SS')
                                                   AND TO_DATE (
                                                          P_ENDDATE,
-                                                         'DD/MM/YYYY HH24:MI:SS'))
+                                                         'DD/MM/YYYY HH24:MI:SS')),
+              CTE_DETAILS
+              AS (SELECT T.TMS_ID,
+                         T.PLAZA_ID,
+                         T.LANE_ID,
+                         T.TRANSACTION_ID,
+                         T.TRANSACTION_DATETIME,
+                         T.CREATION_DATE,
+                         T.VEHICLESPEED,
+                         T.CT_ENTRY_ID AS RFID_FRONT_ID,
+                         CTP.TIME_STAMP AS RFID_FRONT_TIMESTAMP,
+                         CTP.OBJECT_ID AS RFID_FRONT_TAG_ID,
+                         CTP.CTP.VEHICLE_CLASS_ID AS RFID_FRONT_CLASS_ID,
+                         CTP.PLATE_NUMBER AS RFID_FRONT_VRN,
+                         T.CT_ENTRY_ID_REAR AS RFID_REAR_ID,
+                         CTPR.TIME_STAMP AS RFID_REAR_TIMESTAMP,
+                         CTPR.OBJECT_ID AS RFID_REAR_TAG_ID,
+                         CTPR.VEHICLE_CLASS_ID AS RFID_REAR_CLASS_ID,
+                         CTPR.PLATE_NUMBER AS RFID_REAR_VRN,
+                         T.NF_ENTRY_ID_FRONT AS ANPR_FRONT_ID,
+                         NFPF.PLATE_NUMBER AS ANPR_FRONT_VRN,
+                         NFPF.VEHICLE_CLASS_ID AS ANPR_FRONT_CLASS_ID,
+                         NFPF.PLATE_THUMBNAIL AS ANPR_FRONT_IMAGE,
+                         NFPF.VIDEO_URL AS ANPR_FRONT_VIDEO_URL,
+                         NFPF.VEHICLE_SPEED AS ANPR_FRONT_SPEED,
+                         T.NF_ENTRY_ID_REAR AS ANPR_REAR_ID,
+                         NFPR.PLATE_NUMBER AS ANPR_REAR_VRN,
+                         NFPR.VEHICLE_CLASS_ID AS ANPR_REAR_CLASS_ID,
+                         NFPR.PLATE_THUMBNAIL AS ANPR_REAR_IMAGE,
+                         NFPR.VIDEO_URL AS ANPR_REAR_VIDEO_URL,
+                         NFPR.VEHICLE_SPEED AS ANPR_REAR_SPEED,
+                         T.IS_BALANCE_UPDATED,
+                         T.IS_VIOLATION,
+                         T.IS_REGISTERED,
+                         T.AUDIT_STATUS,
+                         T.AUDITOR_ID,
+                         T.AUDIT_DATE,
+                         T.AUDITED_VEHICLE_CLASS_ID,
+                         T.AUDITED_VRN,
+                         AH.AMOUNT,
+                         AH.CLOSING_BALANCE,
+                         T.PARENTID,
+                         T.TRANS_STATUS,
+                         NVL (SH.GATEWAY_RESPONSE_CODE, 0)
+                            GATEWAY_RESPONSE_CODE,
+                         NVL (SH.OPERATOR_RESPONSE_CODE, 0)
+                            OPERATOR_RESPONSE_CODE
+                    FROM CTE_TRANS_DEATILS T
+                         LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
+                            ON T.CT_ENTRY_ID = CTP.ENTRY_ID
+                         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
+                            ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+                         LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTPR
+                            ON T.CT_ENTRY_ID_REAR = CTPR.ENTRY_ID
+                         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTPR
+                            ON VC_CTPR.VEHICLE_CLASS_ID =
+                                  CTPR.VEHICLE_CLASS_ID
+                         LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
+                            ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
+                         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF
+                            ON CV_NFPF.VEH_REG_NO = NFPF.PLATE_NUMBER
+                         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
+                            ON NFPF.VEHICLE_CLASS_ID =
+                                  VC_NFPF.VEHICLE_CLASS_ID
+                         LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
+                            ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
+                         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPR
+                            ON CV_NFPR.VEH_REG_NO = NFPR.PLATE_NUMBER
+                         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
+                            ON NFPR.VEHICLE_CLASS_ID =
+                                  VC_NFPR.VEHICLE_CLASS_ID
+                         LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
+                            ON T.TRANSACTION_ID = AH.TRANSACTION_ID
+                         LEFT OUTER JOIN TBL_SMS_COMM_HISTORY SH
+                            ON AH.ENTRY_ID = SH.ACCOUNT_HISTORY_ID),
+              CTE_REPORT
+              AS (SELECT 'TOTAL VEHICLE' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                  UNION ALL
+                  SELECT 'TOTAL REGISTERED' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE NVL (IS_REGISTERED, 0) = 1
+                  UNION ALL
+                  SELECT 'TOTAL UNREGISTERED' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE NVL (IS_REGISTERED, 0) <> 1
+                  UNION ALL
+                  SELECT 'TOTAL IKE' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE (RFID_FRONT_ID > 0 OR RFID_REAR_ID > 0)
+                  UNION ALL
+                  SELECT 'TOTAL ANPR' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE (ANPR_FRONT_ID > 0 OR ANPR_REAR_ID > 0)
+                  UNION ALL
+                  SELECT 'TOTAL DETECTED VRN' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE (   UPPER (ANPR_FRONT_VRN) <> 'NOT DETECTED'
+                          OR UPPER (ANPR_REAR_VRN) <> 'NOT DETECTED')
+                  UNION ALL
+                  SELECT 'TOTAL FRONT UNKNOWN' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 0
+                  UNION ALL
+                  SELECT 'TOTAL FRONT TWO-WHEELED' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 1
+                  UNION ALL
+                  SELECT 'TOTAL FRONT SMALL' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 2
+                  UNION ALL
+                  SELECT 'TOTAL FRONT MEDIUM' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 3
+                  UNION ALL
+                  SELECT 'TOTAL FRONT LARGE' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 4
+                  UNION ALL
+                  SELECT 'TOTAL FRONT UNKNOWN' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 0
+                  UNION ALL
+                  SELECT 'TOTAL REAR TWO-WHEELED' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 1
+                  UNION ALL
+                  SELECT 'TOTAL REAR SMALL' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 2
+                  UNION ALL
+                  SELECT 'TOTAL REAR MEDIUM' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 3
+                  UNION ALL
+                  SELECT 'TOTAL REAR LARGE' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 4
+                  UNION ALL
+                  SELECT 'TOTAL NOT DETECTED VRN' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE (   UPPER (ANPR_FRONT_VRN) = 'NOT DETECTED'
+                          OR UPPER (ANPR_REAR_VRN) = 'NOT DETECTED')
+                  UNION ALL
+                  SELECT 'TOTAL AUTO CHARGED' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE     NVL (IS_BALANCE_UPDATED, 0) <> 1
+                         AND NVL (AUDIT_STATUS, 0) <> 1
+                  UNION ALL
+                  SELECT 'TOTAL MANUAL CHARGED' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE     NVL (IS_BALANCE_UPDATED, 0) <> 1
+                         AND NVL (AUDIT_STATUS, 0) <> 1
+                  UNION ALL
+                  SELECT 'TOTAL SMS SEND' MESSAGE, COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE NVL (GATEWAY_RESPONSE_CODE, 0) <> 0
+                  UNION ALL
+                  SELECT 'TOTAL SUCCESSFUL SEND' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM CTE_DETAILS
+                   WHERE NVL (OPERATOR_RESPONSE_CODE, 0) <> 0
+				   )
          SELECT *
-           FROM CTE_DETAILS;
+           FROM CTE_REPORT;
    END TRAN_DEATILSALL;
 END MLFF_PACKAGE;
 /

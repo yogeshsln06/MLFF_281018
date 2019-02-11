@@ -389,6 +389,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.TransDeatils(filter);
         }
 
+        public static DataTable TransDeatilsReport(string StartDate, string EndDate)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.TransDeatilsReport(StartDate, EndDate);
+        }
+
 
     }
 }

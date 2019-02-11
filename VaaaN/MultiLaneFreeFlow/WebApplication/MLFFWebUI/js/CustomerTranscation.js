@@ -736,7 +736,7 @@ function Complete() {
         alert('You cannot join more than two trancation.');
         return false;
     }
-    if (confirm('Are you sure you want to reviewed ?')) {
+    if (confirm('Are you sure to complete this transaction???')) {
         var Seconds = $("#filterSec").val();
         Seconds = 60;
         var InputData = {
@@ -2390,8 +2390,8 @@ function DownLoadTransactionReport() {
         type: "POST",
         dataType: "json",
         data: JSON.stringify(Inputdata),
-        url: "ReportTransactionData",
         url: "/CSV/ExportCSVTranscations",
+        //url: "/CSV/ExportCSVTranscationsReport",
         contentType: "application/json; charset=utf-8",
         success: function (Path) {
             $('#filterModel').modal('hide');
@@ -2400,10 +2400,17 @@ function DownLoadTransactionReport() {
                 alert(Path)
                 return;
             }
-            if (Path.toLowerCase().search(".csv") > -1 || Path.toLowerCase().search(".pdf") > -1 || Path.toLowerCase().search(".zip") > -1)
-                window.location.href = "../Attachment/ExportFiles/" + Path;
-            else
-                alert(Path);
+            if (Path.toLowerCase().search(".csv") > -1 || Path.toLowerCase().search(".pdf") > -1 || Path.toLowerCase().search(".zip") > -1) {
+                var res = Path.split(";");
+                for (var j = 0; j < res.length; j++) {
+                    //window.location.href = "../Attachment/ExportFiles/" + res[j];
+                    window.open("../Attachment/ExportFiles/" + res[j]);
+                    //setTimeout(function () {
+                      
+                    //}, 500);
+                }
+            }
+
         },
         error: function (ex) {
             $(".animationload").hide();
