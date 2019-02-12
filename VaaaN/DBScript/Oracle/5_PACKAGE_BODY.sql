@@ -1,4 +1,4 @@
-/* Formatted on 12-02-2019 13:21:50 (QP5 v5.215.12089.38647) */
+/* Formatted on 12/02/2019 13:29:01 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -6587,6 +6587,99 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 AND LOWER (CV.VEHICLE_RC_NO) = LOWER (P_VEHICLE_RC_NO)
                 AND LOWER (CA.RESIDENT_ID) = LOWER (P_RESIDENT_ID);
    END VALIDATE_VEHICLE_DETAILS;
+
+   PROCEDURE VALIDATE_VEHICLE_DETAILS_M (P_VEH_REG_NO      IN     NVARCHAR2,
+                                         P_VEHICLE_RC_NO   IN     NVARCHAR2,
+                                         CUR_OUT              OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+         SELECT CV.TMS_ID,
+                CV.ENTRY_ID,
+                CV.ACCOUNT_ID,
+                CV.VEH_REG_NO,
+                CV.TAG_ID,
+                CV.VEHICLE_CLASS_ID,
+                VC.VEHICLE_CLASS_NAME,
+                CV.CREATION_DATE,
+                CV.MODIFICATION_DATE,
+                CV.MODIFIED_BY,
+                CV.TRANSFER_STATUS,
+                CV.VEHICLE_RC_NO,
+                CV.OWNER_NAME,
+                CV.OWNER_ADDRESS,
+                CV.BRAND,
+                CV.VEHICLE_TYPE,
+                CV.VEHICLE_CATEGORY,
+                CV.MODEL_NO,
+                CV.MANUFACTURING_YEAR,
+                CV.CYCLINDER_CAPACITY,
+                CV.FRAME_NUMBER,
+                CV.ENGINE_NUMBER,
+                CV.VEHICLE_COLOR,
+                CV.FUEL_TYPE,
+                (CASE CV.FUEL_TYPE
+                    WHEN 1 THEN 'GASOLINE'
+                    WHEN 2 THEN 'DIESEL'
+                    WHEN 3 THEN 'ELECTRIC'
+                    ELSE 'Unknown'
+                 END)
+                   FUEL_TYPE_NAME,
+                CV.LICENCE_PLATE_COLOR,
+                (CASE CV.LICENCE_PLATE_COLOR
+                    WHEN 1 THEN 'BLACK'
+                    WHEN 2 THEN 'BLUE'
+                    WHEN 3 THEN 'GREEN'
+                    WHEN 4 THEN 'RED'
+                    WHEN 5 THEN 'WHITE'
+                    WHEN 6 THEN 'YELLOW'
+                    ELSE 'Unknown'
+                 END)
+                   LICENCE_PLATE_COLOR_NAME,
+                CV.REGISTRATION_YEAR,
+                CV.VEHICLE_OWNERSHIP_NO,
+                CV.LOCATION_CODE,
+                CV.REG_QUEUE_NO,
+                CV.VEHICLEIMAGE_FRONT,
+                CV.VEHICLEIMAGE_REAR,
+                CV.VEHICLEIMAGE_RIGHT,
+                CV.VEHICLEIMAGE_LEFT,
+                CV.VEHICLE_RC_NO_PATH,
+                CV.EXCEPTION_FLAG,
+                (CASE CV.EXCEPTION_FLAG
+                    WHEN 1 THEN 'CHARGED'
+                    WHEN 2 THEN 'NOT CHARGED'
+                    WHEN 3 THEN 'BLACK LISTED'
+                    ELSE 'Unknown'
+                 END)
+                   EXCEPTION_FLAG_NAME,
+                CV.STATUS,
+                CV.VALID_UNTIL,
+                CV.TID_FRONT,
+                CV.TID_REAR,
+                CV.ACCOUNT_BALANCE,
+                CV.REGISTRATION_THROUGH,
+                CV.IS_DOC_VERIFIED,
+                CV.QUEUE_STATUS,
+                (CASE CV.QUEUE_STATUS
+                    WHEN 1 THEN 'OPEN'
+                    WHEN 2 THEN 'POSTPONED'
+                    WHEN 3 THEN 'PROCESSED'
+                    ELSE 'Unknown'
+                 END)
+                   QUEUE_STATUS_NAME,
+                CA.FIRST_NAME || ' ' || CA.LAST_NAME AS CUSTOMER_NAME,
+                CA.RESIDENT_ID,
+                CA.EMAIL_ID,
+                CA.MOB_NUMBER
+           FROM TBL_CUSTOMER_VEHICLE CV
+                LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA
+                   ON CA.ACCOUNT_ID = CV.ACCOUNT_ID
+                LEFT OUTER JOIN TBL_VEHICLE_CLASS VC
+                   ON VC.VEHICLE_CLASS_ID = CV.VEHICLE_CLASS_ID
+          WHERE     LOWER (CV.VEH_REG_NO) = LOWER (P_VEH_REG_NO)
+                AND LOWER (CV.VEHICLE_RC_NO) = LOWER (P_VEHICLE_RC_NO);
+   END VALIDATE_VEHICLE_DETAILS_M;
 
    PROCEDURE VEHICLE_DETAILS_RESIDENTID (P_RESIDENT_ID   IN     NVARCHAR2,
                                          CUR_OUT            OUT T_CURSOR)
