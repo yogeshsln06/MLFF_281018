@@ -36,6 +36,73 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return provinces;
         }
 
+        public static CBE.ProvinceCBE GetProvinceById(CBE.ProvinceCBE Province)
+        {
+            try
+            {
+
+                CBE.ProvinceCBECollection Provinces = new CBE.ProvinceCBECollection();
+                string spName = Constants.oraclePackagePrefix + "PROVINCE_GETBYID";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_ID", DbType.Int32, Province.ProvinceId, ParameterDirection.Input));
+                Provinces = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
+                return Provinces[0];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static string Insert(CBE.ProvinceCBE Province)
+        {
+            try
+            {
+                string strmsg = "";
+                string spName = Constants.oraclePackagePrefix + "PROVINCE_INSERT";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                //int ProvinceId = 0;
+                //ProvinceId = GetNextValue();
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, Province.TmsId, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_NAME", DbType.String, Province.ProvinceName, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, Province.ModifierId, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, Province.CreationDate, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, Province.ModificationDate, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RETURNMSG", DbType.String, "", ParameterDirection.Output, 100));
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+                return strmsg = (string)command.Parameters["P_RETURNMSG"].Value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static string Update(CBE.ProvinceCBE Province)
+        {
+            try
+            {
+                string strmsg = "";
+                string spName = Constants.oraclePackagePrefix + "Province_Update";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_ID", DbType.Int32, Province.ProvinceId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_NAME", DbType.String, Province.ProvinceName, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, Province.ModifierId, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, Province.ModificationDate, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RETURNMSG", DbType.String, "", ParameterDirection.Output, 100));
+
+
+
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+                return strmsg = (string)command.Parameters["P_RETURNMSG"].Value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
 
         #region HelperMethods
@@ -79,6 +146,50 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             {
                 throw ex;
             }
+        }
+
+        private static int GetNextValue()
+        {
+            //next value will be 1 if there is no row in the datatable.
+            int nextValue = 1;
+
+            try
+            {
+                //Get object collection
+                CBE.ProvinceCBECollection objs = GetAll();
+
+                //Get all objects Id
+                int[] sortedObjsId = new int[objs.Count];
+                for (int i = 0; i < objs.Count; i++)
+                {
+                    sortedObjsId[i] = objs[i].ProvinceId;
+                }
+
+                //Sort the object id
+                Array.Sort(sortedObjsId);
+
+                for (int j = 0; j < sortedObjsId.Length; j++)
+                {
+                    if (j + 1 < sortedObjsId.Length)
+                    {
+                        if (sortedObjsId[j] + 1 < sortedObjsId[j + 1])
+                        {
+                            nextValue = sortedObjsId[j] + 1;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        nextValue = sortedObjsId[sortedObjsId.Length - 1] + 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return nextValue;
         }
         #endregion
     }

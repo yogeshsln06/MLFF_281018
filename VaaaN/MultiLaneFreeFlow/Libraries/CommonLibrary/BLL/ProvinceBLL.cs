@@ -12,5 +12,19 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.ProvinceDAL.GetAll();
         }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE GetProvinceById(CBE.ProvinceCBE Province)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.ProvinceDAL.GetProvinceById(Province);
+        }
+        public static string Insert(VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE Province)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.ProvinceDAL.Insert(Province);
+        }
+
+        public static string Update(VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE Province)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.ProvinceDAL.Update(Province);
+        }
     }
 }

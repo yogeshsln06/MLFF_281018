@@ -36,11 +36,11 @@
                             <div class="form-row">
                                 <div class="form-group col-md-2 required">
                                     @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label Required" })
-                                    @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control", placeholder = "Longitude"} })
+                                    @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control ", onkeypress = "javascript:return isNumber(event)", placeholder = "Longitude"} })
                                 </div>
                                 <div class="form-group col-md-2 required">
                                     @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label Required" })
-                                    @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control", placeholder = "Latitude" } })
+                                    @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control", onkeypress = "javascript:return isNumber(event)", placeholder = "Latitude" } })
                                 </div>
                                 <div class="form-group  col-md-4">
                                    

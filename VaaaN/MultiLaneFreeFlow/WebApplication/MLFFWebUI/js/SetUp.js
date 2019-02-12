@@ -28,7 +28,7 @@ function BindUserData(UserDataList) {
            { 'data': 'EmailId', },
            { 'data': 'RoleName', },
             { 'data': 'UserDob', },
-           {'data': 'CreationDate',},
+           { 'data': 'CreationDate', },
            { 'data': 'AccountExpiryDate', },
            {
                'data': 'UserStatus',
@@ -129,14 +129,14 @@ function EditUser(ctrl, id) {
         success: function (result) {
             $(".animationload").hide();
             $('#partialModel').html(result);
-           $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#SetUpLabel").text("Update [" + $("#FirstName").val() + "]");
             openpopup();
             $("#UserId").attr("disabled", "disabled");
             $("#LoginName").attr("disabled", "disabled");
             $("#Password").attr("disabled", "disabled");
             $("#RoleId").val($("#SlRoleId").val());
-            
+
             $("#btnSave").show();
             $("#btnSave").text("Update");
         },
@@ -159,7 +159,7 @@ function SaveData(action) {
         if (validateUser()) {
             var UserId = $("#UserId").val() || '';
             var PostURL = '/SetUp/UserUpdate';
-           // var ImagePath = $("#ResidentidImagePath").text().trim();
+            // var ImagePath = $("#ResidentidImagePath").text().trim();
             if (UserId == 0) {
                 UserId = 0;
                 PostURL = '/SetUp/AddUser'
@@ -269,7 +269,7 @@ function validateUser() {
         valid = false;
     }
     else {
-       // showerror($("#RoleId"), '');
+        // showerror($("#RoleId"), '');
     }
     return valid;
 }
@@ -857,11 +857,10 @@ function BindLaneData(LaneDataList) {
                     if (oData.LaneTypeId == "1") {
                         $(nTd).html("Normal");
                     }
-                    else
-                    {
+                    else {
                         $(nTd).html("Trans");
                     }
-                  
+
                 }
             },
             {
@@ -1026,7 +1025,7 @@ function EditLane(ctrl, Id) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-           
+
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#SetUpLabel").text("Update [" + $("#LaneName").val() + "]");
@@ -1127,6 +1126,8 @@ function BindGantryData(GantryDataList) {
             { 'data': 'PlazaName' },
             { 'data': 'Location' },
             { 'data': 'IpAddress' },
+            { 'data': 'Longitude' },
+            { 'data': 'Latitude' },
             {
                 'data': 'PlazaId',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -1188,13 +1189,13 @@ function EditGantry(ctrl, Id) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            
+
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#SetUpLabel").text("Update [" + $("#PlazaName").val() + "]");
             $("#PlazaId").attr("disabled", "disabled");
             openpopup();
-           
+
             $("#btnSave").show();
             $("#btnSave").text("Update");
         },
@@ -1214,7 +1215,7 @@ function NewGantry() {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            $("#SetUpLabel").text("Register New Plaza");
+            $("#SetUpLabel").text("Register New Gantry");
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
@@ -1244,6 +1245,8 @@ function SaveGantryData(action) {
                 PlazaName: $("#PlazaName").val(),
                 Location: $("#Location").val(),
                 IpAddress: $("#IpAddress").val(),
+                Longitude: parseFloat($("#Longitude").val()),
+                Latitude: parseFloat($("#Latitude").val()),
             }
             $(".animationload").show();
             $.ajax({
@@ -1337,13 +1340,14 @@ function BindRolesData(RolesDataList) {
             {
                 'data': 'ISActive',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                if (oData.ISActive == 1) {
-                $(nTd).html("Active");
+                    if (oData.ISActive == 1) {
+                        $(nTd).html("Active");
+                    }
+                    else {
+                        $(nTd).html("Deactive");
+                    }
                 }
-                else {
-                $(nTd).html("Deactive");
-                }
-      }},
+            },
             {
                 'data': 'RoleId',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -1405,14 +1409,14 @@ function EditRoles(ctrl, Id) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-           
+
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#ISActive").val() == 1 ? $("#DisplayActive").prop('checked', true) : $("#DisplayActive").prop('checked', false);
             $("#SetUpLabel").text("Update [" + $("#RoleName").val() + "]");
             $("#RoleId").attr("disabled", "disabled");
             openpopup();
-          
+
             $("#btnSave").show();
             $("#btnCancel").hide();
         },
@@ -1519,6 +1523,17 @@ function SaveRolesData(action) {
 /********Roles End**********/
 
 //******Province Start ******
+function validateProvince() {
+    var valid = true;
+    if ($("#ProvinceName").val() == '') {
+        showError($("#ProvinceName"), $("#ProvinceName").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#ProvinceName"), '');
+    }
+    return valid;
+}
 function BindProvinceData(ProvinceDataList) {
     tblProvinceData = $('#tblProvinceData').DataTable({
         data: ProvinceDataList,
@@ -1592,8 +1607,328 @@ function reloadProvinceData() {
 
     });
 }
+function EditProvince(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetProvince?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("Update [" + $("#ProvinceName").val() + "]");
+            $("#ProvinceId").attr("disabled", "disabled");
+            openpopup();
+
+            $("#btnSave").show();
+            $("#btnCancel").hide();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function NewProvince() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "ProvinceNew",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $("#SetUpLabel").text("Register New Province");
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+            $("#ProvinceId").val('0').attr("disabled", "disabled");
+
+            $("#btnSave").show();
+            $("#btnSave").text("Save");
+            $("#btnClose").hide();
+            $("#btnCancel").show();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function SaveProvinceData(action) {
+    if ($("#needs-validation").valid()) {
+        if (validateProvince()) {
+            var Id = $("#ProvinceId").val() || '';
+            var PostURL = '/SetUp/ProvinceUpdate';
+            if (Id == 0) {
+                Id = 0;
+                PostURL = '/SetUp/ProvinceAdd'
+            }
+            var Inputdata = {
+                ProvinceId: Id,
+                ProvinceName: $("#ProvinceName").val(),
+            }
+            $(".animationload").show();
+            $.ajax({
+                type: "POST",
+                url: PostURL,
+                dataType: "JSON",
+                async: true,
+                data: JSON.stringify(Inputdata),
+                contentType: "application/json; charset=utf-8",
+                success: function (resultData) {
+                    $(".animationload").hide();
+                    var meassage = '';
+                    for (var i = 0; i < resultData.length; i++) {
+                        if (resultData[i].ErrorMessage == "success") {
+                            if (action == 'close') {
+                                reloadProvinceData();
+                                closePopup();
+                            }
+                            else {
+                                $("#warning").hide();
+                                ResetFieldes();
+                            }
+                            break;
+                        }
+                        else if (resultData[i].ErrorMessage == 'logout') {
+                            location.href = "../Login/Logout";
+                            break;
+                        }
+                        else {
+                            meassage = meassage + "<li>" + resultData[i].ErrorMessage + "</li>"
+                        }
+                    }
+                    if (meassage != '') {
+                        $("#warning").html("<ul>" + meassage + "</ul>");
+                        $("#warning").show();
+                    }
+                },
+                error: function (ex) {
+                    $(".animationload").hide();
+                }
+            });
+        }
+        else {
+            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").show();
+        }
+    }
+    else {
+        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+        $("#warning").show();
+    }
+}
 //******Province End ******
 
+
+//******District Start ******
+function validateDistrict() {
+    var valid = true;
+    if ($("#DistrictName").val() == '') {
+        showError($("#DistrictName"), $("#DistrictName").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#DistrictName"), '');
+    }
+    return valid;
+}
+function BindDistrictData(DistrictDataList) {
+    tblDistrictData = $('#tblDistrictData').DataTable({
+        data: DistrictDataList,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        scrollY: "42vh",
+        scrollX: false,
+        paging: false,
+        info: false,
+        columns: [
+             {
+                 'data': 'DistrictId',
+                 orderable: false
+             },
+            {
+                'data': 'DistrictId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<a href='javascript:void(0);' onclick='ProvinceDetail(this," + oData.DistrictId + ")'>" + oData.DistrictId + "</a>");
+                }
+            },
+            { 'data': 'DistrictName' },
+            { 'data': 'creationDate' },
+            {
+                'data': 'DistrictId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<div class='dropdown' style='padding-left: 14px;'>" +
+                        "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
+            "<span class='icon-holder'>" +
+                "<i class='c-blue-500 ti-menu-alt'></i>" +
+            "</span>" +
+        "</a>" +
+        " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
+        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditDistrict(this," + oData.DistrictId + ")'>" +
+        "        <span class='title'>Update</span>" +
+        "    </a>" +
+        "</div>" +
+    "</div>");
+                }
+            },
+        ],
+        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+    });
+    tblDistrictData.on('order.dt search.dt', function () {
+        tblDistrictData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    tblDistrictData.columns.adjust();
+    thId = 'tblDistrictDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+function reloadDistrictData() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "DistrictReload",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (data) {
+            $(".animationload").hide();
+            tblDistrictData.clear().draw();
+            tblDistrictData.rows.add(JSON.parse(data));
+            tblDistrictData.columns.adjust().draw();
+
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+
+    });
+}
+function EditDistrict(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetDistrict?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("Update [" + $("#DistrictName").val() + "]");
+            $("#DistrictId").attr("disabled", "disabled");
+            openpopup();
+
+            $("#btnSave").show();
+            $("#btnCancel").hide();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function NewDistrict() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "DistrictNew",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $("#SetUpLabel").text("Register New District");
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+            $("#DistrictId").val('0').attr("disabled", "disabled");
+
+            $("#btnSave").show();
+            $("#btnSave").text("Save");
+            $("#btnClose").hide();
+            $("#btnCancel").show();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function SaveDistrictData(action) {
+    if ($("#needs-validation").valid()) {
+        if (validateDistrict()) {
+            var Id = $("#DistrictId").val() || '';
+            var PostURL = '/SetUp/DistrictUpdate';
+            if (Id == 0) {
+                Id = 0;
+                PostURL = '/SetUp/DistrictAdd'
+            }
+            var Inputdata = {
+                DistrictId: Id,
+                DistrictName: $("#DistrictName").val(),
+            }
+            $(".animationload").show();
+            $.ajax({
+                type: "POST",
+                url: PostURL,
+                dataType: "JSON",
+                async: true,
+                data: JSON.stringify(Inputdata),
+                contentType: "application/json; charset=utf-8",
+                success: function (resultData) {
+                    $(".animationload").hide();
+                    var meassage = '';
+                    for (var i = 0; i < resultData.length; i++) {
+                        if (resultData[i].ErrorMessage == "success") {
+                            if (action == 'close') {
+                                reloadProvinceData();
+                                closePopup();
+                            }
+                            else {
+                                $("#warning").hide();
+                                ResetFieldes();
+                            }
+                            break;
+                        }
+                        else if (resultData[i].ErrorMessage == 'logout') {
+                            location.href = "../Login/Logout";
+                            break;
+                        }
+                        else {
+                            meassage = meassage + "<li>" + resultData[i].ErrorMessage + "</li>"
+                        }
+                    }
+                    if (meassage != '') {
+                        $("#warning").html("<ul>" + meassage + "</ul>");
+                        $("#warning").show();
+                    }
+                },
+                error: function (ex) {
+                    $(".animationload").hide();
+                }
+            });
+        }
+        else {
+            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").show();
+        }
+    }
+    else {
+        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+        $("#warning").show();
+    }
+}
+//******District End ******
 function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();

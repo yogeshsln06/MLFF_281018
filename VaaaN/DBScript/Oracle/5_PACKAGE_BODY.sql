@@ -3688,8 +3688,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            P_PLAZA_NAME      IN NVARCHAR2,
                            P_LOCATION        IN NVARCHAR2,
                            P_IPADDRESS       IN NVARCHAR2,
-						   P_Longitude       IN NUMBER(9,6),
-						   P_Latitude       IN NUMBER(9,6),
+						   P_LONGITUDE       IN NUMBER,
+						   P_LATITUDE       IN NUMBER,
                            P_CREATION_DATE   IN DATE)
    AS
    BEGIN
@@ -3698,16 +3698,16 @@ ORDER BY TRANSACTION_DATETIME DESC';
                              PLAZA_NAME,
                              LOCATION,
                              IPADDRESS,
-							 Longitude,
-							 Latitude,
+							 LONGITUDE,
+							 LATITUDE,
                              CREATION_DATE)
            VALUES (P_TMS_ID,
                    P_PLAZA_ID,
                    P_PLAZA_NAME,
                    P_LOCATION,
                    P_IPADDRESS,
-				   P_Longitude,
-				   P_Latitude ,
+				   P_LONGITUDE,
+				   P_LATITUDE ,
                    P_CREATION_DATE);
    END PLAZA_INSERT;
 
@@ -3718,6 +3718,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            P_PLAZA_NAME          IN NVARCHAR2,
                            P_LOCATION            IN NVARCHAR2,
                            P_IPADDRESS           IN NVARCHAR2,
+						   P_LONGITUDE           IN NUMBER,
+						   P_LATITUDE            IN NUMBER,
                            P_MODIFIER_ID         IN NUMBER,
                            P_MODIFICATION_DATE   IN DATE)
    AS
@@ -3726,6 +3728,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
          SET PLAZA_NAME = P_PLAZA_NAME,
              LOCATION = P_LOCATION,
              IPADDRESS = P_IPADDRESS,
+			 LONGITUDE = P_LONGITUDE,
+			 LATITUDE = P_LATITUDE,
              MODIFIER_ID = P_MODIFIER_ID,
              MODIFICATION_DATE = MODIFICATION_DATE
        WHERE TMS_ID = P_TMS_ID AND PLAZA_ID = P_PLAZA_ID;
@@ -7726,6 +7730,80 @@ ORDER BY TRANSACTION_DATETIME DESC';
    END PROVINCE_GETALL;
 
 
+  PROCEDURE PROVINCE_GETBYID (P_PROVINCE_ID IN NUMBER, CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_PROVINCE
+            WHERE PROVINCE_ID = P_PROVINCE_ID
+         ORDER BY PROVINCE_ID;
+   END PROVINCE_GETBYID;
+
+
+   PROCEDURE PROVINCE_INSERT (
+                          P_TMS_ID                  IN     NUMBER,
+                          P_PROVINCE_NAME           IN     NVARCHAR2,
+                          P_CREATION_DATE           IN     DATE,
+						  P_MODIFIER_ID             IN     NUMBER,
+                          P_MODIFICATION_DATE       IN     DATE,
+                          P_RETURNMSG              OUT NVARCHAR2)
+   AS
+      C_COUNT   NUMBER;
+   BEGIN
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_PROVINCE
+       WHERE PROVINCE_NAME = P_PROVINCE_NAME;
+
+      IF (C_COUNT > 0)
+      THEN
+         P_RETURNMSG := 'PROVINCE FOUND';
+      ELSE
+         INSERT INTO TBL_PROVINCE (
+		                       TMS_ID,
+		                       PROVINCE_ID,
+                               PROVINCE_NAME,
+                               MODIFIER_ID,
+                               CREATION_DATE,
+                               TRANSFER_STATUS)
+              VALUES (P_TMS_ID,NVL ( (SELECT MAX (PROVINCE_ID) FROM TBL_PROVINCE), 0) + 1,
+                      P_PROVINCE_NAME,
+                      P_MODIFIER_ID,
+                      P_CREATION_DATE,
+                      1);
+         P_RETURNMSG := 'PROVINCE CREATED';
+      END IF;
+   END PROVINCE_INSERT;
+
+
+
+    PROCEDURE PROVINCE_UPDATE (P_PROVINCE_ID             IN     NUMBER,
+                          P_PROVINCE_NAME                IN     NVARCHAR2,
+                          P_MODIFIER_ID                  IN     NUMBER,
+                          P_MODIFICATION_DATE            IN     DATE,
+                          P_RETURNMSG                    OUT NVARCHAR2)
+   AS
+      C_COUNT   NUMBER;
+   BEGIN
+         SELECT COUNT (*)
+           INTO C_COUNT
+           FROM TBL_PROVINCE
+          WHERE PROVINCE_NAME = P_PROVINCE_NAME ;
+
+         IF (C_COUNT > 0)
+         THEN
+            P_RETURNMSG := 'PROVINCE FOUND';
+         ELSE
+            UPDATE TBL_PROVINCE
+               SET PROVINCE_NAME = P_PROVINCE_NAME,
+                   MODIFIER_ID = P_MODIFIER_ID,
+                   MODIFICATION_DATE = P_MODIFICATION_DATE
+             WHERE PROVINCE_ID = P_PROVINCE_ID;
+
+            P_RETURNMSG := 'PROVINCE UPDATED';
+         END IF;
+   END PROVINCE_UPDATE;
 
    /*CITY*/
 

@@ -564,7 +564,9 @@ namespace MLFFWebUI.Controllers
                     PalazaDataList = PlazaBLL.GetAllAsList().Cast<PlazaCBE>().ToList();
 
                     List<PlazaCBE> PlazaNamefiltered = PalazaDataList.FindAll(x => x.PlazaName.ToLower() == Plaza.PlazaName.ToLower() && x.PlazaId != Plaza.PlazaId);
-                    List<PlazaCBE> IpAddressfiltered = PalazaDataList.FindAll(x => x.IpAddress == Plaza.IpAddress);
+                    List<PlazaCBE> IpAddressfiltered = PalazaDataList.FindAll(x => x.IpAddress == Plaza.IpAddress && x.PlazaId != Plaza.PlazaId);
+                    List<PlazaCBE> Longitudefiltered = PalazaDataList.FindAll(x => x.Longitude == Plaza.Longitude && x.PlazaId != Plaza.PlazaId);
+                    List<PlazaCBE> Latitudefiltered = PalazaDataList.FindAll(x => x.Latitude == Plaza.Latitude && x.PlazaId != Plaza.PlazaId);
                     if (PlazaNamefiltered.Count > 0)
                     {
                         ModelStateList objModelState = new ModelStateList();
@@ -577,10 +579,23 @@ namespace MLFFWebUI.Controllers
                         objModelState.ErrorMessage = "IpAddress already exists.";
                         objResponseMessage.Add(objModelState);
                     }
+                    if (Longitudefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Longitude already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (Latitudefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Latitude already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
                     if (objResponseMessage.Count == 0)
                     {
-                       // Plaza.TMSId = 1;
+                        Plaza.TmsId = 1;
                         Plaza.CreationDate = DateTime.Now;
+                        Plaza.ModifierId= Convert.ToInt16(Session["LoggedUserId"]);
                         int id = PlazaBLL.Insert(Plaza);
                         if (id > 0)
                         {
@@ -607,6 +622,7 @@ namespace MLFFWebUI.Controllers
             return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
 
+
         [HttpPost]
         public JsonResult GantryUpdate(PlazaCBE Plaza)
         {
@@ -625,6 +641,8 @@ namespace MLFFWebUI.Controllers
 
                     List<PlazaCBE> PlazaNamefiltered = PalazaDataList.FindAll(x => x.PlazaName.ToLower() == Plaza.PlazaName.ToLower() && x.PlazaId != Plaza.PlazaId);
                     List<PlazaCBE> IpAddressfiltered = PalazaDataList.FindAll(x => x.IpAddress == Plaza.IpAddress && x.PlazaId != Plaza.PlazaId);
+                    List<PlazaCBE> Longitudefiltered = PalazaDataList.FindAll(x => x.Longitude == Plaza.Longitude && x.PlazaId != Plaza.PlazaId);
+                    List<PlazaCBE> Latitudefiltered = PalazaDataList.FindAll(x => x.Latitude == Plaza.Latitude && x.PlazaId != Plaza.PlazaId);
                     if (PlazaNamefiltered.Count > 0)
                     {
                         ModelStateList objModelState = new ModelStateList();
@@ -637,11 +655,24 @@ namespace MLFFWebUI.Controllers
                         objModelState.ErrorMessage = "IpAddress already exists.";
                         objResponseMessage.Add(objModelState);
                     }
+                    if (Longitudefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Longitude already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (Latitudefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Latitude already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
                     if (objResponseMessage.Count == 0)
                     {
-                        // Plaza.TMSId = 1;
+                        Plaza.TmsId = 1;
                         Plaza.CreationDate = DateTime.Now;
-                         PlazaBLL.Update(Plaza);
+                        Plaza.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        PlazaBLL.Update(Plaza);
                        
                             ModelStateList objModelState = new ModelStateList();
                             objModelState.ErrorMessage = "success";
@@ -1447,6 +1478,138 @@ namespace MLFFWebUI.Controllers
             }
             return Json(result.Data, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public ActionResult GetProvince(int id, string urltoken)
+        {
+            ProvinceCBE Province = new ProvinceCBE();
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else {
+                    Province.ProvinceId = id;
+                    Province = VaaaN.MLFF.Libraries.CommonLibrary.BLL.ProvinceBLL.GetProvinceById(Province);
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("GetProvince " + ex);
+            }
+            return View("ProvinceListPopUp", Province);
+        }
+
+        [HttpGet]
+        public ActionResult ProvinceNew()
+        {
+            return View("ProvinceListPopUp");
+        }
+
+        [HttpPost]
+        public JsonResult ProvinceAdd(ProvinceCBE Province)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else
+                {
+                    List<ProvinceCBE> PalazaDataList = new List<ProvinceCBE>();
+                    PalazaDataList = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+
+                    List<ProvinceCBE> PlazaNamefiltered = PalazaDataList.FindAll(x => x.ProvinceName.ToLower() == Province.ProvinceName.ToLower() && x.ProvinceId != Province.ProvinceId);
+                    if (PlazaNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Gantry Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                        Province.TmsId = 1;
+                        Province.CreationDate = DateTime.Now;
+                        Province.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        string id = ProvinceBLL.Insert(Province);
+                        if (id != "")
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to Insert Province in SetUp Controller" + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult ProvinceUpdate(ProvinceCBE Province)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else
+                {
+                    List<ProvinceCBE> ProvinceDataList = new List<ProvinceCBE>();
+                    ProvinceDataList = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+
+                    List<ProvinceCBE> ProvinceNamefiltered = ProvinceDataList.FindAll(x => x.ProvinceName.ToLower() == Province.ProvinceName.ToLower() && x.ProvinceId != Province.ProvinceId);
+                    if (ProvinceNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Province Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    
+                    if (objResponseMessage.Count == 0)
+                    {
+                        Province.TmsId = 1;
+                        Province.ModificationDate = DateTime.Now;
+                        Province.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        ProvinceBLL.Update(Province);
+
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "success";
+                        objResponseMessage.Add(objModelState);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Province Update " + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
         #region Kabupaten/Kota Section
@@ -1459,13 +1622,168 @@ namespace MLFFWebUI.Controllers
             try
             {
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kabupaten/Kota");
-                ViewData["Kabupaten/Kota"] = ProvinceBLL.GetAll();
+                ViewData["Kabupaten/Kota"] = DistrictBLL.GetAll();
             }
             catch (Exception ex)
             {
                 HelperClass.LogMessage("Failed To Load DistrictList List " + ex.Message.ToString());
             }
             return View();
+        }
+
+        public JsonResult DistrictReload()
+        {
+            List<DistrictCBE> DistrictDataList = new List<DistrictCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+                result.Data = objResponseMessage;
+            }
+            try
+            {
+                DistrictDataList = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList(); ;
+                result.Data = DistrictDataList;
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To refresh District List " + ex.Message.ToString());
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetDistrict(int id, string urltoken)
+        {
+            DistrictCBE District = new DistrictCBE();
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else {
+                    District.DistrictId = id;
+                    District = VaaaN.MLFF.Libraries.CommonLibrary.BLL.DistrictBLL.GetDistrictById(District);
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("GetDisrict " + ex);
+            }
+            return View("DistrictListPopUp", District);
+        }
+
+        [HttpGet]
+        public ActionResult DistrictNew()
+        {
+            return View("DistrictListPopUp");
+        }
+
+        [HttpPost]
+        public JsonResult DistrictAdd(DistrictCBE District)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else
+                {
+                    List<DistrictCBE> DistrictDataList = new List<DistrictCBE>();
+                    DistrictDataList = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList();
+
+                    List<DistrictCBE> DistrictNamefiltered = DistrictDataList.FindAll(x => x.DistrictName.ToLower() == District.DistrictName.ToLower() && x.DistrictId != District.DistrictId);
+                    if (DistrictNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "District Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                        District.TmsId = 1;
+                        District.CreationDate = DateTime.Now;
+                        District.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        string id = DistrictBLL.Insert(District);
+                        if (id != "")
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to Insert District in SetUp Controller" + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult DistrictUpdate(DistrictCBE District)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else
+                {
+                    List<DistrictCBE> DistrictDataList = new List<DistrictCBE>();
+                    DistrictDataList = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList();
+
+                    List<DistrictCBE> ProvinceNamefiltered = DistrictDataList.FindAll(x => x.DistrictName.ToLower() == District.DistrictName.ToLower() && x.DistrictId != District.DistrictId);
+                    if (ProvinceNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "District Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+
+                    if (objResponseMessage.Count == 0)
+                    {
+                        District.TmsId = 1;
+                        District.ModificationDate = DateTime.Now;
+                        District.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        DistrictBLL.Update(District);
+
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "success";
+                        objResponseMessage.Add(objModelState);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Province Update " + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

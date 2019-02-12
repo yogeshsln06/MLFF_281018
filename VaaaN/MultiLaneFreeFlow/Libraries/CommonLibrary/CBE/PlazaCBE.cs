@@ -15,8 +15,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         private string plazaName;
         private string location;
         private string ipAddress;
-        private string longitude;
-        private string latitude;
+        private Decimal longitude;
+        private Decimal latitude;
         private Int32 modifierId;
         private DateTime creationDate;
         private DateTime modificationDate;
@@ -28,8 +28,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             this.PlazaName = string.Empty;
             this.Location = string.Empty;
             this.IpAddress = string.Empty;
-            this.longitude = string.Empty;
-            this.latitude = string.Empty;
+            this.Longitude = 0;
+            this.Latitude = 0;
             this.ModifierId = 0;
             this.CreationDate = DateTime.Now;
             this.ModificationDate = DateTime.Now;
@@ -47,7 +47,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.tmsId = value;
             }
         }
-        
+
         public int PlazaId
         {
             get
@@ -61,7 +61,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
         [Required]
-        [Display(Name="PlazaName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Gantry Name")]
         public string PlazaName
         {
             get
@@ -74,7 +74,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.plazaName = value;
             }
         }
-        [Display(Name = "Location", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Display(Name = "Location")]
         [Required]
         public string Location
         {
@@ -104,7 +104,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Required]
-        public string Longitude
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N6}")]
+        public Decimal Longitude
         {
             get
             {
@@ -118,7 +119,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Required]
-        public string Latitude
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N6}")]
+        public Decimal Latitude
         {
             get
             {

@@ -1,0 +1,41 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE
+@{
+    Layout = null;
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Html.BeginForm("GetGantry", "SetUp", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <fieldset id="fildset">
+                    <div class="modal-body" style="height:400px; overflow-y:scroll;">
+                        <h5 class="c-mygrey-900 heading"><strong>Province </strong>Information<span></span></h5>
+                        <div class="mT-5">
+                            <div class="form-row">
+                                <div class="form-group col-md-6 required">
+                                    @Html.LabelFor(model => model.ProvinceId, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.ProvinceId, new { htmlAttributes = new { @class = "form-control", placeholder = "Gantry ID", autofocus = "true" } })
+                                </div>
+                                <div class="form-group col-md-6 required">
+                                    @Html.LabelFor(model => model.ProvinceName, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.ProvinceName, new { htmlAttributes = new { @class = "form-control", placeholder = "Gantry Name", autofocus = "true" } })
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </fieldset>
+            }
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="alert alert-warning" role="alert" id="warning">
+    </div>
+    <button type="button" class="btn btn-outline-danger" id="btnCancel" onclick="ResetFieldes();">Cancel</button>
+    <button type="button" class="btn btn-outline-primary" onclick="SaveProvinceData('close')" id="btnSave">Save</button>
+</div>
+

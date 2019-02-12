@@ -17,25 +17,19 @@
                         <div class="mT-10">
                             <div class="gap-5 peers" style="float:right;overflow: visible !important;">
                                 <div class="peer">
-                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewUser();">New</button>
+                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewCity();">New</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <table id="tblUserData" class="table table-striped table-bordered table-condensed table-hover" cellspacing="0" width="100%">
+                <table id="tblDistrictData" class="table table-striped table-bordered table-condensed table-hover" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                           <th id="tblUserDataTR" style="text-align: center; vertical-align: middle;">No</th>
-                            <th style="text-align:center; vertical-align: middle;">Login Name</th>
-                            <th style="text-align:center; vertical-align: middle;">Name</th>
-                            <th style="text-align:center; vertical-align: middle;">Mobile No</th>
-                            <th style="text-align:center; vertical-align: middle;">Email ID</th>
-                            <th style="text-align:center; vertical-align: middle;">Role</th>
-                            <th style="text-align:center; vertical-align: middle;">Dob</th>
+                           <th id="tblDistrictDataTR" style="text-align: center; vertical-align: middle;">No</th>
+                            <th style="text-align:center; vertical-align: middle;">DistrictId</th>
+                            <th style="text-align:center; vertical-align: middle;">District Name</th>
                             <th style="text-align:center; vertical-align: middle;">Creation Date</th>
-                            <th style="text-align:center; vertical-align: middle;">Account Expiry Date</th>
-                            <th style="text-align:center; vertical-align: middle;">UserStatus</th>
                             <th style="text-align:center; vertical-align: middle;" class="no-rt-border"></th>
                          </tr>
                     </thead>
@@ -50,7 +44,7 @@
 <script src="~/js/SetUp.js"></script>
 <script>
     $(document).ready(function () {
-        UserDataList = @Html.Raw(Json.Encode(ViewData["UserDataList"]));
-        BindUserData(UserDataList);
+        DistrictDataList = @Html.Raw(Json.Encode(ViewData["Kabupaten/Kota"]));
+        BindDistrictData(DistrictDataList);
     });
 </script>

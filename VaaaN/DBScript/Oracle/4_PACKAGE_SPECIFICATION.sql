@@ -647,11 +647,13 @@ AS
                                           CUR_OUT           OUT T_CURSOR);
 
    /*PLAZA*/
-   PROCEDURE PLAZA_INSERT (P_TMS_ID          IN NUMBER,
+      PROCEDURE PLAZA_INSERT (P_TMS_ID          IN NUMBER,
                            P_PLAZA_ID        IN NUMBER,
                            P_PLAZA_NAME      IN NVARCHAR2,
                            P_LOCATION        IN NVARCHAR2,
                            P_IPADDRESS       IN NVARCHAR2,
+						   P_LONGITUDE       IN NUMBER,
+						   P_LATITUDE       IN NUMBER,
                            P_CREATION_DATE   IN DATE);
 
    PROCEDURE PLAZA_UPDATE (P_TMS_ID              IN NUMBER,
@@ -659,6 +661,8 @@ AS
                            P_PLAZA_NAME          IN NVARCHAR2,
                            P_LOCATION            IN NVARCHAR2,
                            P_IPADDRESS           IN NVARCHAR2,
+						   P_LONGITUDE           IN NUMBER,
+						   P_LATITUDE            IN NUMBER,
                            P_MODIFIER_ID         IN NUMBER,
                            P_MODIFICATION_DATE   IN DATE);
 
@@ -1216,7 +1220,21 @@ AS
 
    /*PROVINCE*/
    PROCEDURE PROVINCE_GETALL (CUR_OUT OUT T_CURSOR);
+   PROCEDURE PROVINCE_GETBYID (P_PROVINCE_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
+    PROCEDURE PROVINCE_INSERT (
+                          P_TMS_ID        IN     NUMBER,
+                          P_PROVINCE_NAME           IN     NVARCHAR2,
+                          P_CREATION_DATE           IN     DATE,
+						  P_MODIFIER_ID             IN     NUMBER,
+                          P_MODIFICATION_DATE       IN     DATE,
+                          P_RETURNMSG              OUT NVARCHAR2);
+
+	   PROCEDURE PROVINCE_UPDATE (P_PROVINCE_ID             IN     NUMBER,
+                          P_PROVINCE_NAME                IN     NVARCHAR2,
+                          P_MODIFIER_ID                  IN     NUMBER,
+                          P_MODIFICATION_DATE            IN     DATE,
+                          P_RETURNMSG                    OUT NVARCHAR2);					 
    /*CITY*/
    PROCEDURE CITY_GETALL (CUR_OUT OUT T_CURSOR);
 

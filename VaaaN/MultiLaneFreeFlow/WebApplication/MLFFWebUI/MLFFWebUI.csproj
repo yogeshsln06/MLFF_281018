@@ -372,6 +372,8 @@
     <Content Include="Views\SetUp\ProvinceList.cshtml" />
     <Content Include="Views\SetUp\RoleListPopUp.cshtml" />
     <Content Include="Views\SetUp\UserPopUp.cshtml" />
+    <Content Include="Views\SetUp\ProvinceListPopUp.cshtml" />
+    <Content Include="Views\SetUp\DistrictList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
