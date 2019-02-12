@@ -11,7 +11,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
     {
         private Int32 tmsId;
         private Int32 cityId;
-        private Int32 provinceId;
         private Int32 districtId;
         private String districtName;
         private Int32 districtCode;
@@ -44,18 +43,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.cityId = value;
             }
         }
-        public int ProvinceId
-        {
-            get
-            {
-                return this.provinceId;
-            }
-
-            set
-            {
-                this.provinceId = value;
-            }
-        }
+       
 
         public int DistrictId
         {
@@ -152,7 +140,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         {
             this.tmsId = 0;
             this.cityId = 0;
-            this.provinceId = 0;
             this.districtId = 0;
             this.districtName = string.Empty;
             this.districtCode = 0;
@@ -166,7 +153,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             StringBuilder sb = new StringBuilder();
 
             sb.Append("tmsId = " + this.tmsId + Environment.NewLine);
-            sb.Append("provinceId = " + this.provinceId + Environment.NewLine);
+            sb.Append("cityId = " + this.cityId + Environment.NewLine);
             sb.Append("districtId = " + this.districtId + Environment.NewLine);
             sb.Append("districtName = " + this.districtName + Environment.NewLine);
             sb.Append("districtCode = " + this.districtCode + Environment.NewLine);

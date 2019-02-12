@@ -7926,7 +7926,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    END CITY_GETBYID;
 
 
-   PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
+PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
                           P_PROVINCE_ID     IN     NUMBER,
                           P_CITY_NAME       IN     NVARCHAR2,
                           P_CREATION_DATE   IN     DATE,
@@ -7945,6 +7945,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
          P_RETURNMSG := 'CITY FOUND';
       ELSE
          INSERT INTO TBL_CITY (TMS_ID,
+		                       CITY_ID,
                                PROVINCE_ID,
                                CITY_NAME,
                                MODIFIER_ID,
@@ -7952,6 +7953,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                TRANSFER_STATUS)
               VALUES (P_TMS_ID,
                       NVL ( (SELECT MAX (CITY_ID) FROM TBL_CITY), 0) + 1,
+					  P_PROVINCE_ID,
                       P_CITY_NAME,
                       P_MODIFIER_ID,
                       P_CREATION_DATE,
@@ -7960,6 +7962,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
          P_RETURNMSG := 'CITY CREATED';
       END IF;
    END CITY_INSERT;
+
 
 
    PROCEDURE CITY_UPDATE (P_CITY_ID             IN     NUMBER,
