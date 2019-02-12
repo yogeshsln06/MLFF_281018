@@ -12,5 +12,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CityDAL.GetByProvinceId(city);
         }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBECollection GetAll()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CityDAL.GetAll();
+        }
+
+        public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE GetCityById(CBE.CityCBE city)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CityDAL.GetCityById(city);
+        }
+        public static string Insert(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE city)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CityDAL.Insert(city);
+        }
+
+        public static string Update(VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE city)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CityDAL.Update(city);
+        }
     }
 }

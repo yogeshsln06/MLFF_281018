@@ -31,7 +31,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.tmsId = value;
             }
         }
-
         public int CityId
         {
             get
@@ -44,6 +43,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.cityId = value;
             }
         }
+       
 
         public int DistrictId
         {
@@ -153,7 +153,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             StringBuilder sb = new StringBuilder();
 
             sb.Append("tmsId = " + this.tmsId + Environment.NewLine);
-            sb.Append("cityId = " + this.cityId + Environment.NewLine);
             sb.Append("districtId = " + this.districtId + Environment.NewLine);
             sb.Append("districtName = " + this.districtName + Environment.NewLine);
             sb.Append("districtCode = " + this.districtCode + Environment.NewLine);

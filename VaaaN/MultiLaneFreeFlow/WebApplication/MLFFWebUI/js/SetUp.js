@@ -1726,6 +1726,209 @@ function SaveProvinceData(action) {
 }
 //******Province End ******
 
+//******City Start ******
+function validateCity() {
+    var valid = true;
+    if ($("#CityName").val() == '') {
+        showError($("#CityName"), $("#CityName").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#CityName"), '');
+    }
+    return valid;
+}
+function BindCityData(CityDataList) {
+    tblCityData = $('#tblCityData').DataTable({
+        data: CityDataList,
+        "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
+        scrollY: "42vh",
+        scrollX: false,
+        paging: false,
+        info: false,
+        columns: [
+             {
+                 'data': 'CityId',
+                 orderable: false
+             },
+            {
+                'data': 'CityId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<a href='javascript:void(0);' onclick='ProvinceDetail(this," + oData.CityId + ")'>" + oData.CityId + "</a>");
+                }
+            },
+            { 'data': 'CityName', },
+            {
+                'data': 'CityId',
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    $(nTd).html("<div class='dropdown' style='padding-left: 14px;'>" +
+                        "<a class='dropdown-toggle no-after peers fxw-nw ai-c lh-1' data-toggle='dropdown' href='javascript:void(0);' id='dropdownMenuButton' aria-haspopup='true' aria-expanded='false' onclick='openFilter(this)' id='gridbtn'>" +
+            "<span class='icon-holder'>" +
+                "<i class='c-blue-500 ti-menu-alt'></i>" +
+            "</span>" +
+        "</a>" +
+        " <div class='dropdown-menu dropdown-menu-right myfilter gridbtn' role='menu' id='ddlFilter' style='width:160px; left:110px!important;'>" +
+        "    <a class='dropdown-item' href='javascript:void(0);' onclick='EditCity(this," + oData.CityId + ")'>" +
+        "        <span class='title'>Update</span>" +
+        "    </a>" +
+        "</div>" +
+    "</div>");
+                }
+            },
+        ],
+        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+    });
+    tblCityData.on('order.dt search.dt', function () {
+        tblCityData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+    $('.dataTables_filter input').attr("placeholder", "Search this list…");
+    tblCityData.columns.adjust();
+    thId = 'tblCityDataTR';
+    myVar = setInterval("myclick()", 500);
+}
+function reloadCity() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "CityReload",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (data) {
+            $(".animationload").hide();
+            tblCityData.clear().draw();
+            tblCityData.rows.add(JSON.parse(data));
+            tblCityData.columns.adjust().draw();
+
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+
+    });
+}
+function EditCity(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetCity?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("Update [" + $("#CityName").val() + "]");
+            $("#CityId").attr("disabled", "disabled");
+            openpopup();
+
+            $("#btnSave").show();
+            $("#btnCancel").hide();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function NewCity() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "CityNew",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $("#SetUpLabel").text("Register New Kabupaten/Kota");
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+            $("#CityId").val('0').attr("disabled", "disabled");
+
+            $("#btnSave").show();
+            $("#btnSave").text("Save");
+            $("#btnClose").hide();
+            $("#btnCancel").show();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
+
+function SaveCityData(action) {
+    if ($("#needs-validation").valid()) {
+        if (validateCity()) {
+            var Id = $("#CityId").val() || '';
+            var PostURL = '/SetUp/CityUpdate';
+            if (Id == 0) {
+                Id = 0;
+                PostURL = '/SetUp/CityAdd'
+            }
+            var Inputdata = {
+                CityId: Id,
+                CityName: $("#CityName").val(),
+                ProvinceId: $("#ProvinceId").val(),
+            }
+            $(".animationload").show();
+            $.ajax({
+                type: "POST",
+                url: PostURL,
+                dataType: "JSON",
+                async: true,
+                data: JSON.stringify(Inputdata),
+                contentType: "application/json; charset=utf-8",
+                success: function (resultData) {
+                    $(".animationload").hide();
+                    var meassage = '';
+                    for (var i = 0; i < resultData.length; i++) {
+                        if (resultData[i].ErrorMessage == "success") {
+                            if (action == 'close') {
+                                reloadProvinceData();
+                                closePopup();
+                            }
+                            else {
+                                $("#warning").hide();
+                                ResetFieldes();
+                            }
+                            break;
+                        }
+                        else if (resultData[i].ErrorMessage == 'logout') {
+                            location.href = "../Login/Logout";
+                            break;
+                        }
+                        else {
+                            meassage = meassage + "<li>" + resultData[i].ErrorMessage + "</li>"
+                        }
+                    }
+                    if (meassage != '') {
+                        $("#warning").html("<ul>" + meassage + "</ul>");
+                        $("#warning").show();
+                    }
+                },
+                error: function (ex) {
+                    $(".animationload").hide();
+                }
+            });
+        }
+        else {
+            $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+            $("#warning").show();
+        }
+    }
+    else {
+        $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
+        $("#warning").show();
+    }
+}
+//******City End ******
+
 
 //******District Start ******
 function validateDistrict() {
