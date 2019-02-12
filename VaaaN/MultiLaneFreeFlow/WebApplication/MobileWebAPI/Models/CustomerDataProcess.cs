@@ -104,8 +104,26 @@ namespace MobileWebAPI.Models
         public Int32 CustomerVehicleId { get; set; }
     }
 
-    public class CustomerVehicleInformationforTopup : CustomerVehicleInformation
+    public class CustomerVehicleInformationforTopup1 : CustomerVehicleInformation
     {
+        [Display(Name = "Top-Up Amount")]
+        [Required(ErrorMessage = "Top-Up Amount is required")]
+        //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Invalid price")]
+        [Range(10000, 1000000, ErrorMessage = "Top-Up must be 10000 to 1000000")]
+        public Decimal TopUpAmount { get; set; }
+    }
+
+    public class CustomerVehicleInformationforTopup
+    {
+        [Display(Name = "Vehicle registration certificate number")]
+        [Required(ErrorMessage = "The Vehicle registration certificate number is required")]
+        public String VehicleRegistrationCertificateNumber { get; set; }
+
+        [Display(Name = "Vehicle Registration Number")]
+        [Required(ErrorMessage = "The vehicle registration number is required")]
+        [StringLength(9, ErrorMessage = "Vehicle registration number max length is 9")]
+        public String VehicleRegistrationNumber { get; set; }
+
         [Display(Name = "Top-Up Amount")]
         [Required(ErrorMessage = "Top-Up Amount is required")]
         //[RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Invalid price")]
@@ -156,7 +174,7 @@ namespace MobileWebAPI.Models
         [Display(Name = "TID")]
         [Required(ErrorMessage = "The TID is required")]
         public String TID { get; set; }
-       
+
     }
 
     public class VehicleTransactionHistorySummary

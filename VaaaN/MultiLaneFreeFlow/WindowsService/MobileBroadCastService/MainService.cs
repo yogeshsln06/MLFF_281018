@@ -38,15 +38,15 @@ namespace MobileBroadCastService
             //OnStart(new string[] { "" });
         }
 
-        //static void Main()
-        //{
-        //    ServiceBase[] ServicesToRun;
-        //    ServicesToRun = new ServiceBase[]
-        //    {
-        //        new MainService()
-        //    };
-        //    ServiceBase.Run(ServicesToRun);
-        //}
+        static void Main()
+        {
+            ServiceBase[] ServicesToRun;
+            ServicesToRun = new ServiceBase[]
+            {
+                new MainService()
+            };
+            ServiceBase.Run(ServicesToRun);
+        }
         #endregion
 
         #region OnStart/ OnStop
@@ -136,8 +136,10 @@ namespace MobileBroadCastService
         {
             while (!stopThread)
             {
+               
                 try
                 {
+                    //LogMessage("Checking");
                     UpdateAccountBalance();
                 }
                 catch (Exception ex)
@@ -168,10 +170,10 @@ namespace MobileBroadCastService
             {
                 LogMessage("Failed to send Mobile." + ex.Message);
             }
-            finally
-            {
-                Thread.Sleep(2000);
-            }
+            //finally
+            //{
+            //    Thread.Sleep(2000);
+            //}
         }
 
         private void threadNotificationBoradCastFunction()
@@ -209,10 +211,10 @@ namespace MobileBroadCastService
             {
                 LogMessage("Failed to send Mobile." + ex.Message);
             }
-            finally
-            {
-                Thread.Sleep(2000);
-            }
+            //finally
+            //{
+            //    Thread.Sleep(2000);
+            //}
         }
 
         public void SendBrodcastStatus(string responseString, string Id, string APIfor)

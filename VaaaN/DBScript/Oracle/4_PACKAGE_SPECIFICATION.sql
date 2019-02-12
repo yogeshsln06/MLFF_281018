@@ -1,4 +1,4 @@
-/* Formatted on 12-02-2019 13:21:11 (QP5 v5.215.12089.38647) */
+/* Formatted on 12/02/2019 13:28:37 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -1101,6 +1101,10 @@ AS
                                        P_RESIDENT_ID     IN     NVARCHAR2,
                                        P_VEHICLE_RC_NO   IN     NVARCHAR2,
                                        CUR_OUT              OUT T_CURSOR);
+
+   PROCEDURE VALIDATE_VEHICLE_DETAILS_M (P_VEH_REG_NO      IN     NVARCHAR2,
+                                         P_VEHICLE_RC_NO   IN     NVARCHAR2,
+                                         CUR_OUT              OUT T_CURSOR);
 
    PROCEDURE VEHICLE_DETAILS_RESIDENTID (P_RESIDENT_ID   IN     NVARCHAR2,
                                          CUR_OUT            OUT T_CURSOR);

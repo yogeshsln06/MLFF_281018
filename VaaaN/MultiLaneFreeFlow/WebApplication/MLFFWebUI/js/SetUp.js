@@ -27,9 +27,18 @@ function BindUserData(UserDataList) {
            { 'data': 'MobileNo', },
            { 'data': 'EmailId', },
            { 'data': 'RoleName', },
-            { 'data': 'UserDob', },
-           { 'data': 'CreationDate', },
-           { 'data': 'AccountExpiryDate', },
+           {
+               'data': 'UserDob',
+               fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                   $(nTd).html(DateFormatTime(oData.UserDob));
+               }
+           },
+           {
+               'data': 'AccountExpiryDate',
+               fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                   $(nTd).html(DateFormatTime(oData.AccountExpiryDate));
+               }
+           },
            {
                'data': 'UserStatus',
                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -2158,3 +2167,18 @@ function ResetFieldes() {
     $("#fildset").find('select').val(null);
     $('input[type=checkbox]').prop('checked', false);
 }
+
+function DateFormatTime(newDate) {
+
+    var pattern = /Date\(([^)]+)\)/;
+    var results = pattern.exec(newDate);
+    var d = new Date(parseFloat(results[1]));
+    var date = new Date(d).toDateString("yyyy/MM/dd");
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = monthNames[d.getMonth()];
+    yy = d.getFullYear();
+    return dd + '-' + mm + '-' + +yy;
+}
+
+var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
