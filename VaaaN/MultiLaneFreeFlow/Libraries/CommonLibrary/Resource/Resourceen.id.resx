@@ -345,4 +345,13 @@
   <data name="Province" xml:space="preserve">
     <value>Province</value>
   </data>
+  <data name="Kecamatan" xml:space="preserve">
+    <value>Kecamatan</value>
+  </data>
+  <data name="Kelurahan/Desa" xml:space="preserve">
+    <value>Kelurahan-Desa</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
 </root>

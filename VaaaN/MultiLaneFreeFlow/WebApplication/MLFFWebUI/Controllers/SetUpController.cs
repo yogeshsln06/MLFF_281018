@@ -1613,6 +1613,190 @@ namespace MLFFWebUI.Controllers
         #endregion
 
         #region Kabupaten/Kota Section
+        public ActionResult CityList()
+        {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
+            try
+            {
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kabupaten/Kota");
+                ViewData["City"] = CityBLL.GetAll();
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To Load City List " + ex.Message.ToString());
+            }
+            return View();
+        }
+
+        public JsonResult CityReload()
+        {
+            List<CityCBE> DistrictDataList = new List<CityCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+                result.Data = objResponseMessage;
+            }
+            try
+            {
+                DistrictDataList = CityBLL.GetAll().Cast<CityCBE>().ToList(); ;
+                result.Data = DistrictDataList;
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To refresh District List " + ex.Message.ToString());
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetCity(int id, string urltoken)
+        {
+            CityCBE city = new CityCBE();
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else {
+                    city.CityId = id;
+                    city = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CityBLL.GetCityById(city);
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("GetCity " + ex);
+            }
+            return View("CityListPopUp", city);
+        }
+
+        [HttpGet]
+        public ActionResult CityNew()
+        {
+            List<SelectListItem> provincelist = new List<SelectListItem>();
+            List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+
+            provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+            {
+                provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+            }
+            ViewBag.Province = provincelist;
+            return View("CityListPopUp");
+        }
+
+        [HttpPost]
+        public JsonResult CityAdd(CityCBE city)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else
+                {
+                    List<CityCBE> CityDataList = new List<CityCBE>();
+                    CityDataList = CityBLL.GetAll().Cast<CityCBE>().ToList();
+
+                    List<CityCBE> CityNamefiltered = CityDataList.FindAll(x => x.CityName.ToLower() == city.CityName.ToLower() && x.CityId != city.CityId);
+                    if (CityNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "City Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                        city.TmsId = 1;
+                        city.CreationDate = DateTime.Now;
+                        city.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        string id = CityBLL.Insert(city);
+                        if (id != "")
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to Insert City in SetUp Controller" + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult CityUpdate(CityCBE city)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else
+                {
+                    List<CityCBE> DistrictDataList = new List<CityCBE>();
+                    DistrictDataList = CityBLL.GetAll().Cast<CityCBE>().ToList();
+
+                    List<CityCBE> CityNamefiltered = DistrictDataList.FindAll(x => x.CityName.ToLower() == city.CityName.ToLower() && x.CityId != city.CityId);
+                    if (CityNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "City Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+
+                    if (objResponseMessage.Count == 0)
+                    {
+                        city.TmsId = 1;
+                        city.ModificationDate = DateTime.Now;
+                        city.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        CityBLL.Update(city);
+
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "success";
+                        objResponseMessage.Add(objModelState);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("City Update " + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region Kecamatan Section
         public ActionResult DistrictList()
         {
             if (Session["LoggedUserId"] == null)
