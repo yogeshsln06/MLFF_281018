@@ -1,4 +1,4 @@
-/* Formatted on 08/02/2019 13:15:33 (QP5 v5.215.12089.38647) */
+/* Formatted on 12/02/2019 12:59:34 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -647,13 +647,13 @@ AS
                                           CUR_OUT           OUT T_CURSOR);
 
    /*PLAZA*/
-      PROCEDURE PLAZA_INSERT (P_TMS_ID          IN NUMBER,
+   PROCEDURE PLAZA_INSERT (P_TMS_ID          IN NUMBER,
                            P_PLAZA_ID        IN NUMBER,
                            P_PLAZA_NAME      IN NVARCHAR2,
                            P_LOCATION        IN NVARCHAR2,
                            P_IPADDRESS       IN NVARCHAR2,
-						   P_LONGITUDE       IN NUMBER,
-						   P_LATITUDE       IN NUMBER,
+                           P_LONGITUDE       IN NUMBER,
+                           P_LATITUDE        IN NUMBER,
                            P_CREATION_DATE   IN DATE);
 
    PROCEDURE PLAZA_UPDATE (P_TMS_ID              IN NUMBER,
@@ -661,8 +661,8 @@ AS
                            P_PLAZA_NAME          IN NVARCHAR2,
                            P_LOCATION            IN NVARCHAR2,
                            P_IPADDRESS           IN NVARCHAR2,
-						   P_LONGITUDE           IN NUMBER,
-						   P_LATITUDE            IN NUMBER,
+                           P_LONGITUDE           IN NUMBER,
+                           P_LATITUDE            IN NUMBER,
                            P_MODIFIER_ID         IN NUMBER,
                            P_MODIFICATION_DATE   IN DATE);
 
@@ -1220,21 +1220,22 @@ AS
 
    /*PROVINCE*/
    PROCEDURE PROVINCE_GETALL (CUR_OUT OUT T_CURSOR);
+
    PROCEDURE PROVINCE_GETBYID (P_PROVINCE_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
-    PROCEDURE PROVINCE_INSERT (
-                          P_TMS_ID        IN     NUMBER,
-                          P_PROVINCE_NAME           IN     NVARCHAR2,
-                          P_CREATION_DATE           IN     DATE,
-						  P_MODIFIER_ID             IN     NUMBER,
-                          P_MODIFICATION_DATE       IN     DATE,
-                          P_RETURNMSG              OUT NVARCHAR2);
+   PROCEDURE PROVINCE_INSERT (P_TMS_ID              IN     NUMBER,
+                              P_PROVINCE_NAME       IN     NVARCHAR2,
+                              P_CREATION_DATE       IN     DATE,
+                              P_MODIFIER_ID         IN     NUMBER,
+                              P_MODIFICATION_DATE   IN     DATE,
+                              P_RETURNMSG              OUT NVARCHAR2);
 
-	   PROCEDURE PROVINCE_UPDATE (P_PROVINCE_ID             IN     NUMBER,
-                          P_PROVINCE_NAME                IN     NVARCHAR2,
-                          P_MODIFIER_ID                  IN     NUMBER,
-                          P_MODIFICATION_DATE            IN     DATE,
-                          P_RETURNMSG                    OUT NVARCHAR2);					 
+   PROCEDURE PROVINCE_UPDATE (P_PROVINCE_ID         IN     NUMBER,
+                              P_PROVINCE_NAME       IN     NVARCHAR2,
+                              P_MODIFIER_ID         IN     NUMBER,
+                              P_MODIFICATION_DATE   IN     DATE,
+                              P_RETURNMSG              OUT NVARCHAR2);
+
    /*CITY*/
    PROCEDURE CITY_GETALL (CUR_OUT OUT T_CURSOR);
 
@@ -1257,43 +1258,7 @@ AS
                                           CUR_OUT            OUT T_CURSOR);
 
    /*CUSTOMER APPOINTMENT*/
-   PROCEDURE CUSTOMER_APPOINTMENT_INSERT (
-      P_TMS_ID                    IN     NUMBER,
-      P_CUSTOMER_APPOINTMENT_ID      OUT NUMBER,
-      P_ACCOUNT_ID                IN     NUMBER,
-      P_APPOINTMENT_LOCATION      IN     NVARCHAR2,
-      P_APPOINTMENT_DATE          IN     DATE,
-      P_APPOINTED_BY              IN     NUMBER,
-      P_ATTENDED_BY               IN     NUMBER,
-      P_CREATION_DATE             IN     DATE,
-      P_TRANSFER_STATUS           IN     NUMBER);
 
-   PROCEDURE CUSTOMER_APPOINTMENT_UPDATE (
-      P_TMS_ID                    IN NUMBER,
-      P_CUSTOMER_APPOINTMENT_ID   IN NUMBER,
-      P_ACCOUNT_ID                IN NUMBER,
-      P_APPOINTMENT_LOCATION      IN NVARCHAR2,
-      P_APPOINTMENT_DATE          IN DATE,
-      P_APPOINTED_BY              IN NUMBER,
-      P_ATTENDED_BY               IN NUMBER,
-      P_MODIFIER_ID               IN NUMBER,
-      P_MODIFICATION_DATE         IN DATE,
-      P_TRANSFER_STATUS           IN NUMBER);
-
-
-
-   PROCEDURE CUSTOMER_APPOINTMENT_GETALL (CUR_OUT OUT T_CURSOR);
-
-
-   PROCEDURE CUSTOMER_APPOINTMENT_GETBYID (
-      P_TMS_ID                    IN     NUMBER,
-      P_CUSTOMER_APPOINTMENT_ID   IN     NUMBER,
-      CUR_OUT                        OUT T_CURSOR);
-
-
-   PROCEDURE CUSTAPPOINTMENT_GETACC_ID (P_TMS_ID       IN     NUMBER,
-                                        P_ACCOUNT_ID   IN     NUMBER,
-                                        CUR_OUT           OUT T_CURSOR);
 
    PROCEDURE TRANSCATION_HISTORY_DETAILS (P_VEH_REG_NO      IN     NVARCHAR2,
                                           P_RESIDENT_ID     IN     NVARCHAR2,
