@@ -1,4 +1,4 @@
-/* Formatted on 12/02/2019 12:59:34 (QP5 v5.215.12089.38647) */
+/* Formatted on 12-02-2019 13:21:11 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE MLFF.MLFF_PACKAGE
 AS
    TYPE T_CURSOR IS REF CURSOR;
@@ -1242,6 +1242,22 @@ AS
    PROCEDURE CITY_GETBYPROVINCEID (P_TMS_ID        IN     NUMBER,
                                    P_PROVINCE_ID   IN     NUMBER,
                                    CUR_OUT            OUT T_CURSOR);
+
+   PROCEDURE CITY_GETBYID (P_CITY_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
+
+   PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
+                          P_PROVINCE_ID     IN     NUMBER,
+                          P_CITY_NAME       IN     NVARCHAR2,
+                          P_CREATION_DATE   IN     DATE,
+                          P_MODIFIER_ID     IN     NUMBER,
+                          P_RETURNMSG          OUT NVARCHAR2);
+
+   PROCEDURE CITY_UPDATE (P_CITY_ID             IN     NUMBER,
+                          P_PROVINCE_ID         IN     NVARCHAR2,
+                          P_CITY_NAME           IN     NVARCHAR2,
+                          P_MODIFIER_ID         IN     NUMBER,
+                          P_MODIFICATION_DATE   IN     DATE,
+                          P_RETURNMSG              OUT NVARCHAR2);
 
    /*DISTRICT*/
    PROCEDURE DISTRICT_GETALL (CUR_OUT OUT T_CURSOR);

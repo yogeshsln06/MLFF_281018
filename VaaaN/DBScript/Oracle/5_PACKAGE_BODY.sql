@@ -1,4 +1,4 @@
-/* Formatted on 12/02/2019 12:59:53 (QP5 v5.215.12089.38647) */
+/* Formatted on 12-02-2019 13:21:50 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -7820,6 +7820,83 @@ ORDER BY TRANSACTION_DATETIME DESC';
              FROM TBL_CITY
          ORDER BY CITY_ID;
    END CITY_GETALL;
+
+
+   PROCEDURE CITY_GETBYID (P_CITY_ID IN NUMBER, CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_CITY
+            WHERE CITY_ID = P_CITY_ID
+         ORDER BY CITY_ID;
+   END CITY_GETBYID;
+
+
+   PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
+                          P_PROVINCE_ID     IN     NUMBER,
+                          P_CITY_NAME       IN     NVARCHAR2,
+                          P_CREATION_DATE   IN     DATE,
+                          P_MODIFIER_ID     IN     NUMBER,
+                          P_RETURNMSG          OUT NVARCHAR2)
+   AS
+      C_COUNT   NUMBER;
+   BEGIN
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_CITY
+       WHERE CITY_NAME = P_CITY_NAME;
+
+      IF (C_COUNT > 0)
+      THEN
+         P_RETURNMSG := 'CITY FOUND';
+      ELSE
+         INSERT INTO TBL_CITY (TMS_ID,
+                               PROVINCE_ID,
+                               CITY_NAME,
+                               MODIFIER_ID,
+                               CREATION_DATE,
+                               TRANSFER_STATUS)
+              VALUES (P_TMS_ID,
+                      NVL ( (SELECT MAX (CITY_ID) FROM TBL_CITY), 0) + 1,
+                      P_CITY_NAME,
+                      P_MODIFIER_ID,
+                      P_CREATION_DATE,
+                      1);
+
+         P_RETURNMSG := 'CITY CREATED';
+      END IF;
+   END CITY_INSERT;
+
+
+   PROCEDURE CITY_UPDATE (P_CITY_ID             IN     NUMBER,
+                          P_PROVINCE_ID         IN     NVARCHAR2,
+                          P_CITY_NAME           IN     NVARCHAR2,
+                          P_MODIFIER_ID         IN     NUMBER,
+                          P_MODIFICATION_DATE   IN     DATE,
+                          P_RETURNMSG              OUT NVARCHAR2)
+   AS
+      C_COUNT   NUMBER;
+   BEGIN
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_CITY
+       WHERE CITY_NAME = P_CITY_NAME AND CITY_ID <> P_CITY_ID;
+
+      IF (C_COUNT > 0)
+      THEN
+         P_RETURNMSG := 'District FOUND';
+      ELSE
+         UPDATE TBL_CITY
+            SET CITY_NAME = P_CITY_NAME,
+                PROVINCE_ID = P_PROVINCE_ID,
+                MODIFIER_ID = P_MODIFIER_ID,
+                MODIFICATION_DATE = P_MODIFICATION_DATE
+          WHERE CITY_ID = P_CITY_ID;
+
+         P_RETURNMSG := 'District UPDATED';
+      END IF;
+   END CITY_UPDATE;
 
 
 
