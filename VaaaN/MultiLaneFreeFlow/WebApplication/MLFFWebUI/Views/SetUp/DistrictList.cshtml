@@ -1,4 +1,4 @@
-﻿@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE>
+﻿@*@model IEnumerable<VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE>*@
 @{
     ViewBag.Title = "Kabupaten/Kota List";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,7 +17,14 @@
                         <div class="mT-10">
                             <div class="gap-5 peers" style="float:right;overflow: visible !important;">
                                 <div class="peer">
-                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewCity();">New</button>
+                                    <button type="button" class="btn cur-p btn-outline-primary" onclick="NewDistrict();">New</button>
+                                </div>
+                                <div class="peer">
+                                    <a class="btn cur-p btn-outline-primary" href='javascript:void(0);' onclick="reloadDistrictData();">
+                                        <span class='icon-holder'>
+                                            <i class='c-black-500 ti-reload'></i>
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -44,7 +51,7 @@
 <script src="~/js/SetUp.js"></script>
 <script>
     $(document).ready(function () {
-        DistrictDataList = @Html.Raw(Json.Encode(ViewData["Kabupaten/Kota"]));
+        DistrictDataList = @Html.Raw(Json.Encode(ViewData["District"]));
         BindDistrictData(DistrictDataList);
     });
 </script>

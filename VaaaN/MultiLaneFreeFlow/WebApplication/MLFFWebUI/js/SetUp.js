@@ -1758,8 +1758,8 @@ function BindDistrictData(DistrictDataList) {
                     $(nTd).html("<a href='javascript:void(0);' onclick='ProvinceDetail(this," + oData.DistrictId + ")'>" + oData.DistrictId + "</a>");
                 }
             },
-            { 'data': 'DistrictName' },
-            { 'data': 'creationDate' },
+            { 'data': 'DistrictName', },
+            { 'data': 'CreationDate', },
             {
                 'data': 'DistrictId',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {

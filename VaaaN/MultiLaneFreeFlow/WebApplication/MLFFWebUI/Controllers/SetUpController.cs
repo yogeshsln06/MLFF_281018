@@ -1622,7 +1622,7 @@ namespace MLFFWebUI.Controllers
             try
             {
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kabupaten/Kota");
-                ViewData["Kabupaten/Kota"] = DistrictBLL.GetAll();
+                ViewData["District"] = DistrictBLL.GetAll();
             }
             catch (Exception ex)
             {

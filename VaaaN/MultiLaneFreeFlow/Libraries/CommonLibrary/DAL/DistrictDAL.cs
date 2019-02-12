@@ -20,7 +20,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             {
                 //Stored procedure must have cur_out parameter.
                 //There is no need to add ref cursor for oracle in code.
-                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "DISTRICT_GETALL";
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "CITY_GETALL";
 
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
@@ -67,9 +67,9 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             {
 
                 CBE.DistrictCBECollection Districtes = new CBE.DistrictCBECollection();
-                string spName = Constants.oraclePackagePrefix + "PROVINCE_GETBYID";
+                string spName = Constants.oraclePackagePrefix + "District_GETBYID";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_ID", DbType.Int32, District.DistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_District_ID", DbType.Int32, District.DistrictId, ParameterDirection.Input));
                 Districtes = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
                 return Districtes[0];
             }
