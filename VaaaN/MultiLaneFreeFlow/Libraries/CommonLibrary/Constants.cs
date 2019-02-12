@@ -1739,7 +1739,44 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
                     result[index] = values[i];
                     index = index + 1;
                 }
-                //result[index] = "FC";
+                result[index] = "FC";
+                //result[index] = "00";
+                index = index + 1;
+                for (int j = index; j < 12; j++)
+                {
+                    result[j] = "00";
+                }
+                string finalResult = string.Empty;
+                for (int k = 0; k < 12; k++)
+                {
+                    finalResult = finalResult + result[k];
+                }
+                return finalResult;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public static string VRNToByteWithFC(int vehicleClass, string vehicleRegistrationNumber)
+        {
+            try
+            {
+                string[] result = new string[12];
+                int index = 0;
+                result[index] = vehicleClass.ToString().PadLeft(2, '0');
+                index = index + 1;
+                string vrn = vehicleRegistrationNumber.Trim().ToUpper();
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(vrn);
+                string[] values = BitConverter.ToString(bytes).Split(new char[] { '-' });
+                for (int i = 0; i < values.Length; i++)
+                {
+                    result[index] = values[i];
+                    index = index + 1;
+                }
+                // result[index] = "FC";
                 result[index] = "00";
                 index = index + 1;
                 for (int j = index; j < 12; j++)

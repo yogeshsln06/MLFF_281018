@@ -738,7 +738,7 @@ function Complete() {
     }
     if (confirm('Are you sure to complete this transaction???')) {
         var Seconds = $("#filterSec").val();
-        Seconds = 60;
+        Seconds = 1800;
         var InputData = {
             AssociatedTransactionIds: selectedIDs,
             TransactionId: TransactionId,

@@ -36,7 +36,7 @@ namespace MobileWebAPI.Models
 
         [Display(Name = "Vehicle Registration Number")]
         [Required(ErrorMessage = "The vehicle registration number is required")]
-        [StringLength(10, ErrorMessage = "Vehicle Registration Number max length is 10")]
+        [StringLength(9, ErrorMessage = "Vehicle registration number max length is 9")]
         public String VehicleRegistrationNumber { get; set; }
 
         [Display(Name = "Owner Name")]
@@ -94,7 +94,7 @@ namespace MobileWebAPI.Models
         public String VehicleRegistrationCertificateNumber { get; set; }
 
         [Display(Name = "Vehicle Registration Number")]
-        [StringLength(10, ErrorMessage = "Vehicle Registration Number max length is 10")]
+        [StringLength(9, ErrorMessage = "Vehicle registration number max length is 9")]
         public String VehicleRegistrationNumber { get; set; }
 
         [Display(Name = "EPC Number")]
@@ -125,7 +125,7 @@ namespace MobileWebAPI.Models
 
         [Display(Name = "Vehicle Registration Number")]
         [Required(ErrorMessage = "The vehicle registration number is required")]
-        [StringLength(10, ErrorMessage = "Vehicle Registration Number max length is 10")]
+        [StringLength(9, ErrorMessage = "Vehicle registration number max length is 9")]
         public String VehicleRegistrationNumber { get; set; }
 
         public Int32 PageIndex { get; set; }

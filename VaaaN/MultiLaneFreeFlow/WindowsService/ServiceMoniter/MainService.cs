@@ -98,12 +98,13 @@ namespace ServiceMonitor
 
                 #region Get service name to be monitored
 
-                MLFFOracleDependentServices = new String[3];
+                MLFFOracleDependentServices = new String[4];
 
                 MLFFOracleDependentServices[0] = "VaaaN-MLFF-LDS";
-                MLFFOracleDependentServices[1] = "VaaaN-MLFF-DTS";
-                MLFFOracleDependentServices[2] = "VaaaN-MLFF-SMS";
-                //MLFFOracleDependentServices[3] = "VaaaN-MLFF-VMS";
+                MLFFOracleDependentServices[1] = "VaaaN-MLFF-SMS";
+                MLFFOracleDependentServices[2] = "VaaaN-MLFF-DTS";
+                MLFFOracleDependentServices[3] = "VaaaN-MLFF-MBC";
+                //MLFFOracleDependentServices[4] = "VaaaN-MLFF-VMS";
 
 
                 #endregion
@@ -170,7 +171,7 @@ namespace ServiceMonitor
         {
             try
             {
-               
+
                 if (IsServiceRunning(serviceName1) && IsServiceRunning(serviceName2))
                 {
                     timerWindowsServiceMonitor.Stop();// Stop timer so that task can be finished
@@ -305,7 +306,7 @@ namespace ServiceMonitor
                 StartWindowsService(serviceName, timeoutMilliseconds);
                 LogMessage(serviceName + " has been started.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LogMessage("Failed to start service: " + serviceName);
             }
