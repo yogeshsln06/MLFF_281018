@@ -72,6 +72,25 @@ function BindUserData(UserDataList) {
     thId = 'tblUserDataTR';
     myVar = setInterval("myclick()", 500);
 }
+function reloadUser() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "UserReload",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (data) {
+            $(".animationload").hide();
+            tblUserData.clear().draw();
+            tblUserData.rows.add(JSON.parse(data));
+            tblUserData.columns.adjust().draw();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
 function NewUser() {
     $(".animationload").show();
     $.ajax({
@@ -173,8 +192,10 @@ function SaveData(action) {
                     var meassage = '';
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
-                            if (action == 'close')
+                            if (action == 'close') {
+                                reloadUser();
                                 closePopup();
+                            }
                             else {
                                 $("#warning").hide();
                                 $('#needs-validation')[0].reset();
@@ -243,13 +264,13 @@ function validateUser() {
     else {
         showError($("#EmailId"), '');
     }
-    //if ($("#Address").val() == '') {
-    //    showError($("#Address"), $("#Address").attr('data-val-required'));
-    //    valid = false;
-    //}
-    //else {
-    //    showError($("#Address"), '');
-    //}
+    if ($("#RoleId").val() == null) {
+        showerror($("#RoleId"), $("#RoleId").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+       // showerror($("#RoleId"), '');
+    }
     return valid;
 }
 
@@ -575,7 +596,7 @@ function reloadHardwareData() {
     $(".animationload").show();
     $.ajax({
         type: "GET",
-        url: "ClassificationReload",
+        url: "HardwareReload",
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
@@ -879,15 +900,15 @@ function reloadLaneData() {
     $(".animationload").show();
     $.ajax({
         type: "GET",
-        url: "ClassificationReload",
+        url: "LaneReload",
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (data) {
             $(".animationload").hide();
-            tblHardwareData.clear().draw();
-            tblHardwareData.rows.add(JSON.parse(data));
-            tblHardwareData.columns.adjust().draw();
+            tblLaneData.clear().draw();
+            tblLaneData.rows.add(JSON.parse(data));
+            tblLaneData.columns.adjust().draw();
 
         },
         error: function (x, e) {
@@ -956,7 +977,7 @@ function SaveLaneData(action) {
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
                             if (action == 'close') {
-                                reloadClassfificationData();
+                                reloadLaneData();
                                 closePopup();
                             }
                             else {
@@ -1137,7 +1158,25 @@ function BindGantryData(GantryDataList) {
     thId = 'tblGantryDataTR';
     myVar = setInterval("myclick()", 500);
 }
-
+function reloadGantry() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "GantryReload",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (data) {
+            $(".animationload").hide();
+            tblGantryData.clear().draw();
+            tblGantryData.rows.add(JSON.parse(data));
+            tblGantryData.columns.adjust().draw();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
 function EditGantry(ctrl, Id) {
     $(ctrl).parent().addClass('hide').removeClass('open').hide();
     $(".animationload").show();
@@ -1220,7 +1259,7 @@ function SaveGantryData(action) {
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
                             if (action == 'close') {
-                                reloadClassfificationData();
+                                reloadGantry();
                                 closePopup();
                             }
                             else {
@@ -1336,7 +1375,25 @@ function BindRolesData(RolesDataList) {
     thId = 'tblRolesDataTR';
     myVar = setInterval("myclick()", 500);
 }
-
+function reloadRole() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "RoleReload",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (data) {
+            $(".animationload").hide();
+            tblRolesData.clear().draw();
+            tblRolesData.rows.add(JSON.parse(data));
+            tblRolesData.columns.adjust().draw();
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
 function EditRoles(ctrl, Id) {
     //$(ctrl).parent().addClass('hide').removeClass('open').hide();
     $(".animationload").show();
@@ -1422,7 +1479,7 @@ function SaveRolesData(action) {
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
                             if (action == 'close') {
-                                reloadClassfificationData();
+                                reloadRole();
                                 closePopup();
                             }
                             else {
@@ -1513,6 +1570,27 @@ function BindProvinceData(ProvinceDataList) {
     tblProvinceData.columns.adjust();
     thId = 'tblProvinceDataTR';
     myVar = setInterval("myclick()", 500);
+}
+function reloadProvinceData() {
+    $(".animationload").show();
+    $.ajax({
+        type: "GET",
+        url: "ProvinceReload",
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (data) {
+            $(".animationload").hide();
+            tblProvinceData.clear().draw();
+            tblProvinceData.rows.add(JSON.parse(data));
+            tblProvinceData.columns.adjust().draw();
+
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+
+    });
 }
 //******Province End ******
 

@@ -116,7 +116,7 @@
                         @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "form-label control-label col-md-4 col-sm-4  required" })
                     </div>
                     <div class="form-group  col-md-4">
-                        @Html.DropDownList("RoleId", null, "Select Role", new { @class = "form-control select" })
+                        @Html.DropDownList("RoleId", null, "Select Role", new { @class = "form-control required select" })
                         @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })
                     </div>
                 </div>

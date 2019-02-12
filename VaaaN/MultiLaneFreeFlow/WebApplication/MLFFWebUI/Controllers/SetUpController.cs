@@ -56,7 +56,28 @@ namespace MLFFWebUI.Controllers
             }
             return View("UsersList", userList);
         }
-
+        public JsonResult UserReload()
+        {
+            List<UserCBE> UserDataList = new List<UserCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+                result.Data = objResponseMessage;
+            }
+            try
+            {
+                UserDataList = UserBLL.GetUserAll().Cast<UserCBE>().ToList(); ;
+                result.Data = UserDataList;
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To refresh Classification List " + ex.Message.ToString());
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
         [HttpGet]
         public ActionResult UserNew()
         {
@@ -293,6 +314,34 @@ namespace MLFFWebUI.Controllers
             return View(roleList);
         }
 
+        [HttpGet]
+        public JsonResult RoleReload()
+        {
+            List<RoleCBE> RoleDataList = new List<RoleCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+                result.Data = objResponseMessage;
+            }
+            try
+            {
+                //Int32 RecordCount = 0;
+
+                //VaaaN.MLFF.Libraries.CommonLibrary.Common.SortingPagingInfo info = new VaaaN.MLFF.Libraries.CommonLibrary.Common.SortingPagingInfo();
+                //info.PageSize = Convert.ToInt32(WebConfigurationManager.AppSettings["GridPageSize"]);
+                RoleDataList = RoleBLL.GetRoleAll().Cast<RoleCBE>().ToList();
+                result.Data = RoleDataList;
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To refresh Role List " + ex.Message.ToString());
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult GetRoles(int id, string urltoken)
         {
@@ -442,6 +491,30 @@ namespace MLFFWebUI.Controllers
                 HelperClass.LogMessage("Failed To Load Plaza List " + ex.Message.ToString());
             }
             return View(plazaDataList);
+        }
+
+        [HttpGet]
+        public JsonResult GantryReload()
+        {
+            List<PlazaCBE> PlazaDataList = new List<PlazaCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+                result.Data = objResponseMessage;
+            }
+            try
+            {
+                PlazaDataList = PlazaBLL.GetAllAsList().Cast<PlazaCBE>().ToList(); ;
+                result.Data = PlazaDataList;
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To refresh Gantry List " + ex.Message.ToString());
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1156,6 +1229,7 @@ namespace MLFFWebUI.Controllers
             return View();
         }
 
+        [HttpGet]
         public JsonResult HardwareReload()
         {
             JsonResult result = new JsonResult();
@@ -1349,6 +1423,29 @@ namespace MLFFWebUI.Controllers
                 HelperClass.LogMessage("Failed To Load Province List " + ex.Message.ToString());
             }
             return View();
+        }
+
+        public JsonResult ProvinceReload()
+        {
+            List<ProvinceCBE> ProvinceDataList = new List<ProvinceCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+                result.Data = objResponseMessage;
+            }
+            try
+            {
+                ProvinceDataList = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList(); ;
+                result.Data = ProvinceDataList;
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To refresh Classification List " + ex.Message.ToString());
+            }
+            return Json(result.Data, JsonRequestBehavior.AllowGet);
         }
         #endregion
 
