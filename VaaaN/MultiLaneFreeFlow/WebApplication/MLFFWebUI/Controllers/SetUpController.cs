@@ -1669,6 +1669,17 @@ namespace MLFFWebUI.Controllers
                 else {
                     city.CityId = id;
                     city = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CityBLL.GetCityById(city);
+
+                    List<SelectListItem> provincelist = new List<SelectListItem>();
+                    List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+
+                    provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
+                    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+                    {
+                        provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+                    }
+                    ViewBag.Province = provincelist;
+                    ViewBag.OProvinceId = city.ProvinceId;
                 }
             }
             catch (Exception ex)

@@ -144,17 +144,17 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["TMS_ID"] != DBNull.Value)
                         district.TmsId = Convert.ToInt32(dt.Rows[i]["TMS_ID"]);
 
-                    if (dt.Rows[i]["PROVINCE_ID"] != DBNull.Value)
-                        district.ProvinceId = Convert.ToInt32(dt.Rows[i]["PROVINCE_ID"]);
-
                     if (dt.Rows[i]["CITY_ID"] != DBNull.Value)
-                        district.DistrictId = Convert.ToInt32(dt.Rows[i]["CITY_ID"]);
+                        district.CityId = Convert.ToInt32(dt.Rows[i]["CITY_ID"]);
 
-                    if (dt.Rows[i]["CITY_NAME"] != DBNull.Value)
-                        district.DistrictName = Convert.ToString(dt.Rows[i]["CITY_NAME"]);
+                    if (dt.Rows[i]["DISTRICT_ID"] != DBNull.Value)
+                        district.DistrictId = Convert.ToInt32(dt.Rows[i]["DISTRICT_ID"]);
 
-                    if (dt.Rows[i]["CITY_CODE"] != DBNull.Value)
-                        district.DistrictCode = Convert.ToInt32(dt.Rows[i]["CITY_CODE"]);
+                    if (dt.Rows[i]["DISTRICT_NAME"] != DBNull.Value)
+                        district.DistrictName = Convert.ToString(dt.Rows[i]["DISTRICT_NAME"]);
+
+                    if (dt.Rows[i]["DISTRICT_CODE"] != DBNull.Value)
+                        district.DistrictCode = Convert.ToInt32(dt.Rows[i]["DISTRICT_CODE"]);
 
                     if (dt.Rows[i]["MODIFIER_ID"] != DBNull.Value)
                         district.ModifierId = Convert.ToInt32(dt.Rows[i]["MODIFIER_ID"]);
@@ -165,8 +165,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["MODIFICATION_DATE"] != DBNull.Value)
                         district.ModificationDate = Convert.ToDateTime(dt.Rows[i]["MODIFICATION_DATE"]);
 
-                    if (dt.Rows[i]["TRANSFER_STATUS"] != DBNull.Value)
-                        district.TransferStatus = Convert.ToInt32(dt.Rows[i]["TRANSFER_STATUS"]);
 
                     districts.Add(district);
                 }
@@ -177,7 +175,6 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 throw ex;
             }
         }
-
         #endregion
     }
 }

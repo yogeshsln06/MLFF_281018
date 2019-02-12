@@ -1833,6 +1833,7 @@ function EditCity(ctrl, Id) {
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#SetUpLabel").text("Update [" + $("#CityName").val() + "]");
             $("#CityId").attr("disabled", "disabled");
+            $("#ProvinceId").val($("#OProvinceId").val());
             openpopup();
 
             $("#btnSave").show();
@@ -1899,7 +1900,7 @@ function SaveCityData(action) {
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
                             if (action == 'close') {
-                                reloadProvinceData();
+                                reloadCity();
                                 closePopup();
                             }
                             else {
