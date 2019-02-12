@@ -1681,7 +1681,7 @@ namespace VaaaN.MLFF.WindowsServices
             bool result = false;
             try
             {
-                var obj = rfidRecentDataList.FirstOrDefault(e => (e.PlazaId == plazaId && e.ObjectId == tagId && (e.PacketTimeStamp > tagReportingTime.AddMinutes(-1 * Minutes) && e.PacketTimeStamp > tagReportingTime.AddMinutes(Minutes)) && e.ReaderPosition == ReaderPosition));
+                var obj = rfidRecentDataList.FirstOrDefault(e => (e.PlazaId == plazaId && e.ObjectId == tagId && (e.PacketTimeStamp >= tagReportingTime.AddMinutes(-1 * Minutes) && e.PacketTimeStamp <= tagReportingTime.AddMinutes(Minutes)) && e.ReaderPosition == ReaderPosition));
                 if (obj != null)
                 {
                     obj.PacketTimeStamp = tagReportingTime;
@@ -1703,7 +1703,7 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Checking in recent nodeflux list...");
 
-                var obj = anprRecentDataList.FirstOrDefault(e => (e.PlazaId == plazaId && e.VRN.Trim() == vrn.Trim() && (e.PacketTimeStamp > nodeFluxReportingTime.AddMinutes(-1 * Minutes) && e.PacketTimeStamp > nodeFluxReportingTime.AddMinutes(Minutes)) && e.cameraPosition == cameraPosition));
+                var obj = anprRecentDataList.FirstOrDefault(e => (e.PlazaId == plazaId && e.VRN.Trim() == vrn.Trim() && (e.PacketTimeStamp >= nodeFluxReportingTime.AddMinutes(-1 * Minutes) && e.PacketTimeStamp <= nodeFluxReportingTime.AddMinutes(Minutes)) && e.cameraPosition == cameraPosition));
                 if (obj != null)
                 {
                     obj.PacketTimeStamp = nodeFluxReportingTime;
