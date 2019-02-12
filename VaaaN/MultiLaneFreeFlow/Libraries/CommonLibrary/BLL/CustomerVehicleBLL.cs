@@ -94,6 +94,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.ValidateCustomerVehicleDetails(vehicle, ResidentId);
         }
 
+        public static DataTable GetCustomerVehicleDetails(CBE.CustomerVehicleCBE vehicle)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.GetCustomerVehicleDetails(vehicle);
+        }
+
         public static DataTable CustomerVehicleDetailsByResidentId(string ResidentId)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CustomerVehicleDAL.CustomerVehicleDetailsByResidentId(ResidentId);

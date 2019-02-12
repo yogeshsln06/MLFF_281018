@@ -527,6 +527,7 @@ namespace MobileWebAPI.Controllers
                     objCustomerVehicleCBE.VehicleRCNumber = objCustomerVehicleInformation.VehicleRegistrationCertificateNumber;
                     objCustomerVehicleCBE.VehRegNo = objCustomerVehicleInformation.VehicleRegistrationNumber;
                     dt = CustomerVehicleBLL.ValidateCustomerVehicleDetails(objCustomerVehicleCBE, objCustomerVehicleInformation.ResidentIdentityNumber);
+                    dt = CustomerVehicleBLL.GetCustomerVehicleDetails(objCustomerVehicleCBE);
                     if (dt.Rows.Count > 0)
                     {
 
