@@ -184,7 +184,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 24, " +
+                                "\"Id\": 21, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Simulator\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +
@@ -278,7 +278,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                           "\"Gantry_Id\": 0, " +
                           "\"Camera\": { " +
                                 "\"Camera_Position\": 0, " +
-                                "\"Id\": 21, " +
+                                "\"Id\": 24, " +
                                 "\"Name\": \"Lane2_FF_Panasonic\", " +
                                 "\"Address\": \"Simulator\", " +
                                 "\"Coordinate\": [ \"-6.2328758\", \"106.6506586\" ], " +
@@ -397,7 +397,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                 {
                     Send(s);
                     RandomWaitWithinOneMinute(); //in seconds
-                   // MessageBox.Show("Success");
+                                                 // MessageBox.Show("Success");
                 }
             }
 
@@ -439,7 +439,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                     {
                         HttpClient client = new HttpClient();
                         // "http://192.168.1.63:5555/VaaaN/IndonesiaMLFFApi/SendHikvisionEvent"; <======== sample url
-                        string url = textBoxAPIAddress.Text.Trim() + "/VaaaN/IndonesiaMLFFApi/SendHikvisionEvent"; 
+                        string url = textBoxAPIAddress.Text.Trim() + "/VaaaN/IndonesiaMLFFApi/SendHikvisionEvent";
                         client.BaseAddress = new Uri(url);
 
                         client.PostAsync(
@@ -952,11 +952,11 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                         Console.WriteLine(currentVRN);
                     }
 
-                    if(doClassificationMistake) //classification mistake is visible in registered vehicle only
+                    if (doClassificationMistake) //classification mistake is visible in registered vehicle only
                     {
                         Console.Write("Do classification mistake.<=====================================");
                         int tempClassid = 0;
-                        if(currentVehicleClassid == 1)
+                        if (currentVehicleClassid == 1)
                         {
                             tempClassid = 4;
                         }
@@ -1043,10 +1043,10 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                             frontANPRPacket.Timestamp = System.DateTime.Now;
                             frontANPRPacket.HardwareId = currentFrontCameraId; //<=========================== any front camera id of the gantry
                             frontANPRPacket.VRN = currentVRN; //<=============================VRN of the selected vehicle
-                            
-                            
+
+
                             frontANPRPacket.VehicleClassName = currentVehicleClassName;
-                            
+
 
                             if (isToSendPacket)
                             {
@@ -1078,7 +1078,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
                             rearANPRPacket.VRN = currentVRN; //<=============================VRN of the selected vehicle
 
                             rearANPRPacket.VehicleClassName = currentVehicleClassName;
-                            
+
                             if (isToSendPacket)
                             {
                                 SendANPRPacket(rearANPRPacket);
@@ -1538,7 +1538,7 @@ namespace VaaaN.MLFF.VehicleFlowSimulator
             private string vrn = string.Empty;
             private int vehicleClass = 0;
 
-            public UnregisteredVehicle (string vrn, int vehicleClass)
+            public UnregisteredVehicle(string vrn, int vehicleClass)
             {
                 this.vrn = vrn;
                 this.vehicleClass = vehicleClass;

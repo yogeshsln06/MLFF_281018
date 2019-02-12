@@ -438,7 +438,7 @@ namespace MLFFWebUI.Controllers
                                 #region This VRN alreday Reviewed
                                 int ReviewedTranId = Convert.ToInt32(Assodt.Rows[0]["TRANSACTION_ID"].ToString());
                                 TransactionBLL.MarkAsUnregistred(objtransaction);
-                                TransactionBLL.MeargedAuditTransaction(FirstChildTranasactionId, TransactionId, (int)Constants.TranscationStatus.Merged);
+                                TransactionBLL.MeargedAuditTransaction(ReviewedTranId, TransactionId, (int)Constants.TranscationStatus.Merged);
                                 objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                 TransactionBLL.UpdateAuditSection(objtransaction);
                                 Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and set as VIOLATION!!!";
@@ -448,7 +448,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         objtransaction.TransactionId = FirstChildTranasactionId;
                                         TransactionBLL.MarkAsUnregistred(objtransaction);
-                                        TransactionBLL.MeargedAuditTransaction(FirstChildTranasactionId, TransactionId, (int)Constants.TranscationStatus.Merged);
+                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
                                         Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
@@ -457,7 +457,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         objtransaction.TransactionId = SecondChildTranasactionId;
                                         TransactionBLL.MarkAsUnregistred(objtransaction);
-                                        TransactionBLL.MeargedAuditTransaction(FirstChildTranasactionId, TransactionId, (int)Constants.TranscationStatus.Merged);
+                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
                                         Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
@@ -479,7 +479,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         objtransaction.TransactionId = FirstChildTranasactionId;
                                         TransactionBLL.MarkAsUnregistred(objtransaction);
-                                        TransactionBLL.MeargedAuditTransaction(FirstChildTranasactionId, TransactionId, (int)Constants.TranscationStatus.Merged);
+                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId,FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
                                         Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
@@ -488,7 +488,7 @@ namespace MLFFWebUI.Controllers
                                     {
                                         objtransaction.TransactionId = SecondChildTranasactionId;
                                         TransactionBLL.MarkAsUnregistred(objtransaction);
-                                        TransactionBLL.MeargedAuditTransaction(FirstChildTranasactionId, TransactionId, (int)Constants.TranscationStatus.Merged);
+                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
                                         Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);

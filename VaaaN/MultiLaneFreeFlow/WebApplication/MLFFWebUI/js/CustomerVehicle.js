@@ -448,6 +448,22 @@ function validateCustomerVehicle() {
     }
 
 
+    if ($("#QueueStatus").val() == 0) {
+        showError($("#QueueStatus"), $("#QueueStatus").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#QueueStatus"), '');
+    }
+
+    if ($("#ExceptionFlag").val() == 0) {
+        showError($("#ExceptionFlag"), $("#ExceptionFlag").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#ExceptionFlag"), '');
+    }
+
     return valid;
 }
 
