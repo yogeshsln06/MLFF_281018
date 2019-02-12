@@ -374,6 +374,7 @@
     <Content Include="Views\SetUp\UserPopUp.cshtml" />
     <Content Include="Views\SetUp\ProvinceListPopUp.cshtml" />
     <Content Include="Views\SetUp\DistrictList.cshtml" />
+    <Content Include="Views\SetUp\DistrictListPopUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

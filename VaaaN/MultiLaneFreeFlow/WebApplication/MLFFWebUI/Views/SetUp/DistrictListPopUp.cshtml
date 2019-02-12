@@ -1,0 +1,58 @@
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE
+@{
+    Layout = null;
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+@using (Html.BeginForm("District", "SetUp", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @*<input type="hidden" id="hfHardwarePosition" value="@ViewBag.hfHardwarePosition" />
+    <input type="hidden" id="hfHardwareType" value="@ViewBag.hfHardwareType" />*@
+    <fieldset id="fildset">
+        <div class="modal-body" style="height:400px; overflow-y:scroll;">
+            <h5 class="c-mygrey-900 heading"><strong>Hardware </strong>Information<span></span></h5>
+            <div class="mT-5">
+                <div class="form-row">
+                    <div class="form-group col-md-2 ">
+                        @Html.LabelFor(model => model.DistrictId, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.EditorFor(model => model.DistrictId, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="form-group col-md-2 required">
+                        @Html.LabelFor(model => model.DistrictName, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.EditorFor(model => model.DistrictName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DistrictName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    @*<div class="form-group col-md-2 required">
+                        @Html.LabelFor(model => model.HardwareType, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        @Html.DropDownList("HardwareType", (IEnumerable<SelectListItem>)ViewBag.HardwareType, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.HardwareType, "", new { @class = "text-danger" })
+                    </div>*@
+                   
+                </div>
+                <div class="clearfix"></div>
+                
+               
+            </div>
+        </div>
+    </fieldset>
+}
+<div class="modal-footer">
+    <div class="alert alert-warning" role="alert" id="warning">
+    </div>
+    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnClose">Close</button>
+    <button type="button" class="btn btn-outline-danger" id="btnCancel" onclick="ResetFildes();">Cancel</button>
+    <button type="button" class="btn btn-outline-secondary" id="btnUpdate" onclick="OpenUpdatepopUp();" style="display:none;">Update</button>
+    <button type="button" class="btn btn-outline-danger" id="btnUpdateCancel" onclick="OpenUpdatepopUp();" style="display:none;">Cancel</button>
+    <button type="button" class="btn btn-outline-primary" onclick="SaveHardwareData('close')" id="btnSave">Save</button>
+</div>
+
