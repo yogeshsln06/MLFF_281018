@@ -34,8 +34,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_plaza_name", DbType.String, plaza.PlazaName, ParameterDirection.Input, 50));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_location", DbType.String, plaza.Location, ParameterDirection.Input, 20));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IPADDRESS", DbType.String, plaza.IpAddress, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IPADDRESS", DbType.String, plaza.Longitude, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_IPADDRESS", DbType.String, plaza.Latitude, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LONGITUDE", DbType.Decimal, plaza.Longitude, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LATITUDE", DbType.Decimal, plaza.Latitude, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, plaza.CreationDate, ParameterDirection.Input));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
@@ -61,6 +61,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_location", DbType.String, plaza.Location, ParameterDirection.Input, 20));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_ipaddress", DbType.String, plaza.IpAddress, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modifier_id", DbType.Int32, plaza.ModifierId, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LONGITUDE", DbType.Decimal, plaza.Longitude, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_LATITUDE", DbType.Decimal, plaza.Latitude, ParameterDirection.Input));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "p_modification_date", DbType.DateTime, plaza.ModificationDate, ParameterDirection.Input, 100));
 
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
@@ -229,6 +231,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["IPADDRESS"] != DBNull.Value)
                         plaza.IpAddress = Convert.ToString(dt.Rows[i]["IPADDRESS"]);
 
+                    if (dt.Rows[i]["LONGITUDE"] != DBNull.Value)
+                        plaza.Longitude = Convert.ToDecimal(dt.Rows[i]["LONGITUDE"]);
+
+                    if (dt.Rows[i]["LATITUDE"] != DBNull.Value)
+                        plaza.Latitude = Convert.ToDecimal(dt.Rows[i]["LATITUDE"]);
+
                     if (dt.Rows[i]["MODIFIER_ID"] != DBNull.Value)
                         plaza.ModifierId = Convert.ToInt32(dt.Rows[i]["MODIFIER_ID"]);
 
@@ -253,7 +261,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plazaList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE>();
 
-            foreach(VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE plaza in plazas)
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE plaza in plazas)
             {
                 plazaList.Add(plaza);
             }
