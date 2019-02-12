@@ -1,4 +1,4 @@
-/* Formatted on 08/02/2019 13:15:50 (QP5 v5.215.12089.38647) */
+/* Formatted on 12/02/2019 12:59:53 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -3688,8 +3688,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            P_PLAZA_NAME      IN NVARCHAR2,
                            P_LOCATION        IN NVARCHAR2,
                            P_IPADDRESS       IN NVARCHAR2,
-						   P_LONGITUDE       IN NUMBER,
-						   P_LATITUDE       IN NUMBER,
+                           P_LONGITUDE       IN NUMBER,
+                           P_LATITUDE        IN NUMBER,
                            P_CREATION_DATE   IN DATE)
    AS
    BEGIN
@@ -3698,16 +3698,16 @@ ORDER BY TRANSACTION_DATETIME DESC';
                              PLAZA_NAME,
                              LOCATION,
                              IPADDRESS,
-							 LONGITUDE,
-							 LATITUDE,
+                             LONGITUDE,
+                             LATITUDE,
                              CREATION_DATE)
            VALUES (P_TMS_ID,
                    P_PLAZA_ID,
                    P_PLAZA_NAME,
                    P_LOCATION,
                    P_IPADDRESS,
-				   P_LONGITUDE,
-				   P_LATITUDE ,
+                   P_LONGITUDE,
+                   P_LATITUDE,
                    P_CREATION_DATE);
    END PLAZA_INSERT;
 
@@ -3718,8 +3718,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
                            P_PLAZA_NAME          IN NVARCHAR2,
                            P_LOCATION            IN NVARCHAR2,
                            P_IPADDRESS           IN NVARCHAR2,
-						   P_LONGITUDE           IN NUMBER,
-						   P_LATITUDE            IN NUMBER,
+                           P_LONGITUDE           IN NUMBER,
+                           P_LATITUDE            IN NUMBER,
                            P_MODIFIER_ID         IN NUMBER,
                            P_MODIFICATION_DATE   IN DATE)
    AS
@@ -3728,8 +3728,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
          SET PLAZA_NAME = P_PLAZA_NAME,
              LOCATION = P_LOCATION,
              IPADDRESS = P_IPADDRESS,
-			 LONGITUDE = P_LONGITUDE,
-			 LATITUDE = P_LATITUDE,
+             LONGITUDE = P_LONGITUDE,
+             LATITUDE = P_LATITUDE,
              MODIFIER_ID = P_MODIFIER_ID,
              MODIFICATION_DATE = MODIFICATION_DATE
        WHERE TMS_ID = P_TMS_ID AND PLAZA_ID = P_PLAZA_ID;
@@ -7730,7 +7730,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    END PROVINCE_GETALL;
 
 
-  PROCEDURE PROVINCE_GETBYID (P_PROVINCE_ID IN NUMBER, CUR_OUT OUT T_CURSOR)
+   PROCEDURE PROVINCE_GETBYID (P_PROVINCE_ID IN NUMBER, CUR_OUT OUT T_CURSOR)
    IS
    BEGIN
       OPEN CUR_OUT FOR
@@ -7741,13 +7741,12 @@ ORDER BY TRANSACTION_DATETIME DESC';
    END PROVINCE_GETBYID;
 
 
-   PROCEDURE PROVINCE_INSERT (
-                          P_TMS_ID                  IN     NUMBER,
-                          P_PROVINCE_NAME           IN     NVARCHAR2,
-                          P_CREATION_DATE           IN     DATE,
-						  P_MODIFIER_ID             IN     NUMBER,
-                          P_MODIFICATION_DATE       IN     DATE,
-                          P_RETURNMSG              OUT NVARCHAR2)
+   PROCEDURE PROVINCE_INSERT (P_TMS_ID              IN     NUMBER,
+                              P_PROVINCE_NAME       IN     NVARCHAR2,
+                              P_CREATION_DATE       IN     DATE,
+                              P_MODIFIER_ID         IN     NUMBER,
+                              P_MODIFICATION_DATE   IN     DATE,
+                              P_RETURNMSG              OUT NVARCHAR2)
    AS
       C_COUNT   NUMBER;
    BEGIN
@@ -7760,49 +7759,53 @@ ORDER BY TRANSACTION_DATETIME DESC';
       THEN
          P_RETURNMSG := 'PROVINCE FOUND';
       ELSE
-         INSERT INTO TBL_PROVINCE (
-		                       TMS_ID,
-		                       PROVINCE_ID,
-                               PROVINCE_NAME,
-                               MODIFIER_ID,
-                               CREATION_DATE,
-                               TRANSFER_STATUS)
-              VALUES (P_TMS_ID,NVL ( (SELECT MAX (PROVINCE_ID) FROM TBL_PROVINCE), 0) + 1,
-                      P_PROVINCE_NAME,
-                      P_MODIFIER_ID,
-                      P_CREATION_DATE,
-                      1);
+         INSERT INTO TBL_PROVINCE (TMS_ID,
+                                   PROVINCE_ID,
+                                   PROVINCE_NAME,
+                                   MODIFIER_ID,
+                                   CREATION_DATE,
+                                   TRANSFER_STATUS)
+              VALUES (
+                        P_TMS_ID,
+                          NVL ( (SELECT MAX (PROVINCE_ID) FROM TBL_PROVINCE),
+                               0)
+                        + 1,
+                        P_PROVINCE_NAME,
+                        P_MODIFIER_ID,
+                        P_CREATION_DATE,
+                        1);
+
          P_RETURNMSG := 'PROVINCE CREATED';
       END IF;
    END PROVINCE_INSERT;
 
 
 
-    PROCEDURE PROVINCE_UPDATE (P_PROVINCE_ID             IN     NUMBER,
-                          P_PROVINCE_NAME                IN     NVARCHAR2,
-                          P_MODIFIER_ID                  IN     NUMBER,
-                          P_MODIFICATION_DATE            IN     DATE,
-                          P_RETURNMSG                    OUT NVARCHAR2)
+   PROCEDURE PROVINCE_UPDATE (P_PROVINCE_ID         IN     NUMBER,
+                              P_PROVINCE_NAME       IN     NVARCHAR2,
+                              P_MODIFIER_ID         IN     NUMBER,
+                              P_MODIFICATION_DATE   IN     DATE,
+                              P_RETURNMSG              OUT NVARCHAR2)
    AS
       C_COUNT   NUMBER;
    BEGIN
-         SELECT COUNT (*)
-           INTO C_COUNT
-           FROM TBL_PROVINCE
-          WHERE PROVINCE_NAME = P_PROVINCE_NAME ;
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_PROVINCE
+       WHERE PROVINCE_NAME = P_PROVINCE_NAME;
 
-         IF (C_COUNT > 0)
-         THEN
-            P_RETURNMSG := 'PROVINCE FOUND';
-         ELSE
-            UPDATE TBL_PROVINCE
-               SET PROVINCE_NAME = P_PROVINCE_NAME,
-                   MODIFIER_ID = P_MODIFIER_ID,
-                   MODIFICATION_DATE = P_MODIFICATION_DATE
-             WHERE PROVINCE_ID = P_PROVINCE_ID;
+      IF (C_COUNT > 0)
+      THEN
+         P_RETURNMSG := 'PROVINCE FOUND';
+      ELSE
+         UPDATE TBL_PROVINCE
+            SET PROVINCE_NAME = P_PROVINCE_NAME,
+                MODIFIER_ID = P_MODIFIER_ID,
+                MODIFICATION_DATE = P_MODIFICATION_DATE
+          WHERE PROVINCE_ID = P_PROVINCE_ID;
 
-            P_RETURNMSG := 'PROVINCE UPDATED';
-         END IF;
+         P_RETURNMSG := 'PROVINCE UPDATED';
+      END IF;
    END PROVINCE_UPDATE;
 
    /*CITY*/
@@ -7889,117 +7892,6 @@ ORDER BY TRANSACTION_DATETIME DESC';
             WHERE TMS_ID = P_TMS_ID AND DISTRICT_ID = P_DISTRICT_ID
          ORDER BY SUB_DISTRICT_ID;
    END SUBDISTRICT_GETBYDISTRICTID;
-
-
-
-   /*CUSTOMER APPOINTMENT*/
-
-
-
-   PROCEDURE CUSTOMER_APPOINTMENT_INSERT (
-      P_TMS_ID                    IN     NUMBER,
-      P_CUSTOMER_APPOINTMENT_ID      OUT NUMBER,
-      P_ACCOUNT_ID                IN     NUMBER,
-      P_APPOINTMENT_LOCATION      IN     NVARCHAR2,
-      P_APPOINTMENT_DATE          IN     DATE,
-      P_APPOINTED_BY              IN     NUMBER,
-      P_ATTENDED_BY               IN     NUMBER,
-      P_CREATION_DATE             IN     DATE,
-      P_TRANSFER_STATUS           IN     NUMBER)
-   AS
-   BEGIN
-      INSERT INTO TBL_CUSTOMER_APPOINTMENT (TMS_ID,
-                                            CUSTOMER_APPOINTMENT_ID,
-                                            ACCOUNT_ID,
-                                            APPOINTMENT_LOCATION,
-                                            APPOINTMENT_DATE,
-                                            APPOINTED_BY,
-                                            ATTENDED_BY,
-                                            CREATION_DATE,
-                                            TRANSFER_STATUS)
-           VALUES (P_TMS_ID,
-                   CUSTOMER_APPOINTMENT_SEQ.NEXTVAL,
-                   P_ACCOUNT_ID,
-                   P_APPOINTMENT_LOCATION,
-                   P_APPOINTMENT_DATE,
-                   P_APPOINTED_BY,
-                   P_ATTENDED_BY,
-                   P_CREATION_DATE,
-                   P_TRANSFER_STATUS);
-
-
-
-      P_CUSTOMER_APPOINTMENT_ID := CUSTOMER_APPOINTMENT_SEQ.CURRVAL;
-   END CUSTOMER_APPOINTMENT_INSERT;
-
-
-
-   PROCEDURE CUSTOMER_APPOINTMENT_UPDATE (
-      P_TMS_ID                    IN NUMBER,
-      P_CUSTOMER_APPOINTMENT_ID   IN NUMBER,
-      P_ACCOUNT_ID                IN NUMBER,
-      P_APPOINTMENT_LOCATION      IN NVARCHAR2,
-      P_APPOINTMENT_DATE          IN DATE,
-      P_APPOINTED_BY              IN NUMBER,
-      P_ATTENDED_BY               IN NUMBER,
-      P_MODIFIER_ID               IN NUMBER,
-      P_MODIFICATION_DATE         IN DATE,
-      P_TRANSFER_STATUS           IN NUMBER)
-   AS
-   BEGIN
-      UPDATE TBL_CUSTOMER_APPOINTMENT
-         SET TMS_ID = P_TMS_ID,
-             ACCOUNT_ID = P_ACCOUNT_ID,
-             APPOINTMENT_LOCATION = P_APPOINTMENT_LOCATION,
-             APPOINTMENT_DATE = P_APPOINTMENT_DATE,
-             APPOINTED_BY = P_APPOINTED_BY,
-             ATTENDED_BY = P_ATTENDED_BY,
-             MODIFIER_ID = P_MODIFIER_ID,
-             MODIFICATION_DATE = P_MODIFICATION_DATE,
-             TRANSFER_STATUS = P_TRANSFER_STATUS
-       WHERE     TMS_ID = P_TMS_ID
-             AND ACCOUNT_ID = P_ACCOUNT_ID
-             AND CUSTOMER_APPOINTMENT_ID = P_CUSTOMER_APPOINTMENT_ID;
-   END CUSTOMER_APPOINTMENT_UPDATE;
-
-
-
-   PROCEDURE CUSTOMER_APPOINTMENT_GETALL (CUR_OUT OUT T_CURSOR)
-   IS
-   BEGIN
-      OPEN CUR_OUT FOR
-           SELECT *
-             FROM TBL_CUSTOMER_APPOINTMENT CA
-         ORDER BY CA.ACCOUNT_ID;
-   END CUSTOMER_APPOINTMENT_GETALL;
-
-
-
-   PROCEDURE CUSTOMER_APPOINTMENT_GETBYID (
-      P_TMS_ID                    IN     NUMBER,
-      P_CUSTOMER_APPOINTMENT_ID   IN     NUMBER,
-      CUR_OUT                        OUT T_CURSOR)
-   IS
-   BEGIN
-      OPEN CUR_OUT FOR
-         SELECT *
-           FROM TBL_CUSTOMER_APPOINTMENT
-          WHERE     TMS_ID = P_TMS_ID
-                AND CUSTOMER_APPOINTMENT_ID = P_CUSTOMER_APPOINTMENT_ID;
-   END CUSTOMER_APPOINTMENT_GETBYID;
-
-
-
-   PROCEDURE CUSTAPPOINTMENT_GETACC_ID (P_TMS_ID       IN     NUMBER,
-                                        P_ACCOUNT_ID   IN     NUMBER,
-                                        CUR_OUT           OUT T_CURSOR)
-   IS
-   BEGIN
-      OPEN CUR_OUT FOR
-         SELECT *
-           FROM TBL_CUSTOMER_APPOINTMENT
-          WHERE TMS_ID = P_TMS_ID AND ACCOUNT_ID = P_ACCOUNT_ID;
-   END CUSTAPPOINTMENT_GETACC_ID;
 
 
 
@@ -8967,8 +8859,7 @@ ORDER BY CREATION_DATE DESC ';
                   SELECT 'TOTAL SUCCESSFUL SEND' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
-                   WHERE NVL (OPERATOR_RESPONSE_CODE, 0) <> 0
-				   )
+                   WHERE NVL (OPERATOR_RESPONSE_CODE, 0) <> 0)
          SELECT *
            FROM CTE_REPORT;
    END TRAN_DEATILSALL;
