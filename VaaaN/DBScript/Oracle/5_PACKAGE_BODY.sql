@@ -1,4 +1,4 @@
-/* Formatted on 12/02/2019 13:29:01 (QP5 v5.215.12089.38647) */
+/* Formatted on 12/02/2019 16:12:31 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -8833,18 +8833,34 @@ ORDER BY CREATION_DATE DESC ';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-         WITH CTE_TRANS_DEATILS
+         WITH CTE_DETAILS
               AS (SELECT TMS_ID,
                          PLAZA_ID,
                          LANE_ID,
                          TRANSACTION_ID,
-                         TRANSACTION_DATETIME,
-                         CREATION_DATE,
                          VEHICLESPEED,
-                         CT_ENTRY_ID,
-                         CT_ENTRY_ID_REAR,
-                         NF_ENTRY_ID_FRONT,
-                         NF_ENTRY_ID_REAR,
+                         RFID_FRONT_ID,
+                         RFID_FRONT_TIMESTAMP,
+                         RFID_FRONT_TAG_ID,
+                         RFID_FRONT_CLASS_ID,
+                         RFID_FRONT_VRN,
+                         RFID_REAR_ID,
+                         RFID_REAR_TIMESTAMP,
+                         RFID_REAR_TAG_ID,
+                         RFID_REAR_CLASS_ID,
+                         RFID_REAR_VRN,
+                         ANPR_FRONT_ID,
+                         ANPR_FRONT_VRN,
+                         ANPR_FRONT_CLASS_ID,
+                         ANPR_FRONT_IMAGE,
+                         ANPR_FRONT_VIDEO_URL,
+                         ANPR_FRONT_SPEED,
+                         ANPR_REAR_ID,
+                         ANPR_REAR_VRN,
+                         ANPR_REAR_CLASS_ID,
+                         ANPR_REAR_IMAGE,
+                         ANPR_REAR_VIDEO_URL,
+                         ANPR_REAR_SPEED,
                          IS_BALANCE_UPDATED,
                          IS_VIOLATION,
                          IS_REGISTERED,
@@ -8853,89 +8869,25 @@ ORDER BY CREATION_DATE DESC ';
                          AUDIT_DATE,
                          AUDITED_VEHICLE_CLASS_ID,
                          AUDITED_VRN,
-                         MEARGED_TRAN_ID AS PARENTID,
-                         TRANS_STATUS
-                    FROM TBL_TRANSACTION
+                         AMOUNT,
+                         CLOSING_BALANCE,
+                         ParentId,
+                         TRANS_STATUS,
+                         GATEWAY_RESPONSE_CODE,
+                         OPERATOR_RESPONSE_CODE,
+                         TRANSACTION_DATETIME,
+                         CREATION_DATE,
+                         CREATION_DATE SMS_CREATION,
+                         MESSAGE_SEND_TIME,
+                         MESSAGE_RECEIVE_TIME,
+                         SECONDS
+                    FROM TRANS_DEATILS
                    WHERE TRANSACTION_DATETIME BETWEEN TO_DATE (
                                                          P_STARTDATE,
                                                          'DD/MM/YYYY HH24:MI:SS')
                                                   AND TO_DATE (
                                                          P_ENDDATE,
                                                          'DD/MM/YYYY HH24:MI:SS')),
-              CTE_DETAILS
-              AS (SELECT T.TMS_ID,
-                         T.PLAZA_ID,
-                         T.LANE_ID,
-                         T.TRANSACTION_ID,
-                         T.TRANSACTION_DATETIME,
-                         T.CREATION_DATE,
-                         T.VEHICLESPEED,
-                         T.CT_ENTRY_ID AS RFID_FRONT_ID,
-                         CTP.TIME_STAMP AS RFID_FRONT_TIMESTAMP,
-                         CTP.OBJECT_ID AS RFID_FRONT_TAG_ID,
-                         CTP.CTP.VEHICLE_CLASS_ID AS RFID_FRONT_CLASS_ID,
-                         CTP.PLATE_NUMBER AS RFID_FRONT_VRN,
-                         T.CT_ENTRY_ID_REAR AS RFID_REAR_ID,
-                         CTPR.TIME_STAMP AS RFID_REAR_TIMESTAMP,
-                         CTPR.OBJECT_ID AS RFID_REAR_TAG_ID,
-                         CTPR.VEHICLE_CLASS_ID AS RFID_REAR_CLASS_ID,
-                         CTPR.PLATE_NUMBER AS RFID_REAR_VRN,
-                         T.NF_ENTRY_ID_FRONT AS ANPR_FRONT_ID,
-                         NFPF.PLATE_NUMBER AS ANPR_FRONT_VRN,
-                         NFPF.VEHICLE_CLASS_ID AS ANPR_FRONT_CLASS_ID,
-                         NFPF.PLATE_THUMBNAIL AS ANPR_FRONT_IMAGE,
-                         NFPF.VIDEO_URL AS ANPR_FRONT_VIDEO_URL,
-                         NFPF.VEHICLE_SPEED AS ANPR_FRONT_SPEED,
-                         T.NF_ENTRY_ID_REAR AS ANPR_REAR_ID,
-                         NFPR.PLATE_NUMBER AS ANPR_REAR_VRN,
-                         NFPR.VEHICLE_CLASS_ID AS ANPR_REAR_CLASS_ID,
-                         NFPR.PLATE_THUMBNAIL AS ANPR_REAR_IMAGE,
-                         NFPR.VIDEO_URL AS ANPR_REAR_VIDEO_URL,
-                         NFPR.VEHICLE_SPEED AS ANPR_REAR_SPEED,
-                         T.IS_BALANCE_UPDATED,
-                         T.IS_VIOLATION,
-                         T.IS_REGISTERED,
-                         T.AUDIT_STATUS,
-                         T.AUDITOR_ID,
-                         T.AUDIT_DATE,
-                         T.AUDITED_VEHICLE_CLASS_ID,
-                         T.AUDITED_VRN,
-                         AH.AMOUNT,
-                         AH.CLOSING_BALANCE,
-                         T.PARENTID,
-                         T.TRANS_STATUS,
-                         NVL (SH.GATEWAY_RESPONSE_CODE, 0)
-                            GATEWAY_RESPONSE_CODE,
-                         NVL (SH.OPERATOR_RESPONSE_CODE, 0)
-                            OPERATOR_RESPONSE_CODE
-                    FROM CTE_TRANS_DEATILS T
-                         LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
-                            ON T.CT_ENTRY_ID = CTP.ENTRY_ID
-                         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
-                            ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
-                         LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTPR
-                            ON T.CT_ENTRY_ID_REAR = CTPR.ENTRY_ID
-                         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTPR
-                            ON VC_CTPR.VEHICLE_CLASS_ID =
-                                  CTPR.VEHICLE_CLASS_ID
-                         LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
-                            ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
-                         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF
-                            ON CV_NFPF.VEH_REG_NO = NFPF.PLATE_NUMBER
-                         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
-                            ON NFPF.VEHICLE_CLASS_ID =
-                                  VC_NFPF.VEHICLE_CLASS_ID
-                         LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
-                            ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
-                         LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPR
-                            ON CV_NFPR.VEH_REG_NO = NFPR.PLATE_NUMBER
-                         LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
-                            ON NFPR.VEHICLE_CLASS_ID =
-                                  VC_NFPR.VEHICLE_CLASS_ID
-                         LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
-                            ON T.TRANSACTION_ID = AH.TRANSACTION_ID
-                         LEFT OUTER JOIN TBL_SMS_COMM_HISTORY SH
-                            ON AH.ENTRY_ID = SH.ACCOUNT_HISTORY_ID),
               CTE_REPORT
               AS (SELECT 'TOTAL VEHICLE' MESSAGE, COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
