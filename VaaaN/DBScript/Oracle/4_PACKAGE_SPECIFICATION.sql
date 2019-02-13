@@ -1270,12 +1270,17 @@ AS
                                    P_CITY_ID   IN     NUMBER,
                                    CUR_OUT        OUT T_CURSOR);
 
+PROCEDURE DISTRICT_GETBYID (P_DISTRICT_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
+
+
    /*SUBDISTRICT*/
    PROCEDURE SUBDISTRICT_GETALL (CUR_OUT OUT T_CURSOR);
 
    PROCEDURE SUBDISTRICT_GETBYDISTRICTID (P_TMS_ID        IN     NUMBER,
                                           P_DISTRICT_ID   IN     NUMBER,
                                           CUR_OUT            OUT T_CURSOR);
+
+ PROCEDURE SUBDISTRICT_GETBYID (P_SUBDISTRICT_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
    /*CUSTOMER APPOINTMENT*/
 

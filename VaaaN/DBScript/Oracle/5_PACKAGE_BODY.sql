@@ -1,4 +1,4 @@
-/* Formatted on 12/02/2019 16:12:31 (QP5 v5.215.12089.38647) */
+/* Formatted on 13-02-2019 11:16:09 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -7909,8 +7909,8 @@ ORDER BY TRANSACTION_DATETIME DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT *
-             FROM TBL_CITY
+           SELECT C.*,P.PROVINCE_NAME
+             FROM TBL_CITY C,TBL_PROVINCE P WHERE C.PROVINCE_ID=P.PROVINCE_ID 
          ORDER BY CITY_ID;
    END CITY_GETALL;
 
@@ -7926,7 +7926,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
    END CITY_GETBYID;
 
 
-PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
+   PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
                           P_PROVINCE_ID     IN     NUMBER,
                           P_CITY_NAME       IN     NVARCHAR2,
                           P_CREATION_DATE   IN     DATE,
@@ -7945,7 +7945,7 @@ PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
          P_RETURNMSG := 'CITY FOUND';
       ELSE
          INSERT INTO TBL_CITY (TMS_ID,
-		                       CITY_ID,
+                               CITY_ID,
                                PROVINCE_ID,
                                CITY_NAME,
                                MODIFIER_ID,
@@ -7953,7 +7953,7 @@ PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
                                TRANSFER_STATUS)
               VALUES (P_TMS_ID,
                       NVL ( (SELECT MAX (CITY_ID) FROM TBL_CITY), 0) + 1,
-					  P_PROVINCE_ID,
+                      P_PROVINCE_ID,
                       P_CITY_NAME,
                       P_MODIFIER_ID,
                       P_CREATION_DATE,
@@ -8018,8 +8018,8 @@ PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT *
-             FROM TBL_DISTRICT
+           SELECT D.*,C.CITY_NAME
+             FROM TBL_DISTRICT D ,TBL_CITY C WHERE  D.CITY_ID=C.CITY_ID
          ORDER BY DISTRICT_ID;
    END DISTRICT_GETALL;
 
@@ -8038,6 +8038,16 @@ PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
    END DISTRICT_GETBYCITYID;
 
 
+   PROCEDURE DISTRICT_GETBYID (P_DISTRICT_ID IN NUMBER, CUR_OUT OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_DISTRICT
+            WHERE DISTRICT_ID = P_DISTRICT_ID
+         ORDER BY DISTRICT_ID;
+   END DISTRICT_GETBYID;
+
 
    /*SUB DISTRICT*/
 
@@ -8047,8 +8057,8 @@ PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT *
-             FROM TBL_SUB_DISTRICT
+           SELECT SD.*,D.DISTRICT_NAME
+             FROM TBL_SUB_DISTRICT SD,TBL_DISTRICT D WHERE SD.DISTRICT_ID=D.DISTRICT_ID
          ORDER BY SUB_DISTRICT_ID;
    END SUBDISTRICT_GETALL;
 
@@ -8066,6 +8076,17 @@ PROCEDURE CITY_INSERT (P_TMS_ID          IN     NUMBER,
          ORDER BY SUB_DISTRICT_ID;
    END SUBDISTRICT_GETBYDISTRICTID;
 
+
+   PROCEDURE SUBDISTRICT_GETBYID (P_SUBDISTRICT_ID   IN     NUMBER,
+                                  CUR_OUT               OUT T_CURSOR)
+   IS
+   BEGIN
+      OPEN CUR_OUT FOR
+           SELECT *
+             FROM TBL_SUB_DISTRICT
+            WHERE SUB_DISTRICT_ID = P_SUBDISTRICT_ID
+         ORDER BY SUB_DISTRICT_ID;
+   END SUBDISTRICT_GETBYID;
 
 
    PROCEDURE TRANSCATION_HISTORY_DETAILS (P_VEH_REG_NO      IN     NVARCHAR2,

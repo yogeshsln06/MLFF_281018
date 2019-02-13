@@ -1,4 +1,5 @@
 ﻿using MLFFWebUI.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1612,7 +1613,7 @@ namespace MLFFWebUI.Controllers
         }
         #endregion
 
-        #region Kabupaten/Kota Section
+        #region Kabupaten/Kota Section--CITY
         public ActionResult CityList()
         {
             if (Session["LoggedUserId"] == null)
@@ -1622,7 +1623,9 @@ namespace MLFFWebUI.Controllers
             try
             {
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kabupaten/Kota");
-                ViewData["City"] = CityBLL.GetAll();
+                string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.CityBLL.GetAll_DT(), Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+                ViewData["CityListData"] = Det;
             }
             catch (Exception ex)
             {
@@ -1631,7 +1634,7 @@ namespace MLFFWebUI.Controllers
             return View();
         }
 
-        public JsonResult CityReload()
+        public object CityReload()
         {
             List<CityCBE> DistrictDataList = new List<CityCBE>();
             JsonResult result = new JsonResult();
@@ -1644,14 +1647,18 @@ namespace MLFFWebUI.Controllers
             }
             try
             {
-                DistrictDataList = CityBLL.GetAll().Cast<CityCBE>().ToList(); ;
-                result.Data = DistrictDataList;
+                //DistrictDataList = CityBLL.GetAll().Cast<CityCBE>().ToList(); ;
+                //result.Data = DistrictDataList;
+                string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.CityBLL.GetAll_DT(), Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+                result.Data = Det;
             }
             catch (Exception ex)
             {
-                HelperClass.LogMessage("Failed To refresh District List " + ex.Message.ToString());
+                HelperClass.LogMessage("Failed To refresh City List " + ex.Message.ToString());
             }
-            return Json(result.Data, JsonRequestBehavior.AllowGet);
+            return result.Data;
+            //return Json(result.Data, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1807,7 +1814,7 @@ namespace MLFFWebUI.Controllers
         }
         #endregion
 
-        #region Kecamatan Section
+        #region Kecamatan Section --District
         public ActionResult DistrictList()
         {
             if (Session["LoggedUserId"] == null)
@@ -1817,7 +1824,9 @@ namespace MLFFWebUI.Controllers
             try
             {
                 ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kabupaten/Kota");
-                ViewData["District"] = DistrictBLL.GetAll();
+                string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.DistrictBLL.GetAll_DT(), Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+                ViewData["District"] = Det;
             }
             catch (Exception ex)
             {
@@ -1826,7 +1835,7 @@ namespace MLFFWebUI.Controllers
             return View();
         }
 
-        public JsonResult DistrictReload()
+        public object DistrictReload()
         {
             List<DistrictCBE> DistrictDataList = new List<DistrictCBE>();
             JsonResult result = new JsonResult();
@@ -1839,14 +1848,18 @@ namespace MLFFWebUI.Controllers
             }
             try
             {
-                DistrictDataList = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList(); ;
-                result.Data = DistrictDataList;
+                // DistrictDataList = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList(); ;
+                // result.Data = DistrictDataList;
+                string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.DistrictBLL.GetAll_DT(), Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+                result.Data = Det;
             }
             catch (Exception ex)
             {
                 HelperClass.LogMessage("Failed To refresh District List " + ex.Message.ToString());
             }
-            return Json(result.Data, JsonRequestBehavior.AllowGet);
+            return result.Data;
+           // return Json(result.Data, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1876,6 +1889,16 @@ namespace MLFFWebUI.Controllers
         [HttpGet]
         public ActionResult DistrictNew()
         {
+            List<SelectListItem> provincelist = new List<SelectListItem>();
+            List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+
+            provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+            {
+                provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+            }
+            ViewBag.Province = provincelist;
+
             return View("DistrictListPopUp");
         }
 
@@ -1974,6 +1997,186 @@ namespace MLFFWebUI.Controllers
             catch (Exception ex)
             {
                 HelperClass.LogMessage("Province Update " + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region Kelurahan/Desa Section--SubDistrict
+        public ActionResult SubDistrictList()
+        {
+            if (Session["LoggedUserId"] == null)
+            {
+                return RedirectToAction("Logout", "Login");
+            }
+            try
+            {
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kabupaten/Kota");
+                string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.SubDistrictBLL.GetAll_DT(), Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+                ViewData["SubDistrict"] = Det;
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To Load SubDistrictList List " + ex.Message.ToString());
+            }
+            return View();
+        }
+
+        public object SubDistrictReload()
+        {
+            List<SubDistrictCBE> SubDistrictDataList = new List<SubDistrictCBE>();
+            JsonResult result = new JsonResult();
+            if (Session["LoggedUserId"] == null)
+            {
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "logout";
+                objResponseMessage.Add(objModelState);
+                result.Data = objResponseMessage;
+            }
+            try
+            {
+                //SubDistrictDataList = SubDistrictBLL.GetAll().Cast<SubDistrictCBE>().ToList(); ;
+                //result.Data = SubDistrictDataList;
+                string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.SubDistrictBLL.GetAll_DT(), Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
+                result.Data = Det;
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed To refresh SubDistrict List " + ex.Message.ToString());
+            }
+            return result.Data;
+            //return Json(result.Data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetSubDistrict(int id, string urltoken)
+        {
+            SubDistrictCBE SubDistrict = new SubDistrictCBE();
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else {
+                    SubDistrict.SubDistrictId = id;
+                    SubDistrict = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SubDistrictBLL.GetSubDistrictById(SubDistrict);
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("GetSubDisrict " + ex);
+            }
+            return View("SubDistrictListPopUp", SubDistrict);
+        }
+
+        [HttpGet]
+        public ActionResult SubDistrictNew()
+        {
+            return View("SubDistrictListPopUp");
+        }
+
+        [HttpPost]
+        public JsonResult SubDistrictAdd(SubDistrictCBE SubDistrict)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else
+                {
+                    List<SubDistrictCBE> SubDistrictDataList = new List<SubDistrictCBE>();
+                    SubDistrictDataList = SubDistrictBLL.GetAll().Cast<SubDistrictCBE>().ToList();
+
+                    List<SubDistrictCBE> SubDistrictNamefiltered = SubDistrictDataList.FindAll(x => x.SubDistrictName.ToLower() == SubDistrict.SubDistrictName.ToLower() && x.SubDistrictId != SubDistrict.SubDistrictId);
+                    if (SubDistrictNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "SubDistrict Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                        SubDistrict.TmsId = 1;
+                        SubDistrict.CreationDate = DateTime.Now;
+                        SubDistrict.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        string id = SubDistrictBLL.Insert(SubDistrict);
+                        if (id != "")
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to Insert SubDistrict in SetUp Controller" + ex);
+                ModelStateList objModelState = new ModelStateList();
+                objModelState.ErrorMessage = "Something went wrong";
+                objResponseMessage.Add(objModelState);
+            }
+            return Json(objResponseMessage, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult SubDistrictUpdate(SubDistrictCBE SubDistrict)
+        {
+            try
+            {
+                if (Session["LoggedUserId"] == null)
+                {
+                    ModelStateList objModelState = new ModelStateList();
+                    objModelState.ErrorMessage = "logout";
+                    objResponseMessage.Add(objModelState);
+                }
+                else
+                {
+                    List<SubDistrictCBE> SubDistrictDataList = new List<SubDistrictCBE>();
+                    SubDistrictDataList = SubDistrictBLL.GetAll().Cast<SubDistrictCBE>().ToList();
+
+                    List<SubDistrictCBE> SubDistrictNamefiltered = SubDistrictDataList.FindAll(x => x.SubDistrictName.ToLower() == SubDistrict.SubDistrictName.ToLower() && x.SubDistrictId != SubDistrict.SubDistrictId);
+                    if (SubDistrictNamefiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "SubDistrict Name already exists.";
+                        objResponseMessage.Add(objModelState);
+                    }
+
+                    if (objResponseMessage.Count == 0)
+                    {
+                        SubDistrict.TmsId = 1;
+                        SubDistrict.ModificationDate = DateTime.Now;
+                        SubDistrict.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        SubDistrictBLL.Update(SubDistrict);
+
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "success";
+                        objResponseMessage.Add(objModelState);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("SubDistrict Update " + ex);
                 ModelStateList objModelState = new ModelStateList();
                 objModelState.ErrorMessage = "Something went wrong";
                 objResponseMessage.Add(objModelState);

@@ -37,6 +37,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return subDistricts;
         }
 
+        public static DataTable GetAll_DT()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "SUBDISTRICT_GETALL";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+               dt = ds.Tables[tableName];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dt;
+        }
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.SubDistrictCBECollection GetByDistrictId(Libraries.CommonLibrary.CBE.SubDistrictCBE subDistrict)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.CBE.SubDistrictCBECollection subDistricts = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.SubDistrictCBECollection();
@@ -62,6 +80,69 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return subDistricts;
         }
 
+
+        public static CBE.SubDistrictCBE GetSubDistrictById(CBE.SubDistrictCBE SubDistrict)
+        {
+            try
+            {
+                CBE.SubDistrictCBECollection SubDistrictes = new CBE.SubDistrictCBECollection();
+                string spName = Constants.oraclePackagePrefix + "SUBDISTRICT_GETBYID";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SUBDISTRICT_ID", DbType.Int32, SubDistrict.SubDistrictId, ParameterDirection.Input));
+                SubDistrictes = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
+                return SubDistrictes[0];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static string Insert(CBE.SubDistrictCBE SubDistrict)
+        {
+            try
+            {
+                string strmsg = "";
+                string spName = Constants.oraclePackagePrefix + "PROVINCE_INSERT";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, SubDistrict.TmsId, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_NAME", DbType.String, SubDistrict.SubDistrictName, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, SubDistrict.ModifierId, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, SubDistrict.CreationDate, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, SubDistrict.ModificationDate, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RETURNMSG", DbType.String, "", ParameterDirection.Output, 100));
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+                return strmsg = (string)command.Parameters["P_RETURNMSG"].Value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static string Update(CBE.SubDistrictCBE SubDistrict)
+        {
+            try
+            {
+                string strmsg = "";
+                string spName = Constants.oraclePackagePrefix + "Province_Update";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_ID", DbType.Int32, SubDistrict.SubDistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_NAME", DbType.String, SubDistrict.SubDistrictName, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, SubDistrict.ModifierId, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, SubDistrict.ModificationDate, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RETURNMSG", DbType.String, "", ParameterDirection.Output, 100));
+
+                VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
+                return strmsg = (string)command.Parameters["P_RETURNMSG"].Value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
 
         #region HelperMethods

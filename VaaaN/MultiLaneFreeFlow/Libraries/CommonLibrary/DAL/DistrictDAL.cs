@@ -20,7 +20,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             {
                 //Stored procedure must have cur_out parameter.
                 //There is no need to add ref cursor for oracle in code.
-                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "CITY_GETALL";
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "District_GETALL";
 
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
@@ -36,6 +36,24 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             return districts;
         }
 
+        public static DataTable GetAll_DT()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                //Stored procedure must have cur_out parameter.
+                //There is no need to add ref cursor for oracle in code.
+                string spName = VaaaN.MLFF.Libraries.CommonLibrary.Constants.oraclePackagePrefix + "District_GETALL";
+                DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
+                DataSet ds = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName);
+                dt = ds.Tables[tableName];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dt;
+        }
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBECollection GetByCityId(Libraries.CommonLibrary.CBE.DistrictCBE district)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBECollection districts = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBECollection();
@@ -65,11 +83,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
         {
             try
             {
-
                 CBE.DistrictCBECollection Districtes = new CBE.DistrictCBECollection();
-                string spName = Constants.oraclePackagePrefix + "District_GETBYID";
+                string spName = Constants.oraclePackagePrefix + "DISTRICT_GETBYID";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_District_ID", DbType.Int32, District.DistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_DISTRICT_ID", DbType.Int32, District.DistrictId, ParameterDirection.Input));
                 Districtes = ConvertDataTableToCollection(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.LoadDataSet(command, tableName).Tables[tableName]);
                 return Districtes[0];
             }
