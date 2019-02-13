@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CityDAL.GetAll();
         }
+        public static DataTable GetAll_DT()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.CityDAL.GetAll_DT();
+        }
+
 
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE GetCityById(CBE.CityCBE city)
         {

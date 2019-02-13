@@ -19,7 +19,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.DistrictDAL.GetAll();
         }
-
+        public static DataTable GetAll_DT()
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.DistrictDAL.GetAll_DT();
+        }
         public static VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE GetDistrictById(CBE.DistrictCBE District)
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.DistrictDAL.GetDistrictById(District);
