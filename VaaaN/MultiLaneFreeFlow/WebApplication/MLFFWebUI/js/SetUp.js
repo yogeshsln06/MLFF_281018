@@ -1,8 +1,4 @@
-﻿/*User List */
-//function openpopup() {
-//    $("#warning").hide();
-//    $('#customerModal').modal('show');
-//}
+﻿/*User List Start*/
 function BindUserData(UserDataList) {
     tblUserData = $('#tblUserData').DataTable({
         data: UserDataList,
@@ -157,7 +153,6 @@ function EditUser(ctrl, id) {
         }
     });
 }
-
 function SaveData(action) {
     if ($("#needs-validation").valid()) {
         var UserDob = $('#UserDob').val() || ''
@@ -285,6 +280,7 @@ function validateUser() {
     }
     return valid;
 }
+/*User List End*/
 
 /********Vehicle Classification Start**********/
 function validateClass() {
@@ -298,7 +294,6 @@ function validateClass() {
     }
     return valid;
 }
-
 function BindClassfificationData(VehicleClassJson) {
     tblVehicleClassData = $('#tblVehicleClassData').DataTable({
         data: VehicleClassJson,
@@ -347,7 +342,6 @@ function BindClassfificationData(VehicleClassJson) {
     thId = 'tblVehicleClassDataTR';
     myVar = setInterval("myclick()", 500);
 }
-
 function reloadClassfificationData() {
     $(".animationload").show();
     $.ajax({
@@ -367,7 +361,6 @@ function reloadClassfificationData() {
         }
     });
 }
-
 function NewClassfification() {
     $(".animationload").show();
     $.ajax({
@@ -396,7 +389,6 @@ function NewClassfification() {
 
     });
 }
-
 function SaveClassfificationData(action) {
     if ($("#needs-validation").valid()) {
         if (validateClass()) {
@@ -463,7 +455,6 @@ function SaveClassfificationData(action) {
         $("#warning").show();
     }
 }
-
 function EditVehcileClass(ctrl, Id) {
     $(ctrl).parent().addClass('hide').removeClass('open').hide();
     $(".animationload").show();
@@ -475,9 +466,9 @@ function EditVehcileClass(ctrl, Id) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            $("#SetUpLabel").text("View " + $("#Name").val() + "");
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("View " + $("#Name").val() + "");
             openpopup();
             $("#Id").attr("disabled", "disabled");
             $("#btnSave").show();
@@ -490,7 +481,6 @@ function EditVehcileClass(ctrl, Id) {
 
     });
 }
-
 function VehcileClassDetail(ctrl, Id) {
     $(".animationload").show();
     $.ajax({
@@ -520,7 +510,6 @@ function VehcileClassDetail(ctrl, Id) {
 
     });
 }
-
 /********Vehicle Classification END**********/
 
 /********Hardware Start**********/
@@ -602,7 +591,6 @@ function BindHardwareData(HardwareDataList) {
     thId = 'tblHardwareDataTR';
     myVar = setInterval("myclick()", 500);
 }
-
 function reloadHardwareData() {
     $(".animationload").show();
     $.ajax({
@@ -624,7 +612,6 @@ function reloadHardwareData() {
 
     });
 }
-
 function NewHardware() {
     $(".animationload").show();
     $.ajax({
@@ -652,7 +639,6 @@ function NewHardware() {
 
     });
 }
-
 function SaveHardwareData(action) {
     if ($("#needs-validation").valid()) {
         if (validateHardware()) {
@@ -726,7 +712,6 @@ function SaveHardwareData(action) {
         $("#warning").show();
     }
 }
-
 function EditHardware(ctrl, Id) {
     $(ctrl).parent().addClass('hide').removeClass('open').hide();
     $(".animationload").show();
@@ -738,9 +723,9 @@ function EditHardware(ctrl, Id) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-            $("#SetUpLabel").text("Update " + $("#Name").val() + "");
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("Update " + $("#HardwareName").val() + "");
             openpopup();
             $("#HardwareId").attr("disabled", "disabled");
             $("#HardwareType").val($("#hfHardwareType").val());
@@ -755,7 +740,6 @@ function EditHardware(ctrl, Id) {
 
     });
 }
-
 function HardwareDetail(ctrl, Id) {
     $(".animationload").show();
     $.ajax({
@@ -787,7 +771,6 @@ function HardwareDetail(ctrl, Id) {
 
     });
 }
-
 /********Hardware End**********/
 
 /********Lane Start**********/
@@ -903,7 +886,6 @@ function BindLaneData(LaneDataList) {
     thId = 'tblLaneDataTR';
     myVar = setInterval("myclick()", 500);
 }
-
 function reloadLaneData() {
     $(".animationload").show();
     $.ajax({
@@ -925,7 +907,6 @@ function reloadLaneData() {
 
     });
 }
-
 function NewLane() {
     $(".animationload").show();
     $.ajax({
@@ -952,7 +933,6 @@ function NewLane() {
         }
     });
 }
-
 function SaveLaneData(action) {
     if ($("#needs-validation").valid()) {
         if (validateLane()) {
@@ -1022,7 +1002,6 @@ function SaveLaneData(action) {
         $("#warning").show();
     }
 }
-
 function EditLane(ctrl, Id) {
     $(ctrl).parent().addClass('hide').removeClass('open').hide();
     $(".animationload").show();
@@ -1051,7 +1030,6 @@ function EditLane(ctrl, Id) {
 
     });
 }
-
 function LaneDetail(ctrl, Id) {
     $(".animationload").show();
     $.ajax({
@@ -1083,7 +1061,6 @@ function LaneDetail(ctrl, Id) {
 
     });
 }
-
 /********Lane End**********/
 
 //******Gantry Start ******
@@ -1112,7 +1089,6 @@ function validateGantry() {
     }
     return valid;
 }
-
 function BindGantryData(GantryDataList) {
     tblGantryData = $('#tblGantryData').DataTable({
         data: GantryDataList,
@@ -1215,7 +1191,6 @@ function EditGantry(ctrl, Id) {
         }
     });
 }
-
 function NewGantry() {
     $(".animationload").show();
     $.ajax({
@@ -1242,7 +1217,6 @@ function NewGantry() {
         }
     });
 }
-
 function SaveGantryData(action) {
     if ($("#needs-validation").valid()) {
         if (validateGantry()) {
@@ -1314,7 +1288,6 @@ function SaveGantryData(action) {
 /********Gantry End**********/
 
 //******Roles Start ******
-
 function validateRole() {
     var valid = true;
     if ($("#RoleName").val() == '') {
@@ -1326,7 +1299,6 @@ function validateRole() {
     }
     return valid;
 }
-
 function BindRolesData(RolesDataList) {
     tblRolesData = $('#tblRolesData').DataTable({
         data: RolesDataList,
@@ -1438,7 +1410,6 @@ function EditRoles(ctrl, Id) {
         }
     });
 }
-
 function NewRoles() {
     $(".animationload").show();
     $.ajax({
@@ -1467,7 +1438,6 @@ function NewRoles() {
 
     });
 }
-
 function SaveRolesData(action) {
     if ($("#needs-validation").valid()) {
         if (validateRole()) {
@@ -1646,7 +1616,6 @@ function EditProvince(ctrl, Id) {
         }
     });
 }
-
 function NewProvince() {
     $(".animationload").show();
     $.ajax({
@@ -1673,7 +1642,6 @@ function NewProvince() {
         }
     });
 }
-
 function SaveProvinceData(action) {
     if ($("#needs-validation").valid()) {
         if (validateProvince()) {
@@ -1851,7 +1819,6 @@ function EditCity(ctrl, Id) {
         }
     });
 }
-
 function NewCity() {
     $(".animationload").show();
     $.ajax({
@@ -1878,7 +1845,6 @@ function NewCity() {
         }
     });
 }
-
 function SaveCityData(action) {
     if ($("#needs-validation").valid()) {
         if (validateCity()) {
@@ -1980,8 +1946,8 @@ function BindDistrictData(DistrictDataList) {
                 }
             },
             { 'data': 'DISTRICT_NAME', },
+            { 'data': 'PROVINCE_NAME', },
             { 'data': 'CITY_NAME', },
-            
             {
                 'data': 'DISTRICT_ID',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -2059,7 +2025,6 @@ function EditDistrict(ctrl, Id) {
         }
     });
 }
-
 function NewDistrict() {
     $(".animationload").show();
     $.ajax({
@@ -2086,7 +2051,6 @@ function NewDistrict() {
         }
     });
 }
-
 function SaveDistrictData(action) {
     if ($("#needs-validation").valid()) {
         if (validateDistrict()) {
@@ -2099,6 +2063,8 @@ function SaveDistrictData(action) {
             var Inputdata = {
                 DistrictId: Id,
                 DistrictName: $("#DistrictName").val(),
+                CityId: $("#CityId").val(),
+                ProvinceId: $("#ProvinceId").val()
             }
             $(".animationload").show();
             $.ajax({
@@ -2114,7 +2080,7 @@ function SaveDistrictData(action) {
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
                             if (action == 'close') {
-                                reloadProvinceData();
+                                reloadDistrictData();
                                 closePopup();
                             }
                             else {
@@ -2186,7 +2152,10 @@ function BindSubDistrictData(SubDistrictDataList) {
                 }
             },
             { 'data': 'SUB_DISTRICT_NAME', },
-            { 'data': 'DISTRICT_NAME', },
+           
+            { 'data': 'PROVINCE_NAME', },
+            { 'data': 'CITY_NAME', },
+             { 'data': 'DISTRICT_NAME', },
             {
                 'data': 'SUB_DISTRICT_ID',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
@@ -2251,7 +2220,7 @@ function EditSubDistrict(ctrl, Id) {
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#SetUpLabel").text("Update [" + $("#SubDistrictName").val() + "]");
-            $("#DistrictId").attr("disabled", "disabled");
+            $("#SubDistrictId").attr("disabled", "disabled");
             openpopup();
 
             $("#btnSave").show();
@@ -2263,7 +2232,6 @@ function EditSubDistrict(ctrl, Id) {
         }
     });
 }
-
 function NewSubDistrict() {
     $(".animationload").show();
     $.ajax({
@@ -2290,8 +2258,7 @@ function NewSubDistrict() {
         }
     });
 }
-
-function SaveDistrictData(action) {
+function SaveSUbDistrictData(action) {
     if ($("#needs-validation").valid()) {
         if (validateSubDistrict()) {
             var Id = $("#SubDistrictId").val() || '';
@@ -2303,6 +2270,9 @@ function SaveDistrictData(action) {
             var Inputdata = {
                 SubDistrictId: Id,
                 SubDistrictName: $("#SubDistrictName").val(),
+                ProvinceId: $("#ProvinceId").val(),
+                CityId: $("#CityId").val(),
+                DistrictId: $("#DistrictId").val(),
             }
             $(".animationload").show();
             $.ajax({
@@ -2318,7 +2288,7 @@ function SaveDistrictData(action) {
                     for (var i = 0; i < resultData.length; i++) {
                         if (resultData[i].ErrorMessage == "success") {
                             if (action == 'close') {
-                                reloadProvinceData();
+                                reloadSubDistrictData();
                                 closePopup();
                             }
                             else {
@@ -2356,6 +2326,7 @@ function SaveDistrictData(action) {
     }
 }
 //******SubDistrict End ******
+
 function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();

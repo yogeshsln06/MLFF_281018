@@ -103,14 +103,14 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             try
             {
                 string strmsg = "";
-                string spName = Constants.oraclePackagePrefix + "PROVINCE_INSERT";
+                string spName = Constants.oraclePackagePrefix + "SUBDISTRICT_INSERT";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_TMS_ID", DbType.Int32, SubDistrict.TmsId, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_NAME", DbType.String, SubDistrict.SubDistrictName, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_DISTRICT_ID", DbType.Int32, SubDistrict.DistrictId, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SUB_DISTRICT_NAME", DbType.String, SubDistrict.SubDistrictName, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, SubDistrict.ModifierId, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_CREATION_DATE", DbType.DateTime, SubDistrict.CreationDate, ParameterDirection.Input, 100));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, SubDistrict.ModificationDate, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RETURNMSG", DbType.String, "", ParameterDirection.Output, 100));
                 VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.ExecuteNonQuery(command);
                 return strmsg = (string)command.Parameters["P_RETURNMSG"].Value;
@@ -126,11 +126,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
             try
             {
                 string strmsg = "";
-                string spName = Constants.oraclePackagePrefix + "Province_Update";
+                string spName = Constants.oraclePackagePrefix + "SUBDISTRICT_UPDATE";
                 DbCommand command = VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.GetStoredProcCommand(spName);
 
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_ID", DbType.Int32, SubDistrict.SubDistrictId, ParameterDirection.Input));
-                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_PROVINCE_NAME", DbType.String, SubDistrict.SubDistrictName, ParameterDirection.Input, 100));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SUB_DISTRICT_ID", DbType.Int32, SubDistrict.SubDistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_DISTRICT_ID", DbType.Int32, SubDistrict.DistrictId, ParameterDirection.Input));
+                command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_SUB_DISTRICT_NAME", DbType.String, SubDistrict.SubDistrictName, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFIER_ID", DbType.Int32, SubDistrict.ModifierId, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_MODIFICATION_DATE", DbType.DateTime, SubDistrict.ModificationDate, ParameterDirection.Input, 100));
                 command.Parameters.Add(VaaaN.MLFF.Libraries.CommonLibrary.DBA.DBAccessor.CreateDbParameter(ref command, "P_RETURNMSG", DbType.String, "", ParameterDirection.Output, 100));

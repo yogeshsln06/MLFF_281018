@@ -1875,7 +1875,18 @@ namespace MLFFWebUI.Controllers
                     objResponseMessage.Add(objModelState);
                 }
                 else {
+                    List<SelectListItem> provincelist = new List<SelectListItem>();
+                    List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+
+                    provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
+                    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+                    {
+                        provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+                    }
+                    ViewBag.Province = provincelist;
+                    
                     District.DistrictId = id;
+                    //ViewBag.OCity = District.CityId;
                     District = VaaaN.MLFF.Libraries.CommonLibrary.BLL.DistrictBLL.GetDistrictById(District);
                 }
             }
@@ -2066,6 +2077,17 @@ namespace MLFFWebUI.Controllers
                     objResponseMessage.Add(objModelState);
                 }
                 else {
+                    List<SelectListItem> provincelist = new List<SelectListItem>();
+                    List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+
+                    provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
+                    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+                    {
+                        provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+                    }
+                    ViewBag.Province = provincelist;
+
+                   // ViewBag.ODistrictId = SubDistrict.DistrictId;
                     SubDistrict.SubDistrictId = id;
                     SubDistrict = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SubDistrictBLL.GetSubDistrictById(SubDistrict);
                 }
@@ -2080,6 +2102,15 @@ namespace MLFFWebUI.Controllers
         [HttpGet]
         public ActionResult SubDistrictNew()
         {
+            List<SelectListItem> provincelist = new List<SelectListItem>();
+            List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+
+            provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+            {
+                provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+            }
+            ViewBag.Province = provincelist;
             return View("SubDistrictListPopUp");
         }
 

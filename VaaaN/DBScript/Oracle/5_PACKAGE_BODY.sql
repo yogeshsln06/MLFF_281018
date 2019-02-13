@@ -1,4 +1,4 @@
-/* Formatted on 13-02-2019 11:16:09 (QP5 v5.215.12089.38647) */
+/* Formatted on 13-02-2019 16:08:31 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -7909,8 +7909,9 @@ ORDER BY TRANSACTION_DATETIME DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT C.*,P.PROVINCE_NAME
-             FROM TBL_CITY C,TBL_PROVINCE P WHERE C.PROVINCE_ID=P.PROVINCE_ID 
+           SELECT C.*, P.PROVINCE_NAME
+             FROM TBL_CITY C, TBL_PROVINCE P
+            WHERE C.PROVINCE_ID = P.PROVINCE_ID
          ORDER BY CITY_ID;
    END CITY_GETALL;
 
@@ -7981,7 +7982,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
 
       IF (C_COUNT > 0)
       THEN
-         P_RETURNMSG := 'District FOUND';
+         P_RETURNMSG := 'CITY FOUND';
       ELSE
          UPDATE TBL_CITY
             SET CITY_NAME = P_CITY_NAME,
@@ -7990,7 +7991,7 @@ ORDER BY TRANSACTION_DATETIME DESC';
                 MODIFICATION_DATE = P_MODIFICATION_DATE
           WHERE CITY_ID = P_CITY_ID;
 
-         P_RETURNMSG := 'District UPDATED';
+         P_RETURNMSG := 'CITY UPDATED';
       END IF;
    END CITY_UPDATE;
 
@@ -8018,8 +8019,12 @@ ORDER BY TRANSACTION_DATETIME DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT D.*,C.CITY_NAME
-             FROM TBL_DISTRICT D ,TBL_CITY C WHERE  D.CITY_ID=C.CITY_ID
+           SELECT D.*,
+                  C.CITY_NAME,
+                  P.PROVINCE_ID,
+                  P.PROVINCE_NAME
+             FROM TBL_DISTRICT D, TBL_CITY C, TBL_PROVINCE P
+            WHERE D.CITY_ID = C.CITY_ID AND P.PROVINCE_ID = C.PROVINCE_ID
          ORDER BY DISTRICT_ID;
    END DISTRICT_GETALL;
 
@@ -8048,6 +8053,76 @@ ORDER BY TRANSACTION_DATETIME DESC';
          ORDER BY DISTRICT_ID;
    END DISTRICT_GETBYID;
 
+   PROCEDURE DISTRICT_INSERT (P_TMS_ID          IN     NUMBER,
+                              P_CITY_ID         IN     NUMBER,
+                              P_DISTRICT_NAME   IN     NVARCHAR2,
+                              P_CREATION_DATE   IN     DATE,
+                              P_MODIFIER_ID     IN     NUMBER,
+                              P_RETURNMSG          OUT NVARCHAR2)
+   AS
+      C_COUNT   NUMBER;
+   BEGIN
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_DISTRICT
+       WHERE DISTRICT_NAME = P_DISTRICT_NAME;
+
+      IF (C_COUNT > 0)
+      THEN
+         P_RETURNMSG := 'DISTRICT FOUND';
+      ELSE
+         INSERT INTO TBL_DISTRICT (TMS_ID,
+                                   DISTRICT_ID,
+                                   CITY_ID,
+                                   DISTRICT_NAME,
+                                   MODIFIER_ID,
+                                   CREATION_DATE,
+                                   TRANSFER_STATUS)
+              VALUES (
+                        P_TMS_ID,
+                          NVL ( (SELECT MAX (DISTRICT_ID) FROM TBL_DISTRICT),
+                               0)
+                        + 1,
+                        P_CITY_ID,
+                        P_DISTRICT_NAME,
+                        P_MODIFIER_ID,
+                        P_CREATION_DATE,
+                        1);
+
+         P_RETURNMSG := 'DISTRICT CREATED';
+      END IF;
+   END DISTRICT_INSERT;
+
+
+
+   PROCEDURE DISTRICT_UPDATE (P_DISTRICT_ID         IN     NUMBER,
+                              P_CITY_ID             IN     NUMBER,
+                              P_DISTRICT_NAME       IN     NVARCHAR2,
+                              P_MODIFIER_ID         IN     NUMBER,
+                              P_MODIFICATION_DATE   IN     DATE,
+                              P_RETURNMSG              OUT NVARCHAR2)
+   AS
+      C_COUNT   NUMBER;
+   BEGIN
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_DISTRICT
+       WHERE DISTRICT_NAME = P_DISTRICT_NAME AND DISTRICT_ID <> P_DISTRICT_ID;
+
+      IF (C_COUNT > 0)
+      THEN
+         P_RETURNMSG := 'DISTRICT FOUND';
+      ELSE
+         UPDATE TBL_DISTRICT
+            SET DISTRICT_NAME = P_DISTRICT_NAME,
+                CITY_ID = P_CITY_ID,
+                MODIFIER_ID = P_MODIFIER_ID,
+                MODIFICATION_DATE = P_MODIFICATION_DATE
+          WHERE DISTRICT_ID = P_DISTRICT_ID;
+
+         P_RETURNMSG := 'DISTRICT UPDATED';
+      END IF;
+   END DISTRICT_UPDATE;
 
    /*SUB DISTRICT*/
 
@@ -8057,8 +8132,19 @@ ORDER BY TRANSACTION_DATETIME DESC';
    IS
    BEGIN
       OPEN CUR_OUT FOR
-           SELECT SD.*,D.DISTRICT_NAME
-             FROM TBL_SUB_DISTRICT SD,TBL_DISTRICT D WHERE SD.DISTRICT_ID=D.DISTRICT_ID
+           SELECT SD.*,
+                  D.DISTRICT_NAME,
+                  C.CITY_ID,
+                  C.CITY_NAME,
+                  P.PROVINCE_ID,
+                  P.PROVINCE_NAME
+             FROM TBL_SUB_DISTRICT SD,
+                  TBL_DISTRICT D,
+                  TBL_CITY C,
+                  TBL_PROVINCE P
+            WHERE     P.PROVINCE_ID = C.PROVINCE_ID
+                  AND C.CITY_ID = D.CITY_ID
+                  AND SD.DISTRICT_ID = D.DISTRICT_ID
          ORDER BY SUB_DISTRICT_ID;
    END SUBDISTRICT_GETALL;
 
@@ -8087,6 +8173,83 @@ ORDER BY TRANSACTION_DATETIME DESC';
             WHERE SUB_DISTRICT_ID = P_SUBDISTRICT_ID
          ORDER BY SUB_DISTRICT_ID;
    END SUBDISTRICT_GETBYID;
+
+
+
+   PROCEDURE SUBDISTRICT_INSERT (P_TMS_ID              IN     NUMBER,
+                                 P_DISTRICT_ID         IN     NUMBER,
+                                 P_SUB_DISTRICT_NAME   IN     NVARCHAR2,
+                                 P_CREATION_DATE       IN     DATE,
+                                 P_MODIFIER_ID         IN     NUMBER,
+                                 P_RETURNMSG              OUT NVARCHAR2)
+   AS
+      C_COUNT   NUMBER;
+   BEGIN
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_SUB_DISTRICT
+       WHERE SUB_DISTRICT_NAME = P_SUB_DISTRICT_NAME;
+
+      IF (C_COUNT > 0)
+      THEN
+         P_RETURNMSG := 'SUBDISTRICT FOUND';
+      ELSE
+         INSERT INTO TBL_SUB_DISTRICT (TMS_ID,
+                                       SUB_DISTRICT_ID,
+                                       DISTRICT_ID,
+                                       SUB_DISTRICT_NAME,
+                                       MODIFIER_ID,
+                                       CREATION_DATE,
+                                       TRANSFER_STATUS)
+              VALUES (
+                        P_TMS_ID,
+                          NVL (
+                             (SELECT MAX (SUB_DISTRICT_ID)
+                                FROM TBL_SUB_DISTRICT),
+                             0)
+                        + 1,
+                        P_DISTRICT_ID,
+                        P_SUB_DISTRICT_NAME,
+                        P_MODIFIER_ID,
+                        P_CREATION_DATE,
+                        1);
+
+         P_RETURNMSG := 'SUBDISTRICT CREATED';
+      END IF;
+   END SUBDISTRICT_INSERT;
+
+
+
+   PROCEDURE SUBDISTRICT_UPDATE (P_DISTRICT_ID         IN     NUMBER,
+                                 P_SUB_DISTRICT_ID     IN     NUMBER,
+                                 P_SUB_DISTRICT_NAME   IN     NVARCHAR2,
+                                 P_MODIFIER_ID         IN     NUMBER,
+                                 P_MODIFICATION_DATE   IN     DATE,
+                                 P_RETURNMSG              OUT NVARCHAR2)
+   AS
+      C_COUNT   NUMBER;
+   BEGIN
+      SELECT COUNT (*)
+        INTO C_COUNT
+        FROM TBL_SUB_DISTRICT
+       WHERE     SUB_DISTRICT_NAME = P_SUB_DISTRICT_NAME
+             AND SUB_DISTRICT_ID <> P_SUB_DISTRICT_ID;
+
+      IF (C_COUNT > 0)
+      THEN
+         P_RETURNMSG := 'SUBDISTRICT FOUND';
+      ELSE
+         UPDATE TBL_SUB_DISTRICT
+            SET SUB_DISTRICT_NAME = P_SUB_DISTRICT_NAME,
+                DISTRICT_ID = P_DISTRICT_ID,
+                MODIFIER_ID = P_MODIFIER_ID,
+                MODIFICATION_DATE = P_MODIFICATION_DATE
+          WHERE SUB_DISTRICT_ID = P_SUB_DISTRICT_ID;
+
+         P_RETURNMSG := 'SUBDISTRICT UPDATED';
+      END IF;
+   END SUBDISTRICT_UPDATE;
+
 
 
    PROCEDURE TRANSCATION_HISTORY_DETAILS (P_VEH_REG_NO      IN     NVARCHAR2,

@@ -1272,6 +1272,21 @@ AS
 
 PROCEDURE DISTRICT_GETBYID (P_DISTRICT_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
 
+PROCEDURE DISTRICT_INSERT (
+                           P_TMS_ID         IN     NUMBER,
+                           P_CITY_ID        IN     NUMBER,
+                          P_DISTRICT_NAME   IN     NVARCHAR2,
+                          P_CREATION_DATE   IN     DATE,
+                          P_MODIFIER_ID     IN     NUMBER,
+                          P_RETURNMSG          OUT NVARCHAR2);
+
+ PROCEDURE DISTRICT_UPDATE (
+                          P_DISTRICT_ID         IN     NUMBER,
+                          P_CITY_ID             IN     NUMBER,
+                          P_DISTRICT_NAME       IN     NVARCHAR2,
+                          P_MODIFIER_ID         IN     NUMBER,
+                          P_MODIFICATION_DATE   IN     DATE,
+                          P_RETURNMSG              OUT NVARCHAR2);
 
    /*SUBDISTRICT*/
    PROCEDURE SUBDISTRICT_GETALL (CUR_OUT OUT T_CURSOR);
@@ -1281,6 +1296,24 @@ PROCEDURE DISTRICT_GETBYID (P_DISTRICT_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
                                           CUR_OUT            OUT T_CURSOR);
 
  PROCEDURE SUBDISTRICT_GETBYID (P_SUBDISTRICT_ID IN NUMBER, CUR_OUT OUT T_CURSOR);
+
+
+ PROCEDURE SUBDISTRICT_INSERT (
+                          P_TMS_ID         IN     NUMBER,
+                          P_DISTRICT_ID        IN     NUMBER,
+                          P_SUB_DISTRICT_NAME   IN     NVARCHAR2,
+                          P_CREATION_DATE   IN     DATE,
+                          P_MODIFIER_ID     IN     NUMBER,
+                          P_RETURNMSG          OUT NVARCHAR2);
+
+
+  PROCEDURE SUBDISTRICT_UPDATE (
+                          P_DISTRICT_ID         IN     NUMBER,
+                          P_SUB_DISTRICT_ID     IN     NUMBER,
+                          P_SUB_DISTRICT_NAME   IN     NVARCHAR2,
+                          P_MODIFIER_ID         IN     NUMBER,
+                          P_MODIFICATION_DATE   IN     DATE,
+                          P_RETURNMSG              OUT NVARCHAR2);
 
    /*CUSTOMER APPOINTMENT*/
 
