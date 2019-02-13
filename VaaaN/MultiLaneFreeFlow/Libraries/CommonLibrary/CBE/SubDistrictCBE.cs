@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.tmsId = value;
             }
         }
-
+        [Display(Name = "Kecamatan")]
         public int DistrictId
         {
             get
@@ -45,7 +46,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.districtId = value;
             }
         }
-
+        [Display(Name = "Kelurahan/Desa ID")]
         public int SubDistrictId
         {
             get
@@ -58,7 +59,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.subdistrictId = value;
             }
         }
-
+        [Display(Name = "Kelurahan/Desa Name")]
         public string SubDistrictName
         {
             get

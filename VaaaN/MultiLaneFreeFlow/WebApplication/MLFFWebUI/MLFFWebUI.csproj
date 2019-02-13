@@ -375,6 +375,10 @@
     <Content Include="Views\SetUp\ProvinceListPopUp.cshtml" />
     <Content Include="Views\SetUp\DistrictList.cshtml" />
     <Content Include="Views\SetUp\DistrictListPopUp.cshtml" />
+    <Content Include="Views\SetUp\CityList.cshtml" />
+    <Content Include="Views\SetUp\CityListPopUp.cshtml" />
+    <Content Include="Views\SetUp\SubDistrictList.cshtml" />
+    <Content Include="Views\SetUp\SubDistrictListPopUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

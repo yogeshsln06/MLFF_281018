@@ -20,6 +20,36 @@
                     <div class="form-group  col-md-4">
                         @Html.EditorFor(model => model.SubDistrictId, new { htmlAttributes = new { @class = "form-control" } })
                     </div>
+                  
+                      <div class="form-group col-md-2 required">
+                          <label for="txtUserId" class="form-label">Province</label>
+                      </div>
+                     <div class="form-group  col-md-4">
+                            @Html.DropDownList("ProvinceId", (IEnumerable<SelectListItem>)ViewBag.Province, new { @class = "form-control required select", onchange = "GetCityList();" })
+                      </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-2 required">
+                        <label for="CityId" class="form-label">Kabupaten/Kota</label>
+                    </div>
+                    <div class="form-group  col-md-4">
+                        <select id="CityId" name="CityId" class="form-control"  onchange="GetDistrictList();">
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 required">
+                        @Html.LabelFor(model => model.DistrictId, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group  col-md-4">
+                        <select id="DistrictId" name="DistrictId" class="form-control">
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                   
+                </div>
+
+                <div class="form-row">
                     <div class="form-group col-md-2 required">
                         @Html.LabelFor(model => model.SubDistrictName, htmlAttributes: new { @class = "control-label" })
                     </div>
@@ -27,17 +57,7 @@
                         @Html.EditorFor(model => model.SubDistrictName, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.SubDistrictName, "", new { @class = "text-danger" })
                     </div>
-                </div>
-                <div class="clearfix"></div>
-                <div class="form-row">
-                    @*<div class="form-group col-md-2 required">
-                        @Html.LabelFor(model => model.HardwareType, htmlAttributes: new { @class = "control-label" })
-                    </div>
-                    <div class="form-group  col-md-4">
-                        @Html.DropDownList("HardwareType", (IEnumerable<SelectListItem>)ViewBag.HardwareType, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.HardwareType, "", new { @class = "text-danger" })
-                    </div>*@
-                   
+
                 </div>
                 <div class="clearfix"></div>
                 
@@ -51,6 +71,6 @@
     </div>
     <button type="button" class="btn btn-outline-danger" data-dismiss="modal" id="btnClose">Close</button>
     <button type="button" class="btn btn-outline-danger" id="btnCancel" onclick="ResetFildes();">Cancel</button>
-    <button type="button" class="btn btn-outline-primary" onclick="SaveHardwareData('close')" id="btnSave">Save</button>
+    <button type="button" class="btn btn-outline-primary" onclick="SaveSUbDistrictData('close')" id="btnSave">Save</button>
 </div>
 
