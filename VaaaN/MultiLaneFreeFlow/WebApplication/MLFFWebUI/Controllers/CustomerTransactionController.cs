@@ -123,9 +123,13 @@ namespace MLFFWebUI.Controllers
             {
                 strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0  AND NVL(T.NF_ENTRY_ID_REAR,0) = 0";
             }
-            else if (transaction.TransactionCategoryId == 2)//IKE + Front/Rear ANPR
+            //else if (transaction.TransactionCategoryId == 2)//IKE + Front/Rear ANPR
+            //{
+            //    strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected')) ";
+            //}
+            else if (transaction.TransactionCategoryId == 2)//Front & Rear ANPR Only
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected')) ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected'  AND NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' ";
             }
             else if (transaction.TransactionCategoryId == 3)//Front/Rear ANPR Only
             {
@@ -135,10 +139,7 @@ namespace MLFFWebUI.Controllers
             {
                 strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)='not detected')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)='not detected')) ";
             }
-            else if (transaction.TransactionCategoryId == 5)//Front & Rear ANPR Only
-            {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected'  AND NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' ";
-            }
+            
             dt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strQuery);
             string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Det.Replace("\r", "").Replace("\n", "");

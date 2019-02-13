@@ -28,7 +28,7 @@ $(document).ready(function () {
         thId = 'tblCustomerDataTR';
         myVar = setInterval("myclick()", 500);
     });
-   
+
     BindCustmerAccount();
 });
 
@@ -1079,6 +1079,7 @@ function openImg(ctrl) {
 function ResetCustomerFildes() {
     $("#fildset").find('.text-box').val('');
     $("#fildset").find('input:file').val('');
+    $("#fildset").find('select').val(0);
     $("#ResidentidImage").parent().find('br').remove();
     $("#ResidentidImage").prev().hide();
     $("#ResidentidImage").next().find('span').text('Attach File');

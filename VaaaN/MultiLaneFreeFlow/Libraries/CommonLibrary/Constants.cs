@@ -102,7 +102,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             Audited = 4,
         }
 
-        public enum ManualReviewTransactionCategory
+        public enum ManualReviewTransactionCategory_OLD
         {
             [Display(Name = "All Unreviewed")]
             Unreviewed = 0,
@@ -121,6 +121,29 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
             [Display(Name = "Front & Rear ANPR Only")]
             Only_ALPR = 5,
+        }
+
+        public enum ManualReviewTransactionCategory
+        {
+            [Display(Name = "All Unreviewed")]
+            Unreviewed = 0,
+
+            [Display(Name = "IKE Only")]
+            IKE = 1,
+
+            //[Display(Name = "IKE + Front/Rear ANPR")]
+            //IKE_FR_ALPR = 2,
+
+            [Display(Name = "Front & Rear ANPR Only")]
+            Only_ALPR = 2,
+
+            [Display(Name = "Front/Rear ANPR Only")]
+            FR_ALPR = 3,
+
+            [Display(Name = "Unidentified")]
+            U_ALPR = 4,
+
+
         }
 
 
