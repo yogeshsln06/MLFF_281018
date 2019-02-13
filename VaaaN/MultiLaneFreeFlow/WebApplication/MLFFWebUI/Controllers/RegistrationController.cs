@@ -1129,7 +1129,7 @@ namespace MLFFWebUI.Controllers
                         objCustomerVehicleModel.MobileNo = Constants.MobileNoPrefix(objCustomerVehicleModel.MobileNo.Trim());
                     }
 
-                    objCustomerVehicleModel.AccountId = ValidateCustomerAccount(objCustomerVehicleModel);
+
 
                     CustomerVehicleCBE objCustomerVehicleCBE = new CustomerVehicleCBE();
                     if (objCustomerVehicleModel.AccountId > 0)
@@ -1170,70 +1170,11 @@ namespace MLFFWebUI.Controllers
                         }
                     }
                     else {
-                        objResponseMessage = ValidateCustomerAccountData(objCustomerVehicleModel, objResponseMessage);
-                        objResponseMessage = ValidateVehicleData(objCustomerVehicleModel, objResponseMessage);
-                        if (objResponseMessage.Count == 0)
-                        {
-                            #region Data set for Customer Account
-                            CustomerAccountCBE objCustomerAccountCBE = new CustomerAccountCBE();
-                            objCustomerAccountCBE.ResidentId = objCustomerVehicleModel.ResidentId.Trim();
-                            objCustomerAccountCBE.EmailId = objCustomerVehicleModel.EmailId.Trim();
-                            objCustomerAccountCBE.MobileNo = objCustomerVehicleModel.MobileNo.Trim();
-                            objCustomerAccountCBE.FirstName = objCustomerVehicleModel.FirstName.Trim();
-                            objCustomerAccountCBE.Address = objCustomerVehicleModel.Address.Trim();
-                            objCustomerAccountCBE.TmsId = tmsId;
-                            objCustomerAccountCBE.TransferStatus = 1;
-                            objCustomerAccountCBE.AccountId = 0;
-                            objCustomerAccountCBE.AccountStatus = 1;
-                            objCustomerAccountCBE.CreationDate = DateTime.Now;
-                            objCustomerAccountCBE.IsDocVerified = 1;
-                            objCustomerAccountCBE.RegistartionThrough = 1;
-                            #endregion
 
-                            #region Insert Customer Data
-                            objCustomerVehicleModel.AccountId = CustomerAccountBLL.Insert(objCustomerAccountCBE);
-                            #endregion
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "Please Select Resident Id";
+                        objResponseMessage.Add(objModelState);
 
-                            if (objCustomerVehicleModel.AccountId > 0)
-                            {
-                                #region Insert Into Customer Vehicle Data
-                                objCustomerVehicleCBE = UpdateVehicleCBE(objCustomerVehicleCBE, objCustomerVehicleModel);
-                                objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
-                                objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
-                                if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
-                                    objCustomerVehicleCBE.TagId = string.Empty;
-
-                                int customerVehicleEntryId = CustomerVehicleBLL.Insert(objCustomerVehicleCBE);
-                                if (customerVehicleEntryId > 0)
-                                {
-
-                                    if (objCustomerVehicleModel.SendEmail)
-                                    {
-                                        objCustomerVehicleModel.EntryId = customerVehicleEntryId;
-                                        BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
-                                        BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
-                                    }
-                                    ModelStateList objModelState = new ModelStateList();
-                                    objModelState.ErrorMessage = "success";
-                                    objResponseMessage.Add(objModelState);
-                                }
-                                else
-                                {
-                                    ModelStateList objModelState = new ModelStateList();
-                                    objModelState.ErrorMessage = "Something went wrong";
-                                    objResponseMessage.Add(objModelState);
-                                }
-
-                                #endregion
-                            }
-                            else {
-                                ModelStateList objModelState = new ModelStateList();
-                                objModelState.ErrorMessage = "Something went wrong";
-                                objResponseMessage.Add(objModelState);
-                            }
-
-
-                        }
                     }
                     #endregion
                 }
@@ -1269,11 +1210,6 @@ namespace MLFFWebUI.Controllers
                     }
                     #endregion
 
-                    #region Check Customer Account exists or not
-                    objCustomerVehicleModel.AccountId = ValidateCustomerAccount(objCustomerVehicleModel);
-
-                    #endregion
-
                     if (objCustomerVehicleModel.AccountId > 0)
                     {
                         objResponseMessage = ValidateVehicleData(objCustomerVehicleModel, objResponseMessage);
@@ -1298,58 +1234,6 @@ namespace MLFFWebUI.Controllers
                             objModelState.ErrorMessage = "success";
                             objResponseMessage.Add(objModelState);
                             #endregion
-                        }
-                        else
-                        {
-                            #region Data set for Customer Account
-                            CustomerAccountCBE objCustomerAccountCBE = new CustomerAccountCBE();
-                            objCustomerAccountCBE.ResidentId = objCustomerVehicleModel.ResidentId.Trim();
-                            objCustomerAccountCBE.EmailId = objCustomerVehicleModel.EmailId.Trim();
-                            objCustomerAccountCBE.MobileNo = objCustomerVehicleModel.MobileNo.Trim();
-                            objCustomerAccountCBE.FirstName = objCustomerVehicleModel.FirstName.Trim();
-                            objCustomerAccountCBE.Address = objCustomerVehicleModel.Address.Trim();
-                            objCustomerAccountCBE.TmsId = tmsId;
-                            objCustomerAccountCBE.TransferStatus = 1;
-                            objCustomerAccountCBE.AccountId = 0;
-                            objCustomerAccountCBE.AccountStatus = 1;
-                            objCustomerAccountCBE.CreationDate = DateTime.Now;
-                            objCustomerAccountCBE.IsDocVerified = 1;
-                            objCustomerAccountCBE.RegistartionThrough = 1;
-                            #endregion
-
-                            #region Insert Customer Data
-                            objCustomerVehicleModel.AccountId = CustomerAccountBLL.Insert(objCustomerAccountCBE);
-                            #endregion
-
-                            if (objCustomerVehicleModel.AccountId > 0)
-                            {
-                                #region Update Customer Vehicle Data
-
-                                objCustomerVehicleCBE = UpdateVehicleCBE(objCustomerVehicleCBE, objCustomerVehicleModel);
-                                objCustomerVehicleCBE.ModifiedBy = Convert.ToInt16(Session["LoggedUserId"]);
-                                objCustomerVehicleCBE.EntryId = objCustomerVehicleModel.EntryId;
-                                objCustomerVehicleCBE.AccountId = objCustomerVehicleModel.AccountId;
-                                if (string.IsNullOrEmpty(objCustomerVehicleCBE.TagId))
-                                    objCustomerVehicleCBE.TagId = string.Empty;
-                                CustomerVehicleBLL.Update(objCustomerVehicleCBE);
-                                if (objCustomerVehicleModel.SendEmail)
-                                {
-                                    BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
-                                    BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
-                                }
-
-                                ModelStateList objModelState = new ModelStateList();
-                                objModelState.ErrorMessage = "success";
-                                objResponseMessage.Add(objModelState);
-
-                                #endregion
-                            }
-                            else
-                            {
-                                ModelStateList objModelState = new ModelStateList();
-                                objModelState.ErrorMessage = "Something went wrong";
-                                objResponseMessage.Add(objModelState);
-                            }
                         }
                     }
 

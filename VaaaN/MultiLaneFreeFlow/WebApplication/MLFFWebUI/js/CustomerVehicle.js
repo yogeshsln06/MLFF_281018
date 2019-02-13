@@ -144,7 +144,7 @@ function BindCustmerVehicleAccount() {
                                 $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImgV(this);' style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageRear + "><i class='c-blue-500 ti-camera'></i></span><img onclick='zoomImage(this);' style='display:none;' src='../Attachment/VehicleImage/" + oData.VehicleImageFront + "' data-high-res-src='' alt='' class='gallery-items'>");
                             }
                             else {
-                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false'  style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-gray-500 ti-camera'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false'  style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageRear + "><i class='c-gray-500 ti-camera'></i></span>");
                             }
                         }
                     },

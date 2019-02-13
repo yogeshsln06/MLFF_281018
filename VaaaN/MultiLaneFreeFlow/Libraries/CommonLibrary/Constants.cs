@@ -140,7 +140,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
             [Display(Name = "Front/Rear ANPR Only")]
             FR_ALPR = 3,
 
-            [Display(Name = "Unidentified")]
+            [Display(Name = "Unidentified Only")]
             U_ALPR = 4,
 
 
