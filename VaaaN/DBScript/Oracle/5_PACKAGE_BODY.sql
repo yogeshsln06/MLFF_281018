@@ -9076,99 +9076,281 @@ ORDER BY CREATION_DATE DESC ';
                                                          P_ENDDATE,
                                                          'DD/MM/YYYY HH24:MI:SS')),
               CTE_REPORT
-              AS (SELECT 'TOTAL VEHICLE' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                  UNION ALL
-                  SELECT 'TOTAL REGISTERED' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE NVL (IS_REGISTERED, 0) = 1
-                  UNION ALL
-                  SELECT 'TOTAL UNREGISTERED' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE NVL (IS_REGISTERED, 0) <> 1
-                  UNION ALL
-                  SELECT 'TOTAL IKE' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE (RFID_FRONT_ID > 0 OR RFID_REAR_ID > 0)
-                  UNION ALL
-                  SELECT 'TOTAL ANPR' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE (ANPR_FRONT_ID > 0 OR ANPR_REAR_ID > 0)
-                  UNION ALL
-                  SELECT 'TOTAL DETECTED VRN' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE (   UPPER (ANPR_FRONT_VRN) <> 'NOT DETECTED'
-                          OR UPPER (ANPR_REAR_VRN) <> 'NOT DETECTED')
-                  UNION ALL
-                  SELECT 'TOTAL FRONT UNKNOWN' MESSAGE,
-                         COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 0
-                  UNION ALL
-                  SELECT 'TOTAL FRONT TWO-WHEELED' MESSAGE,
-                         COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 1
-                  UNION ALL
-                  SELECT 'TOTAL FRONT SMALL' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 2
-                  UNION ALL
-                  SELECT 'TOTAL FRONT MEDIUM' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 3
-                  UNION ALL
-                  SELECT 'TOTAL FRONT LARGE' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 4
-                  UNION ALL
-                  SELECT 'TOTAL FRONT UNKNOWN' MESSAGE,
-                         COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 0
-                  UNION ALL
-                  SELECT 'TOTAL REAR TWO-WHEELED' MESSAGE,
-                         COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 1
-                  UNION ALL
-                  SELECT 'TOTAL REAR SMALL' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 2
-                  UNION ALL
-                  SELECT 'TOTAL REAR MEDIUM' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 3
-                  UNION ALL
-                  SELECT 'TOTAL REAR LARGE' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 4
-                  UNION ALL
-                  SELECT 'TOTAL NOT DETECTED VRN' MESSAGE,
-                         COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE (   UPPER (ANPR_FRONT_VRN) = 'NOT DETECTED'
-                          OR UPPER (ANPR_REAR_VRN) = 'NOT DETECTED')
-                  UNION ALL
-                  SELECT 'TOTAL AUTO CHARGED' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE     NVL (IS_BALANCE_UPDATED, 0) <> 1
-                         AND NVL (AUDIT_STATUS, 0) <> 1
-                  UNION ALL
-                  SELECT 'TOTAL MANUAL CHARGED' MESSAGE,
-                         COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE     NVL (IS_BALANCE_UPDATED, 0) <> 1
-                         AND NVL (AUDIT_STATUS, 0) <> 1
-                  UNION ALL
-                  SELECT 'TOTAL SMS SEND' MESSAGE, COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE NVL (GATEWAY_RESPONSE_CODE, 0) <> 0
-                  UNION ALL
-                  SELECT 'TOTAL SUCCESSFUL SEND' MESSAGE,
-                         COUNT (1) TOTALVEHICLE
-                    FROM CTE_DETAILS
-                   WHERE NVL (OPERATOR_RESPONSE_CODE, 0) <> 0)
+              AS (SELECT 1 AS SNO, 'TOTAL VEHICLE' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+         UNION ALL
+         SELECT 2 AS SNO, 'TOTAL REGISTERED' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE NVL (IS_REGISTERED, 0) = 1
+         UNION ALL
+         SELECT 3 AS SNO,
+                'TOTAL UNREGISTERED' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE NVL (IS_REGISTERED, 0) <> 1
+         UNION ALL
+         SELECT 4 AS SNO, 'TOTAL IKE' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE (RFID_FRONT_ID > 0 OR RFID_REAR_ID > 0)
+         UNION ALL
+         SELECT 5 AS SNO, 'TOTAL FRONT IKE' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE (RFID_FRONT_ID > 0)
+         UNION ALL
+         SELECT 6 AS SNO, 'TOTAL REAR IKE' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE (RFID_REAR_ID > 0)
+         UNION ALL
+         SELECT 7 AS SNO, 'TOTAL ANPR' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE (ANPR_FRONT_ID > 0 OR ANPR_REAR_ID > 0)
+         UNION ALL
+         SELECT 8 AS SNO,
+                'TOTAL NOT DETECTED VRN' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE (   UPPER (ANPR_FRONT_VRN) = 'NOT DETECTED'
+                 OR UPPER (ANPR_REAR_VRN) = 'NOT DETECTED')
+         UNION ALL
+         SELECT 9 AS SNO,
+                'TOTAL FRONT NOT DETECTED VRN' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE UPPER (ANPR_FRONT_VRN) = 'NOT DETECTED'
+         UNION ALL
+         SELECT 10 AS SNO,
+                'TOTAL REAR NOT DETECTED VRN' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE UPPER (ANPR_REAR_VRN) = 'NOT DETECTED'
+         UNION ALL
+         SELECT 11 AS SNO,
+                'TOTAL DETECTED VRN' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE (   UPPER (ANPR_FRONT_VRN) <> 'NOT DETECTED'
+                 OR UPPER (ANPR_REAR_VRN) <> 'NOT DETECTED')
+         UNION ALL
+         SELECT 12 AS SNO,
+                'TOTAL FRONT DETECTED VRN' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE UPPER (ANPR_FRONT_VRN) <> 'NOT DETECTED'
+         UNION ALL
+         SELECT 13 AS SNO,
+                'TOTAL REAR DETECTED VRN' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE UPPER (ANPR_REAR_VRN) <> 'NOT DETECTED'
+         UNION ALL
+         SELECT 14 AS SNO,
+                'TOTAL TWO-WHEELED -IKE' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     (RFID_FRONT_ID > 0 OR RFID_REAR_ID > 0)
+                AND (RFID_FRONT_CLASS_ID = 1 OR RFID_REAR_CLASS_ID = 1)
+         UNION ALL
+         SELECT 15 AS SNO, 'TOTAL SMALL -IKE' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     (RFID_FRONT_ID > 0 OR RFID_REAR_ID > 0)
+                AND (RFID_FRONT_CLASS_ID = 2 OR RFID_REAR_CLASS_ID = 2)
+         UNION ALL
+         SELECT 16 AS SNO,
+                'TOTAL MEDIUM -IKE' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     (RFID_FRONT_ID > 0 OR RFID_REAR_ID > 0)
+                AND (RFID_FRONT_CLASS_ID = 3 OR RFID_REAR_CLASS_ID = 3)
+         UNION ALL
+         SELECT 17 AS SNO, 'TOTAL LARGE -IKE' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     (RFID_FRONT_ID > 0 OR RFID_REAR_ID > 0)
+                AND (RFID_FRONT_CLASS_ID = 4 OR RFID_REAR_CLASS_ID = 4)
+         UNION ALL
+         SELECT 18 AS SNO,
+                'TOTAL TWO-WHEELED -IKE-FRONT' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE RFID_FRONT_ID > 0 AND RFID_FRONT_CLASS_ID = 1
+         UNION ALL
+         SELECT 19 AS SNO,
+                'TOTAL SMALL -IKE-FRONT' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE RFID_FRONT_ID > 0 AND RFID_FRONT_CLASS_ID = 2
+         UNION ALL
+         SELECT 20 AS SNO,
+                'TOTAL MEDIUM -IKE-FRONT' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE RFID_FRONT_ID > 0 AND RFID_FRONT_CLASS_ID = 3
+         UNION ALL
+         SELECT 21 AS SNO,
+                'TOTAL LARGE -IKE-FRONT' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE RFID_FRONT_ID > 0 AND RFID_FRONT_CLASS_ID = 4
+         UNION ALL
+         SELECT 22 AS SNO,
+                'TOTAL TWO-WHEELED -IKE-REAR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE RFID_REAR_ID > 0 AND RFID_REAR_CLASS_ID = 1
+         UNION ALL
+         SELECT 23 AS SNO,
+                'TOTAL SMALL -IKE-REAR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE RFID_REAR_ID > 0 AND RFID_REAR_CLASS_ID = 2
+         UNION ALL
+         SELECT 24 AS SNO,
+                'TOTAL MEDIUM -IKE-REAR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE RFID_REAR_ID > 0 AND RFID_REAR_CLASS_ID = 3
+         UNION ALL
+         SELECT 25 AS SNO,
+                'TOTAL LARGE -IKE-REAR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE RFID_REAR_ID > 0 AND RFID_REAR_CLASS_ID = 4
+         UNION ALL
+         SELECT 26 AS SNO,
+                'TOTAL TWO-WHEELED -ANPR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     (ANPR_FRONT_ID > 0 OR ANPR_REAR_ID > 0)
+                AND (ANPR_FRONT_CLASS_ID = 1 OR ANPR_REAR_CLASS_ID = 1)
+         UNION ALL
+         SELECT 27 AS SNO,
+                'TOTAL SMALL -ANPR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     (ANPR_FRONT_ID > 0 OR ANPR_REAR_ID > 0)
+                AND (ANPR_FRONT_CLASS_ID = 2 OR ANPR_REAR_CLASS_ID = 2)
+         UNION ALL
+         SELECT 28 AS SNO,
+                'TOTAL MEDIUM -ANPR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     (ANPR_FRONT_ID > 0 OR ANPR_REAR_ID > 0)
+                AND (ANPR_FRONT_CLASS_ID = 3 OR ANPR_REAR_CLASS_ID = 3)
+         UNION ALL
+         SELECT 29 AS SNO,
+                'TOTAL LARGE -ANPR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     (ANPR_FRONT_ID > 0 OR ANPR_REAR_ID > 0)
+                AND (ANPR_FRONT_CLASS_ID = 4 OR ANPR_REAR_CLASS_ID = 4)
+         UNION ALL
+         SELECT 30 AS SNO,
+                'TOTAL TWO-WHEELED -ANPR-FRONT' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 1
+         UNION ALL
+         SELECT 31 AS SNO,
+                'TOTAL SMALL -ANPR-FRONT' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 2
+         UNION ALL
+         SELECT 32 AS SNO,
+                'TOTAL MEDIUM -ANPR-FRONT' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 3
+         UNION ALL
+         SELECT 33 AS SNO,
+                'TOTAL LARGE -ANPR-FRONT' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE ANPR_FRONT_ID > 0 AND ANPR_FRONT_CLASS_ID = 4
+         UNION ALL
+         SELECT 34 AS SNO,
+                'TOTAL TWO-WHEELED -ANPR-REAR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 1
+         UNION ALL
+         SELECT 35 AS SNO,
+                'TOTAL SMALL -ANPR-REAR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 2
+         UNION ALL
+         SELECT 36 AS SNO,
+                'TOTAL MEDIUM -ANPR-REAR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 3
+         UNION ALL
+         SELECT 37 AS SNO,
+                'TOTAL LARGE -ANPR-REAR' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE ANPR_REAR_ID > 0 AND ANPR_REAR_CLASS_ID = 4
+         UNION ALL
+         SELECT 38 AS SNO,
+                'TOTAL AUTO CHARGED' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     NVL (IS_BALANCE_UPDATED, 0) = 1
+                AND NVL (AUDIT_STATUS, 0) <> 1
+         UNION ALL
+         SELECT 40 AS SNO,
+                'TOTAL NOT CHARGED' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     NVL (IS_BALANCE_UPDATED, 0) = 0
+                AND NVL (AUDIT_STATUS, 0) <> 1
+                AND NVL (IS_REGISTERED, 0) = 1
+         UNION ALL
+         SELECT 41 AS SNO,
+                'TOTAL MANUAL CHARGED' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE     NVL (IS_BALANCE_UPDATED, 0) = 1
+                AND NVL (AUDIT_STATUS, 0) = 1
+                AND NVL (IS_REGISTERED, 0) = 1
+         UNION ALL
+         SELECT 42 AS SNO, 'TOTAL REVIEWED' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE NVL (AUDIT_STATUS, 0) = 1
+         UNION ALL
+         SELECT 43 AS SNO, 'TOTAL VIOLATION' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE NVL (AUDIT_STATUS, 0) = 1 AND TRANS_STATUS = 3
+         UNION ALL
+         SELECT 44 AS SNO,
+                'TOTAL UNIDENTIFIED' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE NVL (AUDIT_STATUS, 0) = 1 AND TRANS_STATUS = 4
+         UNION ALL
+         SELECT 45 AS SNO, 'TOTAL MERGED' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE NVL (AUDIT_STATUS, 0) = 1 AND TRANS_STATUS = 2
+         UNION ALL
+         SELECT 46 AS SNO, 'TOTAL SMS SEND' MESSAGE, COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE NVL (GATEWAY_RESPONSE_CODE, 0) <> 0
+         UNION ALL
+         SELECT 47 AS SNO,
+                'TOTAL SUCCESSFUL SEND' MESSAGE,
+                COUNT (1) TOTALVEHICLE
+           FROM CTE_DETAILS
+          WHERE NVL (OPERATOR_RESPONSE_CODE, 0) <> 0
+         UNION ALL
+         SELECT 48 AS SNO,
+                'TOTAL AVERAGE SMS TIME IN SECONDS' MESSAGE,
+                (  (SELECT SUM (SECONDS)
+                      FROM CTE_DETAILS
+                     WHERE SECONDS <> 0)
+                 / (SELECT COUNT (SECONDS)
+                      FROM CTE_DETAILS
+                     WHERE SECONDS <> 0))
+           FROM DUAL)
          SELECT *
            FROM CTE_REPORT;
    END TRAN_DEATILSALL;
