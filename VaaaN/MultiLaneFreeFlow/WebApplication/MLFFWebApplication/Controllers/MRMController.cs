@@ -262,31 +262,31 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             }
             else if (transaction.TransactionCategoryId == 2)//IKE + FRONT ALPR
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'not detected' AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'unidentified' AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (transaction.TransactionCategoryId == 3)//IKE + REAR ALPR
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)<>'unidentified' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (transaction.TransactionCategoryId == 4)//FRONT ALPR
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'not detected' AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'unidentified' AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
-            else if (transaction.TransactionCategoryId == 5)//REAR ALPR'not detected'
+            else if (transaction.TransactionCategoryId == 5)//REAR ALPR'unidentified'
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)<>'unidentified' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (transaction.TransactionCategoryId == 6)//FRONT ALPR + REAR ALPR
             {
-                strQuery += "  AND NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'not detected' AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += "  AND NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0  AND LOWER(NFPF.PLATE_NUMBER)<>'unidentified' AND NVL(T.NF_ENTRY_ID_REAR,0) > 0  AND LOWER(NFPR.PLATE_NUMBER)<>'unidentified' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (transaction.TransactionCategoryId == 7)//UNIDENTIFIED FRONT ALPR
             {
-                strQuery += " AND LOWER(NFPF.PLATE_NUMBER)='not detected' AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND LOWER(NFPF.PLATE_NUMBER)='unidentified' AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND NVL(T.NF_ENTRY_ID_REAR,0) = 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (transaction.TransactionCategoryId == 8)//UNIDENTIFIED REAR ALPR
             {
-                strQuery += " AND LOWER(NFPR.PLATE_NUMBER)='not detected' AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND LOWER(NFPR.PLATE_NUMBER)='unidentified' AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0 AND NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
 
             DataTable dt = new DataTable();
@@ -399,23 +399,23 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             }
             else if (Convert.ToInt32(TransactionCategoryId) == 1)
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND ((NVL(T.NF_ENTRY_ID_FRONT, 0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected') OR (NVL(T.NF_ENTRY_ID_REAR, 0) > 0 AND LOWER(NFPR.PLATE_NUMBER) <> 'not detected')) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND ((NVL(T.NF_ENTRY_ID_FRONT, 0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'unidentified') OR (NVL(T.NF_ENTRY_ID_REAR, 0) > 0 AND LOWER(NFPR.PLATE_NUMBER) <> 'unidentified')) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (Convert.ToInt32(TransactionCategoryId) == 2)
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND NVL(T.NF_ENTRY_ID_FRONT, 0)= 0 AND NVL(T.NF_ENTRY_ID_REAR,0)>0  AND LOWER(NFPR.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND NVL(T.NF_ENTRY_ID_FRONT, 0)= 0 AND NVL(T.NF_ENTRY_ID_REAR,0)>0  AND LOWER(NFPR.PLATE_NUMBER)<>'unidentified' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (Convert.ToInt32(TransactionCategoryId) == 3)
             {
-                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND NVL(T.NF_ENTRY_ID_FRONT,0)>0  AND LOWER(NFPF.PLATE_NUMBER)<>'not detected' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0  AND NVL(T.NF_ENTRY_ID_FRONT,0)>0  AND LOWER(NFPF.PLATE_NUMBER)<>'unidentified' AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (Convert.ToInt32(TransactionCategoryId) == 4)
             {
-                strQuery += " AND  NVL(T.NF_ENTRY_ID_FRONT,0)  = 0  AND (NVL(T.CT_ENTRY_ID,0)>0  OR (NVL(T.NF_ENTRY_ID_REAR,0)>0 AND LOWER(NFPR.PLATE_NUMBER)<>'not detected'))  AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.NF_ENTRY_ID_FRONT,0)  = 0  AND (NVL(T.CT_ENTRY_ID,0)>0  OR (NVL(T.NF_ENTRY_ID_REAR,0)>0 AND LOWER(NFPR.PLATE_NUMBER)<>'unidentified'))  AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (Convert.ToInt32(TransactionCategoryId) == 5)
             {
-                strQuery += " AND  NVL(T.NF_ENTRY_ID_REAR,0)  = 0  AND (NVL(T.CT_ENTRY_ID,0)>0  OR (NVL(T.NF_ENTRY_ID_FRONT,0)>0 AND LOWER(NFPF.PLATE_NUMBER)<>'not detected')) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND  NVL(T.NF_ENTRY_ID_REAR,0)  = 0  AND (NVL(T.CT_ENTRY_ID,0)>0  OR (NVL(T.NF_ENTRY_ID_FRONT,0)>0 AND LOWER(NFPF.PLATE_NUMBER)<>'unidentified')) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (Convert.ToInt32(TransactionCategoryId) == 6)
             {
@@ -423,11 +423,11 @@ namespace VaaaN.MLFF.WebApplication.Controllers
             }
             else if (Convert.ToInt32(TransactionCategoryId) == 7)
             {
-                strQuery += " AND (LOWER(NFPR.PLATE_NUMBER)='not detected'  OR  NVL(T.CT_ENTRY_ID,0)  > 0 ) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND (LOWER(NFPR.PLATE_NUMBER)='unidentified'  OR  NVL(T.CT_ENTRY_ID,0)  > 0 ) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
             else if (Convert.ToInt32(TransactionCategoryId) == 8)
             {
-                strQuery += " AND (LOWER(NFPF.PLATE_NUMBER)='not detected'  OR  NVL(T.CT_ENTRY_ID,0)  > 0 ) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
+                strQuery += " AND (LOWER(NFPF.PLATE_NUMBER)='unidentified'  OR  NVL(T.CT_ENTRY_ID,0)  > 0 ) AND NVL(IS_BALANCE_UPDATED,0) <> 1 ";
             }
 
 

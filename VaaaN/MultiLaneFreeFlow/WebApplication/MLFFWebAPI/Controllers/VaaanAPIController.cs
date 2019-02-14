@@ -291,7 +291,7 @@ namespace MLFFWebAPI.Controllers
                     {
                         objNodeFluxPacketJSON.Data.Plate = "Not Detected";
                     }
-                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate;
+                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate.Replace("Not Detected", "Unidentified");
                     nodeFluxCBE.VehicleClassName = objNodeFluxPacketJSON.Data.Vehicle_Type.Replace("Motorcycle", "Two-wheeled").Replace("Big", "Large");
                     nodeFluxCBE.VehicleSpeed = objNodeFluxPacketJSON.Data.Vehicle_Speed;
 
@@ -592,9 +592,9 @@ namespace MLFFWebAPI.Controllers
 
                     if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Plate))
                     {
-                        objNodeFluxPacketJSON.Data.Plate = "Not Detected";
+                        objNodeFluxPacketJSON.Data.Plate = "Unidentified";
                     }
-                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate.Replace("Unknown", "Not Detected");
+                    nodeFluxCBE.PlateNumber = objNodeFluxPacketJSON.Data.Plate.Replace("Unknown", "Unidentified");
 
                     if (string.IsNullOrEmpty(objNodeFluxPacketJSON.Data.Vehicle_Type))
                     {
@@ -631,7 +631,7 @@ namespace MLFFWebAPI.Controllers
                     else
                         nodeFluxCBE.VideoURL = "http://" + objNodeFluxPacketJSON.Data.Video_URL;
 
-                   
+
                     #endregion
 
                     #region Send data to MSMQ

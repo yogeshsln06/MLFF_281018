@@ -9115,42 +9115,42 @@ ORDER BY CREATION_DATE DESC ';
                    WHERE (ANPR_FRONT_ID > 0 OR ANPR_REAR_ID > 0)
                   UNION ALL
                   SELECT 8 AS SNO,
-                         'TOTAL NOT DETECTED VRN' MESSAGE,
+                         'TOTAL UNIDENTIFIED VRN' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
-                   WHERE (   UPPER (ANPR_FRONT_VRN) = 'NOT DETECTED'
-                          OR UPPER (ANPR_REAR_VRN) = 'NOT DETECTED')
+                   WHERE (   UPPER (ANPR_FRONT_VRN) = 'UNIDENTIFIED'
+                          OR UPPER (ANPR_REAR_VRN) = 'UNIDENTIFIED')
                   UNION ALL
                   SELECT 9 AS SNO,
-                         'TOTAL FRONT NOT DETECTED VRN' MESSAGE,
+                         'TOTAL FRONT UNIDENTIFIED VRN' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
-                   WHERE UPPER (ANPR_FRONT_VRN) = 'NOT DETECTED'
+                   WHERE UPPER (ANPR_FRONT_VRN) = 'UNIDENTIFIED'
                   UNION ALL
                   SELECT 10 AS SNO,
-                         'TOTAL REAR NOT DETECTED VRN' MESSAGE,
+                         'TOTAL REAR UNIDENTIFIED VRN' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
-                   WHERE UPPER (ANPR_REAR_VRN) = 'NOT DETECTED'
+                   WHERE UPPER (ANPR_REAR_VRN) = 'UNIDENTIFIED'
                   UNION ALL
                   SELECT 11 AS SNO,
                          'TOTAL DETECTED VRN' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
-                   WHERE (   UPPER (ANPR_FRONT_VRN) <> 'NOT DETECTED'
-                          OR UPPER (ANPR_REAR_VRN) <> 'NOT DETECTED')
+                   WHERE (   UPPER (ANPR_FRONT_VRN) <> 'UNIDENTIFIED'
+                          OR UPPER (ANPR_REAR_VRN) <> 'UNIDENTIFIED')
                   UNION ALL
                   SELECT 12 AS SNO,
                          'TOTAL FRONT DETECTED VRN' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
-                   WHERE UPPER (ANPR_FRONT_VRN) <> 'NOT DETECTED'
+                   WHERE UPPER (ANPR_FRONT_VRN) <> 'UNIDENTIFIED'
                   UNION ALL
                   SELECT 13 AS SNO,
                          'TOTAL REAR DETECTED VRN' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
-                   WHERE UPPER (ANPR_REAR_VRN) <> 'NOT DETECTED'
+                   WHERE UPPER (ANPR_REAR_VRN) <> 'UNIDENTIFIED'
                   UNION ALL
                   SELECT 14 AS SNO,
                          'TOTAL TWO-WHEELED -IKE' MESSAGE,
