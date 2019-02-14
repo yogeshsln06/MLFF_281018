@@ -1226,7 +1226,7 @@ namespace MLFFWebUI.Controllers
                             CustomerVehicleBLL.Update(objCustomerVehicleCBE);
                             if (objCustomerVehicleModel.SendEmail)
                             {
-                                BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registration Vehicle Success");
+                                BrodcastDataMobile.SendEmail(EmailBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString(), objCustomerVehicleModel.EmailId, "Registrasi Kendaraan Sukses");
                                 BrodcastDataMobile.BroadCastNotification(objCustomerVehicleModel.ResidentId, objCustomerVehicleModel.EntryId.ToString(), objCustomerVehicleModel.EntryId.ToString(), "Registrasi Kendaraan Sukses", NotificationBody(objCustomerVehicleModel.FirstName, objCustomerVehicleModel.VehRegNo).ToString());
                             }
 

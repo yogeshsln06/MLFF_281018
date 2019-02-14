@@ -732,10 +732,10 @@ function Complete() {
         }
     });
 
-    if (selectedIDs.length > 2) {
-        alert('You cannot join more than two trancation.');
-        return false;
-    }
+    //if (selectedIDs.length > 2) {
+    //    alert('You cannot join more than two trancation.');
+    //    return false;
+    //}
     if (confirm('Are you sure to complete this transaction???')) {
         var Seconds = $("#filterSec").val();
         Seconds = 120;

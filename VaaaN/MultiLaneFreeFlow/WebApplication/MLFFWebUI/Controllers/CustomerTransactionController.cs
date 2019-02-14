@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using VaaaN.MLFF.Libraries.CommonLibrary.Common;
 using System.IO;
 using System.Xml.Serialization;
+using System.Collections;
 
 namespace MLFFWebUI.Controllers
 {
@@ -139,7 +140,7 @@ namespace MLFFWebUI.Controllers
             {
                 strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  = 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)='not detected')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)='not detected')) ";
             }
-            
+
             dt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strQuery);
             string Det = JsonConvert.SerializeObject(dt, Formatting.Indented);
             return Det.Replace("\r", "").Replace("\n", "");
@@ -172,66 +173,74 @@ namespace MLFFWebUI.Controllers
         public string GetAssociated(int Seconds)
         {
             string Det = "No Record Found";
+            string strfilter = String.Empty;
+            DataTable Assodt = new DataTable();
             dt = (DataTable)Session["CurrentTransaction"];
-            int IKEEntryId = 0;
-            int ANPRFrontEntryId = 0;
-            int ANPRRearEntryId = 0;
+            //int IKEEntryId = 0;
+            //int ANPRFrontEntryId = 0;
+            //int ANPRRearEntryId = 0;
             DateTime TransactionDateTime;
             int TransactionId;
             if (dt.Rows.Count > 0)
             {
                 TransactionDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"]);
                 TransactionId = Convert.ToInt32(dt.Rows[0]["TRANSACTION_ID"]);
-                if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString()))
-                {
-                    IKEEntryId = Convert.ToInt32(dt.Rows[0]["CT_ENTRY_ID"]);
-                }
-                if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
-                {
-                    ANPRFrontEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                }
-                if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
-                {
-                    ANPRRearEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                }
 
-                if (IKEEntryId > 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId > 0)
-                {
-                    Det = "No Record Found";
+                strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TransactionDateTime.AddSeconds(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId;
+                Assodt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strfilter);
+                Det = JsonConvert.SerializeObject(Assodt, Formatting.Indented);
+                Det = Det.Replace("\r", "").Replace("\n", "");
 
-                }
-                else
-                {
-                    string strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TransactionDateTime.AddSeconds(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId;
+                #region Old Code
+                //if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString()))
+                //{
+                //    IKEEntryId = Convert.ToInt32(dt.Rows[0]["CT_ENTRY_ID"]);
+                //}
+                //if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
+                //{
+                //    ANPRFrontEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_FRONT"]);
+                //}
+                //if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
+                //{
+                //    ANPRRearEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_REAR"]);
+                //}
+                //if (IKEEntryId > 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId > 0)
+                //{
+                //    Det = "No Record Found";
 
-                    if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId == 0)
-                    {
-                        strfilter += " AND (NVL(CT_ENTRY_ID,0) = 0 AND (NVL(NF_ENTRY_ID_FRONT,0) > 0 OR NVL(NF_ENTRY_ID_REAR,0) > 0))";
-                    }
-                    else if (IKEEntryId == 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId == 0)
-                    {
-                        strfilter += " AND (NVL(NF_ENTRY_ID_FRONT,0) = 0 AND (NVL(CT_ENTRY_ID,0) > 0 OR NVL(NF_ENTRY_ID_REAR,0) > 0))";
-                    }
-                    else if (IKEEntryId == 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId > 0)
-                    {
-                        strfilter += " AND (NVL(NF_ENTRY_ID_REAR,0) = 0 AND (NVL(CT_ENTRY_ID,0) > 0 OR NVL(NF_ENTRY_ID_FRONT,0) > 0))";
-                    }
-                    else if (IKEEntryId > 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId == 0)
-                    {
-                        strfilter += " AND NVL(CT_ENTRY_ID,0) = 0 AND NVL(NF_ENTRY_ID_FRONT,0) = 0) AND (NVL(NF_ENTRY_ID_REAR,0) <> 0 ";
-                    }
-                    else if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId > 0)
-                    {
-                        strfilter += " AND NVL(CT_ENTRY_ID,0) = 0 AND NVL(NF_ENTRY_ID_FRONT,0) <> 0 AND NVL(NF_ENTRY_ID_REAR,0) = 0 ";
-                    }
-                    else if (IKEEntryId == 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId > 0)
-                    {
-                        strfilter += " AND NVL(CT_ENTRY_ID,0) <> 0 AND NVL(NF_ENTRY_ID_FRONT,0) = 0 AND NVL(NF_ENTRY_ID_REAR,0) = 0 ";
-                    }
-                    DataTable Assodt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strfilter);
-                    Det = JsonConvert.SerializeObject(Assodt, Formatting.Indented);
-                    Det = Det.Replace("\r", "").Replace("\n", "");
-                }
+                //}
+                //else
+                //{
+                //    strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TransactionDateTime.AddSeconds(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId;
+                //    if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId == 0)
+                //    {
+                //        strfilter += " AND (NVL(CT_ENTRY_ID,0) = 0 AND (NVL(NF_ENTRY_ID_FRONT,0) > 0 OR NVL(NF_ENTRY_ID_REAR,0) > 0))";
+                //    }
+                //    else if (IKEEntryId == 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId == 0)
+                //    {
+                //        strfilter += " AND (NVL(NF_ENTRY_ID_FRONT,0) = 0 AND (NVL(CT_ENTRY_ID,0) > 0 OR NVL(NF_ENTRY_ID_REAR,0) > 0))";
+                //    }
+                //    else if (IKEEntryId == 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId > 0)
+                //    {
+                //        strfilter += " AND (NVL(NF_ENTRY_ID_REAR,0) = 0 AND (NVL(CT_ENTRY_ID,0) > 0 OR NVL(NF_ENTRY_ID_FRONT,0) > 0))";
+                //    }
+                //    else if (IKEEntryId > 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId == 0)
+                //    {
+                //        strfilter += " AND NVL(CT_ENTRY_ID,0) = 0 AND NVL(NF_ENTRY_ID_FRONT,0) = 0) AND (NVL(NF_ENTRY_ID_REAR,0) <> 0 ";
+                //    }
+                //    else if (IKEEntryId > 0 && ANPRFrontEntryId == 0 && ANPRRearEntryId > 0)
+                //    {
+                //        strfilter += " AND NVL(CT_ENTRY_ID,0) = 0 AND NVL(NF_ENTRY_ID_FRONT,0) <> 0 AND NVL(NF_ENTRY_ID_REAR,0) = 0 ";
+                //    }
+                //    else if (IKEEntryId == 0 && ANPRFrontEntryId > 0 && ANPRRearEntryId > 0)
+                //    {
+                //        strfilter += " AND NVL(CT_ENTRY_ID,0) <> 0 AND NVL(NF_ENTRY_ID_FRONT,0) = 0 AND NVL(NF_ENTRY_ID_REAR,0) = 0 ";
+                //    }
+                //    Assodt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strfilter);
+                //    Det = JsonConvert.SerializeObject(Assodt, Formatting.Indented);
+                //    Det = Det.Replace("\r", "").Replace("\n", "");
+                //}
+                #endregion
 
             }
             return Det;
@@ -291,68 +300,30 @@ namespace MLFFWebUI.Controllers
         {
             #region Varaible 
             JsonResult result = new JsonResult();
-
             Int32 AuditedVehicleClassId = Convert.ToInt32(vehicleClassID);
             Int32 ParentTransactionId = TransactionId;
-            String AuditedVRN = VehRegNo;
+            Int32 ChildTranasactionId = 0;
+            Int32 AlreadyChargedVRNId = 0;
+            Int32 ParentIKEFrontVehicleClassId = 0;
+            Int32 ParentIKERearVehicleClassId = 0;
+            Int32 ChildIKEVehicleClassId = 0;
 
+            ArrayList ChildClassIdArrayList = new ArrayList();
+
+            int MaxParentClassId = AuditedVehicleClassId;
+
+            bool Violation = false;
             bool IsAlreadyAuditedVRN = false;
             bool IsAlreadyChargedVRN = false;
 
-            bool ParentIKE = false;
-            bool ParentANPR = false;
-            Int32 FirstChildTranasactionId = 0;
-            Int16 AssociatedTransactionCount = 0;
-            Int32 AlreadyChargedVRNId = 0;
-            Int32 SecondChildTranasactionId = 0;
-
-            Int16 ParentPacketCount = 0;
-            Int32 ParentIKEFrontEntryId = 0;
-            Int32 ParentIKERearEntryId = 0;
-            Int32 ParentANPRFrontEntryId = 0;
-            Int32 ParentIKEFrontVehicleClassId = 0;
-            Int32 ParentIKERearVehicleClassId = 0;
-            Int32 ParentANPRFrontVehicleClassId = 0;
-            Int32 ParentANPRRearEntryId = 0;
-            Int32 ParentANPRRearVehicleClassId = 0;
-
-            bool ParentBalanceAlreadyDeducated = false;
-            bool Violation = false;
-            bool ParentViolation = false;
-            bool ParentAuditied = false;
-            bool FirstChildAuditied = false;
-            bool SecondChildAuditied = false;
-            bool ChildViolation = false;
-            bool ChildIKE = false;
-            bool ChildANPR = false;
-            bool ValidTransactionsProcess = true;
-            bool FirstChildBalanceAlreadyDeducated = false;
-            bool SecondChildBalanceAlreadyDeducated = false;
-
-            Int32 ChildIKEFrontEntryId = 0;
-            Int32 ChildIKEFrontVehicleClassId = 0;
-            Int32 ChildIKERearEntryId = 0;
-            Int32 ChildIKERearVehicleClassId = 0;
-            Int32 ChildAnprFrontEntryId = 0;
-            Int32 ChildANPRFrontVehicleClassId = 0;
-            Int32 ChildAnprRearEntryId = 0;
-            Int32 ChildANPRRearVehicleClassId = 0;
-            Int32 ChildPacketCount = 0;
-            string strfilter = string.Empty;
-            int[] FirstChildClassIdArray = new int[] { };
-            int[] SecondChildClassIdArray = new int[] { };
-
-
-            int MaxClassId = AuditedVehicleClassId;
-            int MaxParentClassId = AuditedVehicleClassId;
-            int MaxChildClassId = AuditedVehicleClassId;
-            int MaxFirstChildClassId = AuditedVehicleClassId;
-            int MaxSecondChildClassId = AuditedVehicleClassId;
-            int MaxIKEClassId = AuditedVehicleClassId;
             String Meassage = String.Empty;
+            String strfilter = String.Empty;
+            String ValidateChildsIds = String.Empty;
+            String ChildsIds = String.Empty;
+            String AuditedVRN = VehRegNo;
             #endregion
 
-            if (string.IsNullOrEmpty(AuditedVRN))
+            if (String.IsNullOrEmpty(AuditedVRN))
             {
                 #region VRN Validation
                 ModelStateList objModelState = new ModelStateList();
@@ -402,8 +373,22 @@ namespace MLFFWebUI.Controllers
                         }
                         #endregion
 
+                        for (int i = 0; i < AssociatedTransactionIds.Length; i++)
+                        {
+                            ChildsIds = ChildsIds + "," + AssociatedTransactionIds[i];
+                        }
+
                         #region Check audited VPN is already audited or not in one miniute
-                        strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID NOT IN (" + TransactionId + "," + FirstChildTranasactionId + "," + SecondChildTranasactionId + ") AND T.AUDITED_VRN='" + AuditedVRN + "' AND NVL(T.AUDIT_STATUS,0)=1";
+                        if (!string.IsNullOrEmpty(ChildsIds))
+                        {
+                            ValidateChildsIds = TransactionId.ToString() + ChildsIds;
+                        }
+                        else
+                        {
+                            ValidateChildsIds = TransactionId.ToString();
+                        }
+                        strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.AUDITED_VRN='" + AuditedVRN + "' AND NVL(T.AUDIT_STATUS,0)=1";
+                        //strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID NOT IN (" + ValidateChildsIds + ") AND T.AUDITED_VRN='" + AuditedVRN + "' AND NVL(T.AUDIT_STATUS,0)=1";
                         DataTable Assodt = TransactionBLL.GetDataTableFilteredRecords(strfilter);
                         if (Assodt.Rows.Count > 0)
                         {
@@ -414,25 +399,6 @@ namespace MLFFWebUI.Controllers
                         #region Check auditied VRN Exists or not
                         if (string.IsNullOrEmpty(CustomerVehicleDetails.VehRegNo))
                         {
-                            #region Check Associated TransactionIds is avaliable or not 
-                            if (AssociatedTransactionIds != null)
-                            {
-                                if (AssociatedTransactionIds.Length > 0)
-                                {
-                                    AssociatedTransactionCount++;
-                                    FirstChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[0]);
-
-
-                                }
-                                if (AssociatedTransactionIds.Length > 1)
-                                {
-                                    AssociatedTransactionCount++;
-                                    SecondChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[1]);
-
-                                }
-                            }
-                            #endregion
-
                             #region Audited VRN not registered Mark as Unregistred Violance and Auditied
                             if (IsAlreadyAuditedVRN)
                             {
@@ -443,23 +409,16 @@ namespace MLFFWebUI.Controllers
                                 objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                 TransactionBLL.UpdateAuditSection(objtransaction);
                                 Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and set as VIOLATION!!!";
-                                if (AssociatedTransactionCount > 0)
+                                if (AssociatedTransactionIds != null)
                                 {
-                                    if (FirstChildTranasactionId > 0)
+
+                                    for (int i = 0; i < AssociatedTransactionIds.Length; i++)
                                     {
-                                        objtransaction.TransactionId = FirstChildTranasactionId;
+                                        ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                        objtransaction.TransactionId = ChildTranasactionId;
                                         TransactionBLL.MarkAsUnregistred(objtransaction);
-                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                        Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
-                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                    }
-                                    if (SecondChildTranasactionId > 0)
-                                    {
-                                        objtransaction.TransactionId = SecondChildTranasactionId;
-                                        TransactionBLL.MarkAsUnregistred(objtransaction);
-                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                        Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
+                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
                                     }
@@ -474,23 +433,16 @@ namespace MLFFWebUI.Controllers
                                 objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                 TransactionBLL.UpdateAuditSection(objtransaction);
                                 Meassage = "yes!Transactions ID " + TransactionId + " set as VIOLATION!!!";
-                                if (AssociatedTransactionCount > 0)
+                                if (AssociatedTransactionIds != null)
                                 {
-                                    if (FirstChildTranasactionId > 0)
+
+                                    for (int i = 0; i < AssociatedTransactionIds.Length; i++)
                                     {
-                                        objtransaction.TransactionId = FirstChildTranasactionId;
+                                        ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                        objtransaction.TransactionId = ChildTranasactionId;
                                         TransactionBLL.MarkAsUnregistred(objtransaction);
-                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId,FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                        Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                    }
-                                    if (SecondChildTranasactionId > 0)
-                                    {
-                                        objtransaction.TransactionId = SecondChildTranasactionId;
-                                        TransactionBLL.MarkAsUnregistred(objtransaction);
-                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                        Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
+                                        TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
                                     }
@@ -505,296 +457,47 @@ namespace MLFFWebUI.Controllers
                         }
                         else
                         {
-                            #region Check which pakcet is missing in parent
-                            if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID"].ToString())) //IKE is missing
-                            {
-                                ParentPacketCount++;
-                                ParentIKEFrontEntryId = Convert.ToInt32(dt.Rows[0]["CT_ENTRY_ID"]);
-                                ParentIKEFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                ParentIKE = true;
-                            }
-                            if (!string.IsNullOrEmpty(dt.Rows[0]["CT_ENTRY_ID_REAR"].ToString())) //IKE is missing
-                            {
-                                ParentPacketCount++;
-                                ParentIKERearEntryId = Convert.ToInt32(dt.Rows[0]["CT_ENTRY_ID_REAR"]);
-                                ParentIKERearVehicleClassId = Convert.ToInt32(dt.Rows[0]["CTP_VEHICLE_CLASS_IDR"]);
-                                ParentIKE = true;
-                            }
-                            if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))//Front ANPR missing
-                            {
-                                ParentPacketCount++;
-                                ParentANPRFrontEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                                ParentANPRFrontVehicleClassId = Convert.ToInt32(dt.Rows[0]["NFP_VEHICLE_CLASS_ID_FRONT"]);
-                                ParentANPR = true;
-                            }
-                            if (!string.IsNullOrEmpty(dt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))// Rear ANPR missing
-                            {
-                                ParentPacketCount++;
-                                ParentANPRRearEntryId = Convert.ToInt32(dt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                ParentANPRRearVehicleClassId = Convert.ToInt32(dt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
-                                ParentANPR = true;
-                            }
-
-                            #region check Balance already deduct or not for parent
-                            if (dt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
-                            {
-                                ParentBalanceAlreadyDeducated = true;
-                            }
-                            #endregion
-
-                            #region check already Audited or not for parent
-                            if (dt.Rows[0]["AUDIT_STATUS"].ToString() == "1")
-                            {
-                                ParentAuditied = true;
-                            }
-                            #endregion
-                            #endregion
-
                             #region Check Associated TransactionIds is avaliable or not 
                             if (AssociatedTransactionIds != null)
                             {
-                                if (AssociatedTransactionIds.Length > 0)
+                                for (int i = 0; i < AssociatedTransactionIds.Length; i++)
                                 {
-                                    AssociatedTransactionCount++;
-                                    FirstChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[0]);
-                                }
-                                if (AssociatedTransactionIds.Length > 1)
-                                {
-                                    AssociatedTransactionCount++;
-                                    SecondChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[1]);
-                                }
-
-                                if (AssociatedTransactionCount > 0)
-                                {
-                                    #region Find 1st Associated transaction releated pakcet id and is balance already deducated or not
-                                    if (FirstChildTranasactionId > 0)
+                                    ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                    DataTable Childdt = TransactionBLL.GetDataTableFilteredRecordById(ChildTranasactionId);
+                                    if (Childdt.Rows.Count > 0)
                                     {
-                                        #region First Child Pakcet Details
-                                        DataTable FirstChilddt = TransactionBLL.GetDataTableFilteredRecordById(FirstChildTranasactionId);
-                                        if (FirstChilddt.Rows.Count > 0)
+                                        if (!string.IsNullOrEmpty(Childdt.Rows[0]["CT_ENTRY_ID"].ToString()))
                                         {
-                                            if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["CT_ENTRY_ID"].ToString()))
-                                            {
-                                                if (ParentIKEFrontEntryId == 0)
-                                                {
-                                                    ChildIKEFrontEntryId = Convert.ToInt32(FirstChilddt.Rows[0]["CT_ENTRY_ID"]);
-                                                    ChildIKEFrontVehicleClassId = Convert.ToInt32(FirstChilddt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                    ChildPacketCount++;
-                                                    ChildIKE = true;
-                                                }
-                                                else
-                                                {
-                                                    ValidTransactionsProcess = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["CT_ENTRY_ID_REAR"].ToString()))
-                                            {
-                                                if (ParentIKERearEntryId == 0)
-                                                {
-                                                    ChildIKERearEntryId = Convert.ToInt32(FirstChilddt.Rows[0]["CT_ENTRY_ID_REAR"]);
-                                                    ChildIKERearVehicleClassId = Convert.ToInt32(FirstChilddt.Rows[0]["CTP_VEHICLE_CLASS_IDR"]);
-                                                    ChildPacketCount++;
-                                                    ChildIKE = true;
-                                                }
-                                                else
-                                                {
-                                                    ValidTransactionsProcess = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
-                                            {
-                                                if (ParentANPRFrontEntryId == 0)
-                                                {
-                                                    ChildAnprFrontEntryId = Convert.ToInt32(FirstChilddt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                                                    ChildANPRFrontVehicleClassId = Convert.ToInt32(FirstChilddt.Rows[0]["NFP_VEHICLE_CLASS_ID_FRONT"]);
-                                                    ChildPacketCount++;
-                                                    ChildANPR = true;
-                                                }
-                                                else
-                                                {
-                                                    ValidTransactionsProcess = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
-                                            {
-                                                if (ParentANPRRearEntryId == 0)
-                                                {
-                                                    ChildAnprRearEntryId = Convert.ToInt32(FirstChilddt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                                    ChildANPRRearVehicleClassId = Convert.ToInt32(FirstChilddt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
-                                                    ChildPacketCount++;
-                                                    ChildANPR = true;
-                                                }
-                                                else
-                                                {
-                                                    ValidTransactionsProcess = false;
-                                                }
+                                            ChildIKEVehicleClassId = Convert.ToInt32(Childdt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
+                                            ChildClassIdArrayList.Add(new child { TransId = ChildTranasactionId, ClassId = ChildIKEVehicleClassId, });
 
-                                            }
-                                            if (!string.IsNullOrEmpty(FirstChilddt.Rows[0]["IS_BALANCE_UPDATED"].ToString()))
-                                            {
-                                                if (FirstChilddt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
-                                                {
-                                                    FirstChildBalanceAlreadyDeducated = true;
-                                                }
-                                            }
-                                            if (FirstChilddt.Rows[0]["AUDIT_STATUS"].ToString() == "1")
-                                            {
-                                                FirstChildAuditied = true;
-                                            }
-                                            int[] temp = { ChildIKEFrontVehicleClassId, ChildIKERearVehicleClassId, ChildANPRFrontVehicleClassId, ChildANPRRearVehicleClassId, AuditedVehicleClassId, CustomerVehicleDetails.VehicleClassId };
-                                            FirstChildClassIdArray = temp;
                                         }
-                                        #endregion
-                                    }
-                                    #endregion
-
-                                    #region Find 2nd Associated transaction releated pakcet id and is balance already deducated or not
-                                    if (SecondChildTranasactionId > 0)
-                                    {
-                                        #region Second Child Pakcet Details
-                                        DataTable SecondChilddt = TransactionBLL.GetDataTableFilteredRecordById(SecondChildTranasactionId);
-                                        if (SecondChilddt.Rows.Count > 0)
+                                        if (!string.IsNullOrEmpty(Childdt.Rows[0]["CT_ENTRY_ID_REAR"].ToString()))
                                         {
-                                            int Second_ChildIKEFrontVehicleClassId = 0, Second_ChildIKERearVehicleClassId = 0, Second_ChildANPRFrontVehicleClassId = 0, Second_ChildANPRRearVehicleClassId = 0;
-                                            if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["CT_ENTRY_ID"].ToString()))
-                                            {
-                                                if (ParentIKEFrontEntryId == 0 && ChildIKEFrontEntryId == 0)
-                                                {
-                                                    ChildIKEFrontEntryId = Convert.ToInt32(SecondChilddt.Rows[0]["CT_ENTRY_ID"]);
-                                                    ChildIKEFrontVehicleClassId = Convert.ToInt32(SecondChilddt.Rows[0]["CTP_VEHICLE_CLASS_ID"]);
-                                                    Second_ChildIKEFrontVehicleClassId = ChildIKEFrontVehicleClassId;
-                                                    ChildPacketCount++;
-                                                    ChildIKE = true;
-                                                }
-                                                else
-                                                {
-                                                    ValidTransactionsProcess = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["CT_ENTRY_ID_REAR"].ToString()))
-                                            {
-                                                if (ParentIKEFrontEntryId == 0 && ChildIKERearEntryId == 0)
-                                                {
-                                                    ChildIKERearEntryId = Convert.ToInt32(SecondChilddt.Rows[0]["CT_ENTRY_ID_REAR"]);
-                                                    ChildIKERearVehicleClassId = Convert.ToInt32(SecondChilddt.Rows[0]["CTP_VEHICLE_CLASS_IDR"]);
-                                                    Second_ChildIKERearVehicleClassId = ChildIKERearVehicleClassId;
-                                                    ChildPacketCount++;
-                                                    ChildIKE = true;
-                                                }
-                                                else
-                                                {
-                                                    ValidTransactionsProcess = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["NF_ENTRY_ID_FRONT"].ToString()))
-                                            {
-                                                if (ParentANPRFrontEntryId == 0 && ChildAnprFrontEntryId == 0)
-                                                {
-                                                    ChildAnprFrontEntryId = Convert.ToInt32(SecondChilddt.Rows[0]["NF_ENTRY_ID_FRONT"]);
-                                                    ChildANPRFrontVehicleClassId = Convert.ToInt32(SecondChilddt.Rows[0]["NFP_VEHICLE_CLASS_ID_FRONT"]);
-                                                    Second_ChildANPRFrontVehicleClassId = ChildANPRFrontVehicleClassId;
-                                                    ChildPacketCount++;
-                                                    ChildANPR = true;
-                                                }
-                                                else
-                                                {
-                                                    ValidTransactionsProcess = false;
-                                                }
-                                            }
-                                            if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["NF_ENTRY_ID_REAR"].ToString()))
-                                            {
-                                                if (ParentANPRRearEntryId == 0 && ChildAnprRearEntryId == 0)
-                                                {
-                                                    ChildAnprRearEntryId = Convert.ToInt32(SecondChilddt.Rows[0]["NF_ENTRY_ID_REAR"]);
-                                                    ChildANPRRearVehicleClassId = Convert.ToInt32(SecondChilddt.Rows[0]["NFP_VEHICLE_CLASS_ID_REAR"]);
-                                                    Second_ChildANPRRearVehicleClassId = ChildANPRRearVehicleClassId;
-                                                    ChildPacketCount++;
-                                                    ChildANPR = true;
-                                                }
-                                                else
-                                                {
-                                                    ValidTransactionsProcess = false;
-                                                }
-
-                                            }
-                                            if (!string.IsNullOrEmpty(SecondChilddt.Rows[0]["IS_BALANCE_UPDATED"].ToString()))
-                                            {
-                                                if (SecondChilddt.Rows[0]["IS_BALANCE_UPDATED"].ToString() == "1")
-                                                {
-                                                    SecondChildBalanceAlreadyDeducated = true;
-                                                }
-                                            }
-                                            if (SecondChilddt.Rows[0]["AUDIT_STATUS"].ToString() == "1")
-                                            {
-                                                SecondChildAuditied = true;
-                                            }
-                                            int[] temp = { Second_ChildIKEFrontVehicleClassId, Second_ChildIKERearVehicleClassId, Second_ChildANPRFrontVehicleClassId, Second_ChildANPRRearVehicleClassId, AuditedVehicleClassId, CustomerVehicleDetails.VehicleClassId };
-                                            SecondChildClassIdArray = temp;
+                                            ChildIKEVehicleClassId = Convert.ToInt32(Childdt.Rows[0]["CTP_VEHICLE_CLASS_IDR"]);
+                                            ChildClassIdArrayList.Add(new child { TransId = ChildTranasactionId, ClassId = ChildIKEVehicleClassId, });
                                         }
-                                        #endregion
                                     }
-                                    #endregion
                                 }
+
+
                             }
                             #endregion
 
                             #region Check max Class Id
-                            int[] ClassIdArray = {
-                                ParentIKEFrontVehicleClassId,
-                                ParentIKERearVehicleClassId,
-                                ParentANPRFrontVehicleClassId,
-                                ParentANPRFrontVehicleClassId,
-                                ParentANPRRearVehicleClassId,
-                                ChildIKEFrontVehicleClassId,
-                                ChildIKERearVehicleClassId,
-                                ChildANPRFrontVehicleClassId,
-                                ChildANPRRearVehicleClassId,
-                                AuditedVehicleClassId,
-                                CustomerVehicleDetails.VehicleClassId
-                            };
                             int[] ParentClassIdArray = {
                                 ParentIKEFrontVehicleClassId,
                                 ParentIKERearVehicleClassId,
-                                ParentANPRFrontVehicleClassId,
-                                ParentANPRFrontVehicleClassId,
-                                ParentANPRRearVehicleClassId,
                                 AuditedVehicleClassId,
                                 CustomerVehicleDetails.VehicleClassId
                             };
-                            int[] ChildClassIdArray = {
-                                ChildIKEFrontVehicleClassId,
-                                ChildIKERearVehicleClassId,
-                                ChildANPRFrontVehicleClassId,
-                                ChildANPRRearVehicleClassId,
-                                AuditedVehicleClassId,
-                                CustomerVehicleDetails.VehicleClassId
-                            };
-
-                            int[] IKEClassIdArray = {
-                            ParentIKEFrontVehicleClassId,
-                            ParentIKERearVehicleClassId,
-                            ChildIKEFrontVehicleClassId,
-                            ChildIKERearVehicleClassId,
-                            AuditedVehicleClassId,
-                            CustomerVehicleDetails.VehicleClassId
-                            };
-
-                            if (ClassIdArray.Length > 0)
-                                MaxClassId = ClassIdArray.Max();
                             if (ParentClassIdArray.Length > 0)
                                 MaxParentClassId = ParentClassIdArray.Max();
-                            if (ChildClassIdArray.Length > 0)
-                                MaxChildClassId = ChildClassIdArray.Max();
-                            if (FirstChildClassIdArray.Length > 0)
-                                MaxFirstChildClassId = FirstChildClassIdArray.Max();
-                            if (SecondChildClassIdArray.Length > 0)
-                                MaxSecondChildClassId = SecondChildClassIdArray.Max();
-                            if (IKEClassIdArray.Length > 0)
-                                MaxIKEClassId = IKEClassIdArray.Max();
                             #endregion
 
                             #region Check audited VRN is already balance deduct or not in one miniute
-                            strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID NOT IN (" + TransactionId + "," + FirstChildTranasactionId + "," + SecondChildTranasactionId + ") AND (CTP.PLATE_NUMBER = '" + AuditedVRN + "' OR CTPR.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPF.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPR.PLATE_NUMBER = '" + AuditedVRN + "') AND NVL(T.IS_BALANCE_UPDATED,0)=1";
+                            strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND  (CTP.PLATE_NUMBER = '" + AuditedVRN + "' OR CTPR.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPF.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPR.PLATE_NUMBER = '" + AuditedVRN + "') AND NVL(T.IS_BALANCE_UPDATED,0)=1";
+                            //strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID NOT IN (" + ValidateChildsIds + ") AND (CTP.PLATE_NUMBER = '" + AuditedVRN + "' OR CTPR.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPF.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPR.PLATE_NUMBER = '" + AuditedVRN + "') AND NVL(T.IS_BALANCE_UPDATED,0)=1";
                             DataTable alreadyCharged = TransactionBLL.GetDataTableFilteredRecords(strfilter);
                             if (alreadyCharged.Rows.Count > 0)
                             {
@@ -803,929 +506,282 @@ namespace MLFFWebUI.Controllers
                             }
                             #endregion
 
-                            if (ValidTransactionsProcess)
+                            #region Process Transaction
+                            if (IsAlreadyAuditedVRN)
                             {
-                                if (IsAlreadyAuditedVRN)
+                                #region This VRN alreday Reviewed
+                                int ReviewedTranId = Convert.ToInt32(Assodt.Rows[0]["TRANSACTION_ID"].ToString());
+                                int ReviewedViolation = 0;
+                                if (Assodt.Rows[0]["IS_VIOLATION"] != DBNull.Value)
+                                    ReviewedViolation = Convert.ToInt32(Assodt.Rows[0]["IS_VIOLATION"].ToString());
+                                TransactionBLL.MeargedAuditTransaction(ReviewedTranId, TransactionId, (int)Constants.TranscationStatus.Merged);
+                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
+                                TransactionBLL.UpdateAuditSection(objtransaction);
+                                Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed!!!";
+                                if (AssociatedTransactionIds != null)
                                 {
-                                    #region VRN ALREADY AUDITIED
-                                    #region Selected Transctions have valid data to process
-                                    if (ParentPacketCount == 4)
+
+                                    for (int i = 0; i < AssociatedTransactionIds.Length; i++)
                                     {
-                                        #region Selected Transctions have not valid data to process
-                                        ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "Please select valid transactions!!!";
-                                        objResponseMessage.Add(objModelState);
-                                        #endregion
+                                        ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                        objtransaction.TransactionId = ChildTranasactionId;
+                                        TransactionBLL.MarkAsUnregistred(objtransaction);
+                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
+                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
+                                        TransactionBLL.UpdateAuditSection(objtransaction);
                                     }
-                                    else
+                                }
+                                #endregion
+                            }
+                            else
+                            {
+                                #region This VRN still not Reviewed
+                                if (CustomerVehicleDetails.QueueStatus == 3)
+                                {
+                                    #region Customer Document already Verified
+                                    if (IsAlreadyChargedVRN)
                                     {
-                                        if (CustomerVehicleDetails.QueueStatus == 3)
+                                        #region This VRN already Charged
+                                        #region Check Parent Violation
+                                        Violation = CheckViolation(ParentClassIdArray);
+                                        TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, ParentTransactionId, (int)Constants.TranscationStatus.Merged);
+                                        if (Violation)
                                         {
-                                            #region Customer Document Verified
-                                            int ReviewedTranId = Convert.ToInt32(Assodt.Rows[0]["TRANSACTION_ID"].ToString());
-                                            int ReviewedBlanceDeducated = 0;
-                                            if (Assodt.Rows[0]["IS_BALANCE_UPDATED"] != DBNull.Value)
-                                                ReviewedBlanceDeducated = Convert.ToInt32(Assodt.Rows[0]["IS_BALANCE_UPDATED"].ToString());
-                                            int ReviewedViolation = 0;
-                                            if (Assodt.Rows[0]["IS_VIOLATION"] != DBNull.Value)
-                                                ReviewedViolation = Convert.ToInt32(Assodt.Rows[0]["IS_VIOLATION"].ToString());
-                                            #region Parent Transcation have not all data they can be mearged 
-                                            if (AssociatedTransactionCount == 0)
-                                            {
-                                                #region No Associated Transaction Selected
-                                                if (ParentAuditied)
-                                                {
-                                                    #region Selected transactions already reviewed
-                                                    ModelStateList objModelState = new ModelStateList();
-                                                    objModelState.ErrorMessage = "Transactions ID " + TransactionId + " already REVIEWED!!!";
-                                                    objResponseMessage.Add(objModelState);
-                                                    #endregion
-                                                }
-                                                else
-                                                {
-                                                    if (ReviewedBlanceDeducated == 1)
-                                                    {
-                                                        #region this Transaction already charged
-                                                        #region Check for Violation
-                                                        Violation = CheckViolation(IKEClassIdArray);
-                                                        #endregion
-
-                                                        #region process for audit
-                                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, ParentTransactionId, (int)Constants.TranscationStatus.Merged);
-                                                        if (ReviewedViolation == 1)
-                                                        {
-                                                            #region Violation Occured
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = ParentTransactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED also set as VIOLATION!!!";
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-
-                                                        else if (Violation)
-                                                        {
-                                                            #region Violation Occured
-                                                            objtransaction.TransactionId = ParentTransactionId;
-                                                            TransactionBLL.MarkAsViolation(objtransaction);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED!!!";
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        else
-                                                        {
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED!!!";
-                                                            objResponseMessage.Add(objModelState);
-                                                        }
-                                                        #endregion
-                                                        #endregion
-
-                                                        #region its already charged process for set violation //tested
-                                                        if (IsAlreadyChargedVRN)
-                                                        {
-
-                                                        }
-                                                        else if (ParentBalanceAlreadyDeducated)
-                                                        {
-                                                            #region this VRN already charged
-                                                            #region Check for Violation
-                                                            Violation = CheckViolation(IKEClassIdArray);
-                                                            #endregion
-
-                                                            #region process for audit
-
-                                                            if (Violation)
-                                                            {
-                                                                #region violation occured
-                                                                objtransaction.TransactionId = ParentTransactionId;
-                                                                TransactionBLL.MarkAsViolation(objtransaction);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                ModelStateList objModelState = new ModelStateList();
-                                                                objModelState.ErrorMessage = "yes!Transactions ID " + TransactionId + " already CHARGED and set as VIOLATION!!!";
-                                                                objResponseMessage.Add(objModelState);
-                                                                #endregion
-                                                            }
-                                                            else
-                                                            {
-                                                                objtransaction.TransactionId = ParentTransactionId;
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                ModelStateList objModelState = new ModelStateList();
-                                                                objModelState.ErrorMessage = "yes!Transactions ID " + TransactionId + " already CHARGED!!!";
-                                                                objResponseMessage.Add(objModelState);
-                                                            }
-                                                            #endregion
-                                                            #endregion
-                                                        }
-                                                        #endregion
-                                                    }
-                                                    else
-                                                    {
-                                                        #region its not charged process for audit and charged //tested
-                                                        #region Check for Violation
-                                                        Violation = CheckViolation(IKEClassIdArray);
-                                                        #endregion
-
-                                                        #region process for audit
-                                                        objtransaction.TransactionId = ParentTransactionId;
-                                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
-                                                        if (Violation)
-                                                        {
-                                                            #region violation occured
-                                                            TransactionBLL.MarkAsViolation(objtransaction);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED and set as VIOLATION!!!";
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        else
-                                                        {
-                                                            #region Charged 
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED!!!";
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        #endregion
-                                                        #endregion
-                                                    }
-                                                }
-                                                #endregion
-                                            }
-                                            else
-                                            {
-                                                #region Associated Transaction Selected
-                                                if (ReviewedBlanceDeducated == 1)
-                                                {
-                                                    #region this Transaction already charged
-                                                    #region Check for Violation
-                                                    Violation = CheckViolation(IKEClassIdArray);
-                                                    #endregion
-
-                                                    #region process for audit
-                                                    TransactionBLL.MeargedAuditTransaction(ReviewedTranId, ParentTransactionId, (int)Constants.TranscationStatus.Merged);
-                                                    if (ReviewedViolation == 1)
-                                                    {
-                                                        #region Violation Occured
-                                                        //objtransaction.TransactionId = ParentTransactionId;
-                                                        //TransactionBLL.MarkAsViolation(objtransaction);
-                                                        //objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                        //TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        //Meassage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED!!!";
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                        objtransaction.TransactionId = ParentTransactionId;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED also set as VIOLATION!!!";
-                                                        #endregion
-                                                    }
-                                                    else if (Violation)
-                                                    {
-                                                        #region Violation Occured
-                                                        objtransaction.TransactionId = ParentTransactionId;
-                                                        TransactionBLL.MarkAsViolation(objtransaction);
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED!!!";
-
-                                                        #endregion
-                                                    }
-                                                    else
-                                                    {
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED!!!";
-                                                    }
-
-                                                    #region No violation Child
-                                                    if (FirstChildTranasactionId > 0)
-                                                    {
-                                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                        objtransaction.TransactionId = FirstChildTranasactionId;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
-                                                    }
-                                                    if (SecondChildTranasactionId > 0)
-                                                    {
-                                                        TransactionBLL.MeargedAuditTransaction(ReviewedTranId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                        objtransaction.TransactionId = SecondChildTranasactionId;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
-                                                    }
-                                                    #endregion
-                                                    #endregion
-                                                    #endregion
-
-                                                    ModelStateList objModelState = new ModelStateList();
-                                                    objModelState.ErrorMessage = Meassage;
-                                                    objResponseMessage.Add(objModelState);
-
-
-                                                }
-                                                else
-                                                {
-                                                    #region this Selected Transaction not charged
-                                                    #region Check for Violation
-                                                    Violation = CheckViolation(IKEClassIdArray);
-                                                    #endregion
-
-                                                    #region process for audit
-                                                    objtransaction.TransactionId = ParentTransactionId;
-                                                    FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
-                                                    Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED";
-                                                    if (Violation)
-                                                    {
-                                                        #region violation occured
-                                                        #region violation Parent
-                                                        objtransaction.TransactionId = ParentTransactionId;
-                                                        TransactionBLL.MarkAsViolation(objtransaction);
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = Meassage + " and set as VIOLATION!!!";
-                                                        #endregion
-
-                                                        #region No violation Child
-                                                        if (FirstChildTranasactionId > 0)
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = FirstChildTranasactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + TransactionId + "!!!";
-                                                        }
-                                                        if (SecondChildTranasactionId > 0)
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = SecondChildTranasactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + TransactionId + "!!!";
-                                                        }
-                                                        #endregion
-
-                                                        #endregion
-                                                    }
-                                                    else
-                                                    {
-                                                        #region Transaction only merged
-                                                        Meassage = Meassage + "!!!";
-                                                        objtransaction.TransactionId = ParentTransactionId;
-                                                        TransactionBLL.MarkAsViolation(objtransaction);
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-
-                                                        if (FirstChildTranasactionId > 0)
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = FirstChildTranasactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                        }
-                                                        if (SecondChildTranasactionId > 0)
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = SecondChildTranasactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                        }
-                                                        #endregion
-                                                    }
-                                                    #endregion
-
-                                                    ModelStateList objModelState = new ModelStateList();
-                                                    objModelState.ErrorMessage = Meassage;
-                                                    objResponseMessage.Add(objModelState);
-                                                    #endregion
-                                                }
-                                                #endregion
-                                            }
-                                            #endregion
-
-                                            #endregion
-                                        }
-                                        else
-                                        {
-                                            #region Customer Document Not Verified its marked AS Violation
-                                            #region process for audit
-                                            objtransaction.TransactionId = ParentTransactionId;
-                                            //FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
-                                            Meassage = "yes!Transactions ID " + ParentTransactionId + "";
-
-                                            #region violation Parent
+                                            #region Parent Violation found
                                             objtransaction.TransactionId = ParentTransactionId;
                                             TransactionBLL.MarkAsViolation(objtransaction);
                                             objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                             TransactionBLL.UpdateAuditSection(objtransaction);
-                                            Meassage = Meassage + " set as VIOLATION!!!";
+                                            Meassage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
                                             #endregion
 
-                                            #region No violation Child
-                                            if (FirstChildTranasactionId > 0)
+                                            #region Process Child Data
+                                            for (int i = 0; i < AssociatedTransactionIds.Length; i++)
                                             {
-                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                                ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                                objtransaction.TransactionId = ChildTranasactionId;
+                                                TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                                Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
                                                 objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                objtransaction.TransactionId = FirstChildTranasactionId;
                                                 TransactionBLL.UpdateAuditSection(objtransaction);
-                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                            }
-                                            if (SecondChildTranasactionId > 0)
-                                            {
-                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
                                             }
                                             #endregion
+                                        }
+                                        else
+                                        {
+                                            #region Parent Violation not found
+                                            objtransaction.TransactionId = ParentTransactionId;
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
+                                            TransactionBLL.UpdateAuditSection(objtransaction);
+                                            Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
+                                            #endregion
 
+                                            #region Process Child Data
+                                            bool Vresult = false;
+                                            bool Presult = false;
+                                            for (int i = 0; i < AssociatedTransactionIds.Length; i++)
+                                            {
+                                                Presult = false;
+                                                ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                                var query = from child classificationId in ChildClassIdArrayList
+                                                            where classificationId.TransId == ChildTranasactionId
+                                                            select classificationId;
+                                                #region Check for Child Violation
+                                                if (!Vresult && !Presult)
+                                                {
+                                                    int PreVal = 0;
+                                                    foreach (child c in query)
+                                                    {
+                                                        if (c.ClassId > 0)
+                                                        {
+                                                            if (PreVal == 0)
+                                                            {
+                                                                PreVal = c.ClassId;
+                                                            }
+                                                            if (PreVal != c.ClassId)
+                                                            {
+                                                                Vresult = true;
+                                                                Presult = true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                #endregion
+                                                objtransaction.TransactionId = ChildTranasactionId;
+                                                TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                                if (Vresult)
+                                                {
+                                                    #region Child Violation found
+                                                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                                    Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
+                                                    #endregion
+                                                }
+                                                else
+                                                {
+                                                    #region Child Violation not found
+                                                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                                    Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
+                                                    #endregion
+                                                }
+
+                                            }
                                             #endregion
 
                                             ModelStateList objModelState = new ModelStateList();
                                             objModelState.ErrorMessage = Meassage;
                                             objResponseMessage.Add(objModelState);
 
+                                        }
+                                        #endregion
+                                        #endregion
+                                    }
+                                    else
+                                    {
+                                        #region This VRN is not Charged going for charging
+                                        #region Check Parent Violation
+                                        Violation = CheckViolation(ParentClassIdArray);
+
+                                        objtransaction.TransactionId = ParentTransactionId;
+                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxParentClassId, objtransaction, ParentTransactionId);
+
+                                        if (Violation)
+                                        {
+                                            #region Parent Violation found
+                                            objtransaction.TransactionId = ParentTransactionId;
+                                            TransactionBLL.MarkAsViolation(objtransaction);
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                            TransactionBLL.UpdateAuditSection(objtransaction);
+                                            Meassage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully CHARGED!!!";
+                                            #endregion
+
+                                            #region Process Child Data
+                                            for (int i = 0; i < AssociatedTransactionIds.Length; i++)
+                                            {
+                                                ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                                objtransaction.TransactionId = ChildTranasactionId;
+                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                                Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
+                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
+                                                TransactionBLL.UpdateAuditSection(objtransaction);
+                                            }
                                             #endregion
                                         }
+                                        else
+                                        {
+                                            #region Parent Violation not found
+                                            objtransaction.TransactionId = ParentTransactionId;
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
+                                            TransactionBLL.UpdateAuditSection(objtransaction);
+                                            Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED!!!";
+                                            #endregion
+
+                                            #region Process Child Data
+                                            bool Vresult = false;
+                                            bool Presult = false;
+                                            for (int i = 0; i < AssociatedTransactionIds.Length; i++)
+                                            {
+                                                Presult = false;
+                                                ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                                var query = from child classificationId in ChildClassIdArrayList
+                                                            where classificationId.TransId == ChildTranasactionId
+                                                            select classificationId;
+                                                #region Check for Child Violation
+                                                if (!Vresult && !Presult)
+                                                {
+                                                    int PreVal = 0;
+                                                    foreach (child c in query)
+                                                    {
+                                                        if (c.ClassId > 0)
+                                                        {
+                                                            if (PreVal == 0)
+                                                            {
+                                                                PreVal = c.ClassId;
+                                                            }
+                                                            if (PreVal != c.ClassId)
+                                                            {
+                                                                Vresult = true;
+                                                                Presult = true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                #endregion
+                                                objtransaction.TransactionId = ChildTranasactionId;
+                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                                if (Vresult)
+                                                {
+                                                    #region Child Violation found
+                                                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                                    Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
+                                                    #endregion
+                                                }
+                                                else
+                                                {
+                                                    #region Child Violation not found
+                                                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                                    Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
+                                                    #endregion
+                                                }
+
+                                            }
+                                            #endregion
+
+                                            ModelStateList objModelState = new ModelStateList();
+                                            objModelState.ErrorMessage = Meassage;
+                                            objResponseMessage.Add(objModelState);
+
+                                        }
+                                        #endregion
+                                        #endregion
                                     }
-                                    #endregion
                                     #endregion
                                 }
                                 else
                                 {
-                                    #region Selected Transctions have valid data to process
-                                    if (ParentPacketCount == 4)
+                                    #region Customer Document still Not Verified its marked AS Violation
+                                    #region process for audit
+                                    objtransaction.TransactionId = ParentTransactionId;
+                                    Meassage = "yes!Transactions ID " + ParentTransactionId + "";
+
+                                    #region violation Parent
+                                    objtransaction.TransactionId = ParentTransactionId;
+                                    TransactionBLL.MarkAsViolation(objtransaction);
+                                    objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                    TransactionBLL.UpdateAuditSection(objtransaction);
+                                    Meassage = Meassage + " set as VIOLATION!!!";
+                                    #endregion
+
+                                    #region No violation Child
+                                    if (AssociatedTransactionIds != null)
                                     {
-                                        #region Selected Transctions have not valid data to process
-                                        ModelStateList objModelState = new ModelStateList();
-                                        objModelState.ErrorMessage = "Please select valid transactions!!!";
-                                        objResponseMessage.Add(objModelState);
-                                        #endregion
-                                    }
-                                    else
-                                    {
-                                        if (CustomerVehicleDetails.QueueStatus == 3)
+                                        for (int i = 0; i < AssociatedTransactionIds.Length; i++)
                                         {
-                                            #region Customer Document Verified
-                                            #region Parent Transcation have not all data they can be mearged 
-                                            if (AssociatedTransactionCount == 0)
-                                            {
-                                                #region No Associated Transaction Selected
-                                                if (ParentAuditied)
-                                                {
-                                                    #region Selected transactions already reviewed
-                                                    ModelStateList objModelState = new ModelStateList();
-                                                    objModelState.ErrorMessage = "Transactions ID " + TransactionId + " already REVIEWED!!!";
-                                                    objResponseMessage.Add(objModelState);
-                                                    #endregion
-                                                }
-                                                else
-                                                {
-                                                    if (IsAlreadyChargedVRN || ParentBalanceAlreadyDeducated)
-                                                    {
-                                                        #region its already charged process for set violation //tested
-                                                        if (IsAlreadyChargedVRN)
-                                                        {
-                                                            #region this Transaction already charged
-                                                            #region Check for Violation
-                                                            Violation = CheckViolation(IKEClassIdArray);
-                                                            #endregion
-
-                                                            #region process for audit
-                                                            TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, ParentTransactionId, (int)Constants.TranscationStatus.Merged);
-                                                            if (Violation)
-                                                            {
-                                                                #region Violation Occured
-                                                                objtransaction.TransactionId = ParentTransactionId;
-                                                                TransactionBLL.MarkAsViolation(objtransaction);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                ModelStateList objModelState = new ModelStateList();
-                                                                objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
-                                                                objResponseMessage.Add(objModelState);
-                                                                #endregion
-                                                            }
-                                                            else
-                                                            {
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                ModelStateList objModelState = new ModelStateList();
-                                                                objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
-                                                                objResponseMessage.Add(objModelState);
-                                                            }
-                                                            #endregion
-                                                            #endregion
-                                                        }
-                                                        else if (ParentBalanceAlreadyDeducated)
-                                                        {
-                                                            #region this VRN already charged
-                                                            #region Check for Violation
-                                                            Violation = CheckViolation(IKEClassIdArray);
-                                                            #endregion
-
-                                                            #region process for audit
-
-                                                            if (Violation)
-                                                            {
-                                                                #region violation occured
-                                                                objtransaction.TransactionId = ParentTransactionId;
-                                                                TransactionBLL.MarkAsViolation(objtransaction);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                ModelStateList objModelState = new ModelStateList();
-                                                                objModelState.ErrorMessage = "yes!Transactions ID " + TransactionId + " already CHARGED and set as VIOLATION!!!";
-                                                                objResponseMessage.Add(objModelState);
-                                                                #endregion
-                                                            }
-                                                            else
-                                                            {
-                                                                objtransaction.TransactionId = ParentTransactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                ModelStateList objModelState = new ModelStateList();
-                                                                objModelState.ErrorMessage = "yes!Transactions ID " + TransactionId + " already CHARGED!!!";
-                                                                objResponseMessage.Add(objModelState);
-                                                            }
-                                                            #endregion
-                                                            #endregion
-                                                        }
-                                                        #endregion
-                                                    }
-                                                    else
-                                                    {
-                                                        #region its not charged process for audit and charged //tested
-                                                        #region Check for Violation
-                                                        Violation = CheckViolation(IKEClassIdArray);
-                                                        #endregion
-
-                                                        #region process for audit
-                                                        objtransaction.TransactionId = ParentTransactionId;
-                                                        FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
-                                                        if (Violation)
-                                                        {
-                                                            #region violation occured
-                                                            TransactionBLL.MarkAsViolation(objtransaction);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED and set as VIOLATION!!!";
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        else
-                                                        {
-                                                            #region Charged 
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED!!!";
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        #endregion
-                                                        #endregion
-                                                    }
-                                                }
-                                                #endregion
-                                            }
-                                            else
-                                            {
-                                                #region Associated Transaction Selected
-                                                if (IsAlreadyChargedVRN || ParentBalanceAlreadyDeducated || FirstChildBalanceAlreadyDeducated || SecondChildBalanceAlreadyDeducated)
-                                                {
-                                                    #region its already charged process for set violation 
-                                                    if (IsAlreadyChargedVRN)
-                                                    {
-                                                        #region this VRN Transaction already charged
-                                                        #region Check for Violation
-                                                        Violation = CheckViolation(IKEClassIdArray);
-                                                        #endregion
-
-                                                        #region process for audit
-                                                        if (Violation)
-                                                        {
-                                                            #region violation occured
-                                                            TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, ParentTransactionId, (int)Constants.TranscationStatus.Merged);
-
-                                                            #region violation Parent
-                                                            objtransaction.TransactionId = ParentTransactionId;
-                                                            TransactionBLL.MarkAsViolation(objtransaction);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "yes!Transactions ID " + TransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
-                                                            #endregion
-
-                                                            #region No violation Child
-                                                            if (FirstChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
-                                                            }
-                                                            if (SecondChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
-                                                            }
-                                                            #endregion
-
-
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = Meassage;
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        else
-                                                        {
-                                                            #region Transaction only merged
-                                                            objtransaction.TransactionId = ParentTransactionId;
-                                                            TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, ParentTransactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
-                                                            if (FirstChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
-                                                            }
-                                                            if (SecondChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
-                                                            }
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = Meassage;
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        #endregion
-                                                        #endregion
-                                                    }
-                                                    else if (ParentBalanceAlreadyDeducated)
-                                                    {
-                                                        #region this Parent Transaction already charged
-                                                        #region Check for Violation
-                                                        Violation = CheckViolation(IKEClassIdArray);
-                                                        #endregion
-
-                                                        #region process for audit
-
-                                                        if (Violation)
-                                                        {
-                                                            #region violation Parent
-                                                            objtransaction.TransactionId = ParentTransactionId;
-                                                            TransactionBLL.MarkAsViolation(objtransaction);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = "yes!Transactions ID " + ParentTransactionId + " already CHARGED and set as VIOLATION!!!";
-                                                            #endregion
-
-                                                            #region No violation Child
-                                                            if (FirstChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            if (SecondChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            #endregion
-
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = Meassage;
-                                                            objResponseMessage.Add(objModelState);
-                                                        }
-                                                        else
-                                                        {
-                                                            #region Transaction only merged
-                                                            Meassage = "yes!Transactions ID " + ParentTransactionId + " already CHARGED!!!";
-                                                            if (FirstChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            if (SecondChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            #endregion
-                                                        }
-                                                        #endregion
-                                                        #endregion
-                                                    }
-                                                    else if (FirstChildBalanceAlreadyDeducated)
-                                                    {
-                                                        #region this First Child Transaction already charged
-                                                        #region Check for Violation
-                                                        Violation = CheckViolation(IKEClassIdArray);
-                                                        #endregion
-
-                                                        #region process for audit
-                                                        if (Violation)
-                                                        {
-                                                            #region violation occured
-                                                            #region violation Parent
-                                                            objtransaction.TransactionId = ParentTransactionId;
-                                                            TransactionBLL.MarkAsViolation(objtransaction);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + ParentTransactionId + " set as VIOLATION!!!";
-                                                            #endregion
-
-                                                            #region No violation Child
-                                                            if (FirstChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " already CHARGED and successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            if (SecondChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            #endregion
-
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = Meassage;
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        else
-                                                        {
-                                                            #region Transaction only merged
-                                                            if (FirstChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " already CHARGED successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            if (SecondChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            #endregion
-                                                        }
-                                                        #endregion
-                                                        #endregion
-                                                    }
-                                                    else if (SecondChildBalanceAlreadyDeducated)
-                                                    {
-                                                        #region this Second Child Transaction already charged
-                                                        #region Check for Violation
-                                                        Violation = CheckViolation(IKEClassIdArray);
-                                                        #endregion
-
-                                                        #region process for audit
-
-                                                        if (Violation)
-                                                        {
-                                                            #region violation occured
-                                                            #region violation Parent
-                                                            objtransaction.TransactionId = ParentTransactionId;
-                                                            TransactionBLL.MarkAsViolation(objtransaction);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + ParentTransactionId + " set as VIOLATION!!!";
-                                                            #endregion
-
-                                                            #region No violation Child
-                                                            if (FirstChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " and successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            if (SecondChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " already CHARGED successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            #endregion
-
-                                                            ModelStateList objModelState = new ModelStateList();
-                                                            objModelState.ErrorMessage = Meassage;
-                                                            objResponseMessage.Add(objModelState);
-                                                            #endregion
-                                                        }
-                                                        else
-                                                        {
-                                                            #region Transaction only merged
-                                                            if (FirstChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            if (SecondChildTranasactionId > 0)
-                                                            {
-                                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " already CHARGED successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                            }
-                                                            #endregion
-                                                        }
-                                                        #endregion
-                                                        #endregion
-                                                    }
-                                                    #endregion
-                                                }
-                                                else
-                                                {
-                                                    #region this Selected Transaction not charged
-                                                    #region Check for Violation
-                                                    Violation = CheckViolation(IKEClassIdArray);
-                                                    #endregion
-
-                                                    #region process for audit
-                                                    objtransaction.TransactionId = ParentTransactionId;
-                                                    FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
-                                                    Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED";
-                                                    if (Violation)
-                                                    {
-                                                        #region violation occured
-                                                        #region violation Parent
-                                                        objtransaction.TransactionId = ParentTransactionId;
-                                                        TransactionBLL.MarkAsViolation(objtransaction);
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = Meassage + " and set as VIOLATION!!!";
-                                                        #endregion
-
-                                                        #region No violation Child
-                                                        if (FirstChildTranasactionId > 0)
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = FirstChildTranasactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + TransactionId + "!!!";
-                                                        }
-                                                        if (SecondChildTranasactionId > 0)
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = SecondChildTranasactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + TransactionId + "!!!";
-                                                        }
-                                                        #endregion
-
-                                                        #endregion
-                                                    }
-                                                    else
-                                                    {
-                                                        #region Transaction only merged
-                                                        Meassage = Meassage + "!!!";
-                                                        objtransaction.TransactionId = ParentTransactionId;
-                                                        TransactionBLL.MarkAsViolation(objtransaction);
-                                                        objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
-                                                        TransactionBLL.UpdateAuditSection(objtransaction);
-
-                                                        if (FirstChildTranasactionId > 0)
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = FirstChildTranasactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                        }
-                                                        if (SecondChildTranasactionId > 0)
-                                                        {
-                                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                            objtransaction.TransactionId = SecondChildTranasactionId;
-                                                            TransactionBLL.UpdateAuditSection(objtransaction);
-                                                            Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                                        }
-                                                        #endregion
-                                                    }
-                                                    #endregion
-
-                                                    ModelStateList objModelState = new ModelStateList();
-                                                    objModelState.ErrorMessage = Meassage;
-                                                    objResponseMessage.Add(objModelState);
-                                                    #endregion
-                                                }
-                                                #endregion
-                                            }
-                                            #endregion
-                                            #endregion
-                                        }
-                                        else
-                                        {
-                                            #region Customer Document Not Verified its marked AS Violation
-                                            #region process for audit
-                                            objtransaction.TransactionId = ParentTransactionId;
-                                            //FinancialProcessing(CustomerVehicleDetails, customerAccountInfo, MaxIKEClassId, objtransaction, ParentTransactionId);
-                                            Meassage = "yes!Transactions ID " + ParentTransactionId + "";
-
-                                            #region violation Parent
-                                            objtransaction.TransactionId = ParentTransactionId;
-                                            TransactionBLL.MarkAsViolation(objtransaction);
-                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
+                                            ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
+                                            objtransaction.TransactionId = ChildTranasactionId;
+                                            TransactionBLL.MeargedAuditTransaction(ParentTransactionId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
+                                            Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                             TransactionBLL.UpdateAuditSection(objtransaction);
-                                            Meassage = Meassage + " set as VIOLATION!!!";
-                                            #endregion
-
-                                            #region No violation Child
-                                            if (FirstChildTranasactionId > 0)
-                                            {
-                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, FirstChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                objtransaction.TransactionId = FirstChildTranasactionId;
-                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                Meassage = Meassage + "-999-Transactions ID " + FirstChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                            }
-                                            if (SecondChildTranasactionId > 0)
-                                            {
-                                                TransactionBLL.MeargedAuditTransaction(ParentTransactionId, SecondChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
-                                                objtransaction.TransactionId = SecondChildTranasactionId;
-                                                TransactionBLL.UpdateAuditSection(objtransaction);
-                                                Meassage = Meassage + "-999-Transactions ID " + SecondChildTranasactionId + " successfully MERGED to Transactions ID " + ParentTransactionId + "!!!";
-                                            }
-                                            #endregion
-
-                                            #endregion
-
-                                            ModelStateList objModelState = new ModelStateList();
-                                            objModelState.ErrorMessage = Meassage;
-                                            objResponseMessage.Add(objModelState);
-
-                                            #endregion
                                         }
                                     }
                                     #endregion
+
+                                    #endregion
+
+                                    ModelStateList objModelState = new ModelStateList();
+                                    objModelState.ErrorMessage = Meassage;
+                                    objResponseMessage.Add(objModelState);
+
+                                    #endregion
                                 }
-                            }
-                            else
-                            {
-                                #region Selected Transctions have not valid data to process
-                                ModelStateList objModelState = new ModelStateList();
-                                objModelState.ErrorMessage = "Please select valid associate transactions!!!";
-                                objResponseMessage.Add(objModelState);
                                 #endregion
                             }
+                            #endregion
                         }
                         #endregion
 
@@ -2150,7 +1206,7 @@ namespace MLFFWebUI.Controllers
             return View();
         }
 
-      
+
 
         #region Helper Methord
         private static void MarkAsViolation(Int32 TranscationId, TransactionCBE transaction)
@@ -2471,6 +1527,8 @@ namespace MLFFWebUI.Controllers
 
             return result;
         }
+
+
         #endregion
 
         #region OLD Display
@@ -2657,6 +1715,13 @@ namespace MLFFWebUI.Controllers
         void failedQueue_PeekCompleted(object sender, PeekCompletedEventArgs e)
         {
 
+        }
+
+
+        public class child
+        {
+            public int ClassId { get; set; }
+            public int TransId { get; set; }
         }
     }
 }
