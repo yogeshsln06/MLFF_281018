@@ -181,12 +181,13 @@ namespace MLFFWebUI.Controllers
             //int ANPRRearEntryId = 0;
             DateTime TransactionDateTime;
             int TransactionId;
+            int PlazaID;
             if (dt.Rows.Count > 0)
             {
                 TransactionDateTime = Convert.ToDateTime(dt.Rows[0]["TRANSACTION_DATETIME"]);
                 TransactionId = Convert.ToInt32(dt.Rows[0]["TRANSACTION_ID"]);
-
-                strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TransactionDateTime.AddSeconds(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID <> " + TransactionId;
+                PlazaID = Convert.ToInt32(dt.Rows[0]["PLAZA_ID"]);
+                strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + TransactionDateTime.AddSeconds(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS')  AND T.PLAZA_ID = " + PlazaID + " AND T.TRANSACTION_ID <> " + TransactionId;
                 Assodt = TransactionBLL.GetUnReviewedDataTableFilteredRecords(strfilter);
                 Det = JsonConvert.SerializeObject(Assodt, Formatting.Indented);
                 Det = Det.Replace("\r", "").Replace("\n", "");
@@ -387,7 +388,7 @@ namespace MLFFWebUI.Controllers
                         {
                             ValidateChildsIds = TransactionId.ToString();
                         }
-                        strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.AUDITED_VRN='" + AuditedVRN + "' AND NVL(T.AUDIT_STATUS,0)=1";
+                        strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.AUDITED_VRN='" + AuditedVRN + "' AND NVL(T.AUDIT_STATUS,0)=1 AND T.PLAZA_ID=" + objtransaction.PlazaId + "";
                         //strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID NOT IN (" + ValidateChildsIds + ") AND T.AUDITED_VRN='" + AuditedVRN + "' AND NVL(T.AUDIT_STATUS,0)=1";
                         DataTable Assodt = TransactionBLL.GetDataTableFilteredRecords(strfilter);
                         if (Assodt.Rows.Count > 0)
@@ -496,7 +497,7 @@ namespace MLFFWebUI.Controllers
                             #endregion
 
                             #region Check audited VRN is already balance deduct or not in one miniute
-                            strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND  (CTP.PLATE_NUMBER = '" + AuditedVRN + "' OR CTPR.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPF.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPR.PLATE_NUMBER = '" + AuditedVRN + "') AND NVL(T.IS_BALANCE_UPDATED,0)=1";
+                            strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND  (CTP.PLATE_NUMBER = '" + AuditedVRN + "' OR CTPR.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPF.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPR.PLATE_NUMBER = '" + AuditedVRN + "') AND NVL(T.IS_BALANCE_UPDATED,0)=1 AND T.PLAZA_ID=" + objtransaction.PlazaId + "";
                             //strfilter = " WHERE TRANSACTION_DATETIME BETWEEN TO_DATE('" + objtransaction.TransactionDateTime.AddSeconds(-Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND TO_DATE('" + objtransaction.TransactionDateTime.AddMinutes(Seconds).ToString("dd/MM/yyyy HH:mm:ss") + "','DD/MM/YYYY HH24:MI:SS') AND T.TRANSACTION_ID NOT IN (" + ValidateChildsIds + ") AND (CTP.PLATE_NUMBER = '" + AuditedVRN + "' OR CTPR.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPF.PLATE_NUMBER = '" + AuditedVRN + "' OR NFPR.PLATE_NUMBER = '" + AuditedVRN + "') AND NVL(T.IS_BALANCE_UPDATED,0)=1";
                             DataTable alreadyCharged = TransactionBLL.GetDataTableFilteredRecords(strfilter);
                             if (alreadyCharged.Rows.Count > 0)
