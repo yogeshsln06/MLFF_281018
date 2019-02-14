@@ -111,6 +111,9 @@ function BindUnreviewedFirstLoad() {
                 }
             },
             {
+                'data': 'FIRST_NAME',
+            },
+            {
                 'data': 'VEHICLESPEED',
             },
             {

@@ -691,7 +691,7 @@ namespace MLFFWebUI.Controllers
                                         {
                                             #region Parent Violation not found
                                             objtransaction.TransactionId = ParentTransactionId;
-                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
+                                            objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Charged;
                                             TransactionBLL.UpdateAuditSection(objtransaction);
                                             Meassage = "yes!Transactions ID " + ParentTransactionId + " successfully CHARGED!!!";
                                             #endregion
