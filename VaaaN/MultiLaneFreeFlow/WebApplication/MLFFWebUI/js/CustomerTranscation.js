@@ -908,6 +908,10 @@ function BindReviewedFirstLoad() {
                     }
                 }
             },
+             {
+                 'data': 'FNAME'
+
+             },
             { 'data': 'VEHICLESPEED', },
             { 'data': 'AUDITED_VRN' },
             { 'data': 'AUDIT_VEHICLE_CLASS_NAME' },
@@ -1407,6 +1411,10 @@ function BindChargedFirstLoad() {
                     }
                 }
             },
+             {
+                 'data': 'FNAME'
+
+             },
             {
                 'data': 'VEHICLESPEED',
 
@@ -1462,7 +1470,7 @@ function BindChargedFirstLoad() {
            "className": "text-center",
        },
        {
-           "targets": 15,
+           "targets": 16,
            "className": 'dt-body-right',
        },
         {
