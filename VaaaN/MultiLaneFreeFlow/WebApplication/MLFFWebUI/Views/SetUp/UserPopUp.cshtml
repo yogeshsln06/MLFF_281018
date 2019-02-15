@@ -4,19 +4,19 @@
 }
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Scripts/jquery-ui.js"></script>
-<link href="~/Content/jquery-ui.css" rel="stylesheet" />
+@*<script src="~/Scripts/jquery-ui.js"></script>
+<link href="~/Content/jquery-ui.css" rel="stylesheet" />*@
 @*<link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>*@
 <script type="text/javascript">
-    $("#UserDob").datepicker({
-        dateFormat: 'dd-mm-yy',
-        autoclose: true,
-    });
-    $("#AccountExpiryDate").datepicker({
-        dateFormat: 'dd-mm-yy',
-        autoclose: true
-    });
+    //$("#UserDob").datepicker({
+    //    dateFormat: 'dd-mm-yy',
+    //    autoclose: true,
+    //});
+    //$("#AccountExpiryDate").datepicker({
+    //    dateFormat: 'dd-mm-yy',
+    //    autoclose: true
+    //});
     $('#UserStatus').change(
        function (e) {
            if ($('#UserStatus').is(":checked")) {
@@ -69,14 +69,14 @@
                         @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                
+
                 <div class="clearfix"></div>
                 <div class="form-row">
                     <div class="form-group col-md-2 required">
                         <label for="txtDob" class="form-label">DOB</label>
                     </div>
                     <div class="form-group col-md-4">
-                        @Html.EditorFor(model => model.UserDob, new { htmlAttributes = new { @class = "form-control required", @readonly = "readonly" } })
+                        @Html.EditorFor(model => model.UserDob, new { htmlAttributes = new { @class = "form-control form_datetime", @readonly = "readonly" } })
                         @Html.ValidationMessageFor(model => model.UserDob, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-2 required">
@@ -109,14 +109,14 @@
                         <label for="txtAccountExpiry" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.AccountExpiryDate</label>
                     </div>
                     <div class="form-group col-md-4">
-                        @Html.EditorFor(model => model.AccountExpiryDate, new { htmlAttributes = new { @class = "form-control required", @readonly = "readonly" } })
+                        @Html.EditorFor(model => model.AccountExpiryDate, new { htmlAttributes = new { @class = "form-control form_datetime", @readonly = "readonly" } })
                         @Html.ValidationMessageFor(model => model.AccountExpiryDate, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-2">
-                        @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "form-label control-label col-md-4 col-sm-4  required" })
+                        @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "form-label control-label required" })
                     </div>
                     <div class="form-group  col-md-4">
-                        @Html.DropDownList("RoleId", null, "Select Role", new { @class = "form-control required select" })
+                        @Html.DropDownList("RoleId", null, "", new { @class = "form-control required select" })
                         @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -129,10 +129,10 @@
                         @Html.CheckBoxFor(model => model.UserStatus, new { htmlAttributes = new { @class = "form-control" } })
                     </div>
                     <div class="form-group col-md-2">
-                        
+
                     </div>
                     <div class="form-group col-md-4">
-                       
+
                     </div>
                 </div>
                 <div class="clearfix"></div>

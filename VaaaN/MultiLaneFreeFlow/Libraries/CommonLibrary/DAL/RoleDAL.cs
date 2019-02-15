@@ -365,8 +365,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                     if (dt.Rows[i]["MODIFICATION_DATE"] != DBNull.Value)
                         role.ModificationDate = Convert.ToDateTime(dt.Rows[i]["MODIFICATION_DATE"]);
 
-                    //if (dt.Rows[i]["TRANSFER_STATUS"] != DBNull.Value)
-                    //    role.TransferStatus = Convert.ToInt32(dt.Rows[i]["TRANSFER_STATUS"]);
+                    if (dt.Rows[i]["IS_ACTIVE"] != DBNull.Value)
+                    role.ISActive = Convert.ToInt32(dt.Rows[i]["IS_ACTIVE"]);
 
                     roles.Add(role);
                 }
