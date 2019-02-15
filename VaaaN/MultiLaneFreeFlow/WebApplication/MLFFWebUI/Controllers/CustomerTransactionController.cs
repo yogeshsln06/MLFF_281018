@@ -144,7 +144,9 @@ namespace MLFFWebUI.Controllers
             }
             else if (transaction.TransactionCategoryId == 3)//Front/Rear ANPR Only
             {
-                strQuery += "  AND NVL (T.CT_ENTRY_ID, 0) = 0 AND((NVL(T.NF_ENTRY_ID_FRONT, 0) > 0 AND LOWER(NFPF.PLATE_NUMBER) <> 'unidentified' AND NVL(T.NF_ENTRY_ID_REAR, 0) = 0) OR (NVL(T.NF_ENTRY_ID_REAR, 0) > 0 AND LOWER(NFPF.PLATE_NUMBER) <> 'unidentified' AND NVL(T.NF_ENTRY_ID_FRONT, 0) = 0)) ";
+                strQuery += " AND NVL (T.CT_ENTRY_ID, 0) = 0 AND((NVL(T.NF_ENTRY_ID_FRONT, 0) > 0 AND NVL(T.NF_ENTRY_ID_REAR, 0) = 0 AND LOWER(NFPF.PLATE_NUMBER) <> 'unidentified') OR(NVL(T.NF_ENTRY_ID_REAR, 0) > 0 AND NVL(T.NF_ENTRY_ID_FRONT, 0) = 0 AND LOWER(NFPR.PLATE_NUMBER) <> 'unidentified')) ";
+
+                //strQuery += "  AND NVL (T.CT_ENTRY_ID, 0) = 0 AND((NVL(T.NF_ENTRY_ID_FRONT, 0) > 0  AND NVL(T.NF_ENTRY_ID_REAR, 0) = 0 AND LOWER(NFPF.PLATE_NUMBER)<>'unidentified' ) OR (NVL(T.NF_ENTRY_ID_REAR, 0) > 0  AND NVL(T.NF_ENTRY_ID_FRONT, 0) = 0 AND LOWER(NFPR.PLATE_NUMBER)<>'unidentified')) ";
             }
             else if (transaction.TransactionCategoryId == 4)//Unidentified Front/Rear ANPR
             {
