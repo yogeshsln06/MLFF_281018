@@ -112,21 +112,7 @@ function BindUnreviewedFirstLoad() {
             },
             {
                 'data': 'FNAME'
-                //fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                //    if (row.CTP_FIRST_NAME!= 'Not Registered') {
-                //        $(nTd).html(oData.CTP_FIRST_NAME);
-                //    }
-                //    else if (oData.NFPF_FIRST_NAME != 'Not Registered') {
-                //        $(nTd).html(oData.NFPF_FIRST_NAME);
-                //    }
-                //    else if (oData.NFPR_FIRST_NAME != 'Not Registered') {
-                //        $(nTd).html(oData.NFPR_FIRST_NAME);
-                //    }
-                //    else {
-                //        $(nTd).html('Not Registered');
-                //    }
-
-                //}
+              
             },
             {
                 'data': 'VEHICLESPEED',
@@ -660,9 +646,13 @@ function BindAssociatedData(Seconds, dtCount) {
                                     }
                                 }
                             },
+                             {
+                                 'data': 'FNAME',
+                             },
                             {
                                 'data': 'VEHICLESPEED',
                             },
+                           
                             {
                                 'data': 'F_TRANSACTION_DATETIME',
                                 "visible": false,
