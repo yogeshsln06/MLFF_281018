@@ -1308,7 +1308,8 @@ function FilteReviewedData() {
         ReviewerId: ReviewerId,
         ReviewerStatus: ReviewerStatus,
         TranscationId: TraId,
-        VRN: ALLVRN
+        VRN: ALLVRN,
+        Name: Name
     }
     inProgress = true;
     $(".animationload").show();

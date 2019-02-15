@@ -941,6 +941,15 @@ namespace MLFFWebUI.Controllers
             {
                 strQuery += " AND  T.TRANSACTION_DATETIME <= TO_DATE('" + strendtime + "','DD/MM/YYYY HH24:MI:SS')";
             }
+            if (!string.IsNullOrEmpty(transaction.VRN))
+            {
+                strQuery += " AND (LOWER(CTP.PLATE_NUMBER)  LIKE '%" + transaction.VRN + "%' OR LOWER(NFPF.PLATE_NUMBER)  LIKE '%" + transaction.VRN + "%' OR LOWER(NFPR.PLATE_NUMBER)  LIKE '%" + transaction.VRN + "%')";
+            }
+            if (!string.IsNullOrEmpty(transaction.Name))
+            {
+                transaction.Name = transaction.Name.ToLower();
+                strQuery += " AND (LOWER(CA_CTP.FIRST_NAME)  LIKE '%" + transaction.Name + "%' OR LOWER(CA_NFPF.FIRST_NAME)  LIKE '%" + transaction.Name + "%' OR LOWER(CA_NFPR.FIRST_NAME)  LIKE '%" + transaction.Name + "%')";
+            }
             if (!string.IsNullOrEmpty(transaction.ParentTranscationId))
             {
                 strQuery += " AND (T.MEARGED_TRAN_ID LIKE '%" + transaction.ParentTranscationId + "%' )";
