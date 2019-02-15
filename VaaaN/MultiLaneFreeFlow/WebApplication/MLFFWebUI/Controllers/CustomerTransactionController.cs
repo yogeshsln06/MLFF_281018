@@ -329,6 +329,7 @@ namespace MLFFWebUI.Controllers
             bool IsAlreadyAuditedVRN = false;
             bool IsAlreadyChargedVRN = false;
 
+            String PMeassage = String.Empty;
             String Meassage = String.Empty;
             String strfilter = String.Empty;
             String ValidateChildsIds = String.Empty;
@@ -432,7 +433,7 @@ namespace MLFFWebUI.Controllers
                                         objtransaction.TransactionId = ChildTranasactionId;
                                         TransactionBLL.MarkAsUnregistred(objtransaction);
                                         TransactionBLL.MeargedAuditTransaction(ReviewedTranId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
+                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and set as VIOLATION!!!";
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
                                     }
@@ -526,12 +527,30 @@ namespace MLFFWebUI.Controllers
                                 #region This VRN alreday Reviewed
                                 int ReviewedTranId = Convert.ToInt32(Assodt.Rows[0]["TRANSACTION_ID"].ToString());
                                 int ReviewedViolation = 0;
-                                if (Assodt.Rows[0]["IS_VIOLATION"] != DBNull.Value)
-                                    ReviewedViolation = Convert.ToInt32(Assodt.Rows[0]["IS_VIOLATION"].ToString());
+                                int ReviewedCharged = 0;
+                                if (Assodt.Rows[0]["TRANS_STATUS"] != DBNull.Value)
+                                    ReviewedViolation = Convert.ToInt32(Assodt.Rows[0]["TRANS_STATUS"].ToString());
+                                if (Assodt.Rows[0]["IS_BALANCE_UPDATED"] != DBNull.Value)
+                                    ReviewedCharged = Convert.ToInt32(Assodt.Rows[0]["IS_BALANCE_UPDATED"].ToString());
                                 TransactionBLL.MeargedAuditTransaction(ReviewedTranId, TransactionId, (int)Constants.TranscationStatus.Merged);
                                 objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                 TransactionBLL.UpdateAuditSection(objtransaction);
-                                Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed!!!";
+                                if (ReviewedViolation == 3 && ReviewedCharged == 1)
+                                {
+                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully set as VIOLATION and CHARGED!!!";
+                                }
+                                else if (ReviewedViolation == 3)
+                                {
+                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully set as VIOLATION!!!";
+                                }
+                                else if (ReviewedCharged == 1)
+                                {
+                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully set as CHARGED!!!";
+                                }
+                                else
+                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed";
+
+                                PMeassage = Meassage;
                                 if (AssociatedTransactionIds != null)
                                 {
 
@@ -541,7 +560,8 @@ namespace MLFFWebUI.Controllers
                                         objtransaction.TransactionId = ChildTranasactionId;
                                         TransactionBLL.MarkAsUnregistred(objtransaction);
                                         TransactionBLL.MeargedAuditTransaction(ReviewedTranId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
+                                        Meassage = Meassage + PMeassage.Replace("yes!", "-999-").Replace(TransactionId.ToString(), ChildTranasactionId.ToString());
+                                        //Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + "!!!";
                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                         TransactionBLL.UpdateAuditSection(objtransaction);
                                     }
@@ -571,6 +591,7 @@ namespace MLFFWebUI.Controllers
                                             TransactionBLL.MarkAsViolation(objtransaction);
                                             objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                             TransactionBLL.UpdateAuditSection(objtransaction);
+
                                             Meassage = "yes!Transactions ID " + ParentTransactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
                                             #endregion
 
@@ -582,7 +603,8 @@ namespace MLFFWebUI.Controllers
                                                     ChildTranasactionId = Convert.ToInt32(AssociatedTransactionIds[i]);
                                                     objtransaction.TransactionId = ChildTranasactionId;
                                                     TransactionBLL.MeargedAuditTransaction(AlreadyChargedVRNId, ChildTranasactionId, (int)Constants.TranscationStatus.Merged);
-                                                    Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
+                                                    Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
+                                                    //Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
                                                     objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Merged;
                                                     TransactionBLL.UpdateAuditSection(objtransaction);
                                                 }
@@ -639,7 +661,7 @@ namespace MLFFWebUI.Controllers
                                                         #region Child Violation found
                                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                                         TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
+                                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " set as VIOLATION and successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
                                                         #endregion
                                                     }
                                                     else
@@ -647,7 +669,7 @@ namespace MLFFWebUI.Controllers
                                                         #region Child Violation not found
                                                         objtransaction.AuditedTranscationStatus = (int)Constants.TranscationStatus.Violation;
                                                         TransactionBLL.UpdateAuditSection(objtransaction);
-                                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + "!!!";
+                                                        Meassage = Meassage + "-999-Transactions ID " + ChildTranasactionId + " successfully MERGED to Transactions ID " + AlreadyChargedVRNId + " that already reviewed and successfully CHARGED!!!";
                                                         #endregion
                                                     }
 
@@ -943,6 +965,7 @@ namespace MLFFWebUI.Controllers
             }
             if (!string.IsNullOrEmpty(transaction.VRN))
             {
+                transaction.VRN = transaction.VRN.ToLower();
                 strQuery += " AND (LOWER(CTP.PLATE_NUMBER)  LIKE '%" + transaction.VRN + "%' OR LOWER(NFPF.PLATE_NUMBER)  LIKE '%" + transaction.VRN + "%' OR LOWER(NFPR.PLATE_NUMBER)  LIKE '%" + transaction.VRN + "%')";
             }
             if (!string.IsNullOrEmpty(transaction.Name))
