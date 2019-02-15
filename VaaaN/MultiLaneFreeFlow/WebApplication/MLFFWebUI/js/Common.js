@@ -182,7 +182,7 @@ function GetCityList() {
             $.each($.parseJSON(result), function (i, city) {
                 $("#CityId").append
                 ($('<option></option>').val(city.CityId).html(city.CityName))
-                if (city.CityId == $("#hfCityId").val() && pageload == 1) {
+                if (city.CityId == $("#hfCityId").val()) {
                     $("#CityId").val($("#hfCityId").val());
                     GetDistrictList();
                 }
@@ -218,7 +218,7 @@ function GetDistrictList() {
             $.each($.parseJSON(result), function (i, district) {
                 $("#DistrictId").append
                 ($('<option></option>').val(district.DistrictId).html(district.DistrictName))
-                if (district.DistrictId == $("#hfDistrictId").val() && pageload == 1) {
+                if (district.DistrictId == $("#hfDistrictId").val()) {
                     $("#DistrictId").val($("#hfDistrictId").val());
                     GetSubDistrictList();
                 }
@@ -253,10 +253,9 @@ function GetSubDistrictList() {
                 $("#SubDistrictId").append
                 ($('<option zipcode="' + subdistrict.ZipCode + '"></option>').val(subdistrict.SubDistrictId).html(subdistrict.SubDistrictName))
 
-                if (subdistrict.SubDistrictId == $("#hfSubDistrictId").val() && pageload == 1) {
+                if (subdistrict.SubDistrictId == $("#hfSubDistrictId").val()) {
                     $("#SubDistrictId").val($("#hfSubDistrictId").val());
                     $("#PostalCode").val($("#hfPostalCode").val());
-                    pageload = pageload + 1;
                 }
             })
         },

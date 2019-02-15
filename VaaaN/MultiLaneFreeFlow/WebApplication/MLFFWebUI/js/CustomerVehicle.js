@@ -141,10 +141,10 @@ function BindCustmerVehicleAccount() {
                         'data': 'VehicleImageRear', "className": "dt-center",
                         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                             if (oData.VehicleImageRear != '' && oData.VehicleImageRear != null) {
-                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImgV(this);' style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageRear + "><i class='c-blue-500 ti-camera'></i></span><img onclick='zoomImage(this);' style='display:none;' src='../Attachment/VehicleImage/" + oData.VehicleImageFront + "' data-high-res-src='' alt='' class='gallery-items'>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false' onclick='openImgV(this);' style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageRear + "><i class='c-blue-500 ti-camera'></i></span><img onclick='zoomImage(this);' style='display:none;' src='../Attachment/VehicleImage/" + oData.VehicleImageRear + "' data-high-res-src='' alt='' class='gallery-items'>");
                             }
                             else {
-                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false'  style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageFront + "><i class='c-gray-500 ti-camera'></i></span>");
+                                $(nTd).html("<span class='cur-p icon-holder' aria-expanded='false'  style='font-size: 12px;' src=../Attachment/VehicleImage/" + oData.VehicleImageRear + "><i class='c-gray-500 ti-camera'></i></span>");
                             }
                         }
                     },
@@ -216,9 +216,6 @@ function BindCustmerVehicleAccount() {
                 if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
                     AppendCustomerData();
                 }
-                //if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblCustomerVehicle").height()) && !NoMoredata && !inProgress) {
-                //    AppendCustomerData();
-                //}
             });
             thId = 'tblCustomerDataTR';
             myVar = setInterval("myclick()", 500);
@@ -752,7 +749,7 @@ function OpenUpdatepopUp(id) {
                 $("<br/>").insertBefore($("#labelImageRC"));
                 $("#labelImageRC").find('span').text('Update File').show();
             }
-
+            Status = $("#QueueStatus").val();
             $("#btnSave").show();
             //$("#btnSave").text("Update");
             $("#btnpopupUpdateCancel").hide();

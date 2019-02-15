@@ -893,7 +893,7 @@ namespace VaaaN.MLFF.WindowsServices
                                     //whether the vrn exists or does not exist, we have to push it to local table after checking the case of
                                     //multiple reporting
                                     //LogMessage("Checking existing nodeflux records for: " + nfp.PlateNumber);
-                                    if (nfp.PlateNumber.ToLower() == "not detected")
+                                    if (nfp.PlateNumber.ToLower() == "unidentified")
                                     {
                                         #region Send to local nodeflux database
                                         try
