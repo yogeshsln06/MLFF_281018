@@ -324,7 +324,7 @@ function reloadUnreviewedData() {
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
     $('#TranscationId').val(TranscationId);
-    $('#PlateNumber').val(VRN);
+    $('#VRN').val(VRN);
     $('#Name').val(Name);
     FilterUnreviewedData();
     //if (searchEnable) {
@@ -395,7 +395,7 @@ function openFilterpopupUnReviewed() {
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
     $('#TranscationId').val(TranscationId);
-    $('#PlateNumber').val(VRN);
+    $('#VRN').val(VRN);
     $('#Name').val(Name);
     var modal = $("#filterModel");
     var body = $(window);
@@ -455,8 +455,8 @@ function FilterUnreviewedData() {
         TranscationId = '';
     }
 
-    if ($("#PlateNumber").val() != '') {
-        VRN = $("#PlateNumber").val();
+    if ($("#VRN").val() != '') {
+        VRN = $("#VRN").val();
 
     }
     else {
