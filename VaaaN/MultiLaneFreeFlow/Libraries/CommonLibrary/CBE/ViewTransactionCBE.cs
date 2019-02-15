@@ -20,6 +20,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         public String Name { get; set; }
         public String Email { get; set; }
         public String ParentTranscationId { get; set; }
+
         //[Display(Name = "End Date")]
         //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         //public DateTime EndTime { get; set; }
@@ -45,5 +46,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
 
         [Display(Name = "Mobile Number")]
         public String MobileNo { get; set; }
+
+        [Display(Name = "VRN")]
+        public String VRN { get; set; }
     }
 }
