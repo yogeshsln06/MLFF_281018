@@ -10,6 +10,7 @@ var Name = '';
 var Mobile = '';
 var EmailId = '';
 var VRN = '';
+var ALLVRN = '';
 var VehicleClassId = 0;
 var GantryId = 0;
 var ParentTranscationId = 0;
@@ -1211,6 +1212,8 @@ function openFilterpopupReviewed() {
     $("#VehicleClassId").val(VehicleClassId);
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
+    $('#VRN').val(ALLVRN);
+    $('#Name').val(Name);
     var modal = $("#filterModel");
     var body = $(window);
     var w = modal.width();
@@ -1269,6 +1272,20 @@ function FilteReviewedData() {
     else {
         ReviewerStatus = 0;
     }
+
+    if ($("#Name").val() != '') {
+        Name = $("#Name").val();
+    }
+    else {
+        Name = '';
+    }
+    if ($("#VRN").val() != '') {
+        ALLVRN = $("#VRN").val();
+    }
+    else {
+        ALLVRN = '';
+    }
+
     if ($("#PlateNumber").val() != '') {
         VRN = $("#PlateNumber").val();
     }
@@ -1289,6 +1306,7 @@ function FilteReviewedData() {
         TraId = 0;
         TranscationId = '';
     }
+    
 
     var Inputdata = {
         GantryId: GantryId,
@@ -1299,8 +1317,8 @@ function FilteReviewedData() {
         ParentTranscationId: ParentTranscationId,
         ReviewerId: ReviewerId,
         ReviewerStatus: ReviewerStatus,
-        TranscationId: TraId
-
+        TranscationId: TraId,
+        VRN: ALLVRN
     }
     inProgress = true;
     $(".animationload").show();
