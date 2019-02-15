@@ -7,6 +7,7 @@ using System.Messaging;
 using System.Web;
 using System.Web.Mvc;
 using VaaaN.MLFF.Libraries.CommonLibrary;
+using VaaaN.MLFF.Libraries.CommonLibrary.BLL;
 using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
 
 namespace MLFFWebUI.Controllers
@@ -22,6 +23,18 @@ namespace MLFFWebUI.Controllers
             }
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Dashboard","");
             return View();
+        }
+
+        [HttpPost]
+        public string DashBoardTransactionData(ViewTransactionCBE transaction)
+        {
+            string result = "";
+
+            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string Det = JsonConvert.SerializeObject(TransactionBLL.TransDeatilsReport(strstarttime, strendtime), Formatting.Indented);
+            result = Det.Replace("\r", "").Replace("\n", "");
+            return result;
         }
 
         #region Live Events
