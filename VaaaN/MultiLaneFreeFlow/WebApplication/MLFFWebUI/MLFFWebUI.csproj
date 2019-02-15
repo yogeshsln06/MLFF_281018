@@ -248,6 +248,7 @@
     <Content Include="js\CustomerAccount.js" />
     <Content Include="js\CustomerTranscation.js" />
     <Content Include="js\CustomerVehicle.js" />
+    <Content Include="js\Dashboard.js" />
     <Content Include="js\liveEvents.js" />
     <Content Include="js\Report.js" />
     <Content Include="js\SetUp.js" />
@@ -293,6 +294,7 @@
     <Content Include="fonts\glyphicons\glyphicons-halflings-regular.woff2" />
     <None Include="Properties\PublishProfiles\NewUI.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\canvasjs.min.js" />
     <Content Include="Scripts\imageviewer.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -300,6 +302,7 @@
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery-1.12.4.js" />
     <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery.canvasjs.min.js" />
     <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.datetimepicker.full.min.js" />
     <Content Include="Scripts\jquery.freezeheader.js" />
