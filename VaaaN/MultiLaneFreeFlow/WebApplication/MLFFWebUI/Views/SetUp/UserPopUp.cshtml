@@ -4,19 +4,7 @@
 }
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Scripts/jquery-ui.js"></script>
-<link href="~/Content/jquery-ui.css" rel="stylesheet" />
-@*<link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>*@
 <script type="text/javascript">
-    $("#UserDob").datepicker({
-        dateFormat: 'dd-mm-yy',
-        autoclose: true,
-    });
-    $("#AccountExpiryDate").datepicker({
-        dateFormat: 'dd-mm-yy',
-        autoclose: true
-    });
     $('#UserStatus').change(
        function (e) {
            if ($('#UserStatus').is(":checked")) {
@@ -38,7 +26,6 @@
                 <div class="form-row">
                     <div class="form-group col-md-2 ">
                         @Html.LabelFor(model => model.UserId, htmlAttributes: new { @class = "control-label" })
-                        @*<label for="txtUserId" class="form-label">UserId</label>*@
                     </div>
                     <div class="form-group  col-md-4">
                         @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control" } })
@@ -53,7 +40,6 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-2 required">
-                        @*<label for="txtLoginName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.LoginName</label>*@
                         @Html.LabelFor(model => model.LoginName, htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="form-group  col-md-4">
@@ -61,7 +47,6 @@
                         @Html.ValidationMessageFor(model => model.LoginName, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-2 required">
-                        @*<label for="txtPassword" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Password</label>*@
                         @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="form-group  col-md-4">
@@ -69,19 +54,18 @@
                         @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                
+
                 <div class="clearfix"></div>
                 <div class="form-row">
                     <div class="form-group col-md-2 required">
-                        <label for="txtDob" class="form-label">DOB</label>
+                        @Html.LabelFor(model => model.UserDob, htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="form-group col-md-4">
-                        @Html.EditorFor(model => model.UserDob, new { htmlAttributes = new { @class = "form-control required", @readonly = "readonly" } })
+                        @Html.EditorFor(model => model.UserDob, new { htmlAttributes = new { @class = "form-control form_datetime", @readonly = "readonly" } })
                         @Html.ValidationMessageFor(model => model.UserDob, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-2 required">
                         <label for="txtAddress1" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Address</label>
-                        @*@Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label" })*@
                     </div>
                     <div class="form-group col-md-4">
                         @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
@@ -89,14 +73,14 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-2 required">
-                        <label for="txtMobileNo" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.MobileNo</label>
-                    </div>
+                        @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label" })
+                     </div>
                     <div class="form-group col-md-4">
                         @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control required", maxlength = "15" } })
                         @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-2 required">
-                        <label for="txtEmailId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.EmailId</label>
+                        @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="form-group col-md-4">
                         @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control required" } })
@@ -105,18 +89,18 @@
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-row">
-                    <div class="form-group col-md-2 ">
-                        <label for="txtAccountExpiry" class="form-label">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.AccountExpiryDate</label>
+                    <div class="form-group col-md-2 required">
+                        @Html.LabelFor(model => model.AccountExpiryDate, htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="form-group col-md-4">
-                        @Html.EditorFor(model => model.AccountExpiryDate, new { htmlAttributes = new { @class = "form-control required", @readonly = "readonly" } })
+                        @Html.EditorFor(model => model.AccountExpiryDate, new { htmlAttributes = new { @class = "form-control form_datetime", @readonly = "readonly" } })
                         @Html.ValidationMessageFor(model => model.AccountExpiryDate, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group col-md-2">
-                        @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "form-label control-label col-md-4 col-sm-4  required" })
+                    <div class="form-group col-md-2 required">
+                        @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "form-label control-label required" })
                     </div>
                     <div class="form-group  col-md-4">
-                        @Html.DropDownList("RoleId", null, "Select Role", new { @class = "form-control required select" })
+                        @Html.DropDownList("RoleId", null, "", new { @class = "form-control required select" })
                         @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -129,10 +113,10 @@
                         @Html.CheckBoxFor(model => model.UserStatus, new { htmlAttributes = new { @class = "form-control" } })
                     </div>
                     <div class="form-group col-md-2">
-                        
+
                     </div>
                     <div class="form-group col-md-4">
-                       
+
                     </div>
                 </div>
                 <div class="clearfix"></div>

@@ -112,7 +112,9 @@ function NewUser() {
             openpopup();
             $("#UserId").val('0').attr("disabled", "disabled");
             $("#Password").val('');
-            $("#LoginName").val('');
+            $("#LoginName").val(' ');
+            $("#UserDob").attr("data-provide", "datepicker").attr("readolny", true);
+            $("#AccountExpiryDate").attr("data-provide", "datepicker").attr("readolny", true);
             //$("#AccountExpiryDate").val("");
             $("#btnSave").show();
             $("#btnSave").text("Save");
@@ -142,7 +144,8 @@ function EditUser(ctrl, id) {
             $("#LoginName").attr("disabled", "disabled");
             $("#Password").attr("disabled", "disabled");
             $("#RoleId").val($("#SlRoleId").val());
-
+            $("#UserDob").attr("data-provide", "datepicker").attr("readolny", true);
+            $("#AccountExpiryDate").attr("data-provide", "datepicker").attr("readolny", true);
             $("#btnSave").show();
             $("#btnSave").text("Update");
             $("#btnCancel").hide();
@@ -173,14 +176,14 @@ function SaveData(action) {
             }
             var Inputdata = {
                 UserId: UserId,
-                LoginName: $("#LoginName").val(),
-                Password: $("#Password").val(),
-                FirstName: $('#FirstName').val(),
-                LastName: $('#LastName').val(),
+                LoginName: $.trim($("#LoginName").val()),
+                Password: $.trim($("#Password").val()),
+                FirstName: $.trim($('#FirstName').val()),
+                LastName: $.trim($('#LastName').val()),
                 UserDob: $('#UserDob').val(),
-                Address: $("#Address").val(),
-                MobileNo: $("#MobileNo").val(),
-                EmailId: $("#EmailId").val(),
+                Address: $.trim($("#Address").val()),
+                MobileNo: $.trim($("#MobileNo").val()),
+                EmailId: $.trim($("#EmailId").val()),
                 AccountExpiryDate: $("#AccountExpiryDate").val(),
                 RoleId: $("#RoleId").val(),
                 UserStatus: $("#UserStatus").val(),
@@ -279,6 +282,32 @@ function validateUser() {
         // showerror($("#RoleId"), '');
     }
     return valid;
+}
+function UserDetail(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetUser?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialModel').html(result);
+            $("#SetUpLabel").text("View " + $("#FirstName").val() + "");
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+            $("#RoleId").val($("#SlRoleId").val());
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            $("#fildset").attr("disabled", "disabled");
+            $('#UserDob').prop('readonly', false);
+            $('#AccountExpiryDate').prop('readonly', false);
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
 }
 /*User List End*/
 
@@ -468,7 +497,7 @@ function EditVehcileClass(ctrl, Id) {
             $(".animationload").hide();
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
-            $("#SetUpLabel").text("View " + $("#Name").val() + "");
+            $("#SetUpLabel").text("Update [" + $("#Name").val() + "]");
             openpopup();
             $("#Id").attr("disabled", "disabled");
             $("#btnSave").show();
@@ -478,7 +507,6 @@ function EditVehcileClass(ctrl, Id) {
         error: function (x, e) {
             $(".animationload").hide();
         }
-
     });
 }
 function VehcileClassDetail(ctrl, Id) {
@@ -579,7 +607,7 @@ function BindHardwareData(HardwareDataList) {
                 }
             },
         ],
-        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+        columnDefs: [{ "orderable": false, "targets": 8, "className": "text-center", }, ],
     });
     tblHardwareData.on('order.dt search.dt', function () {
         tblHardwareData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -644,7 +672,7 @@ function SaveHardwareData(action) {
         if (validateHardware()) {
             var Id = $("#HardwareId").val() || '';
             var PostURL = '/SetUp/HardwareUpdate';
-            if (Id == '') {
+            if (Id == 0) {
                 Id = 0;
                 PostURL = '/SetUp/HardwareAdd'
             }
@@ -725,7 +753,7 @@ function EditHardware(ctrl, Id) {
             $(".animationload").hide();
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
-            $("#SetUpLabel").text("Update " + $("#HardwareName").val() + "");
+            $("#SetUpLabel").text("Update [" + $("#HardwareName").val() + "]");
             openpopup();
             $("#HardwareId").attr("disabled", "disabled");
             $("#HardwareType").val($("#hfHardwareType").val());
@@ -751,8 +779,8 @@ function HardwareDetail(ctrl, Id) {
         success: function (result) {
             $(".animationload").hide();
             $('#partialModel').html(result);
-            $("#SetUpLabel").text("View " + $("#Name").val() + "");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("View " + $("#HardwareName").val() + "");
             openpopup();
             $("#HardwareId").attr("disabled", "disabled");
             $("#HardwareType").val($("#hfHardwareType").val());
@@ -874,7 +902,7 @@ function BindLaneData(LaneDataList) {
                 }
             },
         ],
-        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+        columnDefs: [{ "orderable": false, "targets": 14, "className": "text-center", }, ],
     });
     tblLaneData.on('order.dt search.dt', function () {
         tblLaneData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -1034,25 +1062,21 @@ function LaneDetail(ctrl, Id) {
     $(".animationload").show();
     $.ajax({
         type: "POST",
-        url: "/SetUp/GetHardware?id=" + Id,
+        url: "/SetUp/GetLane?id=" + Id,
         async: true,
         contentType: "application/json; charset=utf-8",
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
             $('#partialModel').html(result);
-            $("#SetUpLabel").text("View " + $("#Name").val() + "");
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("View " + $("#LaneName").val() + "");
             openpopup();
-            $("#HardwareId").attr("disabled", "disabled");
-            $("#HardwareType").val($("#hfHardwareType").val());
-            $("#HardwarePosition").val($("#hfHardwarePosition").val());
+            //$("#HardwareType").val($("#hfHardwareType").val());
+           // $("#HardwarePosition").val($("#hfHardwarePosition").val());
             $("#btnSave").hide();
-            $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
-            $("#btnpopupClose").show();
             $("#btnCancel").hide();
             $("#btnUpdate").hide();
-            $("#btnUpdateCancel").hide();
             $("#fildset").attr("disabled", "disabled");
         },
         error: function (x, e) {
@@ -1105,7 +1129,7 @@ function BindGantryData(GantryDataList) {
             {
                 'data': 'PlazaId',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    $(nTd).html("<a href='javascript:void(0);' onclick='LaneDetail(this," + oData.PlazaId + ")'>" + oData.PlazaId + "</a>");
+                    $(nTd).html("<a href='javascript:void(0);' onclick='GantryDetail(this," + oData.PlazaId + ")'>" + oData.PlazaId + "</a>");
                 }
             },
             { 'data': 'PlazaName' },
@@ -1132,7 +1156,7 @@ function BindGantryData(GantryDataList) {
                 }
             },
         ],
-        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+        columnDefs: [{ "orderable": false, "targets": 7, "className": "text-center", }, ],
     });
     tblGantryData.on('order.dt search.dt', function () {
         tblGantryData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -1180,7 +1204,6 @@ function EditGantry(ctrl, Id) {
             $("#SetUpLabel").text("Update [" + $("#PlazaName").val() + "]");
             $("#PlazaId").attr("disabled", "disabled");
             openpopup();
-
             $("#btnSave").show();
             $("#btnSave").text("Update");
             $("#btnCancel").hide();
@@ -1285,6 +1308,29 @@ function SaveGantryData(action) {
         $("#warning").show();
     }
 }
+function GantryDetail(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetGantry?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("View " + $("#PlazaName").val() + "");
+            openpopup();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            $("#fildset").attr("disabled", "disabled");
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
 /********Gantry End**********/
 
 //******Roles Start ******
@@ -1315,7 +1361,7 @@ function BindRolesData(RolesDataList) {
             {
                 'data': 'RoleId',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    $(nTd).html("<a href='javascript:void(0);' onclick='RolesDetail(this," + oData.RoleId + ")'>" + oData.RoleId + "</a>");
+                    $(nTd).html("<a href='javascript:void(0);' onclick='RoleDetail(this," + oData.RoleId + ")'>" + oData.RoleId + "</a>");
                 }
             },
             {
@@ -1351,7 +1397,7 @@ function BindRolesData(RolesDataList) {
                 }
             },
         ],
-        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+        columnDefs: [{ "orderable": false, "targets": 4, "className": "text-center", }, ],
     });
     tblRolesData.on('order.dt search.dt', function () {
         tblRolesData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -1502,6 +1548,31 @@ function SaveRolesData(action) {
         $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
         $("#warning").show();
     }
+}
+function RoleDetail(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetRoles?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialModel').html(result);
+            $("#SetUpLabel").text("View " + $("#RoleName").val() + "");
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            openpopup();
+            $("#ISActive").val() == 1 ? $("#DisplayActive").prop('checked', true) : $("#DisplayActive").prop('checked', false);
+            $("#DisplayActive").attr("disabled", "disabled");
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            $("#fildset").attr("disabled", "disabled");
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
 }
 /********Roles End**********/
 
@@ -1706,6 +1777,29 @@ function SaveProvinceData(action) {
         $("#warning").show();
     }
 }
+function ProvinceDetail(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetProvince?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("View " + $("#ProvinceName").val() + "");
+            openpopup();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            $("#fildset").attr("disabled", "disabled");
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
 //******Province End ******
 
 //******City Start ******
@@ -1717,6 +1811,13 @@ function validateCity() {
     }
     else {
         showError($("#CityName"), '');
+    }
+    if ($("#ProvinceId").val() == 0) {
+        showError($("#ProvinceId"), $("#ProvinceId").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#ProvinceId"), '');
     }
     return valid;
 }
@@ -1737,7 +1838,7 @@ function BindCityData(CityListData) {
             {
                 'data': 'CITY_ID',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    $(nTd).html("<a href='javascript:void(0);' onclick='ProvinceDetail(this," + oData.CITY_ID + ")'>" + oData.CITY_ID + "</a>");
+                    $(nTd).html("<a href='javascript:void(0);' onclick='CityDetail(this," + oData.CITY_ID + ")'>" + oData.CITY_ID + "</a>");
                 }
             },
             { 'data': 'CITY_NAME', },
@@ -1803,12 +1904,10 @@ function EditCity(ctrl, Id) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#SetUpLabel").text("Update [" + $("#CityName").val() + "]");
             $("#CityId").attr("disabled", "disabled");
-            $("#ProvinceId").val($("#OProvinceId").val());
             openpopup();
             $("#btnSave").show();
             $("#btnCancel").hide();
@@ -1910,6 +2009,29 @@ function SaveCityData(action) {
         $("#warning").show();
     }
 }
+function CityDetail(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetCity?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("View " + $("#CityName").val() + "");
+            openpopup();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            $("#fildset").attr("disabled", "disabled");
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
 //******City End ******
 
 
@@ -1922,6 +2044,13 @@ function validateDistrict() {
     }
     else {
         showError($("#DistrictName"), '');
+    }
+    if ($("#CityId").val() == 0) {
+        showError($("#CityId"), $("#CityId").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#CityId"), '');
     }
     return valid;
 }
@@ -1942,7 +2071,7 @@ function BindDistrictData(DistrictDataList) {
             {
                 'data': 'DISTRICT_ID',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    $(nTd).html("<a href='javascript:void(0);' onclick='ProvinceDetail(this," + oData.DISTRICT_ID + ")'>" + oData.DISTRICT_ID + "</a>");
+                    $(nTd).html("<a href='javascript:void(0);' onclick='DistrictDetail(this," + oData.DISTRICT_ID + ")'>" + oData.DISTRICT_ID + "</a>");
                 }
             },
             { 'data': 'DISTRICT_NAME', },
@@ -1966,7 +2095,7 @@ function BindDistrictData(DistrictDataList) {
                 }
             },
         ],
-        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+        columnDefs: [{ "orderable": false, "targets": 5, "className": "text-center", }, ],
     });
     tblDistrictData.on('order.dt search.dt', function () {
         tblDistrictData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -2009,13 +2138,11 @@ function EditDistrict(ctrl, Id) {
         dataType: "html",
         success: function (result) {
             $(".animationload").hide();
-
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             $("#SetUpLabel").text("Update [" + $("#DistrictName").val() + "]");
             $("#DistrictId").attr("disabled", "disabled");
             openpopup();
-
             $("#btnSave").show();
             $("#btnCancel").hide();
             $("#btnClose").show();
@@ -2040,7 +2167,6 @@ function NewDistrict() {
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
             openpopup();
             $("#DistrictId").val('0').attr("disabled", "disabled");
-
             $("#btnSave").show();
             $("#btnSave").text("Save");
             $("#btnClose").hide();
@@ -2117,6 +2243,29 @@ function SaveDistrictData(action) {
         $("#warning").show();
     }
 }
+function DistrictDetail(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetDistrict?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("View " + $("#DistrictName").val() + "");
+            openpopup();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            $("#fildset").attr("disabled", "disabled");
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
+}
 //******District End ******
 
 //******SubDistrict Start ******
@@ -2128,6 +2277,13 @@ function validateSubDistrict() {
     }
     else {
         showError($("#SubDistrictName"), '');
+    }
+    if ($("#DistrictId").val() == 0) {
+        showError($("#DistrictId"), $("#DistrictId").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#DistrictId"), '');
     }
     return valid;
 }
@@ -2148,7 +2304,7 @@ function BindSubDistrictData(SubDistrictDataList) {
             {
                 'data': 'SUB_DISTRICT_ID',
                 fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                    $(nTd).html("<a href='javascript:void(0);' onclick='ProvinceDetail(this," + oData.SUB_DISTRICT_ID + ")'>" + oData.SUB_DISTRICT_ID + "</a>");
+                    $(nTd).html("<a href='javascript:void(0);' onclick='SubDistrictDetail(this," + oData.SUB_DISTRICT_ID + ")'>" + oData.SUB_DISTRICT_ID + "</a>");
                 }
             },
             { 'data': 'SUB_DISTRICT_NAME', },
@@ -2174,7 +2330,7 @@ function BindSubDistrictData(SubDistrictDataList) {
                 }
             },
         ],
-        columnDefs: [{ "orderable": false, "targets": 3, "className": "text-center", }, ],
+        columnDefs: [{ "orderable": false, "targets": 6, "className": "text-center", }, ],
     });
     tblSubDistrictData.on('order.dt search.dt', function () {
         tblSubDistrictData.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -2324,6 +2480,29 @@ function SaveSUbDistrictData(action) {
         $("#warning").html("<ul><li>Please fill are mandatory fields</li></ul>");
         $("#warning").show();
     }
+}
+function SubDistrictDetail(ctrl, Id) {
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        url: "/SetUp/GetSubDistrict?id=" + Id,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        success: function (result) {
+            $(".animationload").hide();
+            $('#partialModel').html(result);
+            $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
+            $("#SetUpLabel").text("View " + $("#SubDistrictName").val() + "");
+            openpopup();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            $("#fildset").attr("disabled", "disabled");
+        },
+        error: function (x, e) {
+            $(".animationload").hide();
+        }
+    });
 }
 //******SubDistrict End ******
 

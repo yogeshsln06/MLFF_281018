@@ -32,7 +32,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.tmsId = value;
             }
         }
-
+        [Display(Name = "Province")]
         public int ProvinceId
         {
             get
