@@ -113,21 +113,7 @@ function BindUnreviewedFirstLoad() {
             },
             {
                 'data': 'FNAME'
-                //fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                //    if (row.CTP_FIRST_NAME!= 'Not Registered') {
-                //        $(nTd).html(oData.CTP_FIRST_NAME);
-                //    }
-                //    else if (oData.NFPF_FIRST_NAME != 'Not Registered') {
-                //        $(nTd).html(oData.NFPF_FIRST_NAME);
-                //    }
-                //    else if (oData.NFPR_FIRST_NAME != 'Not Registered') {
-                //        $(nTd).html(oData.NFPR_FIRST_NAME);
-                //    }
-                //    else {
-                //        $(nTd).html('Not Registered');
-                //    }
-
-                //}
+              
             },
             {
                 'data': 'VEHICLESPEED',
@@ -325,7 +311,7 @@ function reloadUnreviewedData() {
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
     $('#TranscationId').val(TranscationId);
-    $('#PlateNumber').val(VRN);
+    $('#VRN').val(VRN);
     $('#Name').val(Name);
     FilterUnreviewedData();
     //if (searchEnable) {
@@ -396,7 +382,7 @@ function openFilterpopupUnReviewed() {
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
     $('#TranscationId').val(TranscationId);
-    $('#PlateNumber').val(VRN);
+    $('#VRN').val(VRN);
     $('#Name').val(Name);
     var modal = $("#filterModel");
     var body = $(window);
@@ -456,8 +442,8 @@ function FilterUnreviewedData() {
         TranscationId = '';
     }
 
-    if ($("#PlateNumber").val() != '') {
-        VRN = $("#PlateNumber").val();
+    if ($("#VRN").val() != '') {
+        VRN = $("#VRN").val();
 
     }
     else {
@@ -661,9 +647,13 @@ function BindAssociatedData(Seconds, dtCount) {
                                     }
                                 }
                             },
+                             {
+                                 'data': 'FNAME',
+                             },
                             {
                                 'data': 'VEHICLESPEED',
                             },
+                           
                             {
                                 'data': 'F_TRANSACTION_DATETIME',
                                 "visible": false,

@@ -29,6 +29,9 @@
             <th style="text-align: center; " colspan="4">
                 ANPR Rear
             </th>
+            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+               Name
+            </th>
             <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
                 Speed
                 <br />
@@ -128,11 +131,6 @@
                     {
                         string path = item["REAR_IMAGE"].ToString();
                         bool result = path.Contains("http");
-                        @*@if (result == false)
-                            {
-                                path = @"\" + path;
-                            }*@
-
                         <img src="@path" height="40" width="60" data-high-res-src="" alt="" class="gallery-items" onclick="zoomImage(this);" />
                     }
                 </td>
@@ -147,8 +145,12 @@
                     }
                 </td>
                 <td>
+                    @item["FNAME"].ToString()
+                </td>
+                <td>
                     @item["VEHICLESPEED"].ToString()
                 </td>
+               
             </tr>
         }
     </tbody>
@@ -193,6 +195,9 @@
                 </th>
                 <th style="text-align: center; " colspan="4">
                     ANPR Rear
+                </th>
+                <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
+                  Name
                 </th>
                 <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
                     Speed

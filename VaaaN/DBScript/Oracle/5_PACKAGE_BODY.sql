@@ -1,4 +1,4 @@
-/* Formatted on 15-02-2019 10:34:25 (QP5 v5.215.12089.38647) */
+/* Formatted on 15-02-2019 14:47:14 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -3021,24 +3021,46 @@ ORDER BY TRANSACTION_DATETIME DESC';
                   T.AUDITED_VEHICLE_CLASS_ID,
                   T.AUDITED_VRN,
                   T.VEHICLESPEED,
-                  AH.AMOUNT
+                  AH.AMOUNT,
+                  (CASE
+                      WHEN NVL (CA_CTP.FIRST_NAME, '-1') = '-1'
+                      THEN
+                         (CASE
+                             WHEN NVL (CA_NFPF.FIRST_NAME, '-1') = '-1'
+                             THEN
+                                NVL (CA_NFPR.FIRST_NAME, 'Not Registered')
+                             ELSE
+                                NVL (CA_NFPF.FIRST_NAME, 'Not Registered')
+                          END)
+                      ELSE
+                         NVL (CA_CTP.FIRST_NAME, 'Not Registered')
+                   END)
+                     AS FNAME
              FROM TRANS_UNREVIEWED T
                   LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
                      ON T.CT_ENTRY_ID = CTP.ENTRY_ID
                   LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_CTP
                      ON VC_CTP.VEHICLE_CLASS_ID = CTP.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_CTP
+                     ON CV_CTP.VEH_REG_NO = CTP.PLATE_NUMBER
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA_CTP
+                     ON CA_CTP.ACCOUNT_ID = CV_CTP.ACCOUNT_ID
                   LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPF
                      ON T.NF_ENTRY_ID_FRONT = NFPF.ENTRY_ID
-                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF
-                     ON CV_NFPF.VEH_REG_NO = NFPF.PLATE_NUMBER
                   LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPF
                      ON NFPF.VEHICLE_CLASS_ID = VC_NFPF.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPF
+                     ON CV_NFPF.VEH_REG_NO = NFPF.PLATE_NUMBER
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA_NFPF
+                     ON CA_NFPF.ACCOUNT_ID = CV_NFPF.ACCOUNT_ID
                   LEFT OUTER JOIN TBL_NODEFLUX_PACKET NFPR
                      ON T.NF_ENTRY_ID_REAR = NFPR.ENTRY_ID
-                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPR
-                     ON CV_NFPR.VEH_REG_NO = NFPR.PLATE_NUMBER
                   LEFT OUTER JOIN TBL_VEHICLE_CLASS VC_NFPR
                      ON NFPR.VEHICLE_CLASS_ID = VC_NFPR.VEHICLE_CLASS_ID
+                  LEFT OUTER JOIN TBL_CUSTOMER_VEHICLE CV_NFPR
+                     ON CV_NFPR.VEH_REG_NO = NFPR.PLATE_NUMBER
+                  LEFT OUTER JOIN TBL_CUSTOMER_ACCOUNT CA_NFPR
+                     ON CA_NFPR.ACCOUNT_ID = CV_NFPR.ACCOUNT_ID
                   LEFT OUTER JOIN TBL_ACCOUNT_HISTORY AH
                      ON T.TRANSACTION_ID = AH.TRANSACTION_ID
             WHERE T.TRANSACTION_ID = P_TRANSACTION_ID
