@@ -497,7 +497,7 @@ function EditVehcileClass(ctrl, Id) {
             $(".animationload").hide();
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
-            $("#SetUpLabel").text("View " + $("#Name").val() + "");
+            $("#SetUpLabel").text("Update [" + $("#Name").val() + "]");
             openpopup();
             $("#Id").attr("disabled", "disabled");
             $("#btnSave").show();
@@ -507,7 +507,6 @@ function EditVehcileClass(ctrl, Id) {
         error: function (x, e) {
             $(".animationload").hide();
         }
-
     });
 }
 function VehcileClassDetail(ctrl, Id) {
@@ -673,7 +672,7 @@ function SaveHardwareData(action) {
         if (validateHardware()) {
             var Id = $("#HardwareId").val() || '';
             var PostURL = '/SetUp/HardwareUpdate';
-            if (Id == '') {
+            if (Id == 0) {
                 Id = 0;
                 PostURL = '/SetUp/HardwareAdd'
             }
@@ -754,7 +753,7 @@ function EditHardware(ctrl, Id) {
             $(".animationload").hide();
             $('#partialModel').html(result);
             $('form').attr("id", "needs-validation").attr("novalidate", "novalidate");
-            $("#SetUpLabel").text("Update " + $("#HardwareName").val() + "");
+            $("#SetUpLabel").text("Update [" + $("#HardwareName").val() + "]");
             openpopup();
             $("#HardwareId").attr("disabled", "disabled");
             $("#HardwareType").val($("#hfHardwareType").val());

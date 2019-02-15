@@ -235,7 +235,7 @@ namespace MLFFWebUI.Controllers
             }
             catch (Exception ex)
             {
-                HelperClass.LogMessage("Failed to Insert User Registration List in SetUp Controller" + ex);
+                HelperClass.LogMessage("Failed to Update User Registration List in SetUp Controller" + ex);
                 ModelStateList objModelState = new ModelStateList();
                 objModelState.ErrorMessage = "Something went wrong";
                 objResponseMessage.Add(objModelState);
@@ -1226,7 +1226,7 @@ namespace MLFFWebUI.Controllers
                 {
                     return RedirectToAction("Logout", "Login");
                 }
-                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Hardware");
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Fare");
                 hardwareDataList = HardwareBLL.GetAll().Cast<HardwareCBE>().ToList();
 
 
@@ -1323,30 +1323,44 @@ namespace MLFFWebUI.Controllers
 
                 }
                 else {
-                    #region Insert Into Hardware Data
-                    hardware.TMSId = 1;
-                    hardware.TransferStatus = 1;
-                    hardware.CreationDate = DateTime.Now;
-                    int userId = HardwareBLL.Insert(hardware);
-                    if (userId > 0)
-                    {
-                        ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "success";
-                        objResponseMessage.Add(objModelState);
-                    }
-                    else
-                    {
-                        ModelStateList objModelState = new ModelStateList();
-                        objModelState.ErrorMessage = "Something went wrong";
-                        objResponseMessage.Add(objModelState);
-                    }
-
+                    List<HardwareCBE> HardwareDataList = new List<HardwareCBE>();
+                    #region Validate duplicate 
+                    HardwareDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetAll().Cast<HardwareCBE>().ToList(); ;
+                    List<HardwareCBE> Ipfiltered = HardwareDataList.FindAll(x => x.IpAddress == hardware.IpAddress.ToString() && x.HardwareId != hardware.HardwareId);
                     #endregion
+                    if (Ipfiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "IP Address already exists";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                        #region Insert Into Hardware Data
+                        hardware.TMSId = 1;
+                        hardware.TransferStatus = 1;
+                        hardware.CreationDate = DateTime.Now;
+                        int userId = HardwareBLL.Insert(hardware);
+                        if (userId > 0)
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "success";
+                            objResponseMessage.Add(objModelState);
+                        }
+                        else
+                        {
+                            ModelStateList objModelState = new ModelStateList();
+                            objModelState.ErrorMessage = "Something went wrong";
+                            objResponseMessage.Add(objModelState);
+                        }
+
+                        #endregion
+                    }
                 }
             }
             catch (Exception ex)
             {
-                HelperClass.LogMessage("Failed to Insert Hardware in Registration Controller" + ex);
+                HelperClass.LogMessage("Failed to Insert Hardware in SetUp Controller" + ex);
                 ModelStateList objModelState = new ModelStateList();
                 objModelState.ErrorMessage = "Something went wrong";
                 objResponseMessage.Add(objModelState);
@@ -1367,16 +1381,34 @@ namespace MLFFWebUI.Controllers
 
                 }
                 else {
-                    hardware.TMSId = 1;
-                    hardware.TransferStatus = 1;
-                    hardware.ModificationDate = DateTime.Now;
-                    hardware.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
-                    HardwareBLL.Update(hardware);
+                    List<HardwareCBE> HardwareDataList = new List<HardwareCBE>();
+                    #region Validate duplicate 
+                    HardwareDataList = VaaaN.MLFF.Libraries.CommonLibrary.BLL.HardwareBLL.GetAll().Cast<HardwareCBE>().ToList(); ;
+                    List<HardwareCBE> Ipfiltered = HardwareDataList.FindAll(x => x.IpAddress == hardware.IpAddress.ToString() && x.HardwareId != hardware.HardwareId);
+                    #endregion
+                    if (Ipfiltered.Count > 0)
+                    {
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "IP Address already exists";
+                        objResponseMessage.Add(objModelState);
+                    }
+                    if (objResponseMessage.Count == 0)
+                    {
+                        hardware.TMSId = 1;
+                        hardware.TransferStatus = 1;
+                        hardware.ModificationDate = DateTime.Now;
+                        hardware.ModifierId = Convert.ToInt16(Session["LoggedUserId"]);
+                        HardwareBLL.Update(hardware);
+                        ModelStateList objModelState = new ModelStateList();
+                        objModelState.ErrorMessage = "success";
+                        objResponseMessage.Add(objModelState);
+                    }
+                  
                 }
             }
             catch (Exception ex)
             {
-                HelperClass.LogMessage("Failed to Insert Customer Registration List in Registration Controller" + ex);
+                HelperClass.LogMessage("Failed to Update Hardware Registration List in SetUp Controller" + ex);
                 ModelStateList objModelState = new ModelStateList();
                 objModelState.ErrorMessage = "Something went wrong";
                 objResponseMessage.Add(objModelState);
@@ -1823,7 +1855,7 @@ namespace MLFFWebUI.Controllers
             }
             try
             {
-                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kabupaten/Kota");
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kecamatan");
                 string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.DistrictBLL.GetAll_DT(), Formatting.Indented);
                 Det = Det.Replace("\r", "").Replace("\n", "");
                 ViewData["District"] = Det;
@@ -1875,18 +1907,18 @@ namespace MLFFWebUI.Controllers
                     objResponseMessage.Add(objModelState);
                 }
                 else {
-                    List<SelectListItem> provincelist = new List<SelectListItem>();
-                    List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+                    List<SelectListItem> citylist = new List<SelectListItem>();
+                    List<CityCBE> City = CityBLL.GetAll().Cast<CityCBE>().ToList();
 
-                    provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
-                    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+                    citylist.Add(new SelectListItem() { Text = "", Value = "0" });
+                    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE cr in City)
                     {
-                        provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+                        citylist.Add(new SelectListItem() { Text = cr.CityName, Value = System.Convert.ToString(cr.CityId) });
                     }
-                    ViewBag.Province = provincelist;
-                    
+                    ViewBag.city = citylist;
+
                     District.DistrictId = id;
-                    //ViewBag.OCity = District.CityId;
+                    ViewBag.OCityId = District.CityId;
                     District = VaaaN.MLFF.Libraries.CommonLibrary.BLL.DistrictBLL.GetDistrictById(District);
                 }
             }
@@ -1900,15 +1932,15 @@ namespace MLFFWebUI.Controllers
         [HttpGet]
         public ActionResult DistrictNew()
         {
-            List<SelectListItem> provincelist = new List<SelectListItem>();
-            List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+            List<SelectListItem> citylist = new List<SelectListItem>();
+            List<CityCBE> City = CityBLL.GetAll().Cast<CityCBE>().ToList();
 
-            provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
-            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+            citylist.Add(new SelectListItem() { Text = "", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE cr in City)
             {
-                provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+                citylist.Add(new SelectListItem() { Text = cr.CityName, Value = System.Convert.ToString(cr.CityId) });
             }
-            ViewBag.Province = provincelist;
+            ViewBag.city = citylist;
 
             return View("DistrictListPopUp");
         }
@@ -2025,7 +2057,7 @@ namespace MLFFWebUI.Controllers
             }
             try
             {
-                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kabupaten/Kota");
+                ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "SetUp", "Kelurahan/Desa");
                 string Det = JsonConvert.SerializeObject(VaaaN.MLFF.Libraries.CommonLibrary.BLL.SubDistrictBLL.GetAll_DT(), Formatting.Indented);
                 Det = Det.Replace("\r", "").Replace("\n", "");
                 ViewData["SubDistrict"] = Det;
@@ -2077,17 +2109,16 @@ namespace MLFFWebUI.Controllers
                     objResponseMessage.Add(objModelState);
                 }
                 else {
-                    List<SelectListItem> provincelist = new List<SelectListItem>();
-                    List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+                    List<SelectListItem> Districtlist = new List<SelectListItem>();
+                    List<DistrictCBE> District = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList();
 
-                    provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
-                    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+                    Districtlist.Add(new SelectListItem() { Text = "", Value = "0" });
+                    foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE cr in District)
                     {
-                        provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+                        Districtlist.Add(new SelectListItem() { Text = cr.DistrictName, Value = System.Convert.ToString(cr.DistrictId) });
                     }
-                    ViewBag.Province = provincelist;
-
-                   // ViewBag.ODistrictId = SubDistrict.DistrictId;
+                    ViewBag.District = Districtlist;
+                    ViewBag.ODistrictId = SubDistrict.DistrictId;
                     SubDistrict.SubDistrictId = id;
                     SubDistrict = VaaaN.MLFF.Libraries.CommonLibrary.BLL.SubDistrictBLL.GetSubDistrictById(SubDistrict);
                 }
@@ -2102,15 +2133,15 @@ namespace MLFFWebUI.Controllers
         [HttpGet]
         public ActionResult SubDistrictNew()
         {
-            List<SelectListItem> provincelist = new List<SelectListItem>();
-            List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
+            List<SelectListItem> Districtlist = new List<SelectListItem>();
+            List<DistrictCBE> District = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList();
 
-            provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
-            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
+            Districtlist.Add(new SelectListItem() { Text = "", Value = "0" });
+            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE cr in District)
             {
-                provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
+                Districtlist.Add(new SelectListItem() { Text = cr.DistrictName, Value = System.Convert.ToString(cr.DistrictId) });
             }
-            ViewBag.Province = provincelist;
+            ViewBag.District = Districtlist;
             return View("SubDistrictListPopUp");
         }
 
