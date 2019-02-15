@@ -124,6 +124,16 @@ namespace MLFFWebUI.Controllers
             {
                 strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND NVL(T.NF_ENTRY_ID_FRONT,0) = 0  AND NVL(T.NF_ENTRY_ID_REAR,0) = 0";
             }
+            if (!string.IsNullOrEmpty(transaction.PlateNumber))
+            {
+                transaction.PlateNumber = transaction.PlateNumber.ToLower();
+                strQuery += " AND (LOWER(CTP.PLATE_NUMBER)  LIKE '%" + transaction.PlateNumber + "%' OR LOWER(NFPF.PLATE_NUMBER)  LIKE '%" + transaction.PlateNumber + "%' OR LOWER(NFPR.PLATE_NUMBER)  LIKE '%" + transaction.PlateNumber + "%')";
+            }
+            if (!string.IsNullOrEmpty(transaction.Name))
+            {
+                transaction.Name = transaction.Name.ToLower();
+                strQuery += " AND (LOWER(CA_CTP.FIRST_NAME)  LIKE '%" + transaction.PlateNumber + "%' OR LOWER(CA_NFPF.FIRST_NAME)  LIKE '%" + transaction.PlateNumber + "%' OR LOWER(CA_NFPR.FIRST_NAME)  LIKE '%" + transaction.PlateNumber + "%')";
+            }
             //else if (transaction.TransactionCategoryId == 2)//IKE + Front/Rear ANPR
             //{
             //    strQuery += " AND  NVL(T.CT_ENTRY_ID,0)  > 0 AND ((NVL(T.NF_ENTRY_ID_FRONT,0) > 0 AND LOWER(NFPF.PLATE_NUMBER)<>'unidentified')  OR (NVL(T.NF_ENTRY_ID_REAR,0) > 0 AND LOWER(NFPR.PLATE_NUMBER)<>'unidentified')) ";

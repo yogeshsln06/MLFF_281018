@@ -31,7 +31,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         [Display(Name = "End Date")]
         public String EndDate { get; set; }
 
-        [Display(Name = "Plate Number")]
+        [Display(Name = "VRN")]
         public string PlateNumber { get; set; }
 
         [Display(Name = "Gantry")]

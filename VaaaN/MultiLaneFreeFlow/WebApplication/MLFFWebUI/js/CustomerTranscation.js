@@ -111,7 +111,22 @@ function BindUnreviewedFirstLoad() {
                 }
             },
             {
-                'data': 'FIRST_NAME',
+                'data': 'FNAME'
+                //fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                //    if (row.CTP_FIRST_NAME!= 'Not Registered') {
+                //        $(nTd).html(oData.CTP_FIRST_NAME);
+                //    }
+                //    else if (oData.NFPF_FIRST_NAME != 'Not Registered') {
+                //        $(nTd).html(oData.NFPF_FIRST_NAME);
+                //    }
+                //    else if (oData.NFPR_FIRST_NAME != 'Not Registered') {
+                //        $(nTd).html(oData.NFPR_FIRST_NAME);
+                //    }
+                //    else {
+                //        $(nTd).html('Not Registered');
+                //    }
+
+                //}
             },
             {
                 'data': 'VEHICLESPEED',
@@ -309,6 +324,8 @@ function reloadUnreviewedData() {
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
     $('#TranscationId').val(TranscationId);
+    $('#PlateNumber').val(VRN);
+    $('#Name').val(Name);
     FilterUnreviewedData();
     //if (searchEnable) {
     //    $("#ddlGantry").val(GantryId)
@@ -378,6 +395,8 @@ function openFilterpopupUnReviewed() {
     $('#StartDate').val(StartDate);
     $('#EndDate').val(EndDate);
     $('#TranscationId').val(TranscationId);
+    $('#PlateNumber').val(VRN);
+    $('#Name').val(Name);
     var modal = $("#filterModel");
     var body = $(window);
     var w = modal.width();
@@ -436,13 +455,31 @@ function FilterUnreviewedData() {
         TranscationId = '';
     }
 
+    if ($("#PlateNumber").val() != '') {
+        VRN = $("#PlateNumber").val();
+
+    }
+    else {
+        VRN = '';
+    }
+
+    if ($("#Name").val() != '') {
+        Name = $("#Name").val();
+
+    }
+    else {
+        Name = '';
+    }
+
 
     var Inputdata = {
         StartDate: StartDate1,
         EndDate: EndDate1,
         GantryId: GantryId,
         TransactionCategoryId: TransactionCategory,
-        TranscationId: TraId
+        TranscationId: TraId,
+        VRN: VRN,
+        Name: Name
     }
 
     $(".animationload").show();
@@ -2409,7 +2446,7 @@ function DownLoadTransactionReport() {
                     //window.location.href = "../Attachment/ExportFiles/" + res[j];
                     window.open("../Attachment/ExportFiles/" + res[j]);
                     //setTimeout(function () {
-                      
+
                     //}, 500);
                 }
             }

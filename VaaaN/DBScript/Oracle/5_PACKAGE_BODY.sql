@@ -1,4 +1,4 @@
-/* Formatted on 14-02-2019 18:06:21 (QP5 v5.215.12089.38647) */
+/* Formatted on 15-02-2019 10:34:25 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -2836,9 +2836,20 @@ ORDER BY TRANSACTION_DATETIME DESC';
        T.IS_REGISTERED,
        T.AUDIT_STATUS,
        T.VEHICLESPEED,
-       NVL(CA_CTP.FIRST_NAME, ''Not Registered'') AS CTP_FIRST_NAME,
-       NVL(CA_NFPF.FIRST_NAME, ''Not Registered'') AS NFPF_FIRST_NAME,
-       NVL(CA_NFPR.FIRST_NAME, ''Not Registered'') AS NFPR_FIRST_NAME
+        (CASE
+           WHEN NVL(CA_CTP.FIRST_NAME,''-1'')=''-1''
+           THEN
+              (CASE
+                  WHEN NVL(CA_NFPF.FIRST_NAME,''-1'')=''-1''
+                  THEN
+                     NVL(CA_NFPR.FIRST_NAME,''Not Registered'')
+                  ELSE
+                     NVL(CA_NFPF.FIRST_NAME,''Not Registered'')
+               END)
+           ELSE
+              NVL(CA_CTP.FIRST_NAME,''Not Registered'')
+        END)
+         AS FNAME
        
   FROM TRANS_UNREVIEWED T
        LEFT OUTER JOIN TBL_CROSSTALK_PACKET CTP
