@@ -24,6 +24,20 @@ $(document).ready(function () {
 
 });
 
+function DateFormatTime(newDate) {
+    var d = new Date(newDate);
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = (d.getMonth() + 1);
+    mm = mm > 9 ? mm : '0' + mm;
+    yy = d.getFullYear();
+    hh = d.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = d.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time1 = hh + ":" + mints;
+    return dd + '-' + mm + '-' + +yy + ' ' + time1
+}
 
 function BindDateTime(mints) {
     var cdt = new Date();
@@ -52,7 +66,7 @@ function BindDateTime(mints) {
 function GetfirstLoadData(StartDT, EndDT, loader) {
     if (Progress) {
         var StartDate = DateFormatTime(StartDT);
-        var EndDate = DateFormatTime(StartDT);
+        var EndDate = DateFormatTime(EndDT);
         var Inputdata = {
             StartDate: StartDate,
             EndDate: EndDate,
@@ -63,13 +77,13 @@ function GetfirstLoadData(StartDT, EndDT, loader) {
             type: "POST",
             dataType: "json",
             data: JSON.stringify(Inputdata),
-            url: "DashBoardTransactionData",
+            url: "Dashboard/DashBoardTransactionData",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
                 $('#filterModel').modal('hide');
                 $('.animationload').hide();
                 ResponceData = data;
-                BindData();
+                BindData(data);
                 sleep(10000);
                 reloadData();
             },
@@ -113,12 +127,20 @@ function sleep(milliseconds) {
     }
 }
 
-$(window).unload(function () {
-    Progress = false;
-});
+//$(window).unload(function () {
+//    Progress = false;
+//});
 
-function BindData() {
-
+function BindData(data) {
+    BindTopCount(data);
 
     
+}
+
+function BindTopCount(data)
+{
+    $("#totalFIke").text(data[4].TOTALVEHICLE);
+    $("#totalRIke").text(data[5].TOTALVEHICLE);
+    $("#totalFANPR").text(data[8].TOTALVEHICLE + data[11].TOTALVEHICLE);
+    $("#totalRANPR").text(data[9].TOTALVEHICLE + data[12].TOTALVEHICLE);
 }
