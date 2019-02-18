@@ -21,6 +21,15 @@ var StartDate = '';
 var EndDate = '';
 var TranscationId = '';
 
+//$(window).on('resize', function () {
+//    //myclick();
+
+//    TopUpdatatableVariable.columns.adjust();
+
+   
+
+//});
+
 $(document).ready(function () {
     $("#TranscationId").attr("type", "text");
 });
@@ -1948,14 +1957,6 @@ function BindTopUpFirstLoad() {
     $('.dataTables_filter input').attr("placeholder", "Search this list…");
     $('.dataTables_scrollBody').on('scroll', function () {
         var ScrollbarHeight = ($("#tblTopUpData").height() - $('.dataTables_scrollBody').outerHeight())
-
-
-        //if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblTopUpData").height()) && !NoMoredata && !inProgress) {
-        //    //console.log("scrollBody : " + $('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height());
-        //    //console.log("table : " + $("#tblTopUpData").height());
-        //    AppendTopUpData();
-        //}
-
         if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
             AppendTopUpData();
         }

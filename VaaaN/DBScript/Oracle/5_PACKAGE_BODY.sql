@@ -1,4 +1,4 @@
-/* Formatted on 15-02-2019 14:47:14 (QP5 v5.215.12089.38647) */
+/* Formatted on 18/02/2019 11:20:50 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -9455,7 +9455,36 @@ ORDER BY CREATION_DATE DESC ';
                           / (SELECT COUNT (SECONDS)
                                FROM CTE_DETAILS
                               WHERE SECONDS <> 0))
-                    FROM DUAL)
+                    FROM DUAL
+                  UNION ALL
+                  SELECT 49 AS SNO,
+                         'TOTAL REGISTERED VEHICLE' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM TBL_CUSTOMER_VEHICLE
+                  UNION ALL
+                  SELECT 50 AS SNO,
+                         'TOTAL PROCESSED VEHICLE' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM TBL_CUSTOMER_VEHICLE
+                   WHERE QUEUE_STATUS = 3
+                  UNION ALL
+                  SELECT 51 AS SNO,
+                         'TOTAL CHARGEABLE VEHICLE' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM TBL_CUSTOMER_VEHICLE
+                   WHERE EXCEPTION_FLAG = 1
+                  UNION ALL
+                  SELECT 52 AS SNO,
+                         'TOTAL NON CHARGEABLE VEHICLE' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM TBL_CUSTOMER_VEHICLE
+                   WHERE EXCEPTION_FLAG = 2
+                  UNION ALL
+                  SELECT 53 AS SNO,
+                         'TOTAL BLACK LISTED VEHICLE' MESSAGE,
+                         COUNT (1) TOTALVEHICLE
+                    FROM TBL_CUSTOMER_VEHICLE
+                   WHERE EXCEPTION_FLAG = 3)
          SELECT *
            FROM CTE_REPORT;
    END TRAN_DEATILSALL;

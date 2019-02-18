@@ -537,11 +537,11 @@ namespace MLFFWebUI.Controllers
                                 TransactionBLL.UpdateAuditSection(objtransaction);
                                 if (ReviewedViolation == 3 && ReviewedCharged == 1)
                                 {
-                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully set as VIOLATION and also successfully CHARGED!!!";
+                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and set as VIOLATION also successfully CHARGED!!!";
                                 }
                                 else if (ReviewedViolation == 3)
                                 {
-                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully set as VIOLATION!!!";
+                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and set as VIOLATION!!!";
                                 }
                                 else if (ReviewedCharged == 1)
                                 {
@@ -1091,7 +1091,8 @@ namespace MLFFWebUI.Controllers
             }
             if (!string.IsNullOrEmpty(transaction.Name))
             {
-                strQuery += " AND ( LOWER(NVL(CA_CT.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%'  OR LOWER (NVL(CA_NFPF.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%' OR LOWER(NVL(CA_NFPR.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%' )";
+                strQuery += " AND(LOWER(NVL(T.FNAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%') ";
+                //strQuery += " AND ( LOWER(NVL(CA_CT.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%'  OR LOWER (NVL(CA_NFPF.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%' OR LOWER(NVL(CA_NFPR.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%' )";
             }
             if (!string.IsNullOrEmpty(transaction.Email))
             {
