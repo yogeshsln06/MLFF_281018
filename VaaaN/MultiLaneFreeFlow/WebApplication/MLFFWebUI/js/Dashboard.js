@@ -211,6 +211,9 @@ function BindTableRight(data) {
     var TotalVehiclePass = data[1].TOTALVEHICLE;
     var TotalRVehiclePass = data[2].TOTALVEHICLE;
     var TotalCVehicle = data[38].TOTALVEHICLE;
+    var TotalSendSms = data[45].TOTALVEHICLE;
+    var SuceessSendSms = data[46].TOTALVEHICLE;
+
     var Per = 0;
     $("#RegisteredVehicle_DB").text(TotalRVehiclePass);
     Per = ((TotalRVehiclePass / TotalVehiclePass) * 100) || 0;
@@ -222,8 +225,17 @@ function BindTableRight(data) {
     $("#ChargedVehicle_DB_PER").text(Per + '%');
     $("#ChargedVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
 
-    //$("#totalFANPR").text(data[8].TOTALVEHICLE + data[11].TOTALVEHICLE);
-    //$("#totalRANPR").text(data[9].TOTALVEHICLE + data[12].TOTALVEHICLE);
+    $("#SendSms_DB").text(TotalSendSms);
+    Per = ((TotalSendSms / TotalCVehicle) * 100) || 0;
+    $("#SendSms_DB_Per").text(Per + '%');
+    $("#SendSms_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+
+    $("#Success_SendSMS_DB").text(SuceessSendSms);
+    Per = ((SuceessSendSms / TotalSendSms) * 100) || 0;
+    $("#Success_SendSMS_DB_Per").text(Per + '%');
+    $("#Success_SendSMS_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+
+
 }
 
 
