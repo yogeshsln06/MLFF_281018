@@ -132,7 +132,7 @@ namespace MLFFWebUI.Controllers
             if (!string.IsNullOrEmpty(transaction.Name))
             {
                 transaction.Name = transaction.Name.ToLower();
-                strQuery += " AND (LOWER(CA_CTP.FIRST_NAME)  LIKE '%" + transaction.Name + "%' OR LOWER(CA_NFPF.FIRST_NAME)  LIKE '%" + transaction.Name + "%' OR LOWER(CA_NFPR.FIRST_NAME)  LIKE '%" + transaction.Name + "%')";
+                strQuery += " AND ( LOWER(NVL(CA_CTP.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name + "%'  OR LOWER (NVL(CA_NFPF.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name + "%' OR LOWER(NVL(CA_NFPR.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name + "%' )";
             }
             //else if (transaction.TransactionCategoryId == 2)//IKE + Front/Rear ANPR
             //{
@@ -537,7 +537,7 @@ namespace MLFFWebUI.Controllers
                                 TransactionBLL.UpdateAuditSection(objtransaction);
                                 if (ReviewedViolation == 3 && ReviewedCharged == 1)
                                 {
-                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully set as VIOLATION and CHARGED!!!";
+                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully set as VIOLATION and also successfully CHARGED!!!";
                                 }
                                 else if (ReviewedViolation == 3)
                                 {
@@ -545,7 +545,7 @@ namespace MLFFWebUI.Controllers
                                 }
                                 else if (ReviewedCharged == 1)
                                 {
-                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully set as CHARGED!!!";
+                                    Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed and successfully CHARGED!!!";
                                 }
                                 else
                                     Meassage = "yes!Transactions ID " + TransactionId + " successfully MERGED to Transactions ID " + ReviewedTranId + " that already reviewed";
@@ -971,7 +971,7 @@ namespace MLFFWebUI.Controllers
             if (!string.IsNullOrEmpty(transaction.Name))
             {
                 transaction.Name = transaction.Name.ToLower();
-                strQuery += " AND (LOWER(CA_CTP.FIRST_NAME)  LIKE '%" + transaction.Name + "%' OR LOWER(CA_NFPF.FIRST_NAME)  LIKE '%" + transaction.Name + "%' OR LOWER(CA_NFPR.FIRST_NAME)  LIKE '%" + transaction.Name + "%')";
+                strQuery += " AND ( LOWER(NVL(CA_CTP.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name + "%'  OR LOWER (NVL(CA_NFPF.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name + "%' OR LOWER(NVL(CA_NFPR.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name + "%' )";
             }
             if (!string.IsNullOrEmpty(transaction.ParentTranscationId))
             {
@@ -1091,7 +1091,7 @@ namespace MLFFWebUI.Controllers
             }
             if (!string.IsNullOrEmpty(transaction.Name))
             {
-                strQuery += " AND (LOWER(CA_CT.FIRST_NAME) LIKE '%" + transaction.Name.ToLower() + "%' OR LOWER(CA_NFPF.FIRST_NAME) LIKE '%" + transaction.Name.ToLower() + "%' OR LOWER(CA_NFPR.FIRST_NAME) LIKE '%" + transaction.Name.ToLower() + "%')";
+                strQuery += " AND ( LOWER(NVL(CA_CT.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%'  OR LOWER (NVL(CA_NFPF.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%' OR LOWER(NVL(CA_NFPR.FIRST_NAME, 'not registered')) LIKE '%" + transaction.Name.ToLower() + "%' )";
             }
             if (!string.IsNullOrEmpty(transaction.Email))
             {
