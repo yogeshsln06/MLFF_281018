@@ -1,4 +1,4 @@
-/* Formatted on 18/02/2019 11:20:50 (QP5 v5.215.12089.38647) */
+/* Formatted on 18-02-2019 13:25:46 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -9395,7 +9395,7 @@ ORDER BY CREATION_DATE DESC ';
                    WHERE     NVL (IS_BALANCE_UPDATED, 0) = 1
                          AND NVL (AUDIT_STATUS, 0) <> 1
                   UNION ALL
-                  SELECT 40 AS SNO,
+                  SELECT 39 AS SNO,
                          'TOTAL NOT CHARGED' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
@@ -9403,7 +9403,7 @@ ORDER BY CREATION_DATE DESC ';
                          AND NVL (AUDIT_STATUS, 0) <> 1
                          AND NVL (IS_REGISTERED, 0) = 1
                   UNION ALL
-                  SELECT 41 AS SNO,
+                  SELECT 40 AS SNO,
                          'TOTAL MANUAL CHARGED' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
@@ -9411,76 +9411,78 @@ ORDER BY CREATION_DATE DESC ';
                          AND NVL (AUDIT_STATUS, 0) = 1
                          AND NVL (IS_REGISTERED, 0) = 1
                   UNION ALL
-                  SELECT 42 AS SNO,
+                  SELECT 41 AS SNO,
                          'TOTAL REVIEWED' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
                    WHERE NVL (AUDIT_STATUS, 0) = 1
                   UNION ALL
-                  SELECT 43 AS SNO,
+                  SELECT 42 AS SNO,
                          'TOTAL VIOLATION' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
                    WHERE NVL (AUDIT_STATUS, 0) = 1 AND TRANS_STATUS = 3
                   UNION ALL
-                  SELECT 44 AS SNO,
+                  SELECT 43 AS SNO,
                          'TOTAL UNIDENTIFIED' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
                    WHERE NVL (AUDIT_STATUS, 0) = 1 AND TRANS_STATUS = 4
                   UNION ALL
-                  SELECT 45 AS SNO,
+                  SELECT 44 AS SNO,
                          'TOTAL MERGED' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
                    WHERE NVL (AUDIT_STATUS, 0) = 1 AND TRANS_STATUS = 2
                   UNION ALL
-                  SELECT 46 AS SNO,
+                  SELECT 45 AS SNO,
                          'TOTAL SMS SEND' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
                    WHERE NVL (GATEWAY_RESPONSE_CODE, 0) <> 0
                   UNION ALL
-                  SELECT 47 AS SNO,
+                  SELECT 46 AS SNO,
                          'TOTAL SUCCESSFUL SEND' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM CTE_DETAILS
                    WHERE NVL (OPERATOR_RESPONSE_CODE, 0) <> 0
                   UNION ALL
-                  SELECT 48 AS SNO,
+                  SELECT 47 AS SNO,
                          'TOTAL AVERAGE SMS TIME IN SECONDS' MESSAGE,
-                         (  (SELECT SUM (SECONDS)
-                               FROM CTE_DETAILS
-                              WHERE SECONDS <> 0)
-                          / (SELECT COUNT (SECONDS)
-                               FROM CTE_DETAILS
-                              WHERE SECONDS <> 0))
+                         NVL ( (  (SELECT SUM (SECONDS)
+                                     FROM CTE_DETAILS
+                                    WHERE SECONDS <> 0)
+                                / (SELECT COUNT (SECONDS)
+                                     FROM CTE_DETAILS
+                                    WHERE SECONDS <> 0)),
+                              0)
+                            AS TOTALVEHICLE
                     FROM DUAL
                   UNION ALL
-                  SELECT 49 AS SNO,
+                  SELECT 48 AS SNO,
                          'TOTAL REGISTERED VEHICLE' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM TBL_CUSTOMER_VEHICLE
                   UNION ALL
-                  SELECT 50 AS SNO,
+                  SELECT 49 AS SNO,
                          'TOTAL PROCESSED VEHICLE' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM TBL_CUSTOMER_VEHICLE
                    WHERE QUEUE_STATUS = 3
                   UNION ALL
-                  SELECT 51 AS SNO,
+                  SELECT 50 AS SNO,
                          'TOTAL CHARGEABLE VEHICLE' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM TBL_CUSTOMER_VEHICLE
                    WHERE EXCEPTION_FLAG = 1
                   UNION ALL
-                  SELECT 52 AS SNO,
+                  SELECT 51 AS SNO,
                          'TOTAL NON CHARGEABLE VEHICLE' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM TBL_CUSTOMER_VEHICLE
                    WHERE EXCEPTION_FLAG = 2
                   UNION ALL
-                  SELECT 53 AS SNO,
+                  SELECT 52 AS SNO,
                          'TOTAL BLACK LISTED VEHICLE' MESSAGE,
                          COUNT (1) TOTALVEHICLE
                     FROM TBL_CUSTOMER_VEHICLE
