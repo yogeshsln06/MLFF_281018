@@ -9449,13 +9449,13 @@ ORDER BY CREATION_DATE DESC ';
                   UNION ALL
                   SELECT 47 AS SNO,
                          'TOTAL AVERAGE SMS TIME IN SECONDS' MESSAGE,
-                         NVL ( (  (SELECT SUM (SECONDS)
+                        ROUND( NVL ( (  (SELECT SUM (SECONDS)
                                      FROM CTE_DETAILS
                                     WHERE SECONDS <> 0)
                                 / (SELECT COUNT (SECONDS)
                                      FROM CTE_DETAILS
                                     WHERE SECONDS <> 0)),
-                              0)
+                              0),0)
                             AS TOTALVEHICLE
                     FROM DUAL
                   UNION ALL

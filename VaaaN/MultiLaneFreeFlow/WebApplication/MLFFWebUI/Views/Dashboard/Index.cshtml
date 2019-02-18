@@ -223,96 +223,7 @@
             stoprefresh = true;
         });
     }
-    function bindRegistereddata()
-    {
-        var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            title: {
-                text: "Composition of Internet Traffic in North America"
-            },
-            axisX: {
-                interval: 1,
-                intervalType: "year",
-                valueFormatString: "YYYY"
-            },
-            axisY: {
-                suffix: "%"
-            },
-            toolTip: {
-                shared: true
-            },
-            legend: {
-                reversed: true,
-                verticalAlign: "center",
-                horizontalAlign: "right"
-            },
-            data: [{
-                type: "stackedColumn100",
-                name: "Real-Time",
-                showInLegend: true,
-                xValueFormatString: "YYYY",
-                yValueFormatString: "#,##0\"%\"",
-                dataPoints: [
-                    { x: new Date(2010, 0), y: 40 },
-                    { x: new Date(2011, 0), y: 50 },
-                    { x: new Date(2012, 0), y: 60 },
-                    { x: new Date(2013, 0), y: 61 },
-                    { x: new Date(2014, 0), y: 63 },
-                    { x: new Date(2015, 0), y: 65 },
-                    { x: new Date(2016, 0), y: 67 }
-                ]
-            },
-            {
-                type: "stackedColumn100",
-                name: "Web Browsing",
-                showInLegend: true,
-                xValueFormatString: "YYYY",
-                yValueFormatString: "#,##0\"%\"",
-                dataPoints: [
-                    { x: new Date(2010, 0), y: 28 },
-                    { x: new Date(2011, 0), y: 18 },
-                    { x: new Date(2012, 0), y: 12 },
-                    { x: new Date(2013, 0), y: 10 },
-                    { x: new Date(2014, 0), y: 10 },
-                    { x: new Date(2015, 0), y: 7 },
-                    { x: new Date(2016, 0), y: 5 }
-                ]
-            },
-            {
-                type: "stackedColumn100",
-                name: "File Sharing",
-                showInLegend: true,
-                xValueFormatString: "YYYY",
-                yValueFormatString: "#,##0\"%\"",
-                dataPoints: [
-                    { x: new Date(2010, 0), y: 15 },
-                    { x: new Date(2011, 0), y: 12 },
-                    { x: new Date(2012, 0), y: 10 },
-                    { x: new Date(2013, 0), y: 9 },
-                    { x: new Date(2014, 0), y: 7 },
-                    { x: new Date(2015, 0), y: 5 },
-                    { x: new Date(2016, 0), y: 1 }
-                ]
-            },
-            {
-                type: "stackedColumn100",
-                name: "Others",
-                showInLegend: true,
-                xValueFormatString: "YYYY",
-                yValueFormatString: "#,##0\"%\"",
-                dataPoints: [
-                    { x: new Date(2010, 0), y: 17 },
-                    { x: new Date(2011, 0), y: 20 },
-                    { x: new Date(2012, 0), y: 18 },
-                    { x: new Date(2013, 0), y: 20 },
-                    { x: new Date(2014, 0), y: 20 },
-                    { x: new Date(2015, 0), y: 23 },
-                    { x: new Date(2016, 0), y: 27 }
-                ]
-            }]
-        });
-        chart.render();
-    }
+   
 </script>
 <style>
     #backButton {
@@ -434,35 +345,51 @@
                                 <!-- Progress Bars -->
                                 <div class="layers">
                                     <div class="layer w-100">
+                                        <h5 class="mB-5" id="TotalVehicle_DB"></h5>
+                                        <small class="fw-600 c-grey-700">Total Vehicle</small>
+                                        <span class="pull-right c-grey-600 fsz-sm" id="TotalVehicle_DB_PER">100%</span>
+                                        <div class="progress mT-10">
+                                            <div class="progress-bar bgc-deep-purple-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">100% Complete</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="layer w-100">
                                         <h5 class="mB-5" id="RegisteredVehicle_DB"></h5>
                                         <small class="fw-600 c-grey-700">Registered Vehicle</small>
-                                        <span class="pull-right c-grey-600 fsz-sm" id="RegisteredVehicle_DB_PER">50%</span>
+                                        <span class="pull-right c-grey-600 fsz-sm" id="RegisteredVehicle_DB_PER">0%</span>
                                         <div class="progress mT-10">
-                                            <div class="progress-bar bgc-deep-purple-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">50% Complete</span></div>
+                                            <div class="progress-bar bgc-deep-purple-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">0% Complete</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="layer w-100">
+                                        <h5 class="mB-5" id="UnRegisteredVehicle_DB"></h5>
+                                        <small class="fw-600 c-grey-700">UnRegistered Vehicle</small>
+                                        <span class="pull-right c-grey-600 fsz-sm" id="UnRegisteredVehicle_DB_PER">0%</span>
+                                        <div class="progress mT-10">
+                                            <div class="progress-bar bgc-deep-purple-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">0% Complete</span></div>
                                         </div>
                                     </div>
                                     <div class="layer w-100 mT-15">
                                         <h5 class="mB-5" id="ChargedVehicle_DB">1M</h5>
                                         <small class="fw-600 c-grey-700">Charged Vehicle</small>
-                                        <span class="pull-right c-grey-600 fsz-sm" id="ChargedVehicle_DB_PER">80%</span>
+                                        <span class="pull-right c-grey-600 fsz-sm" id="ChargedVehicle_DB_PER">0%</span>
                                         <div class="progress mT-10">
-                                            <div class="progress-bar bgc-green-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:80%;"> <span class="sr-only">80% Complete</span></div>
+                                            <div class="progress-bar bgc-green-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:80%;"> <span class="sr-only">0% Complete</span></div>
                                         </div>
                                     </div>
                                     <div class="layer w-100 mT-15">
                                         <h5 class="mB-5" id="SendSms_DB">450k</h5>
                                         <small class="fw-600 c-grey-700">Send SMS</small>
-                                        <span class="pull-right c-grey-600 fsz-sm" id="SendSms_DB_Per">40%</span>
+                                        <span class="pull-right c-grey-600 fsz-sm" id="SendSms_DB_Per">0%</span>
                                         <div class="progress mT-10">
-                                            <div class="progress-bar bgc-light-blue-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:40%;"> <span class="sr-only">40% Complete</span></div>
+                                            <div class="progress-bar bgc-light-blue-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:40%;"> <span class="sr-only">0% Complete</span></div>
                                         </div>
                                     </div>
                                     <div class="layer w-100 mT-15">
                                         <h5 class="mB-5" id="Success_SendSMS_DB">1B</h5>
                                         <small class="fw-600 c-grey-700">Successfully Send SMS</small>
-                                        <span class="pull-right c-grey-600 fsz-sm" id="Success_SendSMS_DB_Per">90%</span>
+                                        <span class="pull-right c-grey-600 fsz-sm" id="Success_SendSMS_DB_Per">0%</span>
                                         <div class="progress mT-10">
-                                            <div class="progress-bar bgc-blue-grey-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:90%;"> <span class="sr-only">90% Complete</span></div>
+                                            <div class="progress-bar bgc-blue-grey-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:90%;"> <span class="sr-only">0% Complete</span></div>
                                         </div>
                                     </div>
                                 </div>
