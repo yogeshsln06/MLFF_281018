@@ -19,7 +19,7 @@ $(document).ready(function () {
     $("#totalRIke").val(0);
     $("#totalFANPR").val(0);
     $("#totalRANPR").val(0);
-    
+
     GetfirstLoadData(StartDT, EndDT, true)
 
 });
@@ -132,13 +132,12 @@ function sleep(milliseconds) {
 //});
 
 function BindData(data) {
-    BindTopCount(data);
+    //BindTopCount(data);
+    BindTableRight(data)
 
-    
 }
 
-function BindTopCount(data)
-{
+function BindTopCount(data) {
     $("#totalFIke").text(data[4].TOTALVEHICLE);
     $("#totalRIke").text(data[5].TOTALVEHICLE);
     $("#totalFANPR").text(data[8].TOTALVEHICLE + data[11].TOTALVEHICLE);
@@ -146,17 +145,17 @@ function BindTopCount(data)
     var TotalFrontANPR;
     var binddata = {
         TOTAL_VEHICLE: 1000,//data[1].TOTALVEHICLE
-        TOTAL_REGISTERED:499,//data[2].TOTALVEHICLE
+        TOTAL_REGISTERED: 499,//data[2].TOTALVEHICLE
         TOTAL_UNREGISTERED: 500,//data[3].TOTALVEHICLE
 
         TOTAL_IKE: 510,//data[4].TOTALVEHICLE
         TOTAL_FRONTIKE: 520,//data[5].TOTALVEHICLE
         TOTAL_REARIKE: 530,//data[6].TOTALVEHICLE
         TOTAL_ANPR: 540,//data[7].TOTALVEHICLE
-        TOTAL_UNIDENTIFIEDVRN:550 ,//data[8].TOTALVEHICLE
-        TOTAL_FRONT_UNIDENTIFIEDVRN:560,//data[9].TOTALVEHICLE
-        TOTAL_REAR_UNIDENTIFIEDVRN:570,//data[10].TOTALVEHICLE
-        TOTAL_DETECTED_VRN:580,//data[11].TOTALVEHICLE
+        TOTAL_UNIDENTIFIEDVRN: 550,//data[8].TOTALVEHICLE
+        TOTAL_FRONT_UNIDENTIFIEDVRN: 560,//data[9].TOTALVEHICLE
+        TOTAL_REAR_UNIDENTIFIEDVRN: 570,//data[10].TOTALVEHICLE
+        TOTAL_DETECTED_VRN: 580,//data[11].TOTALVEHICLE
         TOTAL_FRONT_DETECTEDVRN: 590,//data[12].TOTALVEHICLE
         TOTAL_REAR_DETECTEDVRN: 600,//data[13].TOTALVEHICLE
         TOTAL_TWOWHEELEDIKE: 610,//data[14].TOTALVEHICLE
@@ -176,7 +175,7 @@ function BindTopCount(data)
         TOTAL_SMALL_ANPR: 740,//data[27].TOTALVEHICLE
         TOTAL_MEDIUM_ANPR: 750,//data[28].TOTALVEHICLE
         TOTAL_LARGE_ANPR: 760,//data[29].TOTALVEHICLE
-       
+
         //TotalFrontANPR:TOTAL_TWOWHEELED_ANPRFRONT+TOTAL_SMALLANPR_FRONT+TOTAL_MEDIUMANPR_FRONT+TOTAL_LARGEANPR_FRONT,
         TOTAL_TWOWHEELED_ANPRFRONT: 770,//data[30].TOTALVEHICLE
         TOTAL_SMALLANPR_FRONT: 780,//data[31].TOTALVEHICLE
@@ -196,8 +195,45 @@ function BindTopCount(data)
         TOTAL_MERGED: 910,//data[44].TOTALVEHICLE
         TOTAL_SMSSEND: 920,//data[45].TOTALVEHICLE
         TOTAL_SUCCESSFULSEND: 930,//data[46].TOTALVEHICLE
-        TOTAL_AVERAGESMS_TIMEINSECONDS: 940 //data[47].TOTALVEHICLE
+        TOTAL_AVERAGESMS_TIMEINSECONDS: 940, //data[47].TOTALVEHICLE
+
+        TOTAL_REGISTERED_VEHICLE: 2000000, //data[48].TOTALVEHICLE
+        TOTAL_PROCESSED_VEHICLE: 180000, //data[49].TOTALVEHICLE
+        TOTAL_CHARGEABLE_VEHICLE: 130000, //data[50].TOTALVEHICLE
+        TOTAL_NON_CHARGEABLE_VEHICLE: 990000, //data[51].TOTALVEHICLE
+        TOTAL_BLACK_LISTED_VEHICLE: 0, //data[52].TOTALVEHICLE
     }
     if (stoprefresh)
         bindChart(binddata);
+}
+
+function BindTableRight(data) {
+    var TotalVehiclePass = data[1].TOTALVEHICLE;
+    var TotalRVehiclePass = data[2].TOTALVEHICLE;
+    var TotalCVehicle = data[38].TOTALVEHICLE;
+    var Per = 0;
+    $("#RegisteredVehicle_DB").text(TotalRVehiclePass);
+    Per = ((TotalRVehiclePass / TotalVehiclePass) * 100) || 0;
+    $("#RegisteredVehicle_DB_PER").text(Per + '%');
+    $("#RegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+
+    $("#ChargedVehicle_DB").text(TotalCVehicle);
+    Per = ((TotalCVehicle / TotalRVehiclePass) * 100) || 0;
+    $("#ChargedVehicle_DB_PER").text(Per + '%');
+    $("#ChargedVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+
+    //$("#totalFANPR").text(data[8].TOTALVEHICLE + data[11].TOTALVEHICLE);
+    //$("#totalRANPR").text(data[9].TOTALVEHICLE + data[12].TOTALVEHICLE);
+}
+
+
+
+function intToString(value) {
+    var suffixes = ["", "k", "m", "b", "t"];
+    var suffixNum = Math.floor(("" + value).length / 3);
+    var shortValue = parseFloat((suffixNum != 0 ? (value / Math.pow(1000, suffixNum)) : value).toPrecision(2));
+    if (shortValue % 1 != 0) {
+        var shortNum = shortValue.toFixed(1);
+    }
+    return shortValue + suffixes[suffixNum];
 }
