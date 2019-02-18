@@ -26,69 +26,63 @@
                 ]
             }],
             "REGISTERED VEHICLES": [{
-                type: "stackedColumn100",
-                name: "Two Whealar",
-                showInLegend: true,
-                //xValueFormatString: "YYYY",
-                //yValueFormatString: "#,##0\"%\"",
+                type: "column",
+                name: "FRONT IKE",
+                showInLegend: "true",
                 dataPoints: [
-                    { label: "Two Whealar", y: 40 },
-                    { label: "REAR IKE", y: 60 },
-                    { label: "ANPR FRONT", y: 80 },
-                    { label: "ANPR REAR", y: 90 }
+                    { label: "TWO-WHEELED", y: data.TOTAL_TWOWHEELEDIKEFRONT },
+                    { label: "SMALL", y: data.TOTAL_SMALLIKEFRONT },
+                    { label: "MEDIUM", y: data.TOTAL_MEDIUMIKEFRONT },
+                    { label: "LARGE", y: data.TOTAL_LARGEIKEFRONT },
                 ]
             },
 	{
-	    type: "stackedColumn100",
-	    name: "Small",
-	    showInLegend: true,
-	    //xValueFormatString: "YYYY",
-	    //yValueFormatString: "#,##0\"%\"",
+	    type: "column",
+	    name: "REAR IKE",
+	    showInLegend: "true",
 	    dataPoints: [
-            { label: "Two Whealar", y: 40 },
-            { label: "REAR IKE", y: 60 },
-            { label: "ANPR FRONT", y: 80 },
-            { label: "ANPR REAR", y: 90 }
+			        { label: "TWO-WHEELED", y: data.TOTAL_TWOWHEELEDIKEREAR },
+                    { label: "SMALL", y: data.TOTAL_SMALLIKEREAR },
+                    { label: "MEDIUM", y: data.TOTAL_MEDIUMIKEREAR },
+                    { label: "LARGE", y: data.TOTAL_LARGEIKEREAR },
 	    ]
 	},
 	{
-	    type: "stackedColumn100",
-	    name: "Medium",
-	    showInLegend: true,
-	    //xValueFormatString: "YYYY",
-	    //yValueFormatString: "#,##0\"%\"",
+	    type: "column",
+	    name: "ANPR FRONT",
+	    showInLegend: "true",
 	    dataPoints: [
-            { label: "Two Whealar", y: 40 },
-            { label: "REAR IKE", y: 60 },
-            { label: "ANPR FRONT", y: 80 },
-            { label: "ANPR REAR", y: 90 }
+			        { label: "TWO-WHEELED", y: data.TOTAL_TWOWHEELED_ANPRFRONT },
+                    { label: "SMALL", y: data.TOTAL_SMALLANPR_FRONT },
+                    { label: "MEDIUM", y: data.TOTAL_MEDIUMANPR_FRONT },
+                    { label: "LARGE", y: data.TOTAL_LARGEANPR_FRONT },
 	    ]
 	},
 	{
-	    type: "stackedColumn100",
-	    name: "BIG",
-	    showInLegend: true,
-	    //xValueFormatString: "YYYY",
-	    //yValueFormatString: "#,##0\"%\"",
+	    type: "column",
+	    name: "ANPR REAR",
+	    showInLegend: "true",
 	    dataPoints: [
-            { label: "Two Whealar", y: 40 },
-            { label: "Small", y: 60 },
-            { label: "Meduim", y: 80 },
-            { label: "Big", y: 90 }
+			        { label: "TWO-WHEELED", y: data.TOTAL_TWOWHEELED_ANPRREAR },
+                    { label: "SMALL", y: data.TOTAL_SMALL_ANPRREAR },
+                    { label: "MEDIUM", y: data.TOTAL_MEDIUM_ANPRREAR },
+                    { label: "LARGE", y: data.TOTAL_LARGE_ANPRREAR },
 	    ]
-	}],
+	}
+	],
             "UNREGISTERED VEHICLES": [{
                 color: "#546BC1",
                 name: "Returning Visitors",
-                type: "column",
+                type: "doughnut",
                 xValueFormatString: "MMM YYYY",
                 dataPoints: [
-                    { label: "TOTAL UNIDENTIFIED VRN", y: data.TOTAL_UNIDENTIFIEDVRN },
-                    { label: "TOTAL FRONT UNIDENTIFIED VRN", y: data.TOTAL_FRONT_UNIDENTIFIEDVRN },
-                    { label: "TOTAL REAR UNIDENTIFIED VRN", y: data.TOTAL_REAR_UNIDENTIFIEDVRN },
-                    { label: "TOTAL DETECTED VRN", y: data.TOTAL_DETECTED_VRN },
-                    { label: "TOTAL FRONT DETECTED VRN", y: data.TOTAL_FRONT_DETECTEDVRN },
-                    { label: "TOTAL REAR DETECTED VRN", y: data.TOTAL_REAR_DETECTEDVRN },
+                    //{ label: "TOTAL UNIDENTIFIED VRN", y: data.TOTAL_UNIDENTIFIEDVRN },
+                    // { label: "TOTAL DETECTED VRN", y: data.TOTAL_DETECTED_VRN },
+                     { label: "TOTAL REAR UNIDENTIFIED VRN", y: data.TOTAL_REAR_UNIDENTIFIEDVRN, color: "#E7823A" },
+                    { label: "TOTAL REAR DETECTED VRN", y: data.TOTAL_REAR_DETECTEDVRN, color: "#546BC1" },
+                    { label: "TOTAL FRONT UNIDENTIFIED VRN", y: data.TOTAL_FRONT_UNIDENTIFIEDVRN, color: "#72777a" },
+                    { label: "TOTAL FRONT DETECTED VRN", y: data.TOTAL_FRONT_DETECTEDVRN, color: "#ff6969" },
+                    
                 ]
             }],
             "TOTAL IKE": [{
