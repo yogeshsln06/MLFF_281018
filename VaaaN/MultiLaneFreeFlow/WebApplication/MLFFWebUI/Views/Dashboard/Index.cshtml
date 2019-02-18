@@ -1,131 +1,324 @@
 ﻿@{
     ViewBag.Title = "Dashboard";
 }
-
 <script>
-window.onload = function () {
-
-var totalVisitors = 883000;
-var visitorsData = {
-	"New vs Returning Visitors": [{
-		click: visitorsChartDrilldownHandler,
-		cursor: "pointer",
-		explodeOnClick: false,
-		innerRadius: "75%",
-		legendMarkerType: "square",
-		name: "New vs Returning Visitors",
-		radius: "100%",
-		showInLegend: true,
-		startAngle: 90,
-		type: "doughnut",
-		dataPoints: [
-			{ y: 519960, name: "New Visitors", color: "#E7823A" },
-			{ y: 363040, name: "Returning Visitors", color: "#546BC1" },
-		    { y: 362040, name: "Current Visitors", color: "#546BC1" }
-		]
+    var totalvehicle;
+    function bindChart(data) {
+        totalvehicle=data.TOTAL_VEHICLE;
+        var totalVisitors = data.TOTAL_VEHICLE;
+        var visitorsData = {
+            "New vs Returning Visitors": [{
+                click: visitorsChartDrilldownHandler,
+                cursor: "pointer",
+                explodeOnClick: false,
+                innerRadius: "75%",
+                legendMarkerType: "square",
+                name: "New vs Returning Visitors",
+                radius: "100%",
+                showInLegend: true,
+                startAngle: 90,
+                type: "doughnut",
+                dataPoints: [
+                    { y: data.TOTAL_REGISTERED, name: "REGISTERED VEHICLES", color: "#E7823A" },
+                    { y: data.TOTAL_UNREGISTERED, name: "UNREGISTERED VEHICLES", color: "#546BC1" },
+                    //{ y: data.TOTAL_IKE, name: "TOTAL IKE", color: "#50cdc8" },
+                    //{ y: data.TOTAL_ANPR, name: "TOTAL ANPR", color: "#ff6969" },
+                ]
+            }],
+            "REGISTERED VEHICLES": [{
+                type: "stackedColumn100",
+                name: "Two Whealar",
+                showInLegend: true,
+                //xValueFormatString: "YYYY",
+                //yValueFormatString: "#,##0\"%\"",
+                dataPoints: [
+                    { label: "Two Whealar", y: 40 },
+                    { label: "REAR IKE", y: 60 },
+                    { label: "ANPR FRONT", y: 80 },
+                    { label: "ANPR REAR", y: 90 }
+                ]
+            },
+	{
+	    type: "stackedColumn100",
+	    name: "Small",
+	    showInLegend: true,
+	    //xValueFormatString: "YYYY",
+	    //yValueFormatString: "#,##0\"%\"",
+	    dataPoints: [
+            { label: "Two Whealar", y: 40 },
+            { label: "REAR IKE", y: 60 },
+            { label: "ANPR FRONT", y: 80 },
+            { label: "ANPR REAR", y: 90 }
+	    ]
+	},
+	{
+	    type: "stackedColumn100",
+	    name: "Medium",
+	    showInLegend: true,
+	    //xValueFormatString: "YYYY",
+	    //yValueFormatString: "#,##0\"%\"",
+	    dataPoints: [
+            { label: "Two Whealar", y: 40 },
+            { label: "REAR IKE", y: 60 },
+            { label: "ANPR FRONT", y: 80 },
+            { label: "ANPR REAR", y: 90 }
+	    ]
+	},
+	{
+	    type: "stackedColumn100",
+	    name: "BIG",
+	    showInLegend: true,
+	    //xValueFormatString: "YYYY",
+	    //yValueFormatString: "#,##0\"%\"",
+	    dataPoints: [
+            { label: "Two Whealar", y: 40 },
+            { label: "Small", y: 60 },
+            { label: "Meduim", y: 80 },
+            { label: "Big", y: 90 }
+	    ]
 	}],
-	"New Visitors": [{
-		color: "#E7823A",
-		name: "New Visitors",
-		type: "column",
-		xValueFormatString: "MMM YYYY",
-		dataPoints: [
-			{ x: new Date("1 Jan 2015"), y: 33000 },
-			{ x: new Date("1 Feb 2015"), y: 35960 },
-			{ x: new Date("1 Mar 2015"), y: 42160 },
-			{ x: new Date("1 Apr 2015"), y: 42240 },
-			{ x: new Date("1 May 2015"), y: 43200 },
-			{ x: new Date("1 Jun 2015"), y: 40600 },
-			{ x: new Date("1 Jul 2015"), y: 42560 },
-			{ x: new Date("1 Aug 2015"), y: 44280 },
-			{ x: new Date("1 Sep 2015"), y: 44800 },
-			{ x: new Date("1 Oct 2015"), y: 48720 },
-			{ x: new Date("1 Nov 2015"), y: 50840 },
-			{ x: new Date("1 Dec 2015"), y: 51600 }
-		]
-	}],
-	"Returning Visitors": [{
-		color: "#546BC1",
-		name: "Returning Visitors",
-		type: "column",
-		xValueFormatString: "MMM YYYY",
-		dataPoints: [
-			{ x: new Date("1 Jan 2015"), y: 22000 },
-			{ x: new Date("1 Feb 2015"), y: 26040 },
-			{ x: new Date("1 Mar 2015"), y: 25840 },
-			{ x: new Date("1 Apr 2015"), y: 23760 },
-			{ x: new Date("1 May 2015"), y: 28800 },
-			{ x: new Date("1 Jun 2015"), y: 29400 },
-			{ x: new Date("1 Jul 2015"), y: 33440 },
-			{ x: new Date("1 Aug 2015"), y: 37720 },
-			{ x: new Date("1 Sep 2015"), y: 35200 },
-			{ x: new Date("1 Oct 2015"), y: 35280 },
-			{ x: new Date("1 Nov 2015"), y: 31160 },
-			{ x: new Date("1 Dec 2015"), y: 34400 }
-		]
-	}]
-};
+            "UNREGISTERED VEHICLES": [{
+                color: "#546BC1",
+                name: "Returning Visitors",
+                type: "column",
+                xValueFormatString: "MMM YYYY",
+                dataPoints: [
+                    { label: "TOTAL UNIDENTIFIED VRN", y: data.TOTAL_UNIDENTIFIEDVRN },
+                    { label: "TOTAL FRONT UNIDENTIFIED VRN", y: data.TOTAL_FRONT_UNIDENTIFIEDVRN },
+                    { label: "TOTAL REAR UNIDENTIFIED VRN", y: data.TOTAL_REAR_UNIDENTIFIEDVRN },
+                    { label: "TOTAL DETECTED VRN", y: data.TOTAL_DETECTED_VRN },
+                    { label: "TOTAL FRONT DETECTED VRN", y: data.TOTAL_FRONT_DETECTEDVRN },
+                    { label: "TOTAL REAR DETECTED VRN", y: data.TOTAL_REAR_DETECTEDVRN },
+                ]
+            }],
+            "TOTAL IKE": [{
+                click: visitorsChartDrilldownHandler,
+                cursor: "pointer",
+                explodeOnClick: false,
+                innerRadius: "75%",
+                legendMarkerType: "square",
+                name: "New vs Returning Visitors",
+                radius: "100%",
+                showInLegend: true,
+                startAngle: 90,
+                color: "#50cdc8",
+                name: "Returning Visitors",
+                type: "doughnut",
+                xValueFormatString: "MMM YYYY",
+            dataPoints: [
+                { label: "TOTAL FRONT IKE", y: data.TOTAL_FRONTIKE, name: "FRONT IKE", color: "#222222" },
+                { label: "TOTAL REAR IKE", y: data.TOTAL_REARIKE, name: "REAR IKE", },
+                //{ label: "TOTAL TWO-WHEELED -IKE", y: data.TOTAL_TWOWHEELEDIKE },
+                //{ label: "TOTAL SMALL -IKE", y: data.TOTAL_SMALLIKE },
+                //{ label: "TOTAL MEDIUM -IKE", y: data.TOTAL_MEDIUMIKE },
+                //{ label: "TOTAL LARGE -IKE", y: data.TOTAL_LARGEIKE },
+                //{ label: "TWO-WHEELED -IKE-FRONT", y: data.TOTAL_TWOWHEELEDIKEFRONT },
+                //{ label: "TOTAL SMALL -IKE-FRONT", y: data.TOTAL_SMALLIKEFRONT },
+                //{ label: "TOTAL MEDIUM -IKE-FRONT", y: data.TOTAL_MEDIUMIKEFRONT },
+                //{ label: "TOTAL LARGE -IKE-FRONT", y: data.TOTAL_LARGEIKEFRONT },
+                //{ label: "TOTAL TWO-WHEELED -IKE-REAR", y: data.TOTAL_TWOWHEELEDIKEREAR },
+                //{ label: "TOTAL SMALL -IKE-REAR", y: data.TOTAL_SMALLIKEREAR },
+                //{ label: "TOTAL MEDIUM -IKE-REAR", y: data.TOTAL_MEDIUMIKEREAR },
+                //{ label: "TOTAL LARGE -IKE-REAR", y: data.TOTAL_LARGEIKEREAR },
+        ]
+            }],
+            "TOTAL ANPR": [{
+                color: "#ff6969",
+                name: "Returning Visitors",
+                type: "column",
+                xValueFormatString: "MMM YYYY",
+                dataPoints: [
+                    { label: "TOTAL TWO-WHEELED -ANPR", y: data.TOTAL_TWOWHEELEDANPR },
+                    { label: "TOTAL SMALL -ANPR", y: data.TOTAL_SMALL_ANPR },
+                    { label: "TOTAL MEDIUM -ANPR", y: data.TOTAL_MEDIUM_ANPR },
+                    { label: "TOTAL LARGE -ANPR", y: data.TOTAL_LARGE_ANPR },
+                    { label: "TOTAL TWO-WHEELED -ANPR-FRONT", y: data.TOTAL_TWOWHEELED_ANPRFRONT },
+                    { label: "TOTAL SMALL -ANPR-FRONT", y: data.TOTAL_SMALLANPR_FRONT },
+                    { label: "TOTAL MEDIUM -ANPR-FRONT", y: data.TOTAL_MEDIUMANPR_FRONT },
+                    { label: "TOTAL LARGE -ANPR-FRONT", y: data.TOTAL_LARGEANPR_FRONT },
+                    { label: "TOTAL TWO-WHEELED -ANPR-REAR", y: data.TOTAL_TWOWHEELED_ANPRREAR },
+                    { label: "TOTAL SMALL -ANPR-REAR", y: data.TOTAL_SMALL_ANPRREAR },
+                    { label: "TOTAL MEDIUM -ANPR-REAR", y: data.TOTAL_MEDIUM_ANPRREAR },
+                    { label: "TOTAL LARGE -ANPR-REAR", y: data.TOTAL_LARGE_ANPRREAR },
+                ]
+            }],
+            "FRONT IKE": [{
+                color: "#ff6969",
+                name: "Returning Visitors",
+                type: "column",
+                xValueFormatString: "MMM YYYY",
+                dataPoints: [
+                  { label: "TWO-WHEELED -IKE-FRONT", y: data.TOTAL_TWOWHEELEDIKEFRONT },
+                  { label: "TOTAL SMALL -IKE-FRONT", y: data.TOTAL_SMALLIKEFRONT },
+                  { label: "TOTAL MEDIUM -IKE-FRONT", y: data.TOTAL_MEDIUMIKEFRONT },
+                  { label: "TOTAL LARGE -IKE-FRONT", y: data.TOTAL_LARGEIKEFRONT },
+                ]
+            }],
+            "REAR IKE": [{
+            color: "#ff6969",
+            name: "Returning Visitors",
+            type: "column",
+            xValueFormatString: "MMM YYYY",
+            dataPoints: [
+               { label: "TOTAL TWO-WHEELED -IKE-REAR", y: data.TOTAL_TWOWHEELEDIKEREAR },
+                { label: "TOTAL SMALL -IKE-REAR", y: data.TOTAL_SMALLIKEREAR },
+                { label: "TOTAL MEDIUM -IKE-REAR", y: data.TOTAL_MEDIUMIKEREAR },
+                { label: "TOTAL LARGE -IKE-REAR", y: data.TOTAL_LARGEIKEREAR },
+        ]
+        }]
+        };
 
-var newVSReturningVisitorsOptions = {
-	animationEnabled: true,
-	theme: "light2",
-	title: {
-		text: "New VS Returning Visitors"
-	},
-	subtitles: [{
-		text: "Click on Any Segment to Drilldown",
-		backgroundColor: "#2eacd1",
-		fontSize: 16,
-		fontColor: "white",
-		padding: 5
-	}],
-	legend: {
-		fontFamily: "calibri",
-		fontSize: 14,
-		itemTextFormatter: function (e) {
-			return e.dataPoint.name + ": " + Math.round(e.dataPoint.y / totalVisitors * 100) + "%";
-		}
-	},
-	data: []
-};
+        var newVSReturningVisitorsOptions = {
+            animationEnabled: true,
+            theme: "light2",
+            title: {
+                text: "Vehicle Details"
+            },
+            subtitles: [{
+                text: "Total Vehicle :" + totalvehicle,
+                backgroundColor: "#2eacd1",
+                fontSize: 16,
+                fontColor: "white",
+                padding: 5
+            }],
+            legend: {
+                fontFamily: "calibri",
+                fontSize: 14,
+                itemTextFormatter: function (e) {
+                    return e.dataPoint.name;//+ ": " + Math.round(e.dataPoint.y / totalVisitors * 100) + "%";
+                }
+            },
+            data: []
+        };
 
-var visitorsDrilldownedChartOptions = {
-	animationEnabled: true,
-	theme: "light2",
-	axisX: {
-		labelFontColor: "#717171",
-		lineColor: "#a2a2a2",
-		tickColor: "#a2a2a2"
-	},
-	axisY: {
-		gridThickness: 0,
-		includeZero: false,
-		labelFontColor: "#717171",
-		lineColor: "#a2a2a2",
-		tickColor: "#a2a2a2",
-		lineThickness: 1
-	},
-	data: []
-};
+        var visitorsDrilldownedChartOptions = {
+            animationEnabled: true,
+            theme: "light2",
+            axisX: {
+                labelFontColor: "#717171",
+                lineColor: "#a2a2a2",
+                tickColor: "#a2a2a2"
+            },
+            axisY: {
+                gridThickness: 0,
+                includeZero: false,
+                labelFontColor: "#717171",
+                lineColor: "#a2a2a2",
+                tickColor: "#a2a2a2",
+                lineThickness: 1
+            },
+            data: []
+        };
 
-newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
-$("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
+        newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
+        $("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
 
-function visitorsChartDrilldownHandler(e) {
-	e.chart.options = visitorsDrilldownedChartOptions;
-	e.chart.options.data = visitorsData[e.dataPoint.name];
-	e.chart.options.title = { text: e.dataPoint.name }
-	e.chart.render();
-	$("#backButton").toggleClass("invisible");
-}
+        function visitorsChartDrilldownHandler(e) {
+            e.chart.options = visitorsDrilldownedChartOptions;
+            e.chart.options.data = visitorsData[e.dataPoint.name];
+            e.chart.options.title = { text: e.dataPoint.name }
+            e.chart.render();
+            $("#backButton").toggleClass("invisible");
+            stoprefresh = false;
+        }
 
-$("#backButton").click(function() {
-	$(this).toggleClass("invisible");
-	newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
-	$("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
-});
-
-}
+        $("#backButton").click(function() {
+            $(this).toggleClass("invisible");
+            newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
+            $("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
+            stoprefresh = true;
+        });
+    }
+    function bindRegistereddata()
+    {
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "Composition of Internet Traffic in North America"
+            },
+            axisX: {
+                interval: 1,
+                intervalType: "year",
+                valueFormatString: "YYYY"
+            },
+            axisY: {
+                suffix: "%"
+            },
+            toolTip: {
+                shared: true
+            },
+            legend: {
+                reversed: true,
+                verticalAlign: "center",
+                horizontalAlign: "right"
+            },
+            data: [{
+                type: "stackedColumn100",
+                name: "Real-Time",
+                showInLegend: true,
+                xValueFormatString: "YYYY",
+                yValueFormatString: "#,##0\"%\"",
+                dataPoints: [
+                    { x: new Date(2010, 0), y: 40 },
+                    { x: new Date(2011, 0), y: 50 },
+                    { x: new Date(2012, 0), y: 60 },
+                    { x: new Date(2013, 0), y: 61 },
+                    { x: new Date(2014, 0), y: 63 },
+                    { x: new Date(2015, 0), y: 65 },
+                    { x: new Date(2016, 0), y: 67 }
+                ]
+            },
+            {
+                type: "stackedColumn100",
+                name: "Web Browsing",
+                showInLegend: true,
+                xValueFormatString: "YYYY",
+                yValueFormatString: "#,##0\"%\"",
+                dataPoints: [
+                    { x: new Date(2010, 0), y: 28 },
+                    { x: new Date(2011, 0), y: 18 },
+                    { x: new Date(2012, 0), y: 12 },
+                    { x: new Date(2013, 0), y: 10 },
+                    { x: new Date(2014, 0), y: 10 },
+                    { x: new Date(2015, 0), y: 7 },
+                    { x: new Date(2016, 0), y: 5 }
+                ]
+            },
+            {
+                type: "stackedColumn100",
+                name: "File Sharing",
+                showInLegend: true,
+                xValueFormatString: "YYYY",
+                yValueFormatString: "#,##0\"%\"",
+                dataPoints: [
+                    { x: new Date(2010, 0), y: 15 },
+                    { x: new Date(2011, 0), y: 12 },
+                    { x: new Date(2012, 0), y: 10 },
+                    { x: new Date(2013, 0), y: 9 },
+                    { x: new Date(2014, 0), y: 7 },
+                    { x: new Date(2015, 0), y: 5 },
+                    { x: new Date(2016, 0), y: 1 }
+                ]
+            },
+            {
+                type: "stackedColumn100",
+                name: "Others",
+                showInLegend: true,
+                xValueFormatString: "YYYY",
+                yValueFormatString: "#,##0\"%\"",
+                dataPoints: [
+                    { x: new Date(2010, 0), y: 17 },
+                    { x: new Date(2011, 0), y: 20 },
+                    { x: new Date(2012, 0), y: 18 },
+                    { x: new Date(2013, 0), y: 20 },
+                    { x: new Date(2014, 0), y: 20 },
+                    { x: new Date(2015, 0), y: 23 },
+                    { x: new Date(2016, 0), y: 27 }
+                ]
+            }]
+        });
+        chart.render();
+    }
 </script>
 <style>
     #backButton {
@@ -229,7 +422,7 @@ $("#backButton").click(function() {
         </div>
         <div class="masonry-item col-12">
             <!-- #Site Visits ==================== -->
-            <div class="bd bgc-white">
+            @*<div class="bd bgc-white">
                 <div class="peers fxw-nw@lg+ ai-s">
                     <div class="peer peer-greed w-70p@lg+ w-100@lg- p-20">
                         <div class="layers">
@@ -305,7 +498,9 @@ $("#backButton").click(function() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>*@
+            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+            <button class="btn invisible" id="backButton">< Back</button>
         </div>
         <div class="masonry-item col-md-6">
             <!-- #Monthly Stats ==================== -->
@@ -721,9 +916,9 @@ $("#backButton").click(function() {
       
     </div>
     <div class="row gap-20 masonry pos-r">
-        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-        <button class="btn invisible" id="backButton">< Back</button>
+        @*<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        <button class="btn invisible" id="backButton">< Back</button>*@
    </div>
     </div>
 <script src="~/js/Dashboard.js"></script>
-@*<script src="~/Scripts/jquery.canvasjs.min.js"></script>*@
+<script src="~/Scripts/jquery.canvasjs.min.js"></script>
