@@ -493,20 +493,20 @@
                     </div>
                 </div>
             </div>
-            @*<div id="chartContainer" style="height: 300px; width: 100%;"></div>
-            <button class="btn invisible" id="backButton">< Back</button>*@
+           
         </div>
         <div class="masonry-item col-md-6">
             <!-- #Monthly Stats ==================== -->
             <div class="bd bgc-white">
                 <div class="layers">
                     <div class="layer w-100 pX-20 pT-20">
-                        <h6 class="lh-1">Monthly Stats</h6>
+                        <h6 class="lh-1">Daily Stats</h6>
                     </div>
                     <div class="layer w-100 p-20">
-                        <canvas id="line-chart" height="220"></canvas>
+                        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+                        <button class="btn invisible" id="backButton">< Back</button>
                     </div>
-                    <div class="layer bdT p-20 w-100">
+                    @*<div class="layer bdT p-20 w-100">
                         <div class="peers ai-c jc-c gapX-20">
                             <div class="peer">
                                 <span class="fsz-def fw-600 mR-10 c-grey-800">10% <i class="fa fa-level-up c-green-500"></i></span>
@@ -525,7 +525,7 @@
                                 <small class="c-grey-500 fw-600">Profit</small>
                             </div>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
             </div>
         </div>
@@ -909,10 +909,6 @@
         </div>
       
     </div>
-    <div class="row gap-20 masonry pos-r">
-        @*<div id="chartContainer" style="height: 300px; width: 100%;"></div>
-        <button class="btn invisible" id="backButton">< Back</button>*@
-   </div>
     </div>
 <script src="~/js/Dashboard.js"></script>
 <script src="~/Scripts/jquery.canvasjs.min.js"></script>

@@ -337,7 +337,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
 
-        [Display(Name = "Licence Plate Color")]
+        [Display(Name = "Lisence Plate Color")]
         public Int32 LicencePlateColor
         {
             get
