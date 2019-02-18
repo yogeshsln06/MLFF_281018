@@ -84,8 +84,8 @@ function GetfirstLoadData(StartDT, EndDT, loader) {
                 $('.animationload').hide();
                 ResponceData = data;
                 BindData(data);
-                sleep(10000);
-                reloadData();
+                //sleep(10000);
+                //reloadData();
             },
             error: function (ex) {
                 $(".animationload").hide();
