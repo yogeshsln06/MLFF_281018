@@ -1,4 +1,4 @@
-/* Formatted on 18-02-2019 13:25:46 (QP5 v5.215.12089.38647) */
+/* Formatted on 19-02-2019 10:39:20 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -7320,7 +7320,14 @@ ORDER BY TRANSACTION_DATETIME DESC';
                    END)
                      AS MYTRANID,
                   AH.AMOUNT,
-                  TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+                  (CASE AH.TRANSACTION_ID
+                      WHEN 0
+                      THEN
+                         TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+                      ELSE
+                         TO_CHAR (T.TRANSACTION_DATETIME,
+                                  'DD-Mon-YYYY HH:MI:SS AM')
+                   END)
                      CREATION_DATE,
                   P.PLAZA_NAME,
                   CV.VEH_REG_NO,
@@ -7384,7 +7391,14 @@ ORDER BY TRANSACTION_DATETIME DESC';
                    END)
                      AS MYTRANID,
                   AH.AMOUNT,
-                  TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+                  (CASE AH.TRANSACTION_ID
+                      WHEN 0
+                      THEN
+                         TO_CHAR (AH.CREATION_DATE, 'DD-Mon-YYYY HH:MI:SS AM')
+                      ELSE
+                         TO_CHAR (T.TRANSACTION_DATETIME,
+                                  'DD-Mon-YYYY HH:MI:SS AM')
+                   END)
                      CREATION_DATE,
                   P.PLAZA_NAME,
                   CV.VEH_REG_NO,
@@ -8839,8 +8853,15 @@ ORDER BY TRANSACTION_DATETIME DESC';
                                         ORDER BY AH.CREATION_DATE, AH.ENTRY_ID)
                                    + 1)
                                      AS ROWNUMBER,
-                                  TO_CHAR (AH.CREATION_DATE,
-                                           'DD-Mon-YYYY HH:MI:SS AM')
+                                  (CASE AH.TRANSACTION_ID
+                                      WHEN 0
+                                      THEN
+                                         TO_CHAR (AH.CREATION_DATE,
+                                                  'DD-Mon-YYYY HH:MI:SS AM')
+                                      ELSE
+                                         TO_CHAR (T.TRANSACTION_DATETIME,
+                                                  'DD-Mon-YYYY HH:MI:SS AM')
+                                   END)
                                      CREATION_DATE,
                                   (CASE AH.TRANSACTION_ID
                                       WHEN 0 THEN AH.ENTRY_ID
@@ -9449,13 +9470,14 @@ ORDER BY CREATION_DATE DESC ';
                   UNION ALL
                   SELECT 47 AS SNO,
                          'TOTAL AVERAGE SMS TIME IN SECONDS' MESSAGE,
-                        ROUND( NVL ( (  (SELECT SUM (SECONDS)
-                                     FROM CTE_DETAILS
-                                    WHERE SECONDS <> 0)
-                                / (SELECT COUNT (SECONDS)
-                                     FROM CTE_DETAILS
-                                    WHERE SECONDS <> 0)),
-                              0),0)
+                         ROUND (NVL ( (  (SELECT SUM (SECONDS)
+                                            FROM CTE_DETAILS
+                                           WHERE SECONDS <> 0)
+                                       / (SELECT COUNT (SECONDS)
+                                            FROM CTE_DETAILS
+                                           WHERE SECONDS <> 0)),
+                                     0),
+                                0)
                             AS TOTALVEHICLE
                     FROM DUAL
                   UNION ALL
