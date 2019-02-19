@@ -128,7 +128,8 @@ AS
                 WHEN 5 THEN 'Failed'
              END)
                OPERATOR_RESPONSE_TEXT,
-            CA.FIRST_NAME AS FNAME
+            CA.FIRST_NAME AS FNAME,
+			AH.AMOUNT
        FROM TBL_TRANSACTION T
             LEFT OUTER JOIN TBL_PLAZA P
                ON T.PLAZA_ID = P.PLAZA_ID
