@@ -863,6 +863,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             nfEvent.VideoURL = nfp.VideoURL;
                                             nfEvent.NumberPlatePath = nfp.PlateThumbnail;
                                             nfEvent.VehiclePath = nfp.VehicleThumbnail;
+                                            nfEvent.LaneId = nfp.LaneId;
                                             if (nfp.CameraPosition == "1")
                                             {
                                                 nfEvent.CameraLocation = "Front";

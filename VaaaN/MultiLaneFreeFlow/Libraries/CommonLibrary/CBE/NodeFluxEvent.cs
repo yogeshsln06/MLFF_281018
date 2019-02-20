@@ -12,6 +12,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         DateTime timestamp;
         Int32 plazaId;
         string plazaName;
+        Int32 laneId;
         string laneName;
         string vehicleClassName;
         string vrn;
@@ -53,6 +54,18 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set
             {
                 this.plazaName = value;
+            }
+        }
+
+        public Int32 LaneId
+        {
+            get
+            {
+                return this.laneId;
+            }
+            set
+            {
+                this.laneId = value;
             }
         }
         public string LaneName
