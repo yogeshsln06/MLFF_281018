@@ -105,7 +105,7 @@ function BindCustmerAccount() {
                 scrollY: "39.5vh",
                 scrollX: true,
                 scrollCollapse: false,
-                autoWidth: true,
+                autoWidth: false,
                 paging: false,
                 info: false,
                 columns: [
