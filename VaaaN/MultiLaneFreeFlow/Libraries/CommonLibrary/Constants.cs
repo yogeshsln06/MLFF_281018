@@ -25,6 +25,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
         public static string dateTimeFormat24HForFileName = "yyyy-MM-dd-HH-mm-ss-fff";
         public static string dateTimeFormat24HsqlServer = "yyyy-MM-dd HH:mm:ss.fff";
         public static string dateTimeFormat24HOracleQuery = "dd/MM/yyyy HH:mm:ss";
+        public static string dateTimeFormat24HFileFormat = "MM/dd/yyyy HH:mm:ss";
         public static char hardwareStatusMessageSeparator = '≠';
         public static string driveLetter = "C";
         public static string atmsConfigDirectory = driveLetter + @":\MLFF\Config\";
