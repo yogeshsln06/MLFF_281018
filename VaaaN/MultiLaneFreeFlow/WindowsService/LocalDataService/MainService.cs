@@ -472,6 +472,8 @@ namespace VaaaN.MLFF.WindowsServices
                                                     transaction.LaneId = Filtertransaction.LaneId;
                                                     transaction.TransactionId = Filtertransaction.TranscationId;
                                                     transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
+                                                    transaction.IsBalanceUpdated = Filtertransaction.IsBalanceUpdated;
+                                                    transaction.IsViolation = Filtertransaction.IsViolation;
                                                     if (ctp.ReaderPosition == 1)
                                                     {
                                                         VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateCrossTalkSection(transaction, ctpEntryId);//, eviVehicleClassId, eviVRN);
@@ -695,6 +697,8 @@ namespace VaaaN.MLFF.WindowsServices
                                                         transaction.LaneId = Filtertransaction.LaneId;
                                                         transaction.TransactionId = Filtertransaction.TranscationId;
                                                         transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
+                                                        transaction.IsBalanceUpdated = Filtertransaction.IsBalanceUpdated;
+                                                        transaction.IsViolation = Filtertransaction.IsViolation;
                                                         if (ctp.ReaderPosition == 1)
                                                         {
                                                             VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.UpdateCrossTalkSection(transaction, ctpEntryId);//, eviVehicleClassId, eviVRN);
@@ -996,8 +1000,9 @@ namespace VaaaN.MLFF.WindowsServices
                                                     transaction.LaneId = nfp.LaneId;
                                                     transaction.TransactionId = filteredTransaction.TranscationId;
                                                     transaction.TransactionDateTime = filteredTransaction.TransactionDateTime;
-
-                                                    transaction.IsBalanceUpdated = filteredTransaction.IsBalanceUpdated; //26 Dec, 2018
+                                                    transaction.IsBalanceUpdated = filteredTransaction.IsBalanceUpdated;
+                                                    transaction.IsViolation = filteredTransaction.IsViolation;
+                                                  
 
                                                     #region Get customer vehicle and customer account
 
@@ -1151,6 +1156,8 @@ namespace VaaaN.MLFF.WindowsServices
                                                             transaction.LaneId = nfp.LaneId;
                                                             transaction.TransactionId = Filtertransaction.TranscationId;
                                                             transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
+                                                            transaction.IsBalanceUpdated = Filtertransaction.IsBalanceUpdated;
+                                                            transaction.IsViolation = Filtertransaction.IsViolation;
                                                             if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                             {
                                                                 if (ActiveAnpr.ToLower() == "hikvision")
@@ -1267,6 +1274,8 @@ namespace VaaaN.MLFF.WindowsServices
                                                         transaction.LaneId = nfp.LaneId;
                                                         transaction.TransactionId = Filtertransaction.TranscationId;
                                                         transaction.TransactionDateTime = Filtertransaction.TransactionDateTime;
+                                                        transaction.IsBalanceUpdated = Filtertransaction.IsBalanceUpdated;
+                                                        transaction.IsViolation = Filtertransaction.IsViolation;
                                                         if (nfp.CameraPosition == "1") //1 means front, 2 means rear
                                                         {
                                                             if (ActiveAnpr.ToLower() == "hikvision")
