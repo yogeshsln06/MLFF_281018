@@ -492,7 +492,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.Append("Class (Rear ANPR),");
                 //sb.Append("Total Record,");
                 sb.Append("Lane,");
-                sb.Append("EVI ID,");
+                sb.Append("EPC,");
                 sb.Append("Resident ID,");
                 sb.Append("Name,");
                 sb.Append("Amount,");
@@ -520,7 +520,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //TIME_STAMP
                 if (dr["TIME_STAMP"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToDateTime(dr["TIME_STAMP"]).ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24HOracleQuery) + ",");
+                    sb.Append(Convert.ToDateTime(dr["TIME_STAMP"]).ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24HFileFormat) + ",");
                 }
                 else
                 {
@@ -738,6 +738,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.AppendLine();
                 sb.AppendLine();
                 sb.AppendLine();
+                sb.Append(",,,,,,");
+                sb.Append("Class (Front EVI),");
+                sb.Append("Class (Rear EVI),");
+                sb.Append("Class (Front ANPR),");
+                sb.Append("Class (Rear ANPR),");
+                sb.AppendLine();
                 sb.Append("Total Two-wheeled,,,,,,");
                 sb.Append(
                     (Convert.ToInt32(filteredRows1.Length).ToString()) + "," +
@@ -849,7 +855,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 //TIME_STAMP
                 if (dr["TIME_STAMP"] != DBNull.Value)
                 {
-                    sb.Append(Convert.ToDateTime(dr["TIME_STAMP"]).ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24HOracleQuery) + ",");
+                    sb.Append(Convert.ToDateTime(dr["TIME_STAMP"]).ToString(VaaaN.MLFF.Libraries.CommonLibrary.Constants.dateTimeFormat24HFileFormat) + ",");
                 }
                 else
                 {
@@ -966,6 +972,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                 sb.AppendLine();
                 sb.AppendLine();
+                sb.AppendLine();
+
+                sb.Append(",,,,");
+                sb.Append("Class (Front ANPR),");
+                sb.Append("Class (Rear ANPR),");
                 sb.AppendLine();
                 sb.Append("Total Two-wheeled,,,,");
                 sb.Append(
