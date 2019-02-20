@@ -226,8 +226,8 @@ namespace MLFFWebUI.Controllers
         public string ExportCSVTranscations(ViewTransactionCBE transaction)
         {
             Int16 IsDataFound = 0;
-            var filename = "TransactionDetails_Charged_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
-            var filename1 = "TransactionDetails_UnCharged_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            var filename = "Transaction_Details_Registered_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
+            var filename1 = "Transaction_Details_UnRegistered_" + DateTime.Now.ToString(Constants.dateTimeFormat24HForFileName) + ".csv";
             FileInfo file = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename));
             FileInfo file1 = new FileInfo(Server.MapPath("~/Attachment/ExportFiles/" + filename1));
             try
@@ -250,7 +250,7 @@ namespace MLFFWebUI.Controllers
                 DataTable dt = TransactionBLL.TransDeatils(strQuery);
                 DataView dv = new DataView(dt);
                 DataTable Charged = dt.AsEnumerable()
-                            .Where(r => r.Field<decimal>("IS_BALANCE_UPDATED") == 1)
+                            .Where(r => r.Field<decimal>("IS_REGISTERED") == 1)
                             .CopyToDataTable();
                 //DataTable Charged = (DataTable)(dv.RowFilter = "IS_BALANCE_UPDATED=1").;
                 if (Charged.Rows.Count > 0)
@@ -260,7 +260,7 @@ namespace MLFFWebUI.Controllers
                         filename = string.Empty;
                 }
                 DataTable UnCharged = dt.AsEnumerable()
-                            .Where(r => r.Field<decimal>("IS_BALANCE_UPDATED") == 0)
+                            .Where(r => r.Field<decimal>("IS_REGISTERED") != 1)
                             .CopyToDataTable();
                 if (UnCharged.Rows.Count > 0)
                 {
