@@ -21,7 +21,7 @@ namespace MLFFWebUI.Controllers
             {
                 return RedirectToAction("Logout", "Login");
             }
-            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Dashboard","");
+            ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Dashboard", "");
             return View();
         }
 
@@ -107,6 +107,7 @@ namespace MLFFWebUI.Controllers
                                     liveEvent.PacketName = "CrossTalk";
                                     liveEvent.PlazaId = ctp.PlazaId;
                                     liveEvent.PlazaName = ctp.PlazaName;
+                                    liveEvent.LaneId = ctp.LaneId;
                                     liveEvent.LaneName = ctp.LaneName;
                                     liveEvent.VehicleClassName = ctp.VehicleClassName;
                                     liveEvent.VRN = ctp.VRN;
@@ -124,6 +125,7 @@ namespace MLFFWebUI.Controllers
                                     liveEvent.PacketName = "NodeFlux - " + ntp.CameraLocation;
                                     liveEvent.PlazaName = ntp.PlazaName;
                                     liveEvent.PlazaId = ntp.PlazaId;
+                                    liveEvent.LaneId = ntp.LaneId;
                                     liveEvent.LaneName = ntp.LaneName;
                                     liveEvent.VehicleClassName = ntp.VehicleClassName;
                                     liveEvent.VRN = ntp.VRN;
