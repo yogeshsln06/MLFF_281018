@@ -128,7 +128,7 @@ namespace MLFFWebUI.Controllers
                                     liveEvent.VehicleClassName = ntp.VehicleClassName;
                                     liveEvent.VRN = ntp.VRN;
                                     liveEvent.DeviceLocation = ntp.CameraLocation;
-                                    liveEvent.NumberPlatePath = ntp.NumberPlatePath.Replace('\\', '^'); ;
+                                    liveEvent.NumberPlatePath = ntp.NumberPlatePath;
                                     liveEvent.VehiclePath = ntp.VehiclePath.Replace('\\', '^');
                                     liveEvent.VideoURL = ntp.VideoURL.Replace('\\', '^'); ;
                                     liveEvent.Datepacket = ntp.Timestamp.ToString("dd-MMM-yyyy hh:mm:ss tt");

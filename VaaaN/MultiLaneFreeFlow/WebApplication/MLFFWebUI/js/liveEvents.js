@@ -67,8 +67,8 @@ function BindEventList(data) {
                 }
             }
             else if (data[i].PacketName.toLowerCase() == "nodeflux - front") {
-                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-3'>" + data[i].LaneName + "</td><td class='col-md-3'>" + replacenull(data[i].VRN) + "</td>" +
-              "<td class='col-md-3'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-md-2'>" + data[i].Datepacket + "</td><td class='col-md-2'>" + data[i].LaneName + "</td><td class='col-md-2'>" + replacenull(data[i].VRN) + "</td>" +
+              "<td class='col-md-3'>" + replacenull(data[i].VehicleClassName) + "</td> <td class='col-md-3'><img src=" + data[i].NumberPlatePath + " height='40' width='60' onclick='openImagePreview(this);' /></td></tr>"
                 if ($("#tblANPRFront tbody tr").length > 0) {
                     $('#tblANPRFront tbody tr:first').before(TR);
                 }
@@ -77,8 +77,8 @@ function BindEventList(data) {
                 }
             }
             else if (data[i].PacketName.toLowerCase() == 'nodeflux - rear') {
-                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-3'>" + data[i].LaneName + "</td><td class='col-md-3'>" + replacenull(data[i].VRN) + "</td>" +
-                "<td class='col-md-3'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-md-2'>" + data[i].Datepacket + "</td><td class='col-md-2'>" + data[i].LaneName + "</td><td class='col-md-2'>" + replacenull(data[i].VRN) + "</td>" +
+                "<td class='col-md-3'>" + replacenull(data[i].VehicleClassName) + "</td> <td class='col-md-3'><img src=" + data[i].NumberPlatePath + " height='40' width='60' onclick='openImagePreview(this);' /></td></tr>"
 
                 if ($("#tblANPRRear tbody tr").length > 0) {
                     $('#tblANPRRear tbody tr:first').before(TR);
