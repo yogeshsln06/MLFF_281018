@@ -1,8 +1,17 @@
 ﻿var ResponceData = [];
 $(document).ready(function () {
     myVar = setInterval("GetMSMQData()", 2000);
-});
+    
+    setHeight();
 
+    $(window).resize(function () {
+        setHeight();
+    });
+});
+function setHeight() {
+        windowHeight = $(window).innerHeight() - 110;
+        $('.container-fluid').css('max-height', windowHeight);
+    };
 function filterData() {
     var GantryId = $("#ddlGantry").val();
     if (GantryId > 0) {
@@ -27,8 +36,9 @@ function GetMSMQData() {
             ResponceData = data.Data;
 
             var GantryId = $("#ddlGantry").val();
+            var FilteredData = '';
             if (GantryId > 0) {
-                var FilteredData = $.grep(ResponceData, function (element, index) {
+                FilteredData = $.grep(ResponceData, function (element, index) {
                     return element.PlazaId == GantryId;
                 });
                 BindEventList(FilteredData);
@@ -56,9 +66,9 @@ function BindEventList(data) {
                     loc = "Rear";
                 }
                 //
-                TR = "<tr style='cursor:pointer;'><td class='col-md-2'>" + data[i].Datepacket + "</td><td class='col-md-2'>" + data[i].LaneId + "-" + loc + "</td><td class='col-md-4'>" + data[i].TagId + "</td><td class='col-md-2'>" + replacenull(data[i].VRN) + "</td>" +
-              "<td class='col-md-2'>" + replacenull(data[i].VehicleClassName) + "</td></tr>"
-
+                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-1'>" + data[i].LaneId + "<br>" + loc + "</td><td class='col-md-6'>" + data[i].TagId + "</td><td class='col-md-2'>" + replacenull(data[i].VRN) + " <br> " + replacenull(data[i].VehicleClassName) + "</td>" +
+              "</tr>"
+                //<td class='col-md-2'>" + replacenull(data[i].VehicleClassName) + "</td>
                 if ($("#tblIKE tbody tr").length > 0) {
                     $('#tblIKE tbody tr:first').before(TR);
                 }
@@ -67,8 +77,8 @@ function BindEventList(data) {
                 }
             }
             else if (data[i].PacketName.toLowerCase() == "nodeflux - front") {
-                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-1'>" + data[i].LaneId + "</td><td class='col-md-2'>" + replacenull(data[i].VRN) + "</td>" +
-              "<td class='col-md-3'>" + replacenull(data[i].VehicleClassName) + "</td> <td class='col-md-3'><img src=" + data[i].NumberPlatePath + " onclick='openImagePreview(this);' /></td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-2'>" + data[i].LaneId + "</td><td class='col-md-3'>" + replacenull(data[i].VRN) + " <br> " + replacenull(data[i].VehicleClassName) + "</td>" +
+            " <td class='col-md-4'><img height=40 Width=80 src=" + data[i].NumberPlatePath + " onclick='openImagePreview(this);' /></td></tr>"
                 if ($("#tblANPRFront tbody tr").length > 0) {
                     $('#tblANPRFront tbody tr:first').before(TR);
                 }
@@ -77,8 +87,8 @@ function BindEventList(data) {
                 }
             }
             else if (data[i].PacketName.toLowerCase() == 'nodeflux - rear') {
-                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-1'>" + data[i].LaneId + "</td><td class='col-md-2'>" + replacenull(data[i].VRN) + "</td>" +
-               "<td class='col-md-3'>" + replacenull(data[i].VehicleClassName) + "</td> <td class='col-md-3'><img src=" + data[i].NumberPlatePath + " onclick='openImagePreview(this);' /></td></tr>"
+                TR = "<tr style='cursor:pointer;'><td class='col-md-3'>" + data[i].Datepacket + "</td><td class='col-md-2'>" + data[i].LaneId + "</td><td class='col-md-3'>" + replacenull(data[i].VRN) + " <br> " + replacenull(data[i].VehicleClassName) + "</td>" +
+            " <td class='col-md-4'><img height=40 Width=80 src=" + data[i].NumberPlatePath + " onclick='openImagePreview(this);' /></td></tr>"
 
                 if ($("#tblANPRRear tbody tr").length > 0) {
                     $('#tblANPRRear tbody tr:first').before(TR);
@@ -88,6 +98,7 @@ function BindEventList(data) {
                 }
             }
         }
+        setHeight();
     }
 
 }

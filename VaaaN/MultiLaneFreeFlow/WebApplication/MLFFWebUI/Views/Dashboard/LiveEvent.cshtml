@@ -38,12 +38,13 @@
                 float: left;
                 border-bottom-width: 0;
             }
-
+.tooltip{ overflow: hidden; }
+.tooltip:hover { overflow: visible; }
     /*td {
       white-space: normal !important;
     }*/
 </style>
-<div class="container-fluid" style="overflow:hidden;">
+<div class="container-fluid" style="overflow-y:scroll; overflow-x:hidden">
     <div class="row">
         <div class="col-md-12">
             <div class="bgc-white bd bdrs-3 p-20 mB-20">
@@ -76,11 +77,11 @@
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th class="col-md-2">Date Time</th>
-                                        <th class="col-md-2">Lane & Position</th>
-                                        <th class="col-md-4">EPC</th>
-                                        <th class="col-md-2">VRN</th>
-                                        <th class="col-md-2">Class</th>
+                                        <th class="col-md-3">Date Time</th>
+                                        <th class="col-md-1">Lane <br /> Position</th>
+                                        <th class="col-md-6" style="text-align:center">EPC</th>
+                                        <th class="col-md-2">VRN <br />Class</th>
+                                        @*<th class="col-md-2">Class</th>*@
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -98,10 +99,13 @@
                                     </tr>
                                     <tr>
                                         <th class="col-md-3">Date <br />Time</th>
-                                        <th class="col-md-1">Lane</th>
-                                        <th class="col-md-2">VRN</th>
-                                        <th class="col-md-3">Class</th>
-                                        <th class="col-md-3">Image</th>
+                                        <th class="col-md-2">Lane</th>
+                                        <th class="col-md-3">
+                                            VRN<br />
+                                            Class
+                                        </th>
+                                        @*<th class="col-md-3">Class</th>*@
+                                        <th class="col-md-4">Image</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -119,10 +123,13 @@
                                     </tr>
                                     <tr>
                                         <th class="col-md-3">Date <br />Time</th>
-                                        <th class="col-md-1">Lane</th>
-                                        <th class="col-md-2">VRN</th>
-                                        <th class="col-md-3">Class</th>
-                                        <th class="col-md-3">Image</th>
+                                        <th class="col-md-2">Lane</th>
+                                        <th class="col-md-3">
+                                            VRN<br />
+                                            Class
+                                        </th>
+                                        @*<th class="col-md-3">Class</th>*@
+                                        <th class="col-md-4">Image</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
