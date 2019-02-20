@@ -96,8 +96,6 @@ function GetfirstLoadData(StartDT, EndDT, loader) {
     }
 }
 
-
-
 function reloadData() {
     var d = new Date();
     dd = d.getDate();
@@ -213,42 +211,91 @@ function BindTableRight(data) {
     var TotalVehiclePass = data[0].TOTALVEHICLE;
     var TotalRVehiclePass = data[1].TOTALVEHICLE;
     var TOTAL_UNREGISTERED = data[2].TOTALVEHICLE;
-    var TotalCVehicle = data[38].TOTALVEHICLE;
+    var TotalCVehicle = data[37].TOTALVEHICLE;
     var TotalSendSms = data[44].TOTALVEHICLE;
     var SuceessSendSms = data[45].TOTALVEHICLE;
+    var TotalManualChargeVehicle = data[39].TOTALVEHICLE;
+    var TotalManualSendSms = data[52].TOTALVEHICLE;
+    var ManualSuceessSendSms = data[53].TOTALVEHICLE;
 
     var Per = 0;
     $("#TotalVehicle_DB").text(TotalVehiclePass);
-
+    Per = (((TotalVehiclePass / TotalVehiclePass) * 100) || 0).toFixed();
+    $("#TotalVehicle_DB_PER").text(Per + '%');
+    $("#TotalVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+    //------------
     $("#RegisteredVehicle_DB").text(TotalRVehiclePass);
     Per = (((TotalRVehiclePass / TotalVehiclePass) * 100) || 0).toFixed();
     $("#RegisteredVehicle_DB_PER").text(Per + '%');
     $("#RegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
-
+    //------------
     $("#UnRegisteredVehicle_DB").text(TOTAL_UNREGISTERED);
     Per = (((TOTAL_UNREGISTERED / TotalVehiclePass) * 100) || 0).toFixed();
     $("#UnRegisteredVehicle_DB_PER").text(Per + '%');
     $("#UnRegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
 
+    //-----------------
     $("#ChargedVehicle_DB").text(TotalCVehicle);
+    if (TotalRVehiclePass!=0)
+    {
     Per = (((TotalCVehicle / TotalRVehiclePass) * 100) || 0).toFixed();
     $("#ChargedVehicle_DB_PER").text(Per + '%');
+    } else {
+        Per = 0;
+    }
     $("#ChargedVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
 
+    //-------------
     $("#SendSms_DB").text(TotalSendSms);
-    Per = (((TotalSendSms / TotalCVehicle) * 100) || 0).toFixed();
-    $("#SendSms_DB_Per").text(Per + '%');
+    if (TotalCVehicle!=0)
+    {
+        Per = (((TotalSendSms / TotalCVehicle) * 100) || 0).toFixed();
+        $("#SendSms_DB_Per").text(Per + '%');
+    } else {
+        Per = 0;
+    }
     $("#SendSms_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
-
+  
+    //----------------
     $("#Success_SendSMS_DB").text(SuceessSendSms);
-    Per = (((SuceessSendSms / TotalSendSms) * 100) || 0).toFixed();
-    $("#Success_SendSMS_DB_Per").text(Per + '%');
+    if (TotalSendSms!=0)
+    {
+        Per = (((SuceessSendSms / TotalSendSms) * 100) || 0).toFixed();
+        $("#Success_SendSMS_DB_Per").text(Per + '%');
+    } else {
+        Per = 0;
+    }
     $("#Success_SendSMS_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
 
+    //------------
+    $("#ManualChargedVehicle_DB").text(TotalManualChargeVehicle);
+    if (TotalRVehiclePass != 0) {
+        Per = (((TotalManualChargeVehicle / TotalRVehiclePass) * 100) || 0).toFixed();
+        $("#ManualChargedVehicle_DB_PER").text(Per + '%');
+    } else {
+        Per = 0;
+    }
+    $("#ManualChargedVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+    //------------
+    $("#ManualSendSms_DB").text(TotalManualSendSms);
+    if (TotalManualChargeVehicle != 0) {
+        Per = (((TotalManualSendSms / TotalManualChargeVehicle) * 100) || 0).toFixed();
+        $("#ManualSendSms_DB_Per").text(Per + '%');
+    } else {
+        Per = 0;
+    }
+    $("#ManualSendSms_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
 
+    //---------------
+    $("#ManualSuccess_SendSMS_DB").text(ManualSuceessSendSms);
+    if (TotalManualSendSms != 0) {
+        Per = (((ManualSuceessSendSms / TotalManualSendSms) * 100) || 0).toFixed();
+        $("#ManualSuccess_SendSMS_DB_Per").text(Per + '%');
+    } else {
+        Per = 0;
+    }
+    $("#ManualSuccess_SendSMS_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
 }
-
-
 
 function intToString(value) {
     var suffixes = ["", "k", "m", "b", "t"];
@@ -259,6 +306,7 @@ function intToString(value) {
     }
     return shortValue + suffixes[suffixNum];
 }
+
 function GetGantry() {
             $(".animationload").show();
         $.ajax({
