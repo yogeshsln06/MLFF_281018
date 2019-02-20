@@ -738,6 +738,12 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
                 sb.AppendLine();
                 sb.AppendLine();
                 sb.AppendLine();
+                sb.Append(",,,,,,");
+                sb.Append("Class (Front EVI),");
+                sb.Append("Class (Rear EVI),");
+                sb.Append("Class (Front ANPR),");
+                sb.Append("Class (Rear ANPR),");
+                sb.AppendLine();
                 sb.Append("Total Two-wheeled,,,,,,");
                 sb.Append(
                     (Convert.ToInt32(filteredRows1.Length).ToString()) + "," +
@@ -966,6 +972,11 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.DAL
 
                 sb.AppendLine();
                 sb.AppendLine();
+                sb.AppendLine();
+
+                sb.Append(",,,,");
+                sb.Append("Class (Front ANPR),");
+                sb.Append("Class (Rear ANPR),");
                 sb.AppendLine();
                 sb.Append("Total Two-wheeled,,,,");
                 sb.Append(
