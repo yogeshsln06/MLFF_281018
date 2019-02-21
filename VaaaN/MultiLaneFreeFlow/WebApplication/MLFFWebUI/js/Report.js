@@ -6,7 +6,19 @@ var CustomerVehcileJson = [];
 var MonthId = month;
 var VehicleId = 0;
 var YearId = year;
+var mainWidth = 0;
 
+$(document).ready(function () {
+    mainWidth = $(window).innerWidth();
+    $(window).resize(function () {
+        if (mainWidth != $(window).innerWidth()) {
+            $(".animationload").show();
+            mainWidth = $(window).innerWidth();
+            thId = 'tblVBRData';
+            myVar = setInterval("myclick()", 100);
+        }
+    });
+});
 function bindMonth() {
     for (var i = 0; i < monthNames.length; i++) {
         $("#monthList").append
@@ -60,7 +72,7 @@ function FirstLoadVehicleBalance() {
                 scrollY: "39.5vh",
                 scrollX: true,
                 scrollCollapse: false,
-                autoWidth: false,
+                autoWidth: true,
                 paging: false,
                 info: false,
                 searching: false,

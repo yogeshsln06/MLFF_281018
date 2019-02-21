@@ -1,6 +1,6 @@
 ﻿var pageload = 1;
 var Transload = 1;
-var pagesize = 30;
+var pagesize = 50;
 var NoMoredata = false;
 var inProgress = false;
 var CustomerVehicleId = 0;
@@ -20,15 +20,34 @@ var VehicleClassId = 0;
 var QueueStatus = 0;
 var ExceptionFlag = 0;
 var Status = 0;
-
+var mainWidth = 0;
+var windowHeight = 300;
 $(document).ready(function () {
     $("#sidebar-toggle").bind("click", function () {
         $(".animationload").show();
-        thId = 'tblCustomerDataTR';
+        thId = 'tblCustomerVehicleTR';
         myVar = setInterval("myclick()", 500);
     });
     BindCustmerVehicleAccount();
+
+    mainWidth = $(window).innerWidth();
+    $(window).resize(function () {
+        if (mainWidth != $(window).innerWidth()) {
+            setHeight();
+            $(".animationload").show();
+            thId = 'tblCustomerVehicleTR';
+            mainWidth = $(window).innerWidth();
+            myVar = setInterval("myclick()", 100);
+        }
+    });
 });
+
+function setHeight() {
+    windowHeight = $(window).innerHeight()-400;
+    //windowHeight = (windowHeight * 40) / 100
+
+    $(".dataTables_scrollBody").css("height", windowHeight);
+};
 
 function refreshData() {
     if (searchEnable) {
@@ -110,10 +129,11 @@ function BindCustmerVehicleAccount() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
-                scrollY: "39.5vh",
+                //scrollY: "39.5vh",
+                scrollY: windowHeight,
                 scrollX: true,
                 scrollCollapse: false,
-                autoWidth: false,
+                autoWidth: true,
                 paging: false,
                 info: false,
                 columns: [
@@ -203,7 +223,7 @@ function BindCustmerVehicleAccount() {
                  { "targets": 8, "className": 'dt-body-right', }],
                 order: [[1, 'asc']],
             });
-            $('.dataTable').css('width', '1200px !important');
+            //$('.dataTable').css('width', '1200px !important');
             datatableVariable.on('order.dt search.dt', function () {
                 datatableVariable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
                     cell.innerHTML = i + 1;
@@ -217,8 +237,9 @@ function BindCustmerVehicleAccount() {
                     AppendCustomerData();
                 }
             });
-            thId = 'tblCustomerDataTR';
+            thId = 'tblCustomerVehicleTR';
             myVar = setInterval("myclick()", 500);
+           
         },
         error: function (ex) {
             $(".animationload").hide();
@@ -1151,6 +1172,7 @@ function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();
     clearTimeout(myVar);
+    setHeight();
     $(".animationload").hide();
 }
 

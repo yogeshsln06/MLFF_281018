@@ -20,18 +20,26 @@ var TransactionCategory = 0;
 var StartDate = '';
 var EndDate = '';
 var TranscationId = '';
-
+var mainWidth = 0;
 //$(window).on('resize', function () {
 //    //myclick();
 
 //    TopUpdatatableVariable.columns.adjust();
 
-   
+
 
 //});
 
 $(document).ready(function () {
     $("#TranscationId").attr("type", "text");
+    mainWidth = $(window).innerWidth();
+    $(window).resize(function () {
+        if (mainWidth != $(window).innerWidth()) {
+            $(".animationload").show();
+            mainWidth = $(window).innerWidth();
+            myVar = setInterval("myclick()", 100);
+        }
+    });
 });
 /***************************** UnReviewed Start ****************/
 function BindUnreviewedFirstLoad() {
@@ -122,7 +130,7 @@ function BindUnreviewedFirstLoad() {
             },
             {
                 'data': 'FNAME'
-              
+
             },
             {
                 'data': 'VEHICLESPEED',
@@ -662,7 +670,7 @@ function BindAssociatedData(Seconds, dtCount) {
                             {
                                 'data': 'VEHICLESPEED',
                             },
-                           
+
                             {
                                 'data': 'F_TRANSACTION_DATETIME',
                                 "visible": false,
@@ -1309,7 +1317,7 @@ function FilteReviewedData() {
         TraId = 0;
         TranscationId = '';
     }
-    
+
 
     var Inputdata = {
         GantryId: GantryId,
@@ -1906,8 +1914,7 @@ function BindTopUpFirstLoad() {
         scrollY: "39.5vh",
         scrollX: true,
         scrollCollapse: false,
-        //autoWidth: true,
-        autoWidth: false,
+        autoWidth: true,
         paging: false,
         info: false,
         columns: [
@@ -2035,13 +2042,6 @@ function BindTopUpFirstLoad1() {
             $('.dataTables_filter input').attr("placeholder", "Search this list…");
             $('.dataTables_scrollBody').on('scroll', function () {
                 var ScrollbarHeight = ($("#tblTopUpData").height() - $('.dataTables_scrollBody').outerHeight())
-
-
-                //if (($('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height() >= $("#tblTopUpData").height()) && !NoMoredata && !inProgress) {
-                //    //console.log("scrollBody : " + $('.dataTables_scrollBody').scrollTop() + $('.dataTables_scrollBody').height());
-                //    //console.log("table : " + $("#tblTopUpData").height());
-                //    AppendTopUpData();
-                //}
 
                 if ($('.dataTables_scrollBody').scrollTop() > ScrollbarHeight && ScrollbarHeight > 0 && !NoMoredata && !inProgress && !searchEnable) {
                     AppendTopUpData();

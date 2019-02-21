@@ -1,4 +1,5 @@
-﻿@{
+﻿@model VaaaN.MLFF.Libraries.CommonLibrary.CBE.ViewTransactionCBE
+@{
     ViewBag.Title = "Dashboard";
 }
 <script>
@@ -255,7 +256,29 @@
                     <div class="layers bd bgc-white p-20">
                         <div class="layer w-100 mB-10">
                             <h6 class="lh-1">Total Front IKE</h6>
-                            <a onclick="alert('hi');" style="color:white">hello</a>
+                            <a onclick="openFilterpopup();" style="color:white">hello</a>
+                            <div class="modal fade" id="filterModel" tabindex="1" role="dialog" aria-labelledby="filterModelLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body filterModel">
+                                            <form id="filterbox">
+                                                <div class="form-group">
+                                                    <label for="StartDate">Date From</label>
+                                                    @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control form_datetime", @readonly = true, } })
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="EndDate">Date To</label>
+                                                    @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control form_datetime", @readonly = true, } })
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="ResetFilter();" id="btnFilterCancel">Clear</button>
+                                            <button type="button" class="btn btn-outline-primary" onclick="DownLoadTransactionReport()" id="btnFilterSearch">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="layer w-100">
                             <div class="peers ai-sb fxw-nw">
@@ -867,3 +890,19 @@
 </div>
 <script src="~/js/Dashboard.js"></script>
 <script src="~/Scripts/jquery.canvasjs.min.js"></script>
+<script>
+    $(document).ready(function () {
+        
+        $(".form_datetime").datetimepicker({
+            format: "mm/dd/yyyy  hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            //startDate: "2018-12-06 10:00",
+            minuteStep: 1,
+
+        })
+        BindDateTimeforDate();
+    });
+</script>
+<link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>

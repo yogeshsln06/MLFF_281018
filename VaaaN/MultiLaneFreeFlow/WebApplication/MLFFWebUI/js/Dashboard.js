@@ -1,8 +1,10 @@
 ﻿var ResponceData = [];
 var ResponceGantryData = [];
-var StartDT, EndDT;
+//var StartDT, EndDT;
 var Progress = true;
 var stoprefresh = true;
+var StartDate = '';
+var EndDate = '';
 $(document).ready(function () {
     function setHeight() {
         windowHeight = $(window).innerHeight() - 110;
@@ -21,7 +23,7 @@ $(document).ready(function () {
     $("#totalFANPR").val(0);
     $("#totalRANPR").val(0);
 
-    GetfirstLoadData(StartDT, EndDT, true)
+    GetfirstLoadData(StartDate, EndDate, true)
 
 });
 
@@ -59,15 +61,15 @@ function BindDateTime(mints) {
     mints = newd.getMinutes();
     mints = mints > 9 ? mints : '0' + mints;
     var time2 = hh + ":" + mints;
-    StartDT = mm + '/' + dd + '/' + yy + " " + time1;
-    EndDT = mm + '/' + dd + '/' + yy + " " + time2;
+    StartDate = mm + '/' + dd + '/' + yy + " " + time1;
+    EndDate = mm + '/' + dd + '/' + yy + " " + time2;
 
 }
 
-function GetfirstLoadData(StartDT, EndDT, loader) {
+function GetfirstLoadData(StartDate, EndDate, loader) {
     if (Progress) {
-        var StartDate = DateFormatTime(StartDT);
-        var EndDate = DateFormatTime(EndDT);
+        var StartDate = DateFormatTime(StartDate);
+        var EndDate = DateFormatTime(EndDate);
         var Inputdata = {
             StartDate: StartDate,
             EndDate: EndDate,
@@ -112,9 +114,9 @@ function reloadData() {
     mints = newd.getMinutes();
     mints = mints > 9 ? mints : '0' + mints;
     var time2 = hh + ":" + mints + ":" + 59;
-    StartDT = mm + '/' + dd + '/' + yy + " " + time1;
-    EndDT = mm + '/' + dd + '/' + yy + " " + time2;
-    GetfirstLoadData(StartDT, EndDT, false);
+    StartDate = mm + '/' + dd + '/' + yy + " " + time1;
+    EndDate = mm + '/' + dd + '/' + yy + " " + time2;
+    GetfirstLoadData(StartDate, EndDate, false);
 
 }
 
@@ -325,4 +327,109 @@ function GetGantry() {
                 $(".animationload").hide();
             }
         });
+}
+
+function ResetFilter() {
+    $("#filterbox").find('input:text').val('');
+    //$("#filterbox").find('select').val(0);
+    BindDateTimeforDate();
+}
+function ClearBindDateTime() {
+    var cdt = new Date();
+    var d = new Date(cdt.setMinutes(cdt.getMinutes() - 30));
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = (d.getMonth() + 1);
+    mm = mm > 9 ? mm : '0' + mm;
+    yy = d.getFullYear();
+    hh = d.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = d.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time1 = hh + ":" + mints;
+    var newd = new Date();
+    hh = newd.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = newd.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time2 = hh + ":" + mints;
+    $('#StartDate').val(mm + '/' + dd + '/' + yy + " " + time1);
+    $('#EndDate').val(mm + '/' + dd + '/' + yy + " " + time2);
+}
+function BindDateTimeforDate() {
+    var cdt = new Date();
+    var d = new Date(cdt.setMinutes(cdt.getMinutes() - 30));
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = (d.getMonth() + 1);
+    mm = mm > 9 ? mm : '0' + mm;
+    yy = d.getFullYear();
+    hh = d.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = d.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time1 = hh + ":" + mints;
+    var newd = new Date();
+    hh = newd.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = newd.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time2 = hh + ":" + mints;
+    StartDate = mm + '/' + dd + '/' + yy + " " + time1;
+    EndDate = mm + '/' + dd + '/' + yy + " " + time2;
+    $('#StartDate').val(StartDate);
+    $('#EndDate').val(EndDate);
+}
+
+function openFilterpopup() {
+    $('#StartDate').val(StartDate);
+    $('#EndDate').val(EndDate);
+    var modal = $("#filterModel");
+    var body = $(window);
+    var w = modal.width();
+    var h = modal.height();
+    var bw = body.width();
+    var bh = body.height();
+    modal.css({
+        "top": "106px",
+        "left": ((bw - 450)) + "px",
+        "right": "30px"
+    })
+    $('#filterModel').modal('show');
+    $(".modal-backdrop.show").hide();
+}
+
+function DownLoadTransactionReport() {
+    var StartDate = DateFormatTime($("#StartDate").val());
+    var EndDate = DateFormatTime($("#EndDate").val());
+    var Inputdata = {
+        StartDate: StartDate,
+        EndDate: EndDate,
+    }
+    inProgress = true;
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "/CSV/ExportCSVTranscations",
+        contentType: "application/json; charset=utf-8",
+        success: function (Path) {
+            $('#filterModel').modal('hide');
+            $('.animationload').hide();
+            if (Path.toLowerCase() == "no data to export." || Path.toLowerCase() == "file exported successfully") {
+                alert(Path)
+                return;
+            }
+            if (Path.toLowerCase().search(".csv") > -1 || Path.toLowerCase().search(".pdf") > -1 || Path.toLowerCase().search(".zip") > -1) {
+                var res = Path.split(";");
+                for (var j = 0; j < res.length; j++) {
+                    window.open("../Attachment/ExportFiles/" + res[j]);
+                }
+            }
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
 }

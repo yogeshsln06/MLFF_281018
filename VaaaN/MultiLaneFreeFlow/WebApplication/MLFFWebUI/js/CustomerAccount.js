@@ -2,7 +2,7 @@
 var thId;
 var pageload = 1;
 var Transload = 1;
-var pagesize = 30;
+var pagesize = 50;
 var CustomerAccountId = 0;
 var CustomerName = '';
 var NoMoredata = false;
@@ -19,8 +19,8 @@ var Mobile = '';
 var EmailId = '';
 var VRN = '';
 var boolfliter = false;
-
-
+var mainWidth = 0;
+var windowHeight = 300;
 
 $(document).ready(function () {
     $("#sidebar-toggle").bind("click", function () {
@@ -30,7 +30,23 @@ $(document).ready(function () {
     });
 
     BindCustmerAccount();
+
+    mainWidth = $(window).innerWidth();
+    $(window).resize(function () {
+        if (mainWidth != $(window).innerWidth()) {
+            $(".animationload").show();
+            mainWidth = $(window).innerWidth();
+            thId = 'tblCustomerDataTR';
+            myVar = setInterval("myclick()", 100);
+        }
+    });
 });
+
+function setHeight() {
+    windowHeight = $(window).innerHeight() - 378;
+    //windowHeight = (windowHeight * 40) / 100
+    $(".dataTables_scrollBody").css("height", windowHeight);
+};
 
 function closePopup() {
     $("#btnpopupClose").trigger('click');
@@ -102,10 +118,11 @@ function BindCustmerAccount() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
-                scrollY: "39.5vh",
+                //scrollY: "39.5vh",
+                scrollY: windowHeight,
                 scrollX: true,
                 scrollCollapse: false,
-                autoWidth: false,
+                autoWidth: true,
                 paging: false,
                 info: false,
                 columns: [
@@ -864,6 +881,7 @@ function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();
     clearTimeout(myVar);
+    setHeight();
     $(".animationload").hide();
 }
 

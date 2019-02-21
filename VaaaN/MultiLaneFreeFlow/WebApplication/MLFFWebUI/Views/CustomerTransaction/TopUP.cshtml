@@ -18,7 +18,7 @@
                         <div class="mT-10">
                             <div class="gap-5 peers" style="float:right;overflow: visible !important;">
                                 <div class="peer">
-                                    <a class="btn cur-p btn-outline-primary" href='javascript:void(0);' onclick="reloadTopUpData();">
+                                    <a class="btn cur-p btn-outline-primary" href='javascript:void(0);' onclick="reloadTopUpData();" id="reload">
                                         <span class='icon-holder'>
                                             <i class='c-black-500 ti-reload'></i>
                                         </span>
@@ -99,18 +99,19 @@
                             <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id">
                                 Name
                             </th>
-                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" class="no-rt-border">
+                            <th style="text-align: center; vertical-align: middle; " rowspan="2" data-field="id" >
                                 Amount
                             </th>
                             <th style="text-align: center; display:none; vertical-align: middle; " rowspan="2" data-field="id">
                                 Formated Date
                             </th>
+
                         </tr>
                         <tr>
                             <th style="text-align: center; " data-field="price">
                                 VRN
                             </th>
-                            <th style="text-align: center!important; " data-field="operate">
+                            <th style="text-align: center; " data-field="operate">
                                 Class
                             </th>
                         </tr>
@@ -120,6 +121,7 @@
             </div>
         </div>
     </div>
+    <a id="blankclick" onclick="checkClick();"></a>
 </div>
 <script>
     $(document).ready(function () {
