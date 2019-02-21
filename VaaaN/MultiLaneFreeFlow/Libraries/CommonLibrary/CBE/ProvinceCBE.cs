@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.tmsId = value;
             }
         }
-
+        [Display(Name = "Province ID")]
         public int ProvinceId
         {
             get
@@ -43,7 +44,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
                 this.provinceId = value;
             }
         }
-
+        [Display(Name = "Province Name")]
+        [Required]
         public string ProvinceName
         {
             get

@@ -742,7 +742,6 @@ namespace MLFFWebUI.Controllers
             #region ANPR Dropdown
             List<SelectListItem> anprList = new List<SelectListItem>();
             List<HardwareCBE> ANPRfiltered = hardwareDataList.FindAll(x => x.HardwareType == 1);
-            anprList.Add(new SelectListItem() { Text = "--Select ANPR--", Value = "0" });
             foreach (HardwareCBE h in ANPRfiltered)
             {
                 anprList.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
@@ -755,7 +754,6 @@ namespace MLFFWebUI.Controllers
             #region RFID Dropdown
             List<SelectListItem> rfidList = new List<SelectListItem>();
             List<HardwareCBE> RFIDfiltered = hardwareDataList.FindAll(x => x.HardwareType == 2);
-            rfidList.Add(new SelectListItem() { Text = "--Select RFID--", Value = "0" });
             foreach (HardwareCBE h in RFIDfiltered)
             {
                 rfidList.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
@@ -770,7 +768,6 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> gantryList = new List<SelectListItem>();
             List<PlazaCBE> plaza = PlazaBLL.GetAllAsList();
 
-            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
             foreach (PlazaCBE cr in plaza)
             {
                 gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
@@ -964,7 +961,6 @@ namespace MLFFWebUI.Controllers
                     #region ANPR Dropdown
                     List<SelectListItem> anprList = new List<SelectListItem>();
                     List<HardwareCBE> ANPRfiltered = hardwareDataList.FindAll(x => x.HardwareType == 1);
-                    anprList.Add(new SelectListItem() { Text = "--Select ANPR--", Value = "0" });
                     foreach (HardwareCBE h in ANPRfiltered)
                     {
                         anprList.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
@@ -977,7 +973,6 @@ namespace MLFFWebUI.Controllers
                     #region RFID Dropdown
                     List<SelectListItem> rfidList = new List<SelectListItem>();
                     List<HardwareCBE> RFIDfiltered = hardwareDataList.FindAll(x => x.HardwareType == 2);
-                    rfidList.Add(new SelectListItem() { Text = "--Select RFID--", Value = "0" });
                     foreach (HardwareCBE h in RFIDfiltered)
                     {
                         rfidList.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
@@ -992,7 +987,6 @@ namespace MLFFWebUI.Controllers
                     List<SelectListItem> gantryList = new List<SelectListItem>();
                     List<PlazaCBE> plaza = PlazaBLL.GetAllAsList();
 
-                    gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
                     foreach (PlazaCBE cr in plaza)
                     {
                         gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
@@ -1290,13 +1284,13 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> gantryList = new List<SelectListItem>();
             List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
 
-            gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
-            foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
-            {
-                gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
-            }
+            //gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
+            //foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
+            //{
+            //    gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
+            //}
 
-            ViewBag.Gantry = gantryList;
+            //ViewBag.Gantry = gantryList;
 
             #endregion
 
@@ -1435,7 +1429,6 @@ namespace MLFFWebUI.Controllers
                     List<SelectListItem> gantryList = new List<SelectListItem>();
                     List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE> plaza = VaaaN.MLFF.Libraries.CommonLibrary.BLL.PlazaBLL.GetAllAsList();
 
-                    gantryList.Add(new SelectListItem() { Text = "--Select Gantry--", Value = "0" });
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE cr in plaza)
                     {
                         gantryList.Add(new SelectListItem() { Text = cr.PlazaName, Value = System.Convert.ToString(cr.PlazaId) });
@@ -1712,7 +1705,6 @@ namespace MLFFWebUI.Controllers
                     List<SelectListItem> provincelist = new List<SelectListItem>();
                     List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
 
-                    provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
                     {
                         provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
@@ -1734,7 +1726,6 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> provincelist = new List<SelectListItem>();
             List<ProvinceCBE> province = ProvinceBLL.GetAll().Cast<ProvinceCBE>().ToList();
 
-            provincelist.Add(new SelectListItem() { Text = "", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.ProvinceCBE cr in province)
             {
                 provincelist.Add(new SelectListItem() { Text = cr.ProvinceName, Value = System.Convert.ToString(cr.ProvinceId) });
@@ -1910,7 +1901,6 @@ namespace MLFFWebUI.Controllers
                     List<SelectListItem> citylist = new List<SelectListItem>();
                     List<CityCBE> City = CityBLL.GetAll().Cast<CityCBE>().ToList();
 
-                    citylist.Add(new SelectListItem() { Text = "", Value = "0" });
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE cr in City)
                     {
                         citylist.Add(new SelectListItem() { Text = cr.CityName, Value = System.Convert.ToString(cr.CityId) });
@@ -1935,7 +1925,6 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> citylist = new List<SelectListItem>();
             List<CityCBE> City = CityBLL.GetAll().Cast<CityCBE>().ToList();
 
-            citylist.Add(new SelectListItem() { Text = "", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CityCBE cr in City)
             {
                 citylist.Add(new SelectListItem() { Text = cr.CityName, Value = System.Convert.ToString(cr.CityId) });
@@ -2112,7 +2101,6 @@ namespace MLFFWebUI.Controllers
                     List<SelectListItem> Districtlist = new List<SelectListItem>();
                     List<DistrictCBE> District = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList();
 
-                    Districtlist.Add(new SelectListItem() { Text = "", Value = "0" });
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE cr in District)
                     {
                         Districtlist.Add(new SelectListItem() { Text = cr.DistrictName, Value = System.Convert.ToString(cr.DistrictId) });
@@ -2136,7 +2124,6 @@ namespace MLFFWebUI.Controllers
             List<SelectListItem> Districtlist = new List<SelectListItem>();
             List<DistrictCBE> District = DistrictBLL.GetAll().Cast<DistrictCBE>().ToList();
 
-            Districtlist.Add(new SelectListItem() { Text = "", Value = "0" });
             foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.DistrictCBE cr in District)
             {
                 Districtlist.Add(new SelectListItem() { Text = cr.DistrictName, Value = System.Convert.ToString(cr.DistrictId) });

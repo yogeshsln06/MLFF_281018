@@ -118,8 +118,7 @@ function NewUser() {
             //$("#AccountExpiryDate").val("");
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnCancel").show();
-            $("#btnClose").hide();
+            $("#btnClose").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -148,7 +147,7 @@ function EditUser(ctrl, id) {
             $("#AccountExpiryDate").attr("data-provide", "datepicker").attr("readolny", true);
             $("#btnSave").show();
             $("#btnSave").text("Update");
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#btnClose").show();
         },
         error: function (x, e) {
@@ -299,7 +298,7 @@ function UserDetail(ctrl, Id) {
             openpopup();
             $("#RoleId").val($("#SlRoleId").val());
             $("#btnSave").hide();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#fildset").attr("disabled", "disabled");
             $('#UserDob').prop('readonly', false);
             $('#AccountExpiryDate').prop('readonly', false);
@@ -408,9 +407,9 @@ function NewClassfification() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnClose").hide();
-            $("#btnCancel").show();
-            //$("#btnSaveNew").show();
+            $("#btnClose").show();
+            //$("#btnCancel").show();
+            $("#btnSaveNew").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -502,7 +501,7 @@ function EditVehcileClass(ctrl, Id) {
             $("#Id").attr("disabled", "disabled");
             $("#btnSave").show();
             $("#btnClose").show();
-            $("#btnCancel").hide();
+           // $("#btnCancel").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -527,7 +526,7 @@ function VehcileClassDetail(ctrl, Id) {
             $("#btnSave").hide();
             $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupClose").show();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#btnUpdate").hide();
             $("#btnUpdateCancel").hide();
             $("#fildset").attr("disabled", "disabled");
@@ -658,8 +657,8 @@ function NewHardware() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnClose").hide();
-            $("#btnCancel").show();
+            $("#btnClose").show();
+            //$("#btnCancel").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -760,7 +759,7 @@ function EditHardware(ctrl, Id) {
             $("#HardwarePosition").val($("#hfHardwarePosition").val());
             $("#btnSave").show();
             $("#btnClose").show();
-            $("#btnCancel").hide();
+           // $("#btnCancel").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -788,7 +787,7 @@ function HardwareDetail(ctrl, Id) {
             $("#btnSave").hide();
             $("#btnpopupClose").removeClass('btn-outline-secondary').addClass('btn-outline-danger');
             $("#btnpopupClose").show();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#btnUpdate").hide();
             $("#btnUpdateCancel").hide();
             $("#fildset").attr("disabled", "disabled");
@@ -953,8 +952,8 @@ function NewLane() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnClose").hide();
-            $("#btnCancel").show();
+            $("#btnClose").show();
+           // $("#btnCancel").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -1048,9 +1047,9 @@ function EditLane(ctrl, Id) {
             openpopup();
             $("#LaneId").attr("disabled", "disabled");
             $("#btnSave").show();
-            $("#btnClose").hide();
+            $("#btnClose").show();
             $("#btnUpdateCancel").show();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -1075,7 +1074,7 @@ function LaneDetail(ctrl, Id) {
             //$("#HardwareType").val($("#hfHardwareType").val());
            // $("#HardwarePosition").val($("#hfHardwarePosition").val());
             $("#btnSave").hide();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#btnUpdate").hide();
             $("#fildset").attr("disabled", "disabled");
         },
@@ -1206,7 +1205,7 @@ function EditGantry(ctrl, Id) {
             openpopup();
             $("#btnSave").show();
             $("#btnSave").text("Update");
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#btnClose").show();
         },
         error: function (x, e) {
@@ -1232,8 +1231,8 @@ function NewGantry() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnCancel").show();
-            $("#btnClose").hide();
+           // $("#btnCancel").show();
+            $("#btnClose").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -1323,7 +1322,7 @@ function GantryDetail(ctrl, Id) {
             $("#SetUpLabel").text("View " + $("#PlazaName").val() + "");
             openpopup();
             $("#btnSave").hide();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#fildset").attr("disabled", "disabled");
         },
         error: function (x, e) {
@@ -1448,7 +1447,7 @@ function EditRoles(ctrl, Id) {
             openpopup();
 
             $("#btnSave").show();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#btnClose").show();
         },
         error: function (x, e) {
@@ -1474,8 +1473,8 @@ function NewRoles() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnClose").hide();
-            $("#btnCancel").show();
+            $("#btnClose").show();
+            //$("#btnCancel").show();
             //$("#btnSaveNew").show();
         },
         error: function (x, e) {
@@ -1566,7 +1565,7 @@ function RoleDetail(ctrl, Id) {
             $("#ISActive").val() == 1 ? $("#DisplayActive").prop('checked', true) : $("#DisplayActive").prop('checked', false);
             $("#DisplayActive").attr("disabled", "disabled");
             $("#btnSave").hide();
-            $("#btnCancel").hide();
+           // $("#btnCancel").hide();
             $("#fildset").attr("disabled", "disabled");
         },
         error: function (x, e) {
@@ -1679,7 +1678,7 @@ function EditProvince(ctrl, Id) {
             openpopup();
 
             $("#btnSave").show();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#btnClose").show();
         },
         error: function (x, e) {
@@ -1705,8 +1704,8 @@ function NewProvince() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnClose").hide();
-            $("#btnCancel").show();
+            $("#btnClose").show();
+            //$("#btnCancel").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -1792,7 +1791,7 @@ function ProvinceDetail(ctrl, Id) {
             $("#SetUpLabel").text("View " + $("#ProvinceName").val() + "");
             openpopup();
             $("#btnSave").hide();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#fildset").attr("disabled", "disabled");
         },
         error: function (x, e) {
@@ -1910,7 +1909,7 @@ function EditCity(ctrl, Id) {
             $("#CityId").attr("disabled", "disabled");
             openpopup();
             $("#btnSave").show();
-            $("#btnCancel").hide();
+           // $("#btnCancel").hide();
             $("#btnClose").show();
         },
         error: function (x, e) {
@@ -1936,8 +1935,8 @@ function NewCity() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnClose").hide();
-            $("#btnCancel").show();
+            $("#btnClose").show();
+           // $("#btnCancel").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -2024,7 +2023,7 @@ function CityDetail(ctrl, Id) {
             $("#SetUpLabel").text("View " + $("#CityName").val() + "");
             openpopup();
             $("#btnSave").hide();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#fildset").attr("disabled", "disabled");
         },
         error: function (x, e) {
@@ -2144,7 +2143,7 @@ function EditDistrict(ctrl, Id) {
             $("#DistrictId").attr("disabled", "disabled");
             openpopup();
             $("#btnSave").show();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#btnClose").show();
         },
         error: function (x, e) {
@@ -2169,8 +2168,8 @@ function NewDistrict() {
             $("#DistrictId").val('0').attr("disabled", "disabled");
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnClose").hide();
-            $("#btnCancel").show();
+            $("#btnClose").show();
+           // $("#btnCancel").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -2258,7 +2257,7 @@ function DistrictDetail(ctrl, Id) {
             $("#SetUpLabel").text("View " + $("#DistrictName").val() + "");
             openpopup();
             $("#btnSave").hide();
-            $("#btnCancel").hide();
+           // $("#btnCancel").hide();
             $("#fildset").attr("disabled", "disabled");
         },
         error: function (x, e) {
@@ -2380,7 +2379,7 @@ function EditSubDistrict(ctrl, Id) {
             openpopup();
 
             $("#btnSave").show();
-            $("#btnCancel").hide();
+           // $("#btnCancel").hide();
             $("#btnClose").show();
         },
         error: function (x, e) {
@@ -2406,8 +2405,8 @@ function NewSubDistrict() {
 
             $("#btnSave").show();
             $("#btnSave").text("Save");
-            $("#btnClose").hide();
-            $("#btnCancel").show();
+            $("#btnClose").show();
+            //$("#btnCancel").show();
         },
         error: function (x, e) {
             $(".animationload").hide();
@@ -2496,7 +2495,7 @@ function SubDistrictDetail(ctrl, Id) {
             $("#SetUpLabel").text("View " + $("#SubDistrictName").val() + "");
             openpopup();
             $("#btnSave").hide();
-            $("#btnCancel").hide();
+            //$("#btnCancel").hide();
             $("#fildset").attr("disabled", "disabled");
         },
         error: function (x, e) {

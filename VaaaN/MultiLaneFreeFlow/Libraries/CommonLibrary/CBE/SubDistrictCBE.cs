@@ -47,6 +47,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
         [Display(Name = "Kelurahan/Desa ID")]
+        [Required]
         public int SubDistrictId
         {
             get
@@ -60,6 +61,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
         [Display(Name = "Kelurahan/Desa Name")]
+        [Required]
         public string SubDistrictName
         {
             get

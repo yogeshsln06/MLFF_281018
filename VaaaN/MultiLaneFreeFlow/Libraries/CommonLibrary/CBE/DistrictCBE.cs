@@ -33,6 +33,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
         [Display(Name = "Kabupaten/Kota")]
+        [Required]
         public int CityId
         {
             get
@@ -60,6 +61,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
         [Display(Name = "Kecamatan Name")]
+        [Required]
         public string DistrictName
         {
             get

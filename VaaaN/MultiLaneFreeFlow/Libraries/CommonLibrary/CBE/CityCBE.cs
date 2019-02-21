@@ -33,6 +33,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
         [Display(Name = "Province")]
+        [Required]
         public int ProvinceId
         {
             get
@@ -59,6 +60,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
         [Display(Name = "Kabupaten/Kota Name")]
+        [Required]
         public string CityName
         {
             get
