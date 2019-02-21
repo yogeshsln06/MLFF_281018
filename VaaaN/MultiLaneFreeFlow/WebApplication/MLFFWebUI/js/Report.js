@@ -7,7 +7,7 @@ var MonthId = month;
 var VehicleId = 0;
 var YearId = year;
 var mainWidth = 0;
-
+var windowHeight = 300;
 $(document).ready(function () {
     mainWidth = $(window).innerWidth();
     $(window).resize(function () {
@@ -19,6 +19,12 @@ $(document).ready(function () {
         }
     });
 });
+function setHeight() {
+    windowHeight = $(window).innerHeight()-400;
+    //windowHeight = (windowHeight * 40) / 100
+
+    $(".dataTables_scrollBody").css("height", windowHeight);
+}
 function bindMonth() {
     for (var i = 0; i < monthNames.length; i++) {
         $("#monthList").append
@@ -69,7 +75,8 @@ function FirstLoadVehicleBalance() {
                 data: bindDate,
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
-                scrollY: "39.5vh",
+                //scrollY: "39.5vh",
+                scrollY: windowHeight,
                 scrollX: true,
                 scrollCollapse: false,
                 autoWidth: true,
@@ -297,6 +304,7 @@ function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();
     clearTimeout(myVar);
+    setHeight();
     $(".animationload").hide();
 }
 

@@ -21,13 +21,10 @@ var StartDate = '';
 var EndDate = '';
 var TranscationId = '';
 var mainWidth = 0;
+var windowHeight = 300;
 //$(window).on('resize', function () {
 //    //myclick();
-
 //    TopUpdatatableVariable.columns.adjust();
-
-
-
 //});
 
 $(document).ready(function () {
@@ -41,6 +38,12 @@ $(document).ready(function () {
         }
     });
 });
+function setHeight() {
+    windowHeight = $(window).innerHeight() - 400;
+    //windowHeight = (windowHeight * 40) / 100
+
+    $(".dataTables_scrollBody").css("height", windowHeight);
+};
 /***************************** UnReviewed Start ****************/
 function BindUnreviewedFirstLoad() {
     $("#tblUnreviewedData").removeClass('my-table-bordered').addClass('table-bordered');
@@ -49,7 +52,8 @@ function BindUnreviewedFirstLoad() {
         "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
         "bScrollInfinite": true,
         "bScrollCollapse": false,
-        scrollY: "39.5vh",
+       // scrollY: "39.5vh",
+        scrollY: windowHeight,
         scrollX: true,
         scrollCollapse: false,
         autoWidth: true,
@@ -198,7 +202,8 @@ function BindUnreviewedFirstLoad1() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
-                scrollY: "39.5vh",
+                //scrollY: "39.5vh",
+                scrollY: windowHeight,
                 scrollX: true,
                 scrollCollapse: false,
                 autoWidth: true,
@@ -357,7 +362,6 @@ function reloadUnreviewedData() {
     //            datatableVariable.clear().draw();
     //            datatableVariable.rows.add(data); // Add new data
     //            datatableVariable.columns.adjust().draw();
-
     //        },
     //        error: function (ex) {
     //            $(".animationload").hide();
@@ -853,7 +857,8 @@ function BindReviewedFirstLoad() {
         "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
         "bScrollInfinite": true,
         "bScrollCollapse": false,
-        scrollY: "39.5vh",
+        //scrollY: "39.5vh",
+        scrollY: windowHeight,
         scrollX: true,
         scrollCollapse: false,
         autoWidth: true,
@@ -998,7 +1003,8 @@ function BindReviewedFirstLoad1() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
-                scrollY: "39.5vh",
+                //scrollY: "39.5vh",
+                scrollY: windowHeight,
                 scrollX: true,
                 scrollCollapse: false,
                 autoWidth: true,
@@ -1143,9 +1149,7 @@ function reloadReviewedData() {
     //        $("#ParentTranscationId").val(ParentTranscationId);
     //    else
     //        $("#ParentTranscationId").val('');
-
     //    $("#ReviewerId").val(ReviewerId);
-
     //    $("#ReviewerStatus").val(ReviewerStatus);
     //    $("#PlateNumber").val(VRN);
     //    $("#VehicleClassId").val(VehicleClassId);
@@ -1171,7 +1175,6 @@ function reloadReviewedData() {
     //            RevieweddatatableVariable.clear().draw();
     //            RevieweddatatableVariable.rows.add(data); // Add new data
     //            RevieweddatatableVariable.columns.adjust().draw();
-
     //            inProgress = false;
     //        },
     //        error: function (ex) {
@@ -1374,7 +1377,8 @@ function BindChargedFirstLoad() {
         "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
         "bScrollInfinite": true,
         "bScrollCollapse": false,
-        scrollY: "39.5vh",
+        //scrollY: "39.5vh",
+        scrollY: windowHeight,
         scrollX: true,
         scrollCollapse: false,
         autoWidth: true,
@@ -1553,7 +1557,8 @@ function BindChargedFirstLoad1() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
-                scrollY: "39.5vh",
+                //scrollY: "39.5vh",
+                scrollY: windowHeight,
                 scrollX: true,
                 scrollCollapse: false,
                 autoWidth: true,
@@ -1911,7 +1916,8 @@ function BindTopUpFirstLoad() {
         "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
         "bScrollInfinite": true,
         "bScrollCollapse": false,
-        scrollY: "39.5vh",
+        //scrollY: "39.5vh",
+        scrollY: windowHeight,
         scrollX: true,
         scrollCollapse: false,
         autoWidth: true,
@@ -1993,7 +1999,8 @@ function BindTopUpFirstLoad1() {
                 "oLanguage": { "sSearch": '<a class="btn searchBtn" id="searchBtn"><i class="ti-search"></i></a>' },
                 "bScrollInfinite": true,
                 "bScrollCollapse": false,
-                scrollY: "39.5vh",
+                //scrollY: "39.5vh",
+                scrollY: windowHeight,
                 scrollX: true,
                 scrollCollapse: false,
                 autoWidth: true,
@@ -2263,6 +2270,7 @@ function myclick() {
     document.getElementById(thId).click();
     document.getElementById(thId).click();
     clearTimeout(myVar);
+    setHeight();
     $(".animationload").hide();
 }
 
