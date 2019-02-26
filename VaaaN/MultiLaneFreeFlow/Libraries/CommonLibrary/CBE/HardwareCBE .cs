@@ -123,6 +123,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.modelName = value; }
         }
         [Display(Name = "IP Address")]
+        [Required]
+        //[RegularExpression(@"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")]
         public String IpAddress
         {
             get { return this.ipAddress; }

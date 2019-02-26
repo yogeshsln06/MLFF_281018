@@ -549,19 +549,26 @@ function validateHardware() {
     else {
         showError($("#HardwareName"), '');
     }
-    if ($("#HardwareType").val() == 0) {
+    if ($("#HardwareType").val() == '') {
         showError($("#HardwareType"), $("#HardwareType").attr('data-val-required'));
         valid = false;
     }
     else {
         showError($("#HardwareType"), '');
     }
-    if ($("#HardwarePosition").val() == 0) {
+    if ($("#HardwarePosition").val() == '') {
         showError($("#HardwarePosition"), $("#HardwarePosition").attr('data-val-required'));
         valid = false;
     }
     else {
         showError($("#HardwarePosition"), '');
+    }
+    if ($("#IpAddress").val() == '') {
+        showError($("#IpAddress"), $("#IpAddress").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#IpAddress"), '');
     }
     return valid;
 }

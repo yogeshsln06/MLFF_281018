@@ -1669,8 +1669,9 @@ namespace VaaaN.MLFF.WindowsServices
                 lock (customerVehicles)
                 {
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE cvc in customerVehicles)
-                    {
-                        if (cvc.TagId.Replace("FC", "00").ToLower() == tagId.Replace("FC", "00").ToLower())
+                    {  
+                        // if (cvc.TagId.Replace("FC", "00").ToLower() == tagId.Replace("FC", "00").ToLower())
+                        if (cvc.TagId.ToLower() == tagId.ToLower())
                         {
                             result = cvc;
                             break;

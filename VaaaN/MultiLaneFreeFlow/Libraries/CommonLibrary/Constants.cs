@@ -338,8 +338,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
         public enum HardwarePosition
         {
-            [Display(Name = "--Select--")]
-            NoPosition = 0,
+            //[Display(Name = "--Select--")]
+            //NoPosition = 0,
 
             [Display(Name = "Front")]
             Front = 1,

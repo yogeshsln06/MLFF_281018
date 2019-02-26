@@ -47,6 +47,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
      
 
         [Display(Name ="RoleName", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
+        [Required]
         [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only please")]
         public String RoleName
         {

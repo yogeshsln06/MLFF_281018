@@ -90,6 +90,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Required]
+       // [RegularExpression(@"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")]
         public string IpAddress
         {
             get

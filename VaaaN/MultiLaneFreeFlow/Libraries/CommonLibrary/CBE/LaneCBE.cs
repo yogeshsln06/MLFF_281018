@@ -55,6 +55,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.tmsId = value; }
         }
 
+        [Display(Name = "Gantry")]
         public Int32 PlazaId
         {
             get { return this.plazaId; }
