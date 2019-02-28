@@ -74,6 +74,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             set { this.laneId = value; }
         }
 
+        [Display(Name = "Lane Type")]
         public Int32 LaneTypeId
         {
             get { return this.laneTypeId; }
