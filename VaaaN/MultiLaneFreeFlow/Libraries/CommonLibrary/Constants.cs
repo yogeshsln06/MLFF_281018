@@ -1747,6 +1747,20 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
 
             return currentTimeTollRates;
         }
+
+        private static string calculateCheckSum(string byte1, string byte2)
+        {
+            string chkSumByte;
+
+            int first = int.Parse(byte1, System.Globalization.NumberStyles.HexNumber);
+            int second = int.Parse(byte2, System.Globalization.NumberStyles.HexNumber);
+
+            int x =  first ^= second;
+
+            chkSumByte = x.ToString("X");
+
+            return chkSumByte;
+        }
         public static string VRNToByte(int vehicleClass, string vehicleRegistrationNumber)
         {
             try
@@ -1763,12 +1777,20 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary
                     result[index] = values[i];
                     index = index + 1;
                 }
+                string chucksumresult = calculateCheckSum(values[0], values[1]);
                 result[index] = "FC";
                 //result[index] = "00";
                 index = index + 1;
                 for (int j = index; j < 12; j++)
                 {
-                    result[j] = "00";
+                    if (j == index)
+                    {
+                        result[j] = chucksumresult;
+                    }
+                    else
+                    {
+                        result[j] = "00";
+                    }
                 }
                 string finalResult = string.Empty;
                 for (int k = 0; k < 12; k++)
