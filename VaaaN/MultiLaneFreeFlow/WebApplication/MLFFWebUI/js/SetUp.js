@@ -838,12 +838,19 @@ function validateLane() {
     else {
         showError($("#CameraIdRear"), '');
     }
-    if ($("#EtcReaderId").val() == 0) {
-        showError($("#EtcReaderId"), $("#EtcReaderId").attr('data-val-required'));
+    if ($("#EtcAntennaNameFront").val() == '') {
+        showError($("#EtcAntennaNameFront"), $("#EtcAntennaNameFront").attr('data-val-required'));
         valid = false;
     }
     else {
-        showError($("#EtcReaderId"), '');
+        showError($("#EtcAntennaNameFront"), '');
+    }
+    if ($("#EtcAntennaNameRear").val() == '') {
+        showError($("#EtcAntennaNameRear"), $("#EtcAntennaNameRear").attr('data-val-required'));
+        valid = false;
+    }
+    else {
+        showError($("#EtcAntennaNameRear"), '');
     }
     return valid;
 }
@@ -1053,6 +1060,8 @@ function EditLane(ctrl, Id) {
             $("#SetUpLabel").text("Update [" + $("#LaneName").val() + "]");
             openpopup();
             $("#LaneId").attr("disabled", "disabled");
+            $("#EtcAntennaNameFront").val($("#hfAntennaIdFront").val());
+            $("#EtcAntennaNameRear").val($("#hfAntennaIdRear").val());
             $("#btnSave").show();
             $("#btnClose").show();
             $("#btnUpdateCancel").show();

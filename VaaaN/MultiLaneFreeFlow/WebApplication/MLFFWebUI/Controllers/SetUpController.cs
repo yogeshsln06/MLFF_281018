@@ -752,15 +752,22 @@ namespace MLFFWebUI.Controllers
             #endregion
 
             #region RFID Dropdown
-            List<SelectListItem> rfidList = new List<SelectListItem>();
-            List<HardwareCBE> RFIDfiltered = hardwareDataList.FindAll(x => x.HardwareType == 2);
-            foreach (HardwareCBE h in RFIDfiltered)
+            List<SelectListItem> rfidListFront = new List<SelectListItem>();
+            List<SelectListItem> rfidListRear = new List<SelectListItem>();
+            List<HardwareCBE> RFIDfilteredFront = hardwareDataList.FindAll(x => x.HardwareType == 2 && x.HardwarePosition==1);
+            List<HardwareCBE> RFIDfilteredRear = hardwareDataList.FindAll(x => x.HardwareType == 2 && x.HardwarePosition == 2);
+            foreach (HardwareCBE h in RFIDfilteredFront)
             {
-                rfidList.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
+                rfidListFront.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
+            }
+            foreach (HardwareCBE h in RFIDfilteredRear)
+            {
+                rfidListRear.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
             }
 
 
-            ViewBag.RFID = rfidList;
+            ViewBag.RFIDFront = rfidListFront;
+            ViewBag.RFIDRear = rfidListRear;
 
             #endregion
 
@@ -971,15 +978,22 @@ namespace MLFFWebUI.Controllers
                     #endregion
 
                     #region RFID Dropdown
-                    List<SelectListItem> rfidList = new List<SelectListItem>();
-                    List<HardwareCBE> RFIDfiltered = hardwareDataList.FindAll(x => x.HardwareType == 2);
-                    foreach (HardwareCBE h in RFIDfiltered)
+                    List<SelectListItem> rfidListFront = new List<SelectListItem>();
+                    List<SelectListItem> rfidListRear = new List<SelectListItem>();
+                    List<HardwareCBE> RFIDfilteredFront = hardwareDataList.FindAll(x => x.HardwareType == 2 && x.HardwarePosition == 1);
+                    List<HardwareCBE> RFIDfilteredRear = hardwareDataList.FindAll(x => x.HardwareType == 2 && x.HardwarePosition == 2);
+                    foreach (HardwareCBE h in RFIDfilteredFront)
                     {
-                        rfidList.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
+                        rfidListFront.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
+                    }
+                    foreach (HardwareCBE h in RFIDfilteredRear)
+                    {
+                        rfidListRear.Add(new SelectListItem() { Text = h.HardwareName, Value = System.Convert.ToString(h.HardwareId) });
                     }
 
 
-                    ViewBag.RFID = rfidList;
+                    ViewBag.RFIDFront = rfidListFront;
+                    ViewBag.RFIDRear = rfidListRear;
 
                     #endregion
 
