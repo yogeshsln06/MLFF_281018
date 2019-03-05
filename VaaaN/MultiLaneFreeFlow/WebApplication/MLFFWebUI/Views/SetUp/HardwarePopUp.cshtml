@@ -33,15 +33,15 @@
                     <div class="form-group col-md-2 required">
                         @Html.LabelFor(model => model.HardwareType, htmlAttributes: new { @class = "control-label required" })
                     </div>
-                    <div class="form-group col-md-4">
-                        @Html.DropDownList("HardwareType", (IEnumerable<SelectListItem>)ViewBag.HardwareType,"", new { @class = "form-control required select" })
+                    <div class="form-group  col-md-4">
+                        @Html.DropDownList("HardwareType", (IEnumerable<SelectListItem>)ViewBag.HardwareType, " ", new { @class = "form-control required" })
                         @Html.ValidationMessageFor(model => model.HardwareType, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-2 required">
-                        @Html.LabelFor(model => model.HardwarePosition, htmlAttributes: new { @class = "control-label required" })
+                        @Html.LabelFor(model => model.HardwarePosition, htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="form-group col-md-4">
-                        @Html.DropDownList("HardwarePosition", (IEnumerable<SelectListItem>)ViewBag.HardwarePosition," ", new { @class = "form-control required select" })
+                        @Html.DropDownList("HardwarePosition", (IEnumerable<SelectListItem>)ViewBag.HardwarePosition," ", new { @class = "form-control required" })
                         @Html.ValidationMessageFor(model => model.HardwarePosition,"", new { @class = "text-danger" })
                     </div>
                 </div>
