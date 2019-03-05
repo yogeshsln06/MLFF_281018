@@ -1,4 +1,4 @@
-/* Formatted on 05-03-2019 10:53:40 (QP5 v5.215.12089.38647) */
+/* Formatted on 05-03-2019 15:07:56 (QP5 v5.215.12089.38647) */
 CREATE OR REPLACE PACKAGE BODY MLFF.MLFF_PACKAGE
 AS
    /*USER*/
@@ -9119,25 +9119,25 @@ ORDER BY CREATION_DATE DESC ';
                          VEHICLESPEED,
                          RFID_FRONT_ID,
                          RFID_FRONT_TIMESTAMP,
-                         RFID_FRONT_TAG_ID,
+                         --RFID_FRONT_TAG_ID,
                          RFID_FRONT_CLASS_ID,
                          RFID_FRONT_VRN,
                          RFID_REAR_ID,
                          RFID_REAR_TIMESTAMP,
-                         RFID_REAR_TAG_ID,
+                         --RFID_REAR_TAG_ID,
                          RFID_REAR_CLASS_ID,
                          RFID_REAR_VRN,
                          ANPR_FRONT_ID,
                          ANPR_FRONT_VRN,
                          ANPR_FRONT_CLASS_ID,
-                         ANPR_FRONT_IMAGE,
-                         ANPR_FRONT_VIDEO_URL,
+                         --ANPR_FRONT_IMAGE,
+                         --ANPR_FRONT_VIDEO_URL,
                          ANPR_FRONT_SPEED,
                          ANPR_REAR_ID,
                          ANPR_REAR_VRN,
                          ANPR_REAR_CLASS_ID,
-                         ANPR_REAR_IMAGE,
-                         ANPR_REAR_VIDEO_URL,
+                         --ANPR_REAR_IMAGE,
+                         --ANPR_REAR_VIDEO_URL,
                          ANPR_REAR_SPEED,
                          IS_BALANCE_UPDATED,
                          IS_VIOLATION,
@@ -9533,92 +9533,94 @@ ORDER BY CREATION_DATE DESC ';
    BEGIN
       OPEN CUR_OUT FOR
          WITH CTE_DETAILS
-              AS (select  TMS_ID,
-                PLAZA_ID,
-                LANE_ID,
-                TRANSACTION_ID,
-                VEHICLESPEED,
-                RFID_FRONT_ID,
-                RFID_FRONT_TIMESTAMP,
-                RFID_FRONT_TAG_ID,
-                RFID_FRONT_CLASS_ID,
-                RFID_FRONT_VRN,
-                RFID_REAR_ID,
-                RFID_REAR_TIMESTAMP,
-                RFID_REAR_TAG_ID,
-                RFID_REAR_CLASS_ID,
-                RFID_REAR_VRN,
-                ANPR_FRONT_ID,
-                ANPR_FRONT_VRN,
-                ANPR_FRONT_CLASS_ID, 
-                ANPR_FRONT_SPEED,
-                ANPR_REAR_ID,
-                ANPR_REAR_VRN,
-                ANPR_REAR_CLASS_ID,               
-                ANPR_REAR_SPEED,
-                IS_BALANCE_UPDATED,
-                IS_VIOLATION,
-                IS_REGISTERED,
-                AUDIT_STATUS,
-                AUDITOR_ID,
-                AUDIT_DATE,
-                AUDITED_VEHICLE_CLASS_ID,
-                AUDITED_VRN,
-                AMOUNT,
-                CLOSING_BALANCE,
-                ParentId,
-                TRANS_STATUS,
-                GATEWAY_RESPONSE_CODE,
-                OPERATOR_RESPONSE_CODE,
-                TRANSACTION_DATETIME,
-                CREATION_DATE,
-                CREATION_DATE SMS_CREATION,
-                MESSAGE_SEND_TIME,
-                MESSAGE_RECEIVE_TIME,
-                SECONDS,
-                TRANSACTION_TYPE
-                 FROM TRANS_DEATILS 
-      WHERE TRANSACTION_DATETIME BETWEEN TO_DATE ('22-02-2019','DD/MM/YYYY') AND TO_DATE ('02-03-2019','DD/MM/YYYY')),
-
-      CTE_STACKCHARTREPORTDATA
-     AS (SELECT 1 AS SNO, 'TOTAL VEHICLE PASS' MESSAGE, COUNT (1) TOTALDETAILS
-           FROM CTE_DETAILS 
-           
-         UNION ALL
-         
-         SELECT 2 AS SNO,
-                'TOTAL REGISTERED' MESSAGE,COUNT (1) TOTALDETAILS
-           FROM CTE_DETAILS
-          WHERE NVL (IS_REGISTERED, 0) = 1 
-          
-           UNION ALL
+              AS (SELECT TMS_ID,
+                         PLAZA_ID,
+                         LANE_ID,
+                         TRANSACTION_ID,
+                         VEHICLESPEED,
+                         RFID_FRONT_ID,
+                         RFID_FRONT_TIMESTAMP,
+                         --RFID_FRONT_TAG_ID,
+                         RFID_FRONT_CLASS_ID,
+                         RFID_FRONT_VRN,
+                         RFID_REAR_ID,
+                         RFID_REAR_TIMESTAMP,
+                         --RFID_REAR_TAG_ID,
+                         RFID_REAR_CLASS_ID,
+                         RFID_REAR_VRN,
+                         ANPR_FRONT_ID,
+                         ANPR_FRONT_VRN,
+                         ANPR_FRONT_CLASS_ID,
+                         ANPR_FRONT_SPEED,
+                         ANPR_REAR_ID,
+                         ANPR_REAR_VRN,
+                         ANPR_REAR_CLASS_ID,
+                         ANPR_REAR_SPEED,
+                         IS_BALANCE_UPDATED,
+                         IS_VIOLATION,
+                         IS_REGISTERED,
+                         AUDIT_STATUS,
+                         AUDITOR_ID,
+                         AUDIT_DATE,
+                         AUDITED_VEHICLE_CLASS_ID,
+                         AUDITED_VRN,
+                         AMOUNT,
+                         CLOSING_BALANCE,
+                         ParentId,
+                         TRANS_STATUS,
+                         GATEWAY_RESPONSE_CODE,
+                         OPERATOR_RESPONSE_CODE,
+                         TRANSACTION_DATETIME,
+                         CREATION_DATE,
+                         CREATION_DATE SMS_CREATION,
+                         MESSAGE_SEND_TIME,
+                         MESSAGE_RECEIVE_TIME,
+                         SECONDS,
+                         TRANSACTION_TYPE
+                    FROM TRANS_DEATILS
+                   WHERE TRANSACTION_DATETIME BETWEEN TO_DATE ('22-02-2019',
+                                                               'DD/MM/YYYY')
+                                                  AND TO_DATE ('02-03-2019',
+                                                               'DD/MM/YYYY')),
+              CTE_STACKCHARTREPORTDATA
+              AS (SELECT 1 AS SNO,
+                         'TOTAL VEHICLE PASS' MESSAGE,
+                         COUNT (1) TOTALDETAILS
+                    FROM CTE_DETAILS
+                  UNION ALL
+                  SELECT 2 AS SNO,
+                         'TOTAL REGISTERED' MESSAGE,
+                         COUNT (1) TOTALDETAILS
+                    FROM CTE_DETAILS
+                   WHERE NVL (IS_REGISTERED, 0) = 1
+                  UNION ALL
                   SELECT 3 AS SNO,
                          'TOTAL UNREGISTERED' MESSAGE,
                          COUNT (1) TOTALDETAILS
                     FROM CTE_DETAILS
                    WHERE NVL (IS_REGISTERED, 0) <> 1
-          
-           UNION ALL
+                  UNION ALL
                   SELECT 4 AS SNO,
                          'TOTAL UNIDENTIFIED VRN' MESSAGE,
                          COUNT (1) TOTALDETAILS
                     FROM CTE_DETAILS
                    WHERE (   UPPER (ANPR_FRONT_VRN) = 'UNIDENTIFIED'
                           OR UPPER (ANPR_REAR_VRN) = 'UNIDENTIFIED')
-          UNION ALL
-          
-          SELECT 5 AS SNO, 'TOPUP_AMOUNT' MESSAGE,NVL ( SUM (AMOUNT),0) TOTALDETAILS
-           FROM CTE_DETAILS where  TRANSACTION_TYPE=2 
-           
-            UNION ALL
-            
-           SELECT 6 AS SNO, 'CHARGED_AMOUNT' MESSAGE,NVL ( SUM (AMOUNT),0) TOTALDETAILS
-           FROM CTE_DETAILS where  TRANSACTION_TYPE=4 )
-
-         SELECT * FROM CTE_STACKCHARTREPORTDATA;
-
+                  UNION ALL
+                  SELECT 5 AS SNO,
+                         'TOPUP_AMOUNT' MESSAGE,
+                         NVL (SUM (AMOUNT), 0) TOTALDETAILS
+                    FROM CTE_DETAILS
+                   WHERE TRANSACTION_TYPE = 2
+                  UNION ALL
+                  SELECT 6 AS SNO,
+                         'CHARGED_AMOUNT' MESSAGE,
+                         NVL (SUM (AMOUNT), 0) TOTALDETAILS
+                    FROM CTE_DETAILS
+                   WHERE TRANSACTION_TYPE = 4)
+         SELECT *
+           FROM CTE_STACKCHARTREPORTDATA;
    END TRAN_GETSTACKCHART;
-
 END MLFF_PACKAGE;
 /
 /
