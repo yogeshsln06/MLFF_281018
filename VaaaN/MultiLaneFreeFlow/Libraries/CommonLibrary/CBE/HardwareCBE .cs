@@ -73,7 +73,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Display(Name = "Hardware Type")]
-        [Required]
+        //[Required]
         public Int32 HardwareType
         {
             get { return this.hardwareType; }
@@ -95,7 +95,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         [Display(Name = "Hardware Position")]
-        [Required]
+        //[Required]
         public Int32 HardwarePosition
         {
             get

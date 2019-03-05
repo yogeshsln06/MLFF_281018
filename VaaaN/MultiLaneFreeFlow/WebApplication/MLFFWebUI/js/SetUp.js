@@ -274,11 +274,11 @@ function validateUser() {
         showError($("#EmailId"), '');
     }
     if ($("#RoleId").val() == null) {
-        showerror($("#RoleId"), $("#RoleId").attr('data-val-required'));
+        showError($("#RoleId"), $("#RoleId").attr('data-val-required'));
         valid = false;
     }
     else {
-        // showerror($("#RoleId"), '');
+         showError($("#RoleId"), '');
     }
     return valid;
 }
@@ -2513,7 +2513,7 @@ function SubDistrictDetail(ctrl, Id) {
 //******SubDistrict End ******
 
 function myclick() {
-    document.getElementById(thId).click();
+    //document.getElementById(thId).click();
     document.getElementById(thId).click();
     clearTimeout(myVar);
     $(".animationload").hide();

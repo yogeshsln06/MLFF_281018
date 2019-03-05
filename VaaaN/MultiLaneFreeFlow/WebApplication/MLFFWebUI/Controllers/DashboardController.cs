@@ -37,6 +37,17 @@ namespace MLFFWebUI.Controllers
             return result;
         }
 
+        [HttpPost]
+        public string StackChartData(ViewTransactionCBE transaction)
+        {
+            string result = "";
+
+            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string Det = JsonConvert.SerializeObject(TransactionBLL.StackChartData(strstarttime, strendtime), Formatting.Indented);
+            result = Det.Replace("\r", "").Replace("\n", "");
+            return result;
+        }
         #region Live Events
         public ActionResult LiveEvent()
         {

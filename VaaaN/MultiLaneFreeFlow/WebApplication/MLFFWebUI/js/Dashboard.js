@@ -24,7 +24,7 @@ $(document).ready(function () {
     $("#totalRANPR").val(0);
 
     GetfirstLoadData(StartDate, EndDate, true)
-
+    GetStackChartData(StartDate, EndDate);
 });
 
 function DateFormatTime(newDate) {
@@ -87,9 +87,8 @@ function GetfirstLoadData(StartDate, EndDate, loader) {
                 $('.animationload').hide();
                 ResponceData = data;
                 BindData(data);
-                // sleep(10000);
+               
                 setTimeout(function () { reloadData(); }, 20000);
-               // reloadData();
             },
             error: function (ex) {
                 $(".animationload").hide();
@@ -136,7 +135,6 @@ function sleep(milliseconds) {
 function BindData(data) {
     BindTopCount(data);
     BindTableRight(data)
-
 }
 
 function BindTopCount(data) {
@@ -432,4 +430,40 @@ function DownLoadTransactionReport() {
             $(".animationload").hide();
         }
     });
+}
+
+function GetStackChartData(StartDate, EndDate) {
+    $(".animationload").show();
+    var Inputdata = {
+        StartDate: StartDate,
+        EndDate: EndDate,
+    }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "Dashboard/StackChartData",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $('#filterModel').modal('hide');
+                $('.animationload').hide();
+                BindStackChartData(data);
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+        });   
+}
+
+function BindStackChartData(data) {
+   
+    var binddata_Stackchart = {
+        TOTAL_VEHICLE: data[0].TOTALDETAILS,
+        TOTAL_REGISTERED: data[1].TOTALDETAILS,
+        TOTAL_UNREGISTERED:data[2].TOTALDETAILS,
+        TOTAL_UNIDENTIFIED_VRN:data[3].TOTALDETAILS,
+        TOPUP_AMOUNT: data[4].TOTALDETAILS,
+        CHARGED_AMOUNT:data[5].TOTALDETAILS
+    }
+    bindStackedColumnChart(binddata_Stackchart);
 }

@@ -227,6 +227,34 @@
     
     }
 
+    function bindStackedColumnChart(Stackchartdata)
+    {
+        var chart = new CanvasJS.Chart("chartContainerstack", {
+            animationEnabled: true,
+            theme: "light1", // "light1", "light2", "dark1", "dark2"
+            title: {
+                text: "Last 7 Days Report Data"
+            },
+            axisY: {
+                title: "Data",
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "grey",
+                legendText: "Report Data",
+                dataPoints: [
+                    { y: Stackchartdata.TOTAL_VEHICLE, label: "TOTAL VEHICLES" },
+                      { y: Stackchartdata.TOTAL_VEHICLE, label: "TOTAL UNREGISTERED" },
+                    { y: Stackchartdata.TOTAL_REGISTERED, label: "REGISTERED VEHICLES" },
+                     { y: Stackchartdata.CHARGED_AMOUNT, label: "CHARGED" },
+                    { y: Stackchartdata.TOTAL_UNIDENTIFIED_VRN, label: "TOTAL UNIDENTIFIED VRN" },
+                    { y: Stackchartdata.TOPUP_AMOUNT, label: "TOPUP" },
+                ]
+            }]
+        });
+        chart.render();
+    }
 </script>
 <style>
     #backButton {
@@ -478,7 +506,7 @@
             <div class="bd bgc-white">
                 <div class="layers">
                     <div class="layer w-100 pX-20 pT-20">
-                        <h6 class="lh-1">Daily Stats</h6>
+                        <h6 class="lh-1">Daily Status</h6>
                     </div>
                     <div class="layer w-100 p-20">
                         <div id="chartContainer" style="height: 300px; width: 100%;"></div>
@@ -512,10 +540,11 @@
             <div class="bd bgc-white p-20">
                 <div class="layers">
                     <div class="layer w-100 mB-10">
-                        <h6 class="lh-1">Todo List</h6>
+                        <h6 class="lh-1">Last Days Status</h6>
                     </div>
                     <div class="layer w-100">
-                        <ul class="list-task list-group" data-role="tasklist">
+                        <div id="chartContainerstack" style="height: 300px; width: 100%;"></div>
+                        @*<ul class="list-task list-group" data-role="tasklist">
                             <li class="list-group-item bdw-0" data-role="task">
                                 <div class="checkbox checkbox-circle checkbox-info peers ai-c">
                                     <input type="checkbox" id="inputCall1" name="inputCheckboxesCall" class="peer">
@@ -579,7 +608,7 @@
                                     </label>
                                 </div>
                             </li>
-                        </ul>
+                        </ul>*@
                     </div>
                 </div>
             </div>

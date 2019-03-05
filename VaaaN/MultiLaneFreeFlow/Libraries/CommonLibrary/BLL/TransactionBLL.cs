@@ -393,7 +393,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.BLL
         {
             return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.TransDeatilsReport(StartDate, EndDate);
         }
-
+        public static DataTable StackChartData(string StartDate, string EndDate)
+        {
+            return VaaaN.MLFF.Libraries.CommonLibrary.DAL.TransactionDAL.StackChartData(StartDate, EndDate);
+        }
 
     }
 }

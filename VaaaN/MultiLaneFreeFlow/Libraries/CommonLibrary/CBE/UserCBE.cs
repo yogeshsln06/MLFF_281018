@@ -71,8 +71,10 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.user_dob; }
             set { this.user_dob = value; }
         }
+
         [Display(Name = "MobileNo", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Mobile Number must be numeric")]
+
         public String MobileNo
         {
             get { return this.mobile_no; }
@@ -93,6 +95,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             get { return this.loginName; }
             set { this.loginName = value; }
         }
+
         [Display(Name = "Name")]
         public String FirstName
         {
