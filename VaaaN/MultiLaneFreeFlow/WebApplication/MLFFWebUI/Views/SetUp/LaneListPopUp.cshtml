@@ -16,20 +16,22 @@
                 <input type="hidden" id="hfCameraIdFront" value="@ViewBag.CameraIdFront" />
                 <input type="hidden" id="hfCameraIdRear" value="@ViewBag.CameraIdRear" />
                 <input type="hidden" id="hfEtcReaderId" value="@ViewBag.EtcReaderId" />
-                @Html.HiddenFor(model => model.LaneId)
+                <input type="hidden" id="hfAntennaIdFront" value="@ViewBag.hfAntennaIdFront" />
+                <input type="hidden" id="hfAntennaIdRear" value="@ViewBag.hfAntennaIdRear" />
+                @*@Html.HiddenFor(model => model.LaneId)*@
                 <fieldset id="fildset">
                     <div class="modal-body" style="height:400px; overflow-y:scroll;">
                         <h5 class="c-mygrey-900 heading"><strong>Lane </strong>Information<span></span></h5>
                         <div class="mT-5">
 
                             <div class="form-row">
-                                <div class="form-group col-md-2 ">
-                                    <label for="PlazaId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry</label>
+                                <div class="form-group col-md-2 required">
+                                    <label for="lblPlazaId" class="form-label">Lane ID</label>
                                 </div>
-                                <div class="form-group  col-md-4">
-                                    @Html.DropDownList("PlazaId", (IEnumerable<SelectListItem>)ViewBag.Gantry," ", new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.PlazaId, "", new { @class = "text-danger" })
+                                <div class="form-group col-md-4 required">
+                                    @Html.EditorFor(model => model.LaneId, new { htmlAttributes = new { @class = "form-control", } })
                                 </div>
+                                
                                 <div class="form-group col-md-2 required">
                                     @*<label for="LaneName" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.LaneName</label>*@
                                     @Html.LabelFor(model => model.LaneName, htmlAttributes: new { @class = "control-label required" })
@@ -41,6 +43,13 @@
                             </div>
 
                             <div class="form-row">
+                                <div class="form-group col-md-2 ">
+                                    <label for="PlazaId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.Gantry</label>
+                                </div>
+                                <div class="form-group  col-md-4">
+                                    @Html.DropDownList("PlazaId", (IEnumerable<SelectListItem>)ViewBag.Gantry, " ", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PlazaId, "", new { @class = "text-danger" })
+                                </div>
                                 <div class="form-group col-md-2 required">
                                     @*<label for="LaneTypeId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.LaneType</label>*@
                                     @Html.LabelFor(model => model.LaneTypeId, htmlAttributes: new { @class = "control-label required" })
@@ -49,16 +58,17 @@
                                     @Html.DropDownList("LaneTypeId", (IEnumerable<SelectListItem>)ViewBag.LaneType," ", new { @class = "form-control required" })
                                     @Html.ValidationMessageFor(model => model.LaneTypeId, "", new { @class = "text-danger" })
                                 </div>
+                               
+                            </div>
+
+                            <div class="form-row">
                                 <div class="form-group col-md-2 required">
                                     <label for="CameraIdFront" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.CameraNameFront</label>
                                 </div>
                                 <div class="form-group  col-md-4">
-                                    @Html.DropDownList("CameraIdFront", (IEnumerable<SelectListItem>)ViewBag.ANPR," ", new { @class = "form-control required" })
+                                    @Html.DropDownList("CameraIdFront", (IEnumerable<SelectListItem>)ViewBag.ANPR, " ", new { @class = "form-control required" })
                                     @Html.ValidationMessageFor(model => model.CameraIdFront, "", new { @class = "text-danger" })
                                 </div>
-                            </div>
-
-                            <div class="form-row">
                                 <div class="form-group col-md-2 ">
                                     <label for="CameraIdRear" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.CameraNameRear</label>
                                 </div>
@@ -66,14 +76,28 @@
                                     @Html.DropDownList("CameraIdRear", (IEnumerable<SelectListItem>)ViewBag.ANPR," ", new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.CameraIdRear, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group col-md-2 required">
+                                @*<div class="form-group col-md-2 required">
                                     <label for="EtcReaderId" class="form-label required">@VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen.ETCReaderName</label>
+                                </div>*@
+                            </div>
+                            <div class="form-row">
+                               
+                                <div class="form-group col-md-2 required">
+                                    @Html.LabelFor(model => model.EtcAntennaNameFront, htmlAttributes: new { @class = "control-label" })
                                 </div>
                                 <div class="form-group  col-md-4">
-                                    @Html.DropDownList("EtcReaderId", (IEnumerable<SelectListItem>)ViewBag.RFID," ", new { @class = "form-control" })
+                                    @Html.DropDownList("EtcAntennaNameFront", (IEnumerable<SelectListItem>)ViewBag.RFIDFront, " ", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.EtcAntennaNameFront, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group col-md-2 required">
+                                   @Html.LabelFor(model => model.EtcAntennaNameRear, htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="form-group  col-md-4">
+                                    @*@Html.DropDownList("EtcReaderId", (IEnumerable<SelectListItem>)ViewBag.RFID, " ", new { @class = "form-control" })*@
+                                    @Html.DropDownList("EtcAntennaNameRear", (IEnumerable<SelectListItem>)ViewBag.RFIDRear, " ", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.EtcAntennaNameRear, "", new { @class = "text-danger" })
                                 </div>
                             </div>
-
                             <div class="clearfix"></div>
                             <div class="form-group col-xs-10 col-sm-4 col-md-4 col-lg-4" style="float:right">
                                 <span id="lblErrors" style="color:red;"></span>

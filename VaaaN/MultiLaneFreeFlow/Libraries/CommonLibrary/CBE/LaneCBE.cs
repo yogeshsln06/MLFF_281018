@@ -139,7 +139,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
         }
 
         //[Display(Name = "ETCReaderNameFront", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
-        [Display(Name = "ETC Reader Name Front")]
+        [Display(Name = "RFID Front")]
+        [Required]
         public string EtcAntennaNameFront
         {
             get
@@ -153,7 +154,8 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.CBE
             }
         }
         //[Display(Name = "ETCReaderNameRear", ResourceType = typeof(VaaaN.MLFF.Libraries.CommonLibrary.Resource.Resourceen))]
-        [Display(Name = "ETC Reader Name Rear")]
+        [Display(Name = "RFID Rear")]
+        [Required]
         public string EtcAntennaNameRear
         {
             get
