@@ -128,6 +128,7 @@
     <Compile Include="CBE\CrossTalkEvent.cs" />
     <Compile Include="CBE\CustomerAppointmentCBE.cs" />
     <Compile Include="CBE\DistrictCBE.cs" />
+    <Compile Include="Common\DashboardEventCBE.cs" />
     <Compile Include="CBE\ProvinceCBE.cs" />
     <Compile Include="CBE\SubDistrictCBE.cs" />
     <Compile Include="CBE\VehicleClassMappingCBE.cs" />
