@@ -283,8 +283,8 @@
                 <div class='col-md-3'>
                     <div class="layers bd bgc-white p-20">
                         <div class="layer w-100 mB-10">
-                            <h6 class="lh-1">Total Front IKE</h6>
-                            <a onclick="openFilterpopup();" style="color:white">hello</a>
+                            <h6 onclick="openFilterpopup();" class="lh-1">Total Front IKE</h6>
+                            
                             <div class="modal fade" id="filterModel" tabindex="1" role="dialog" aria-labelledby="filterModelLabel">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -301,6 +301,7 @@
                                             </form>
                                         </div>
                                         <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="btnpopupClose">Close</button>
                                             <button type="button" class="btn btn-outline-secondary" onclick="ResetFilter();" id="btnFilterCancel">Clear</button>
                                             <button type="button" class="btn btn-outline-primary" onclick="DownLoadTransactionReport()" id="btnFilterSearch">Search</button>
                                         </div>
@@ -339,7 +340,7 @@
                         </div>
                     </div>
                 </div>
-
+               
                 <!-- #Unique Visitors ==================== -->
                 <div class='col-md-3'>
                     <div class="layers bd bgc-white p-20">
