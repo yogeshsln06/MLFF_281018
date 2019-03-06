@@ -22,10 +22,100 @@ $(document).ready(function () {
     $("#totalRIke").val(0);
     $("#totalFANPR").val(0);
     $("#totalRANPR").val(0);
+    myVar = setInterval("GetMSMQData()", 2000);
 
-    GetfirstLoadData(StartDate, EndDate, true)
-    GetStackChartData(StartDate, EndDate);
 });
+
+
+function GetMSMQData() {
+    $.ajax({
+        type: 'GET',
+        url: "Dashboard/GetMSMQDashBoardCounter",
+        cache: false,
+        dataType: "json",
+        success: function (data) {
+            ResponceData = data.Data;
+            var ChargedVehcileCount = (ResponceData.RegisterCharged.ChargedClass.MoterCycleCount + ResponceData.RegisterCharged.ChargedClass.SmallCount + ResponceData.RegisterCharged.ChargedClass.MediumCount + ResponceData.RegisterCharged.ChargedClass.BigCount);
+
+            var FrontIKECount = (ResponceData.Register.FrontIKE.MoterCycleCount + ResponceData.Register.FrontIKE.SmallCount + ResponceData.Register.FrontIKE.MediumCount + ResponceData.Register.FrontIKE.BigCount);
+            var RearIKECount = (ResponceData.Register.RearIKE.MoterCycleCount + ResponceData.Register.RearIKE.SmallCount + ResponceData.Register.RearIKE.MediumCount + ResponceData.Register.RearIKE.BigCount);
+
+            var FrontRegisterANPRCount = (ResponceData.Register.FrontANPR.MoterCycleCount + ResponceData.Register.FrontANPR.SmallCount + ResponceData.Register.FrontANPR.MediumCount + ResponceData.Register.FrontANPR.BigCount);
+            var RearRegisterANPRCount = (ResponceData.Register.RearANPR.MoterCycleCount + ResponceData.Register.RearANPR.SmallCount + ResponceData.Register.RearANPR.MediumCount + ResponceData.Register.RearANPR.BigCount);
+
+
+            var FrontUnRegisterANPRCount = (ResponceData.UnRegister.FrontANPR.MoterCycleCount + ResponceData.UnRegister.FrontANPR.SmallCount + ResponceData.UnRegister.FrontANPR.MediumCount + ResponceData.UnRegister.FrontANPR.BigCount);
+            var RearUnRegisterANPRCount = (ResponceData.UnRegister.RearANPR.MoterCycleCount + ResponceData.UnRegister.RearANPR.SmallCount + ResponceData.UnRegister.RearANPR.MediumCount + ResponceData.UnRegister.RearANPR.BigCount);
+
+            var FrontUnIdentifiedANPRCount = (ResponceData.UnIdentified.FrontANPR.MoterCycleCount + ResponceData.UnIdentified.FrontANPR.SmallCount + ResponceData.UnIdentified.FrontANPR.MediumCount + ResponceData.UnIdentified.FrontANPR.BigCount);
+            var RearUnIdentifiedANPRCount = (ResponceData.UnIdentified.RearANPR.MoterCycleCount + ResponceData.UnIdentified.RearANPR.SmallCount + ResponceData.UnIdentified.RearANPR.MediumCount + ResponceData.UnIdentified.RearANPR.BigCount);
+
+            //var FrontANPRCount = (ResponceData.FrontANPR.MoterCycleCount + ResponceData.FrontANPR.SmallCount + ResponceData.FrontANPR.MediumCount + ResponceData.FrontANPR.BigCount);
+            //var RearANPRCount = (ResponceData.RearANPR.MoterCycleCount + ResponceData.RearANPR.SmallCount + ResponceData.RearANPR.MediumCount + ResponceData.RearANPR.BigCount);
+           
+
+            //var TotalPassed = Math.max(FrontANPRCount, RearANPRCount, FrontIKECount, RearIKECount);
+            //var TotalRegisterPassed = Math.max(ResponceData.RearANPR.Register, ResponceData.FrontANPR.Register, FrontIKECount, RearIKECount);
+            //var VehicleUnidentitfiedCount = ResponceData.VehicleUnidentitfiedCount;
+            //var VehicleChargedCount = ResponceData.VehicleChargedCount;
+            //var TotalRegisterVehicle = ResponceData.TotalRegisterVehicleCount;
+
+            $("#totalFIke").text(FrontIKECount);
+            $("#totalRIke").text(RearIKECount);
+            $("#totalFANPR").text(FrontRegisterANPRCount + FrontUnRegisterANPRCount + FrontUnIdentifiedANPRCount);
+            $("#totalRANPR").text(RearRegisterANPRCount + RearUnRegisterANPRCount + RearUnIdentifiedANPRCount);
+
+
+
+            //var TotalVehiclePass = TotalPassed;
+            //var TotalRVehiclePass = TotalRegisterPassed;
+            //var TOTAL_UNREGISTERED = TotalPassed - TotalRegisterPassed;
+            //var TotalCVehicle = VehicleChargedCount;
+            //var TotalSendSms = VehicleChargedCount;
+
+
+            //var Per = 0;
+            //$("#TotalVehicle_DB").text(TotalVehiclePass);
+            //Per = (((TotalVehiclePass / TotalVehiclePass) * 100) || 0).toFixed();
+            //$("#TotalVehicle_DB_PER").text(Per + '%');
+            //$("#TotalVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+            ////------------
+            //$("#RegisteredVehicle_DB").text(TotalRVehiclePass);
+            //Per = (((TotalRVehiclePass / TotalVehiclePass) * 100) || 0).toFixed();
+            //$("#RegisteredVehicle_DB_PER").text(Per + '%');
+            //$("#RegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+            ////------------
+            //$("#UnRegisteredVehicle_DB").text(TOTAL_UNREGISTERED);
+            //Per = (((TOTAL_UNREGISTERED / TotalVehiclePass) * 100) || 0).toFixed();
+            //$("#UnRegisteredVehicle_DB_PER").text(Per + '%');
+            //$("#UnRegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+
+            ////-----------------
+            //$("#ChargedVehicle_DB").text(TotalCVehicle);
+            //if (TotalRVehiclePass != 0) {
+            //    Per = (((TotalCVehicle / TotalRVehiclePass) * 100) || 0).toFixed();
+            //    $("#ChargedVehicle_DB_PER").text(Per + '%');
+            //} else {
+            //    Per = 0;
+            //}
+            //$("#ChargedVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+
+            ////-------------
+            //$("#SendSms_DB").text(TotalSendSms);
+            //if (TotalCVehicle != 0) {
+            //    Per = (((TotalSendSms / TotalCVehicle) * 100) || 0).toFixed();
+            //    $("#SendSms_DB_Per").text(Per + '%');
+            //} else {
+            //    Per = 0;
+            //}
+            //$("#SendSms_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+            //if (stoprefresh)
+            //    bindChart(ResponceData, TotalRVehiclePass, TOTAL_UNREGISTERED);
+        },
+        error: function (ex) {
+        }
+    });
+}
 
 function DateFormatTime(newDate) {
     var d = new Date(newDate);
@@ -87,7 +177,7 @@ function GetfirstLoadData(StartDate, EndDate, loader) {
                 $('.animationload').hide();
                 ResponceData = data;
                 BindData(data);
-               
+
                 setTimeout(function () { reloadData(); }, 20000);
             },
             error: function (ex) {
@@ -137,74 +227,223 @@ function BindData(data) {
     BindTableRight(data)
 }
 
-function BindTopCount(data) {
-    $("#totalFIke").text(data[4].TOTALVEHICLE);
-    $("#totalRIke").text(data[5].TOTALVEHICLE);
-    $("#totalFANPR").text(data[8].TOTALVEHICLE + data[11].TOTALVEHICLE);
-    $("#totalRANPR").text(data[9].TOTALVEHICLE + data[12].TOTALVEHICLE);
-    var TotalFrontANPR;
-    var binddata = {
-        TOTAL_VEHICLE:data[0].TOTALVEHICLE,
-        TOTAL_REGISTERED:data[1].TOTALVEHICLE,
-        TOTAL_UNREGISTERED: data[2].TOTALVEHICLE,
+function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
+    totalvehicle = TotalRVehiclePass + TOTAL_UNREGISTERED;
+    var totalVisitors = totalvehicle;
+    var visitorsData = {
+        "New vs Returning Visitors": [{
+            click: visitorsChartDrilldownHandler,
+            cursor: "pointer",
+            explodeOnClick: false,
+            innerRadius: "75%",
+            legendMarkerType: "square",
+            name: "New vs Returning Visitors",
+            radius: "100%",
+            showInLegend: true,
+            startAngle: 90,
+            type: "doughnut",
+            dataPoints: [
+                { y: TotalRVehiclePass, name: "REGISTERED VEHICLES", color: "#E7823A" },
+                { y: TOTAL_UNREGISTERED, name: "UNREGISTERED VEHICLES", color: "#546BC1" },
+            ]
+        }],
+        "REGISTERED VEHICLES": [{
+            type: "column",
+            name: "FRONT IKE",
+            showInLegend: "true",
+            dataPoints: [
+                { label: "TWO-WHEELED", y: data.FrontIKE.MoterCycleCount },
+                { label: "SMALL", y: data.FrontIKE.SmallCount },
+                { label: "MEDIUM", y: data.FrontIKE.MediumCount },
+                { label: "LARGE", y: data.FrontIKE.BigCount },
+            ]
+        },
+{
+    type: "column",
+    name: "REAR IKE",
+    showInLegend: "true",
+    dataPoints: [
+                 { label: "TWO-WHEELED", y: data.RearIKE.MoterCycleCount },
+                { label: "SMALL", y: data.RearIKE.SmallCount },
+                { label: "MEDIUM", y: data.RearIKE.MediumCount },
+                { label: "LARGE", y: data.RearIKE.BigCount },
+    ]
+},
+{
+    type: "column",
+    name: "ANPR FRONT",
+    showInLegend: "true",
+    dataPoints: [
+               { label: "TWO-WHEELED", y: data.FrontANPR.MoterCycleCount },
+                { label: "SMALL", y: data.FrontANPR.SmallCount },
+                { label: "MEDIUM", y: data.FrontANPR.MediumCount },
+                { label: "LARGE", y: data.FrontANPR.BigCount },
+    ]
+},
+{
+    type: "column",
+    name: "ANPR REAR",
+    showInLegend: "true",
+    dataPoints: [
+                { label: "TWO-WHEELED", y: data.RearANPR.MoterCycleCount },
+                { label: "SMALL", y: data.RearANPR.SmallCount },
+                { label: "MEDIUM", y: data.RearANPR.MediumCount },
+                { label: "LARGE", y: data.RearANPR.BigCount },
+    ]
+}
+        ],
+        "UNREGISTERED VEHICLES": [{
+            color: "#546BC1",
+            name: "Returning Visitors",
+            type: "doughnut",
+            xValueFormatString: "MMM YYYY",
+            dataPoints: [
+                { label: "TOTAL REAR UNIDENTIFIED VRN", y: data.TOTAL_REAR_UNIDENTIFIEDVRN, color: "#E7823A" },
+                { label: "TOTAL REAR DETECTED VRN", y: data.TOTAL_REAR_DETECTEDVRN, color: "#546BC1" },
+                { label: "TOTAL FRONT UNIDENTIFIED VRN", y: data.TOTAL_FRONT_UNIDENTIFIEDVRN, color: "#72777a" },
+                { label: "TOTAL FRONT DETECTED VRN", y: data.TOTAL_FRONT_DETECTEDVRN, color: "#ff6969" },
 
-        TOTAL_IKE: data[3].TOTALVEHICLE,
-        TOTAL_FRONTIKE:data[4].TOTALVEHICLE,
-        TOTAL_REARIKE: data[5].TOTALVEHICLE,
-        TOTAL_ANPR: data[6].TOTALVEHICLE,
-        TOTAL_UNIDENTIFIEDVRN: data[7].TOTALVEHICLE,
-        TOTAL_FRONT_UNIDENTIFIEDVRN: data[8].TOTALVEHICLE,
-        TOTAL_REAR_UNIDENTIFIEDVRN: data[9].TOTALVEHICLE,
-        TOTAL_DETECTED_VRN: data[10].TOTALVEHICLE,
-        TOTAL_FRONT_DETECTEDVRN: data[11].TOTALVEHICLE,
-        TOTAL_REAR_DETECTEDVRN: data[12].TOTALVEHICLE,
-        TOTAL_TWOWHEELEDIKE: data[13].TOTALVEHICLE,
-        TOTAL_SMALLIKE: data[14].TOTALVEHICLE,
-        TOTAL_MEDIUMIKE: data[15].TOTALVEHICLE,
-        TOTAL_LARGEIKE: data[16].TOTALVEHICLE,
-        TOTAL_TWOWHEELEDIKEFRONT: data[17].TOTALVEHICLE,
-        TOTAL_SMALLIKEFRONT: data[18].TOTALVEHICLE,
-        TOTAL_MEDIUMIKEFRONT: data[19].TOTALVEHICLE,
-        TOTAL_LARGEIKEFRONT: data[20].TOTALVEHICLE,
-        TOTAL_TWOWHEELEDIKEREAR: data[21].TOTALVEHICLE,
-        TOTAL_SMALLIKEREAR: data[22].TOTALVEHICLE,
-        TOTAL_MEDIUMIKEREAR: data[23].TOTALVEHICLE,
-        TOTAL_LARGEIKEREAR: data[24].TOTALVEHICLE,
+            ]
+        }],
+        "TOTAL IKE": [{
+            click: visitorsChartDrilldownHandler,
+            cursor: "pointer",
+            explodeOnClick: false,
+            innerRadius: "75%",
+            legendMarkerType: "square",
+            name: "New vs Returning Visitors",
+            radius: "100%",
+            showInLegend: true,
+            startAngle: 90,
+            color: "#50cdc8",
+            name: "Returning Visitors",
+            type: "doughnut",
+            xValueFormatString: "MMM YYYY",
+            dataPoints: [
+                { label: "TOTAL FRONT IKE", y: data.TOTAL_FRONTIKE, name: "FRONT IKE", color: "#222222" },
+                { label: "TOTAL REAR IKE", y: data.TOTAL_REARIKE, name: "REAR IKE", },
+                //{ label: "TOTAL TWO-WHEELED -IKE", y: data.TOTAL_TWOWHEELEDIKE },
+                //{ label: "TOTAL SMALL -IKE", y: data.TOTAL_SMALLIKE },
+                //{ label: "TOTAL MEDIUM -IKE", y: data.TOTAL_MEDIUMIKE },
+                //{ label: "TOTAL LARGE -IKE", y: data.TOTAL_LARGEIKE },
+                //{ label: "TWO-WHEELED -IKE-FRONT", y: data.TOTAL_TWOWHEELEDIKEFRONT },
+                //{ label: "TOTAL SMALL -IKE-FRONT", y: data.TOTAL_SMALLIKEFRONT },
+                //{ label: "TOTAL MEDIUM -IKE-FRONT", y: data.TOTAL_MEDIUMIKEFRONT },
+                //{ label: "TOTAL LARGE -IKE-FRONT", y: data.TOTAL_LARGEIKEFRONT },
+                //{ label: "TOTAL TWO-WHEELED -IKE-REAR", y: data.TOTAL_TWOWHEELEDIKEREAR },
+                //{ label: "TOTAL SMALL -IKE-REAR", y: data.TOTAL_SMALLIKEREAR },
+                //{ label: "TOTAL MEDIUM -IKE-REAR", y: data.TOTAL_MEDIUMIKEREAR },
+                //{ label: "TOTAL LARGE -IKE-REAR", y: data.TOTAL_LARGEIKEREAR },
+            ]
+        }],
+        "TOTAL ANPR": [{
+            color: "#ff6969",
+            name: "Returning Visitors",
+            type: "column",
+            xValueFormatString: "MMM YYYY",
+            dataPoints: [
+                { label: "TOTAL TWO-WHEELED -ANPR", y: data.TOTAL_TWOWHEELEDANPR },
+                { label: "TOTAL SMALL -ANPR", y: data.TOTAL_SMALL_ANPR },
+                { label: "TOTAL MEDIUM -ANPR", y: data.TOTAL_MEDIUM_ANPR },
+                { label: "TOTAL LARGE -ANPR", y: data.TOTAL_LARGE_ANPR },
+                { label: "TOTAL TWO-WHEELED -ANPR-FRONT", y: data.TOTAL_TWOWHEELED_ANPRFRONT },
+                { label: "TOTAL SMALL -ANPR-FRONT", y: data.TOTAL_SMALLANPR_FRONT },
+                { label: "TOTAL MEDIUM -ANPR-FRONT", y: data.TOTAL_MEDIUMANPR_FRONT },
+                { label: "TOTAL LARGE -ANPR-FRONT", y: data.TOTAL_LARGEANPR_FRONT },
+                { label: "TOTAL TWO-WHEELED -ANPR-REAR", y: data.TOTAL_TWOWHEELED_ANPRREAR },
+                { label: "TOTAL SMALL -ANPR-REAR", y: data.TOTAL_SMALL_ANPRREAR },
+                { label: "TOTAL MEDIUM -ANPR-REAR", y: data.TOTAL_MEDIUM_ANPRREAR },
+                { label: "TOTAL LARGE -ANPR-REAR", y: data.TOTAL_LARGE_ANPRREAR },
+            ]
+        }],
+        "FRONT IKE": [{
+            color: "#ff6969",
+            name: "Returning Visitors",
+            type: "column",
+            xValueFormatString: "MMM YYYY",
+            dataPoints: [
+              { label: "TWO-WHEELED -IKE-FRONT", y: data.TOTAL_TWOWHEELEDIKEFRONT },
+              { label: "TOTAL SMALL -IKE-FRONT", y: data.TOTAL_SMALLIKEFRONT },
+              { label: "TOTAL MEDIUM -IKE-FRONT", y: data.TOTAL_MEDIUMIKEFRONT },
+              { label: "TOTAL LARGE -IKE-FRONT", y: data.TOTAL_LARGEIKEFRONT },
+            ]
+        }],
+        "REAR IKE": [{
+            color: "#ff6969",
+            name: "Returning Visitors",
+            type: "column",
+            xValueFormatString: "MMM YYYY",
+            dataPoints: [
+               { label: "TOTAL TWO-WHEELED -IKE-REAR", y: data.TOTAL_TWOWHEELEDIKEREAR },
+                { label: "TOTAL SMALL -IKE-REAR", y: data.TOTAL_SMALLIKEREAR },
+                { label: "TOTAL MEDIUM -IKE-REAR", y: data.TOTAL_MEDIUMIKEREAR },
+                { label: "TOTAL LARGE -IKE-REAR", y: data.TOTAL_LARGEIKEREAR },
+            ]
+        }]
+    };
 
-        TOTAL_TWOWHEELEDANPR: data[25].TOTALVEHICLE,
-        TOTAL_SMALL_ANPR: data[26].TOTALVEHICLE,
-        TOTAL_MEDIUM_ANPR: data[27].TOTALVEHICLE,
-        TOTAL_LARGE_ANPR: data[28].TOTALVEHICLE,
+    var newVSReturningVisitorsOptions = {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+            text: "Vehicle Details"
+        },
+        subtitles: [{
+            text: "Total Vehicle :" + totalvehicle,
+            backgroundColor: "#2eacd1",
+            fontSize: 16,
+            fontColor: "white",
+            padding: 5
+        }],
+        legend: {
+            fontFamily: "calibri",
+            fontSize: 14,
+            itemTextFormatter: function (e) {
+                return e.dataPoint.name;//+ ": " + Math.round(e.dataPoint.y / totalVisitors * 100) + "%";
+            }
+        },
+        data: []
+    };
 
-        //TotalFrontANPR:TOTAL_TWOWHEELED_ANPRFRONT+TOTAL_SMALLANPR_FRONT+TOTAL_MEDIUMANPR_FRONT+TOTAL_LARGEANPR_FRONT,
-        TOTAL_TWOWHEELED_ANPRFRONT: data[29].TOTALVEHICLE,
-        TOTAL_SMALLANPR_FRONT: data[30].TOTALVEHICLE,
-        TOTAL_MEDIUMANPR_FRONT: data[31].TOTALVEHICLE,
-        TOTAL_LARGEANPR_FRONT: data[32].TOTALVEHICLE,
-        TOTAL_TWOWHEELED_ANPRREAR: data[33].TOTALVEHICLE,
-        TOTAL_SMALL_ANPRREAR: data[34].TOTALVEHICLE,
-        TOTAL_MEDIUM_ANPRREAR: data[35].TOTALVEHICLE,
-        TOTAL_LARGE_ANPRREAR: data[36].TOTALVEHICLE,
+    var visitorsDrilldownedChartOptions = {
+        animationEnabled: true,
+        theme: "light2",
+        axisX: {
+            labelFontColor: "#717171",
+            lineColor: "#a2a2a2",
+            tickColor: "#a2a2a2"
+        },
+        axisY: {
+            gridThickness: 0,
+            includeZero: false,
+            labelFontColor: "#717171",
+            lineColor: "#a2a2a2",
+            tickColor: "#a2a2a2",
+            lineThickness: 1
+        },
+        data: []
+    };
 
-        TOTAL_AUTOCHARGED: data[37].TOTALVEHICLE,
-        TOTAL_NOTCHARGED: data[38].TOTALVEHICLE,
-        TOTAL_MANUALCHARGED: data[39].TOTALVEHICLE,
-        TOTAL_REVIEWED: data[40].TOTALVEHICLE,
-        TOTAL_VIOLATION: data[41].TOTALVEHICLE,
-        TOTAL_UNIDENTIFIED: data[42].TOTALVEHICLE,
-        TOTAL_MERGED: data[43].TOTALVEHICLE,
-        TOTAL_SMSSEND: data[44].TOTALVEHICLE,
-        TOTAL_SUCCESSFULSEND: data[45].TOTALVEHICLE,
-        TOTAL_AVERAGESMS_TIMEINSECONDS: data[46].TOTALVEHICLE,
+    newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
+    $("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
 
-        TOTAL_REGISTERED_VEHICLE: data[47].TOTALVEHICLE,
-        TOTAL_PROCESSED_VEHICLE: data[48].TOTALVEHICLE,
-        TOTAL_CHARGEABLE_VEHICLE: data[49].TOTALVEHICLE,
-        TOTAL_NON_CHARGEABLE_VEHICLE: data[50].TOTALVEHICLE,
-        TOTAL_BLACK_LISTED_VEHICLE:data[51].TOTALVEHICLE,
+    function visitorsChartDrilldownHandler(e) {
+        e.chart.options = visitorsDrilldownedChartOptions;
+        e.chart.options.data = visitorsData[e.dataPoint.name];
+        e.chart.options.title = { text: e.dataPoint.name }
+        e.chart.render();
+        $("#backButton").toggleClass("invisible");
+        stoprefresh = false;
     }
-    if (stoprefresh)
-        bindChart(binddata);
+
+    $("#backButton").click(function () {
+        $(this).toggleClass("invisible");
+        newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
+        $("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
+        stoprefresh = true;
+    });
+
+
 }
 
 function BindTableRight(data) {
@@ -236,10 +475,9 @@ function BindTableRight(data) {
 
     //-----------------
     $("#ChargedVehicle_DB").text(TotalCVehicle);
-    if (TotalRVehiclePass!=0)
-    {
-    Per = (((TotalCVehicle / TotalRVehiclePass) * 100) || 0).toFixed();
-    $("#ChargedVehicle_DB_PER").text(Per + '%');
+    if (TotalRVehiclePass != 0) {
+        Per = (((TotalCVehicle / TotalRVehiclePass) * 100) || 0).toFixed();
+        $("#ChargedVehicle_DB_PER").text(Per + '%');
     } else {
         Per = 0;
     }
@@ -247,19 +485,17 @@ function BindTableRight(data) {
 
     //-------------
     $("#SendSms_DB").text(TotalSendSms);
-    if (TotalCVehicle!=0)
-    {
+    if (TotalCVehicle != 0) {
         Per = (((TotalSendSms / TotalCVehicle) * 100) || 0).toFixed();
         $("#SendSms_DB_Per").text(Per + '%');
     } else {
         Per = 0;
     }
     $("#SendSms_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
-  
+
     //----------------
     $("#Success_SendSMS_DB").text(SuceessSendSms);
-    if (TotalSendSms!=0)
-    {
+    if (TotalSendSms != 0) {
         Per = (((SuceessSendSms / TotalSendSms) * 100) || 0).toFixed();
         $("#Success_SendSMS_DB_Per").text(Per + '%');
     } else {
@@ -308,23 +544,23 @@ function intToString(value) {
 }
 
 function GetGantry() {
-            $(".animationload").show();
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(Inputdata),
-            url: "Dashboard/DashBoardTransactionData",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $('#filterModel').modal('hide');
-                $('.animationload').hide();
-                ResponceGantryData = data;
-                console.log(ResponceGantryData);
-            },
-            error: function (ex) {
-                $(".animationload").hide();
-            }
-        });
+    $(".animationload").show();
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "Dashboard/DashBoardTransactionData",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $('#filterModel').modal('hide');
+            $('.animationload').hide();
+            ResponceGantryData = data;
+            console.log(ResponceGantryData);
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
 }
 
 function ResetFilter() {
@@ -438,32 +674,32 @@ function GetStackChartData(StartDate, EndDate) {
         StartDate: StartDate,
         EndDate: EndDate,
     }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(Inputdata),
-            url: "Dashboard/StackChartData",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $('#filterModel').modal('hide');
-                $('.animationload').hide();
-                BindStackChartData(data);
-            },
-            error: function (ex) {
-                $(".animationload").hide();
-            }
-        });   
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(Inputdata),
+        url: "Dashboard/StackChartData",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            $('#filterModel').modal('hide');
+            $('.animationload').hide();
+            BindStackChartData(data);
+        },
+        error: function (ex) {
+            $(".animationload").hide();
+        }
+    });
 }
 
 function BindStackChartData(data) {
-   
+
     var binddata_Stackchart = {
         TOTAL_VEHICLE: data[0].TOTALDETAILS,
         TOTAL_REGISTERED: data[1].TOTALDETAILS,
-        TOTAL_UNREGISTERED:data[2].TOTALDETAILS,
-        TOTAL_UNIDENTIFIED_VRN:data[3].TOTALDETAILS,
+        TOTAL_UNREGISTERED: data[2].TOTALDETAILS,
+        TOTAL_UNIDENTIFIED_VRN: data[3].TOTALDETAILS,
         TOPUP_AMOUNT: data[4].TOTALDETAILS,
-        CHARGED_AMOUNT:data[5].TOTALDETAILS
+        CHARGED_AMOUNT: data[5].TOTALDETAILS
     }
     bindStackedColumnChart(binddata_Stackchart);
 }

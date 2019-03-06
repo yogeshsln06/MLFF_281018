@@ -15,6 +15,7 @@ namespace MLFFWebUI.Controllers
     public class DashboardController : Controller
     {
         static MessageQueue eventQueue;
+        static MessageQueue webDashboardMessageQueue;
         public ActionResult Index()
         {
             if (Session["LoggedUserId"] == null)
@@ -24,6 +25,52 @@ namespace MLFFWebUI.Controllers
             ViewBag.MainMenu = HelperClass.NewMenu(Convert.ToInt16(Session["LoggedUserId"]), "Dashboard", "");
             return View();
         }
+
+        [HttpGet]
+        public JsonResult GetMSMQDashBoardCounter()
+        {
+
+            JsonResult result = new JsonResult();
+            DashboardEventCBE.DashBoardDataCount objDashBoardDataCount = new DashboardEventCBE.DashBoardDataCount();
+            try
+            {
+                webDashboardMessageQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.webDashboardMessageQueue);
+                Message[] msgs = webDashboardMessageQueue.GetAllMessages();
+                if (msgs.Length > 0)
+                {
+                    foreach (Message msg in msgs)
+                    {
+                        Message m = msg;
+                        m.Formatter = new BinaryMessageFormatter();
+                        if (m != null)
+                        {
+                            m.Formatter = new BinaryMessageFormatter();
+                            if (m.Body != null)
+                            {
+                                #region Processing packets
+                                if (m.Body is DashboardEventCBE.DashBoardDataCount)
+                                {
+                                    #region CrossTalk packet
+                                    objDashBoardDataCount = (DashboardEventCBE.DashBoardDataCount)m.Body;
+                                    #endregion
+                                }
+
+                                #endregion
+                            }
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to read MSMQ liveEvets data. " + ex.Message);
+            }
+            result.Data = objDashBoardDataCount;
+            return Json(result, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpPost]
         public string DashBoardTransactionData(ViewTransactionCBE transaction)

@@ -4,228 +4,7 @@
 }
 <script>
     var totalvehicle;
-    function bindChart(data) {
-        totalvehicle = data.TOTAL_VEHICLE;
-        var totalVisitors = data.TOTAL_VEHICLE;
-        var visitorsData = {
-            "New vs Returning Visitors": [{
-                click: visitorsChartDrilldownHandler,
-                cursor: "pointer",
-                explodeOnClick: false,
-                innerRadius: "75%",
-                legendMarkerType: "square",
-                name: "New vs Returning Visitors",
-                radius: "100%",
-                showInLegend: true,
-                startAngle: 90,
-                type: "doughnut",
-                dataPoints: [
-                    { y: data.TOTAL_REGISTERED, name: "REGISTERED VEHICLES", color: "#E7823A" },
-                    { y: data.TOTAL_UNREGISTERED, name: "UNREGISTERED VEHICLES", color: "#546BC1" },
-                    //{ y: data.TOTAL_IKE, name: "TOTAL IKE", color: "#50cdc8" },
-                    //{ y: data.TOTAL_ANPR, name: "TOTAL ANPR", color: "#ff6969" },
-                ]
-            }],
-            "REGISTERED VEHICLES": [{
-                type: "column",
-                name: "FRONT IKE",
-                showInLegend: "true",
-                dataPoints: [
-                    { label: "TWO-WHEELED", y: data.TOTAL_TWOWHEELEDIKEFRONT },
-                    { label: "SMALL", y: data.TOTAL_SMALLIKEFRONT },
-                    { label: "MEDIUM", y: data.TOTAL_MEDIUMIKEFRONT },
-                    { label: "LARGE", y: data.TOTAL_LARGEIKEFRONT },
-                ]
-            },
-	{
-	    type: "column",
-	    name: "REAR IKE",
-	    showInLegend: "true",
-	    dataPoints: [
-			        { label: "TWO-WHEELED", y: data.TOTAL_TWOWHEELEDIKEREAR },
-                    { label: "SMALL", y: data.TOTAL_SMALLIKEREAR },
-                    { label: "MEDIUM", y: data.TOTAL_MEDIUMIKEREAR },
-                    { label: "LARGE", y: data.TOTAL_LARGEIKEREAR },
-	    ]
-	},
-	{
-	    type: "column",
-	    name: "ANPR FRONT",
-	    showInLegend: "true",
-	    dataPoints: [
-			        { label: "TWO-WHEELED", y: data.TOTAL_TWOWHEELED_ANPRFRONT },
-                    { label: "SMALL", y: data.TOTAL_SMALLANPR_FRONT },
-                    { label: "MEDIUM", y: data.TOTAL_MEDIUMANPR_FRONT },
-                    { label: "LARGE", y: data.TOTAL_LARGEANPR_FRONT },
-	    ]
-	},
-	{
-	    type: "column",
-	    name: "ANPR REAR",
-	    showInLegend: "true",
-	    dataPoints: [
-			        { label: "TWO-WHEELED", y: data.TOTAL_TWOWHEELED_ANPRREAR },
-                    { label: "SMALL", y: data.TOTAL_SMALL_ANPRREAR },
-                    { label: "MEDIUM", y: data.TOTAL_MEDIUM_ANPRREAR },
-                    { label: "LARGE", y: data.TOTAL_LARGE_ANPRREAR },
-	    ]
-	}
-            ],
-            "UNREGISTERED VEHICLES": [{
-                color: "#546BC1",
-                name: "Returning Visitors",
-                type: "doughnut",
-                xValueFormatString: "MMM YYYY",
-                dataPoints: [
-                    //{ label: "TOTAL UNIDENTIFIED VRN", y: data.TOTAL_UNIDENTIFIEDVRN },
-                    // { label: "TOTAL DETECTED VRN", y: data.TOTAL_DETECTED_VRN },
-                     { label: "TOTAL REAR UNIDENTIFIED VRN", y: data.TOTAL_REAR_UNIDENTIFIEDVRN, color: "#E7823A" },
-                    { label: "TOTAL REAR DETECTED VRN", y: data.TOTAL_REAR_DETECTEDVRN, color: "#546BC1" },
-                    { label: "TOTAL FRONT UNIDENTIFIED VRN", y: data.TOTAL_FRONT_UNIDENTIFIEDVRN, color: "#72777a" },
-                    { label: "TOTAL FRONT DETECTED VRN", y: data.TOTAL_FRONT_DETECTEDVRN, color: "#ff6969" },
-
-                ]
-            }],
-            "TOTAL IKE": [{
-                click: visitorsChartDrilldownHandler,
-                cursor: "pointer",
-                explodeOnClick: false,
-                innerRadius: "75%",
-                legendMarkerType: "square",
-                name: "New vs Returning Visitors",
-                radius: "100%",
-                showInLegend: true,
-                startAngle: 90,
-                color: "#50cdc8",
-                name: "Returning Visitors",
-                type: "doughnut",
-                xValueFormatString: "MMM YYYY",
-                dataPoints: [
-                    { label: "TOTAL FRONT IKE", y: data.TOTAL_FRONTIKE, name: "FRONT IKE", color: "#222222" },
-                    { label: "TOTAL REAR IKE", y: data.TOTAL_REARIKE, name: "REAR IKE", },
-                    //{ label: "TOTAL TWO-WHEELED -IKE", y: data.TOTAL_TWOWHEELEDIKE },
-                    //{ label: "TOTAL SMALL -IKE", y: data.TOTAL_SMALLIKE },
-                    //{ label: "TOTAL MEDIUM -IKE", y: data.TOTAL_MEDIUMIKE },
-                    //{ label: "TOTAL LARGE -IKE", y: data.TOTAL_LARGEIKE },
-                    //{ label: "TWO-WHEELED -IKE-FRONT", y: data.TOTAL_TWOWHEELEDIKEFRONT },
-                    //{ label: "TOTAL SMALL -IKE-FRONT", y: data.TOTAL_SMALLIKEFRONT },
-                    //{ label: "TOTAL MEDIUM -IKE-FRONT", y: data.TOTAL_MEDIUMIKEFRONT },
-                    //{ label: "TOTAL LARGE -IKE-FRONT", y: data.TOTAL_LARGEIKEFRONT },
-                    //{ label: "TOTAL TWO-WHEELED -IKE-REAR", y: data.TOTAL_TWOWHEELEDIKEREAR },
-                    //{ label: "TOTAL SMALL -IKE-REAR", y: data.TOTAL_SMALLIKEREAR },
-                    //{ label: "TOTAL MEDIUM -IKE-REAR", y: data.TOTAL_MEDIUMIKEREAR },
-                    //{ label: "TOTAL LARGE -IKE-REAR", y: data.TOTAL_LARGEIKEREAR },
-                ]
-            }],
-            "TOTAL ANPR": [{
-                color: "#ff6969",
-                name: "Returning Visitors",
-                type: "column",
-                xValueFormatString: "MMM YYYY",
-                dataPoints: [
-                    { label: "TOTAL TWO-WHEELED -ANPR", y: data.TOTAL_TWOWHEELEDANPR },
-                    { label: "TOTAL SMALL -ANPR", y: data.TOTAL_SMALL_ANPR },
-                    { label: "TOTAL MEDIUM -ANPR", y: data.TOTAL_MEDIUM_ANPR },
-                    { label: "TOTAL LARGE -ANPR", y: data.TOTAL_LARGE_ANPR },
-                    { label: "TOTAL TWO-WHEELED -ANPR-FRONT", y: data.TOTAL_TWOWHEELED_ANPRFRONT },
-                    { label: "TOTAL SMALL -ANPR-FRONT", y: data.TOTAL_SMALLANPR_FRONT },
-                    { label: "TOTAL MEDIUM -ANPR-FRONT", y: data.TOTAL_MEDIUMANPR_FRONT },
-                    { label: "TOTAL LARGE -ANPR-FRONT", y: data.TOTAL_LARGEANPR_FRONT },
-                    { label: "TOTAL TWO-WHEELED -ANPR-REAR", y: data.TOTAL_TWOWHEELED_ANPRREAR },
-                    { label: "TOTAL SMALL -ANPR-REAR", y: data.TOTAL_SMALL_ANPRREAR },
-                    { label: "TOTAL MEDIUM -ANPR-REAR", y: data.TOTAL_MEDIUM_ANPRREAR },
-                    { label: "TOTAL LARGE -ANPR-REAR", y: data.TOTAL_LARGE_ANPRREAR },
-                ]
-            }],
-            "FRONT IKE": [{
-                color: "#ff6969",
-                name: "Returning Visitors",
-                type: "column",
-                xValueFormatString: "MMM YYYY",
-                dataPoints: [
-                  { label: "TWO-WHEELED -IKE-FRONT", y: data.TOTAL_TWOWHEELEDIKEFRONT },
-                  { label: "TOTAL SMALL -IKE-FRONT", y: data.TOTAL_SMALLIKEFRONT },
-                  { label: "TOTAL MEDIUM -IKE-FRONT", y: data.TOTAL_MEDIUMIKEFRONT },
-                  { label: "TOTAL LARGE -IKE-FRONT", y: data.TOTAL_LARGEIKEFRONT },
-                ]
-            }],
-            "REAR IKE": [{
-                color: "#ff6969",
-                name: "Returning Visitors",
-                type: "column",
-                xValueFormatString: "MMM YYYY",
-                dataPoints: [
-                   { label: "TOTAL TWO-WHEELED -IKE-REAR", y: data.TOTAL_TWOWHEELEDIKEREAR },
-                    { label: "TOTAL SMALL -IKE-REAR", y: data.TOTAL_SMALLIKEREAR },
-                    { label: "TOTAL MEDIUM -IKE-REAR", y: data.TOTAL_MEDIUMIKEREAR },
-                    { label: "TOTAL LARGE -IKE-REAR", y: data.TOTAL_LARGEIKEREAR },
-                ]
-            }]
-        };
-
-        var newVSReturningVisitorsOptions = {
-            animationEnabled: true,
-            theme: "light2",
-            title: {
-                text: "Vehicle Details"
-            },
-            subtitles: [{
-                text: "Total Vehicle :" + totalvehicle,
-                backgroundColor: "#2eacd1",
-                fontSize: 16,
-                fontColor: "white",
-                padding: 5
-            }],
-            legend: {
-                fontFamily: "calibri",
-                fontSize: 14,
-                itemTextFormatter: function (e) {
-                    return e.dataPoint.name;//+ ": " + Math.round(e.dataPoint.y / totalVisitors * 100) + "%";
-                }
-            },
-            data: []
-        };
-
-        var visitorsDrilldownedChartOptions = {
-            animationEnabled: true,
-            theme: "light2",
-            axisX: {
-                labelFontColor: "#717171",
-                lineColor: "#a2a2a2",
-                tickColor: "#a2a2a2"
-            },
-            axisY: {
-                gridThickness: 0,
-                includeZero: false,
-                labelFontColor: "#717171",
-                lineColor: "#a2a2a2",
-                tickColor: "#a2a2a2",
-                lineThickness: 1
-            },
-            data: []
-        };
-
-        newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
-        $("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
-
-        function visitorsChartDrilldownHandler(e) {
-            e.chart.options = visitorsDrilldownedChartOptions;
-            e.chart.options.data = visitorsData[e.dataPoint.name];
-            e.chart.options.title = { text: e.dataPoint.name }
-            e.chart.render();
-            $("#backButton").toggleClass("invisible");
-            stoprefresh = false;
-        }
-
-        $("#backButton").click(function () {
-            $(this).toggleClass("invisible");
-            newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
-            $("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
-            stoprefresh = true;
-        });
-
-    
-    }
+  
 
     function bindStackedColumnChart(Stackchartdata)
     {
@@ -425,7 +204,7 @@
                                     </div>
                                     <div class="layer w-100 mT-15">
                                         <h5 class="mB-5" id="ChargedVehicle_DB">0</h5>
-                                        <small class="fw-600 c-grey-700">Auto Charged Vehicle</small>
+                                        <small class="fw-600 c-grey-700">Charged Vehicle</small>
                                         <span class="pull-right c-grey-600 fsz-sm" id="ChargedVehicle_DB_PER">0%</span>
                                         <div class="progress mT-10">
                                             <div class="progress-bar bgc-green-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:80%;"> <span class="sr-only">0% Complete</span></div>
@@ -440,61 +219,10 @@
                                             <div class="progress-bar bgc-light-blue-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:40%;"> <span class="sr-only">0% Complete</span></div>
                                         </div>
                                     </div>
-                                    <div class="layer w-100 mT-15">
-                                        <h5 class="mB-5" id="Success_SendSMS_DB">0</h5>
-                                        <small class="fw-600 c-grey-700">Successfully Send SMS</small>
-                                        <span class="pull-right c-grey-600 fsz-sm" id="Success_SendSMS_DB_Per">0%</span>
-                                        <div class="progress mT-10">
-                                            <div class="progress-bar bgc-blue-grey-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:90%;"> <span class="sr-only">0% Complete</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="layer w-100 mT-15">
-                                        <h5 class="mB-5" id="ManualChargedVehicle_DB">0</h5>
-                                        <small class="fw-600 c-grey-700">Manual Charged Vehicle</small>
-                                        <span class="pull-right c-grey-600 fsz-sm" id="ManualChargedVehicle_DB_PER">0%</span>
-                                        <div class="progress mT-10">
-                                            <div class="progress-bar bgc-green-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:80%;"> <span class="sr-only">0% Complete</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="layer w-100 mT-15">
-                                        <h5 class="mB-5" id="ManualSendSms_DB">0</h5>
-                                        <small class="fw-600 c-grey-700">Manual Send SMS</small>
-                                        <span class="pull-right c-grey-600 fsz-sm" id="ManualSendSms_DB_Per">0%</span>
-                                        <div class="progress mT-10">
-                                            <div class="progress-bar bgc-light-blue-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:40%;"> <span class="sr-only">0% Complete</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="layer w-100 mT-15">
-                                        <h5 class="mB-5" id="ManualSuccess_SendSMS_DB">0</h5>
-                                        <small class="fw-600 c-grey-700">Manual Successfully Send SMS</small>
-                                        <span class="pull-right c-grey-600 fsz-sm" id="ManualSuccess_SendSMS_DB_Per">0%</span>
-                                        <div class="progress mT-10">
-                                            <div class="progress-bar bgc-blue-grey-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:90%;"> <span class="sr-only">0% Complete</span></div>
-                                        </div>
-                                    </div>
+                                   
                                 </div>
 
-                                <!-- Pie Charts -->
-                                @*<div class="peers pT-20 mT-20 bdT fxw-nw@lg+ jc-sb ta-c gap-10">
-                                        <div class="peer">
-                                            <div class="easy-pie-chart" data-size='80' data-percent="75" data-bar-color='#f44336'>
-                                                <span></span>
-                                            </div>
-                                            <h6 class="fsz-sm">New Users</h6>
-                                        </div>
-                                        <div class="peer">
-                                            <div class="easy-pie-chart" data-size='80' data-percent="50" data-bar-color='#2196f3'>
-                                                <span></span>
-                                            </div>
-                                            <h6 class="fsz-sm">New Purchases</h6>
-                                        </div>
-                                        <div class="peer">
-                                            <div class="easy-pie-chart" data-size='80' data-percent="90" data-bar-color='#ff9800'>
-                                                <span></span>
-                                            </div>
-                                            <h6 class="fsz-sm">Bounce Rate</h6>
-                                        </div>
-                                    </div>*@
+                              
                             </div>
                         </div>
                     </div>
@@ -922,7 +650,6 @@
 <script src="~/Scripts/jquery.canvasjs.min.js"></script>
 <script>
     $(document).ready(function () {
-        
         $(".form_datetime").datetimepicker({
             format: "mm/dd/yyyy  hh:ii",
             autoclose: true,
