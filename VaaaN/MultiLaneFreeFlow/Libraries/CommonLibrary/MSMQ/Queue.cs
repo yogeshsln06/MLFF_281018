@@ -29,6 +29,7 @@ namespace VaaaN.MLFF.Libraries.CommonLibrary.MSMQ
         public static TimeSpan smsMessageQueueTimeOut = new TimeSpan(0, 0, 10);
 
         public static string webDashboardMessageQueue = ".\\Private$\\webDashboardStatusQueue";
+        public static string webChartDashboardMessageQueue = ".\\Private$\\webChartDashboardMessageQueue";
 
         public static MessageQueue Create(string queueName)
         {

@@ -9578,10 +9578,10 @@ ORDER BY CREATION_DATE DESC ';
                          SECONDS,
                          TRANSACTION_TYPE
                     FROM TRANS_DEATILS
-                   WHERE TRANSACTION_DATETIME BETWEEN TO_DATE ('22-02-2019',
-                                                               'DD/MM/YYYY')
-                                                  AND TO_DATE ('02-03-2019',
-                                                               'DD/MM/YYYY')),
+                   WHERE TRANSACTION_DATETIME BETWEEN TO_DATE (P_STARTDATE,
+                                                               'DD/MM/YYYY')-7
+                                                  AND TO_DATE (P_STARTDATE,
+                                                               'DD/MM/YYYY')-1),
               CTE_STACKCHARTREPORTDATA
               AS (SELECT 1 AS SNO,
                          'TOTAL VEHICLE PASS' MESSAGE,

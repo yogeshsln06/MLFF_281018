@@ -15,18 +15,19 @@ $(document).ready(function () {
     $(window).resize(function () {
         setHeight();
     });
-
-    BindDateTime(5);
+  
     Progress = true;
     $("#totalFIke").val(0);
     $("#totalRIke").val(0);
     $("#totalFANPR").val(0);
     $("#totalRANPR").val(0);
-    myVar = setInterval("GetMSMQData()", 2000);
-
+    GetMSMQData();
+    GetMSMQChartData();
+    BindDateTime(5);
+    myVar = setInterval("GetMSMQData()", 20000);
+    myVar = setInterval("GetMSMQChartData()", 20000);
 });
-
-
+// get Data From MSMQ
 function GetMSMQData() {
     $.ajax({
         type: 'GET',
@@ -44,191 +45,82 @@ function GetMSMQData() {
             var RearRegisterANPRCount = (ResponceData.Register.RearANPR.MoterCycleCount + ResponceData.Register.RearANPR.SmallCount + ResponceData.Register.RearANPR.MediumCount + ResponceData.Register.RearANPR.BigCount);
 
 
-            var FrontUnRegisterANPRCount = (ResponceData.UnRegister.FrontANPR.MoterCycleCount + ResponceData.UnRegister.FrontANPR.SmallCount + ResponceData.UnRegister.FrontANPR.MediumCount + ResponceData.UnRegister.FrontANPR.BigCount);
+             var FrontUnRegisterANPRCount = (ResponceData.UnRegister.FrontANPR.MoterCycleCount + ResponceData.UnRegister.FrontANPR.SmallCount + ResponceData.UnRegister.FrontANPR.MediumCount + ResponceData.UnRegister.FrontANPR.BigCount);
             var RearUnRegisterANPRCount = (ResponceData.UnRegister.RearANPR.MoterCycleCount + ResponceData.UnRegister.RearANPR.SmallCount + ResponceData.UnRegister.RearANPR.MediumCount + ResponceData.UnRegister.RearANPR.BigCount);
 
             var FrontUnIdentifiedANPRCount = (ResponceData.UnIdentified.FrontANPR.MoterCycleCount + ResponceData.UnIdentified.FrontANPR.SmallCount + ResponceData.UnIdentified.FrontANPR.MediumCount + ResponceData.UnIdentified.FrontANPR.BigCount);
-            var RearUnIdentifiedANPRCount = (ResponceData.UnIdentified.RearANPR.MoterCycleCount + ResponceData.UnIdentified.RearANPR.SmallCount + ResponceData.UnIdentified.RearANPR.MediumCount + ResponceData.UnIdentified.RearANPR.BigCount);
-
+           var RearUnIdentifiedANPRCount = (ResponceData.UnIdentified.RearANPR.MoterCycleCount + ResponceData.UnIdentified.RearANPR.SmallCount + ResponceData.UnIdentified.RearANPR.MediumCount + ResponceData.UnIdentified.RearANPR.BigCount);
+           
             //var FrontANPRCount = (ResponceData.FrontANPR.MoterCycleCount + ResponceData.FrontANPR.SmallCount + ResponceData.FrontANPR.MediumCount + ResponceData.FrontANPR.BigCount);
             //var RearANPRCount = (ResponceData.RearANPR.MoterCycleCount + ResponceData.RearANPR.SmallCount + ResponceData.RearANPR.MediumCount + ResponceData.RearANPR.BigCount);
            
+           var FrontANPRCount = (FrontRegisterANPRCount + FrontUnRegisterANPRCount + FrontUnIdentifiedANPRCount );
+           var RearANPRCount = (RearRegisterANPRCount + RearUnRegisterANPRCount + RearUnIdentifiedANPRCount);
 
-            //var TotalPassed = Math.max(FrontANPRCount, RearANPRCount, FrontIKECount, RearIKECount);
-            //var TotalRegisterPassed = Math.max(ResponceData.RearANPR.Register, ResponceData.FrontANPR.Register, FrontIKECount, RearIKECount);
-            //var VehicleUnidentitfiedCount = ResponceData.VehicleUnidentitfiedCount;
-            //var VehicleChargedCount = ResponceData.VehicleChargedCount;
-            //var TotalRegisterVehicle = ResponceData.TotalRegisterVehicleCount;
+            var TotalPassed = Math.max(FrontANPRCount, RearANPRCount, FrontIKECount, RearIKECount);
+            var TotalRegisterPassed = Math.max(FrontIKECount, RearIKECount);
+            var VehicleUnidentitfiedCount = (FrontUnIdentifiedANPRCount + RearUnIdentifiedANPRCount);
+            var VehicleChargedCount = (ResponceData.RegisterCharged.ChargedClass.MoterCycleCount + ResponceData.RegisterCharged.ChargedClass.SmallCount + ResponceData.RegisterCharged.ChargedClass.MediumCount + ResponceData.RegisterCharged.ChargedClass.BigCount);
+            var TotalRegisterVehicle = ResponceData.TotalRegisterVehicleCount;
 
             $("#totalFIke").text(FrontIKECount);
             $("#totalRIke").text(RearIKECount);
-            $("#totalFANPR").text(FrontRegisterANPRCount + FrontUnRegisterANPRCount + FrontUnIdentifiedANPRCount);
-            $("#totalRANPR").text(RearRegisterANPRCount + RearUnRegisterANPRCount + RearUnIdentifiedANPRCount);
+            $("#totalFANPR").text(FrontANPRCount);
+            $("#totalRANPR").text(RearANPRCount);
 
+            var TotalVehiclePass = TotalPassed;
+            var TotalRVehiclePass = TotalRegisterPassed;
+            var TOTAL_UNREGISTERED = TotalPassed - TotalRegisterPassed;
+            var TotalCVehicle = VehicleChargedCount;
+            var TotalSendSms = VehicleChargedCount;
 
+            var Per = 0;
+            $("#TotalVehicle_DB").text(TotalVehiclePass);
+            Per = (((TotalVehiclePass / TotalVehiclePass) * 100) || 0).toFixed();
+            $("#TotalVehicle_DB_PER").text(Per + '%');
+            $("#TotalVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+            //------------
+            $("#RegisteredVehicle_DB").text(TotalRVehiclePass);
+            Per = (((TotalRVehiclePass / TotalVehiclePass) * 100) || 0).toFixed();
+            $("#RegisteredVehicle_DB_PER").text(Per + '%');
+            $("#RegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+            //------------
+            $("#UnRegisteredVehicle_DB").text(TOTAL_UNREGISTERED);
+            Per = (((TOTAL_UNREGISTERED / TotalVehiclePass) * 100) || 0).toFixed();
+            $("#UnRegisteredVehicle_DB_PER").text(Per + '%');
+            $("#UnRegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
 
-            //var TotalVehiclePass = TotalPassed;
-            //var TotalRVehiclePass = TotalRegisterPassed;
-            //var TOTAL_UNREGISTERED = TotalPassed - TotalRegisterPassed;
-            //var TotalCVehicle = VehicleChargedCount;
-            //var TotalSendSms = VehicleChargedCount;
+            //-----------------
+            $("#ChargedVehicle_DB").text(TotalCVehicle);
+            if (TotalRVehiclePass != 0) {
+                Per = (((TotalCVehicle / TotalRVehiclePass) * 100) || 0).toFixed();
+                $("#ChargedVehicle_DB_PER").text(Per + '%');
+            } else {
+                Per = 0;
+            }
+            $("#ChargedVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
 
-
-            //var Per = 0;
-            //$("#TotalVehicle_DB").text(TotalVehiclePass);
-            //Per = (((TotalVehiclePass / TotalVehiclePass) * 100) || 0).toFixed();
-            //$("#TotalVehicle_DB_PER").text(Per + '%');
-            //$("#TotalVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
-            ////------------
-            //$("#RegisteredVehicle_DB").text(TotalRVehiclePass);
-            //Per = (((TotalRVehiclePass / TotalVehiclePass) * 100) || 0).toFixed();
-            //$("#RegisteredVehicle_DB_PER").text(Per + '%');
-            //$("#RegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
-            ////------------
-            //$("#UnRegisteredVehicle_DB").text(TOTAL_UNREGISTERED);
-            //Per = (((TOTAL_UNREGISTERED / TotalVehiclePass) * 100) || 0).toFixed();
-            //$("#UnRegisteredVehicle_DB_PER").text(Per + '%');
-            //$("#UnRegisteredVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
-
-            ////-----------------
-            //$("#ChargedVehicle_DB").text(TotalCVehicle);
-            //if (TotalRVehiclePass != 0) {
-            //    Per = (((TotalCVehicle / TotalRVehiclePass) * 100) || 0).toFixed();
-            //    $("#ChargedVehicle_DB_PER").text(Per + '%');
-            //} else {
-            //    Per = 0;
-            //}
-            //$("#ChargedVehicle_DB_PER").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
-
-            ////-------------
-            //$("#SendSms_DB").text(TotalSendSms);
-            //if (TotalCVehicle != 0) {
-            //    Per = (((TotalSendSms / TotalCVehicle) * 100) || 0).toFixed();
-            //    $("#SendSms_DB_Per").text(Per + '%');
-            //} else {
-            //    Per = 0;
-            //}
-            //$("#SendSms_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
-            //if (stoprefresh)
-            //    bindChart(ResponceData, TotalRVehiclePass, TOTAL_UNREGISTERED);
+            //-------------
+            $("#SendSms_DB").text(TotalSendSms);
+            if (TotalCVehicle != 0) {
+                Per = (((TotalSendSms / TotalCVehicle) * 100) || 0).toFixed();
+                $("#SendSms_DB_Per").text(Per + '%');
+            } else {
+                Per = 0;
+            }
+            $("#SendSms_DB_Per").next().find('.progress-bar').attr('aria-valuenow', Per).css("width", Per + "%");
+            CallBundleJS(ResponceData.Register, ResponceData.UnRegister, ResponceData.UnIdentified);
+            if (stoprefresh)
+                bindChart(ResponceData, TotalRVehiclePass, TOTAL_UNREGISTERED);
         },
         error: function (ex) {
         }
     });
 }
 
-function DateFormatTime(newDate) {
-    var d = new Date(newDate);
-    dd = d.getDate();
-    dd = dd > 9 ? dd : '0' + dd;
-    mm = (d.getMonth() + 1);
-    mm = mm > 9 ? mm : '0' + mm;
-    yy = d.getFullYear();
-    hh = d.getHours();
-    hh = hh > 9 ? hh : '0' + hh;
-    mints = d.getMinutes();
-    mints = mints > 9 ? mints : '0' + mints;
-    var time1 = hh + ":" + mints;
-    return dd + '-' + mm + '-' + +yy + ' ' + time1
-}
-
-function BindDateTime(mints) {
-    var cdt = new Date();
-    var d = new Date(cdt.setMinutes(cdt.getMinutes() - mints));
-    dd = d.getDate();
-    dd = dd > 9 ? dd : '0' + dd;
-    mm = (d.getMonth() + 1);
-    mm = mm > 9 ? mm : '0' + mm;
-    yy = d.getFullYear();
-    hh = d.getHours();
-    hh = hh > 9 ? hh : '0' + hh;
-    mints = d.getMinutes();
-    mints = mints > 9 ? mints : '0' + mints;
-    var time1 = hh + ":" + mints;
-    var newd = new Date();
-    hh = newd.getHours();
-    hh = hh > 9 ? hh : '0' + hh;
-    mints = newd.getMinutes();
-    mints = mints > 9 ? mints : '0' + mints;
-    var time2 = hh + ":" + mints;
-    StartDate = mm + '/' + dd + '/' + yy + " " + time1;
-    EndDate = mm + '/' + dd + '/' + yy + " " + time2;
-
-}
-
-function GetfirstLoadData(StartDate, EndDate, loader) {
-    if (Progress) {
-        var StartDate = DateFormatTime(StartDate);
-        var EndDate = DateFormatTime(EndDate);
-        var Inputdata = {
-            StartDate: StartDate,
-            EndDate: EndDate,
-        }
-        if (loader)
-            $(".animationload").show();
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(Inputdata),
-            url: "Dashboard/DashBoardTransactionData",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                $('#filterModel').modal('hide');
-                $('.animationload').hide();
-                ResponceData = data;
-                BindData(data);
-
-                setTimeout(function () { reloadData(); }, 20000);
-            },
-            error: function (ex) {
-                $(".animationload").hide();
-            }
-        });
-    }
-}
-
-function reloadData() {
-    var d = new Date();
-    dd = d.getDate();
-    dd = dd > 9 ? dd : '0' + dd;
-    mm = (d.getMonth() + 1);
-    mm = mm > 9 ? mm : '0' + mm;
-    yy = d.getFullYear();
-    hh = d.getHours();
-    hh = hh > 9 ? hh : '0' + hh;
-    var time1 = 00 + ":" + 00 + ":" + 00;
-    var newd = new Date();
-    hh = newd.getHours();
-    hh = hh > 9 ? hh : '0' + hh;
-    mints = newd.getMinutes();
-    mints = mints > 9 ? mints : '0' + mints;
-    var time2 = hh + ":" + mints + ":" + 59;
-    StartDate = mm + '/' + dd + '/' + yy + " " + time1;
-    EndDate = mm + '/' + dd + '/' + yy + " " + time2;
-    GetfirstLoadData(StartDate, EndDate, false);
-
-}
-
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds) {
-            break;
-        }
-    }
-}
-
-//$(window).unload(function () {
-//    Progress = false;
-//});
-
-function BindData(data) {
-    BindTopCount(data);
-    BindTableRight(data)
-}
-
+// Prepare First chart
 function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
-    totalvehicle = TotalRVehiclePass + TOTAL_UNREGISTERED;
+    var totalvehicle = TotalRVehiclePass + TOTAL_UNREGISTERED;
     var totalVisitors = totalvehicle;
     var visitorsData = {
         "New vs Returning Visitors": [{
@@ -252,10 +144,10 @@ function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
             name: "FRONT IKE",
             showInLegend: "true",
             dataPoints: [
-                { label: "TWO-WHEELED", y: data.FrontIKE.MoterCycleCount },
-                { label: "SMALL", y: data.FrontIKE.SmallCount },
-                { label: "MEDIUM", y: data.FrontIKE.MediumCount },
-                { label: "LARGE", y: data.FrontIKE.BigCount },
+                { label: "TWO-WHEELED", y: data.Register.FrontIKE.MoterCycleCount },
+                { label: "SMALL", y: data.Register.FrontIKE.SmallCount },
+                { label: "MEDIUM", y: data.Register.FrontIKE.MediumCount },
+                { label: "LARGE", y: data.Register.FrontIKE.BigCount },
             ]
         },
 {
@@ -263,10 +155,10 @@ function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
     name: "REAR IKE",
     showInLegend: "true",
     dataPoints: [
-                 { label: "TWO-WHEELED", y: data.RearIKE.MoterCycleCount },
-                { label: "SMALL", y: data.RearIKE.SmallCount },
-                { label: "MEDIUM", y: data.RearIKE.MediumCount },
-                { label: "LARGE", y: data.RearIKE.BigCount },
+                 { label: "TWO-WHEELED", y: data.Register.RearIKE.MoterCycleCount },
+                { label: "SMALL", y: data.Register.RearIKE.SmallCount },
+                { label: "MEDIUM", y: data.Register.RearIKE.MediumCount },
+                { label: "LARGE", y: data.Register.RearIKE.BigCount },
     ]
 },
 {
@@ -274,10 +166,10 @@ function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
     name: "ANPR FRONT",
     showInLegend: "true",
     dataPoints: [
-               { label: "TWO-WHEELED", y: data.FrontANPR.MoterCycleCount },
-                { label: "SMALL", y: data.FrontANPR.SmallCount },
-                { label: "MEDIUM", y: data.FrontANPR.MediumCount },
-                { label: "LARGE", y: data.FrontANPR.BigCount },
+               { label: "TWO-WHEELED", y: data.Register.FrontANPR.MoterCycleCount },
+                { label: "SMALL", y: data.Register.FrontANPR.SmallCount },
+                { label: "MEDIUM", y: data.Register.FrontANPR.MediumCount },
+                { label: "LARGE", y: data.Register.FrontANPR.BigCount },
     ]
 },
 {
@@ -285,10 +177,10 @@ function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
     name: "ANPR REAR",
     showInLegend: "true",
     dataPoints: [
-                { label: "TWO-WHEELED", y: data.RearANPR.MoterCycleCount },
-                { label: "SMALL", y: data.RearANPR.SmallCount },
-                { label: "MEDIUM", y: data.RearANPR.MediumCount },
-                { label: "LARGE", y: data.RearANPR.BigCount },
+                { label: "TWO-WHEELED", y: data.Register.RearANPR.MoterCycleCount },
+                { label: "SMALL", y: data.Register.RearANPR.SmallCount },
+                { label: "MEDIUM", y: data.Register.RearANPR.MediumCount },
+                { label: "LARGE", y: data.Register.RearANPR.BigCount },
     ]
 }
         ],
@@ -298,11 +190,19 @@ function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
             type: "doughnut",
             xValueFormatString: "MMM YYYY",
             dataPoints: [
-                { label: "TOTAL REAR UNIDENTIFIED VRN", y: data.TOTAL_REAR_UNIDENTIFIEDVRN, color: "#E7823A" },
-                { label: "TOTAL REAR DETECTED VRN", y: data.TOTAL_REAR_DETECTEDVRN, color: "#546BC1" },
-                { label: "TOTAL FRONT UNIDENTIFIED VRN", y: data.TOTAL_FRONT_UNIDENTIFIEDVRN, color: "#72777a" },
-                { label: "TOTAL FRONT DETECTED VRN", y: data.TOTAL_FRONT_DETECTEDVRN, color: "#ff6969" },
+                { label: "REAR TWO-WHEELED", y: data.UnRegister.RearANPR.MoterCycleCount, color: "#E7823A" },
+                { label: "REAR SMALL", y: data.UnRegister.RearANPR.SmallCount, color: "#546BC1" },
+                { label: "MEDIUM", y: data.UnRegister.RearANPR.MediumCount, color: "#E7823A" },
+                { label: "REAR LARGE", y: data.UnRegister.RearANPR.BigCount, color: "#546BC1" },
+                { label: "FRONT TWO-WHEELED", y: data.UnRegister.FrontANPR.MoterCycleCount, color: "#72777a" },
+                { label: "FRONT SMALL", y: data.UnRegister.FrontANPR.SmallCount, color: "#ff6969" },
+                { label: "FRONT MEDIUM", y: data.UnRegister.FrontANPR.MediumCount, color: "#ff6969" },
+                { label: "FRONT LARGE", y: data.UnRegister.FrontANPR.BigCount, color: "#ff6969" },
 
+                //{ label: "TOTAL REAR UNIDENTIFIED VRN", y: data.TOTAL_REAR_UNIDENTIFIEDVRN, color: "#E7823A" },
+                //{ label: "TOTAL REAR DETECTED VRN", y: data.TOTAL_REAR_DETECTEDVRN, color: "#546BC1" },
+                //{ label: "TOTAL FRONT UNIDENTIFIED VRN", y: data.TOTAL_FRONT_UNIDENTIFIEDVRN, color: "#72777a" },
+                //{ label: "TOTAL FRONT DETECTED VRN", y: data.TOTAL_FRONT_DETECTEDVRN, color: "#ff6969" },
             ]
         }],
         "TOTAL IKE": [{
@@ -437,13 +337,127 @@ function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
     }
 
     $("#backButton").click(function () {
-        $(this).toggleClass("invisible");
-        newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
-        $("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
-        stoprefresh = true;
+        if (stoprefresh == false) {
+            $(this).toggleClass("invisible");
+            newVSReturningVisitorsOptions.data = visitorsData["New vs Returning Visitors"];
+            $("#chartContainer").CanvasJSChart(newVSReturningVisitorsOptions);
+            //$("#backButton").hide();
+            //$("#backButton").toggleClass("invisible");
+            stoprefresh = true;
+        }
     });
+}
 
+///---------------
+function DateFormatTime(newDate) {
+    var d = new Date(newDate);
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = (d.getMonth() + 1);
+    mm = mm > 9 ? mm : '0' + mm;
+    yy = d.getFullYear();
+    hh = d.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = d.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time1 = hh + ":" + mints;
+    return dd + '-' + mm + '-' + +yy + ' ' + time1
+}
 
+function BindDateTime(mints) {
+    var cdt = new Date();
+    var d = new Date(cdt.setMinutes(cdt.getMinutes() - mints));
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = (d.getMonth() + 1);
+    mm = mm > 9 ? mm : '0' + mm;
+    yy = d.getFullYear();
+    hh = d.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = d.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time1 = hh + ":" + mints;
+    var newd = new Date();
+    hh = newd.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = newd.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time2 = hh + ":" + mints;
+    StartDate = mm + '/' + dd + '/' + yy + " " + time1;
+    EndDate = mm + '/' + dd + '/' + yy + " " + time2;
+    GetStackChartData(StartDate, EndDate);
+
+}
+
+function GetfirstLoadData(StartDate, EndDate, loader) {
+    if (Progress) {
+        var StartDate = DateFormatTime(StartDate);
+        var EndDate = DateFormatTime(EndDate);
+        var Inputdata = {
+            StartDate: StartDate,
+            EndDate: EndDate,
+        }
+        if (loader)
+            $(".animationload").show();
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Inputdata),
+            url: "Dashboard/DashBoardTransactionData",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $('#filterModel').modal('hide');
+                $('.animationload').hide();
+                ResponceData = data;
+                BindData(data);
+
+                setTimeout(function () { reloadData(); }, 20000);
+            },
+            error: function (ex) {
+                $(".animationload").hide();
+            }
+        });
+    }
+}
+
+function reloadData() {
+    var d = new Date();
+    dd = d.getDate();
+    dd = dd > 9 ? dd : '0' + dd;
+    mm = (d.getMonth() + 1);
+    mm = mm > 9 ? mm : '0' + mm;
+    yy = d.getFullYear();
+    hh = d.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    var time1 = 00 + ":" + 00 + ":" + 00;
+    var newd = new Date();
+    hh = newd.getHours();
+    hh = hh > 9 ? hh : '0' + hh;
+    mints = newd.getMinutes();
+    mints = mints > 9 ? mints : '0' + mints;
+    var time2 = hh + ":" + mints + ":" + 59;
+    StartDate = mm + '/' + dd + '/' + yy + " " + time1;
+    EndDate = mm + '/' + dd + '/' + yy + " " + time2;
+    GetfirstLoadData(StartDate, EndDate, false);
+
+}
+
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds) {
+            break;
+        }
+    }
+}
+
+//$(window).unload(function () {
+//    Progress = false;
+//});
+
+function BindData(data) {
+    BindTopCount(data);
+    BindTableRight(data)
 }
 
 function BindTableRight(data) {
@@ -633,6 +647,7 @@ function openFilterpopup() {
     $(".modal-backdrop.show").hide();
 }
 
+// download register and Unregistered File
 function DownLoadTransactionReport() {
     var StartDate = DateFormatTime($("#StartDate").val());
     var EndDate = DateFormatTime($("#EndDate").val());
@@ -668,8 +683,13 @@ function DownLoadTransactionReport() {
     });
 }
 
+// Prepare second chart
 function GetStackChartData(StartDate, EndDate) {
-    $(".animationload").show();
+    var StartDate = DateFormatTime(StartDate);
+    var EndDate = DateFormatTime(EndDate);
+   // $(".animationload").show();
+    $('#load').show(); // Show loading animation
+    $('#chartContainerstack').hide(); // Hide content until loaded
     var Inputdata = {
         StartDate: StartDate,
         EndDate: EndDate,
@@ -677,16 +697,20 @@ function GetStackChartData(StartDate, EndDate) {
     $.ajax({
         type: "POST",
         dataType: "json",
+       // processData: true,
+        async:true,
         data: JSON.stringify(Inputdata),
         url: "Dashboard/StackChartData",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             $('#filterModel').modal('hide');
-            $('.animationload').hide();
-            BindStackChartData(data);
+            //$('.animationload').hide();
+            $('#load').hide(); // Hide loading animation
+            $('#chartContainerstack').show(); // Show content
         },
         error: function (ex) {
-            $(".animationload").hide();
+            $('#load').hide(); // Hide loading animation
+            $('#chartContainerstack').show(); // Show content
         }
     });
 }
@@ -701,5 +725,21 @@ function BindStackChartData(data) {
         TOPUP_AMOUNT: data[4].TOTALDETAILS,
         CHARGED_AMOUNT: data[5].TOTALDETAILS
     }
+   
     bindStackedColumnChart(binddata_Stackchart);
+}
+
+function GetMSMQChartData() {
+    $.ajax({
+        type: 'GET',
+        url: "Dashboard/GetMSMQChartData",
+        cache: false,
+        dataType: "json",
+        success: function (data) {
+            BindStackChartData(data);
+            console.log(data);
+        },
+        error: function (ex) {
+        }
+    });
 }

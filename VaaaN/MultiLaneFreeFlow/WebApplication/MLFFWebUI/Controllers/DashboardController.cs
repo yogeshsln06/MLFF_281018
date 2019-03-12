@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using VaaaN.MLFF.Libraries.CommonLibrary;
 using VaaaN.MLFF.Libraries.CommonLibrary.BLL;
@@ -16,6 +19,7 @@ namespace MLFFWebUI.Controllers
     {
         static MessageQueue eventQueue;
         static MessageQueue webDashboardMessageQueue;
+        static MessageQueue webChartDashboardMessageQueue;
         public ActionResult Index()
         {
             if (Session["LoggedUserId"] == null)
@@ -71,7 +75,6 @@ namespace MLFFWebUI.Controllers
             return Json(result, System.Web.Mvc.JsonRequestBehavior.AllowGet);
         }
 
-
         [HttpPost]
         public string DashBoardTransactionData(ViewTransactionCBE transaction)
         {
@@ -88,13 +91,49 @@ namespace MLFFWebUI.Controllers
         public string StackChartData(ViewTransactionCBE transaction)
         {
             string result = "";
-
-            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy HH:mm:ss");
+            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy");
             string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
-            string Det = JsonConvert.SerializeObject(TransactionBLL.StackChartData(strstarttime, strendtime), Formatting.Indented);
-            result = Det.Replace("\r", "").Replace("\n", "");
+            //Thread.Sleep(500);
+             HostingEnvironment.QueueBackgroundWorkItem(cancellationToken => new HelperAsync().StartProcessing(cancellationToken, strstarttime));
+            // string Det = JsonConvert.SerializeObject(TransactionBLL.StackChartData(strstarttime, strendtime), Formatting.Indented);
+            //result = Det.Replace("\r", "").Replace("\n", "");
             return result;
         }
+
+        [HttpGet]
+        public string GetMSMQChartData()
+        {
+            string str = string.Empty;
+            try
+            {
+                webChartDashboardMessageQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.webChartDashboardMessageQueue);
+                Message[] msgs = webChartDashboardMessageQueue.GetAllMessages();
+                if (msgs.Length > 0)
+                {
+                    foreach (Message msg in msgs)
+                    {
+                        Message m = msg;
+                        m.Formatter = new BinaryMessageFormatter();
+                        if (m != null)
+                        {
+                            m.Formatter = new BinaryMessageFormatter();
+                            if (m.Body != null)
+                            {
+                                str = m.Body.ToString();
+                                str = str.Replace("\r", "").Replace("\n", "");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperClass.LogMessage("Failed to read MSMQ ChartEvets data. " + ex.Message);
+            }
+            return str;
+            //return Json(str, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+        }
+
         #region Live Events
         public ActionResult LiveEvent()
         {

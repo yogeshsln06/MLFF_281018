@@ -2,10 +2,14 @@
 @{
     ViewBag.Title = "Dashboard";
 }
-<script>
-    var totalvehicle;
-  
+<script src="~/assets/admin/vendor.js"></script>
 
+<script>
+    //$(document).ready(function () {
+    //    window.menuHoverStart = function (element, topshift, thumbchange) {
+    //        test();
+    //    };
+    //})
     function bindStackedColumnChart(Stackchartdata)
     {
         var chart = new CanvasJS.Chart("chartContainerstack", {
@@ -14,20 +18,46 @@
             title: {
                 text: "Last 7 Days Report Data"
             },
-            axisY: {
-                title: "Data",
-            },
+            //axisX: {
+            //    title: "Data",
+            //    includeZero: false,
+            //    //beginAtZero: true,
+            //   // min: 0,
+            //    //suggestedMin: 0,
+            //    //labelFormatter: function (e) {
+            //    //    return "x: " + e.value;
+            //    //}
+            //},
+            //axisY: {
+            //    title: "Data",
+            //    includeZero: false,
+            //    //beginAtZero: true,
+            //   // min: 0,
+            //    //suggestedMin: 0,
+            //    //labelFormatter: function (e) {
+            //    //    return "y: " + e.value;
+            //    //}
+            //},
+            //plotOptions: {
+            //    series: {
+            //        dataLabels: {
+            //            enabled: true,
+            //            color: 'gray'
+            //        }
+            //    }
+            //},
             data: [{
                 type: "column",
                 showInLegend: true,
                 legendMarkerColor: "grey",
                 legendText: "Report Data",
+                xValueFormatString: "MMM YYYY",
                 dataPoints: [
-                    { y: Stackchartdata.TOTAL_VEHICLE, label: "TOTAL VEHICLES" },
-                      { y: Stackchartdata.TOTAL_VEHICLE, label: "TOTAL UNREGISTERED" },
-                    { y: Stackchartdata.TOTAL_REGISTERED, label: "REGISTERED VEHICLES" },
-                     { y: Stackchartdata.CHARGED_AMOUNT, label: "CHARGED" },
-                    { y: Stackchartdata.TOTAL_UNIDENTIFIED_VRN, label: "TOTAL UNIDENTIFIED VRN" },
+                    { y: Stackchartdata.TOTAL_VEHICLE, label: "VEHICLES" },
+                      { y: Stackchartdata.TOTAL_VEHICLE, label: "UNREGISTERED" },
+                    { y: Stackchartdata.TOTAL_REGISTERED, label: "REGISTERED" },
+                     { y: Stackchartdata.CHARGED_AMOUNT, label: "CHARGED"},
+                    { y: Stackchartdata.TOTAL_UNIDENTIFIED_VRN, label: "UNIDENTIFIED VRN"},
                     { y: Stackchartdata.TOPUP_AMOUNT, label: "TOPUP" },
                 ]
             }]
@@ -147,8 +177,8 @@
                         </div>
                         <div class="layer w-100">
                             <div class="peers ai-sb fxw-nw">
-                                <div class="peer peer-greed">
-                                    <span id="sparklinedash4"></span>
+                                <div class="peer peer-greed" >
+                                    <span id="sparklinedash4" ></span>
                                 </div>
                                 <div class="peer">
                                     <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-blue-50 c-blue-500" id="totalRANPR">0</span>
@@ -272,6 +302,7 @@
                         <h6 class="lh-1">Last Days Status</h6>
                     </div>
                     <div class="layer w-100">
+                        <div id="load">Loading Wait ??.</div>
                         <div id="chartContainerstack" style="height: 300px; width: 100%;"></div>
                         @*<ul class="list-task list-group" data-role="tasklist">
                             <li class="list-group-item bdw-0" data-role="task">
@@ -342,7 +373,7 @@
                 </div>
             </div>
         </div>
-        <div class="masonry-item col-md-6">
+        @*<div class="masonry-item col-md-6">
             <!-- #Sales Report ==================== -->
             <div class="bd bgc-white">
                 <div class="layers">
@@ -642,12 +673,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>*@
 
     </div>
 </div>
-<script src="~/js/Dashboard.js"></script>
 <script src="~/Scripts/jquery.canvasjs.min.js"></script>
+<script src="~/js/Dashboard.js"></script>
 <script>
     $(document).ready(function () {
         $(".form_datetime").datetimepicker({

@@ -36,6 +36,8 @@ namespace VaaaN.MLFF.WindowsServices
         private MessageQueue smsMessageQueue;
         private MessageQueue eventQueue;
 
+        private MessageQueue webDashboardMessageQueue;
+
         int ctpEntryId = 0;
         int nfpEntryId = 0;
         int currentTMSId = -1;
@@ -43,10 +45,9 @@ namespace VaaaN.MLFF.WindowsServices
         int Minutes = 2;
 
         DateTime countStartTime = DateTime.MinValue;
-        int motorCycleCount = 0;
-        int smallCount = 0;
-        int mediumCount = 0;
-        int bigCount = 0;
+        string StartDateTime = DateTime.Now.ToString("dd-MMM-yyyy");
+        string oStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy");
+
         string counterString = string.Empty;
         string ActiveAnpr = string.Empty;
 
@@ -58,6 +59,31 @@ namespace VaaaN.MLFF.WindowsServices
         List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE> TollRateFilteredList = new List<VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCBE>();
 
         VaaaN.MLFF.Libraries.CommonLibrary.XMLConfigurationClasses.GeneralConfiguration generalFileConfig;
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.DashBoardDataCount objDashBoardDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.DashBoardDataCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.RegisterChargedVehcileCount objRegisterChargedVehcileCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.RegisterChargedVehcileCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.UnRegisterVehcileCount objUnRegisterVehcileCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.UnRegisterVehcileCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.UnIdentifiedVehcileCount objUnIdentifiedVehcileCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.UnIdentifiedVehcileCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.RegisterVehcileCount objRegisterVehcileCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.RegisterVehcileCount();
+
+        //Libraries.CommonLibrary.CBE.DashboardEventCBE.FrontIKEDataCount objFrontIKEDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.FrontIKEDataCount();
+        //Libraries.CommonLibrary.CBE.DashboardEventCBE.RearIKEDataCount objRearIKEDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.RearIKEDataCount();
+        //Libraries.CommonLibrary.CBE.DashboardEventCBE.FrontANPRDataCount objFrontANPRDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.FrontANPRDataCount();
+        //Libraries.CommonLibrary.CBE.DashboardEventCBE.RearANPRDataCount objRearANPRDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.RearANPRDataCount();
+
+        
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.ChargedFrontIKEDataCount objChargedFrontIKEDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.ChargedFrontIKEDataCount();
+
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.RegFrontIKEDataCount objRegFrontIKEDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.RegFrontIKEDataCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.RegRearIKEDataCount objRegRearIKEDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.RegRearIKEDataCount();
+
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.RegFrontANPRDataCount objRegFrontANPRDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.RegFrontANPRDataCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.UnRegFrontANPRDataCount objUnRegFrontANPRDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.UnRegFrontANPRDataCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.UnIdentFrontANPRDataCount objUnIdentFrontANPRDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.UnIdentFrontANPRDataCount();
+
+        
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.RegRearANPRDataCount objRegRearANPRDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.RegRearANPRDataCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.UnRegRearANPRDataCount objUnRegRearANPRDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.UnRegRearANPRDataCount();
+        Libraries.CommonLibrary.CBE.DashboardEventCBE.UnIdentRearANPRDataCount objUnIdentRearANPRDataCount = new Libraries.CommonLibrary.CBE.DashboardEventCBE.UnIdentRearANPRDataCount();
 
         Thread collectionUpdaterThread;
 
@@ -70,7 +96,7 @@ namespace VaaaN.MLFF.WindowsServices
             InitializeComponent();
 
             //dont forget to comment this line
-            //OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
+            OnStart(new string[] { "sd" }); //<===================================================================== only for debugging
         }
 
         static void Main()
@@ -98,12 +124,9 @@ namespace VaaaN.MLFF.WindowsServices
             }
             currentTMSId = VaaaN.MLFF.Libraries.CommonLibrary.Constants.GetCurrentTMSId();
 
-
             countStartTime = System.DateTime.Now;
-            motorCycleCount = 0;
-            smallCount = 0;
-            mediumCount = 0;
-            bigCount = 0;
+            StartDateTime = DateTime.Now.ToString("dd-MMM-yyyy");
+            oStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy");
 
             try
             {
@@ -164,7 +187,7 @@ namespace VaaaN.MLFF.WindowsServices
                 this.smsMessageQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.smsMessageQueue);
                 this.eventQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.eventQueue);
                 this.failedQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.failedQueueName);
-
+                this.webDashboardMessageQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.webDashboardMessageQueue);
                 LogMessage("Reference for MSMQs has been created successfully.");
             }
             catch (Exception ex)
@@ -176,7 +199,7 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Trying to start LDS...");
 
-
+                ResetDashboardCounter();
                 #region Inbox Queue
                 try
                 {
@@ -246,7 +269,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
 
             }
-
             base.OnStop();
         }
 
@@ -254,7 +276,6 @@ namespace VaaaN.MLFF.WindowsServices
         void InBoxQueue_PeekCompleted(object sender, PeekCompletedEventArgs e)
         {
             MessageQueue mq = (MessageQueue)sender;
-
             try
             {
                 Message m = (Message)mq.EndPeek(e.AsyncResult);
@@ -263,7 +284,6 @@ namespace VaaaN.MLFF.WindowsServices
                 //LogMessage("Going to process InBoxQueue message...");
 
                 ProcessQueueMessage(m);
-
             }
             catch (Exception ex)
             {
@@ -278,7 +298,6 @@ namespace VaaaN.MLFF.WindowsServices
         #endregion
 
         #region Helper Methods
-
 
         int packetCounter = 0;
         private void ProcessQueueMessage(Message m)
@@ -298,9 +317,14 @@ namespace VaaaN.MLFF.WindowsServices
                     packetCounter = 0;
                 }
                 //-----------------------------------------------------
-
                 if (m.Body != null)
                 {
+                    oStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy");
+                    if (StartDateTime != oStartDateTime)
+                    {
+                        StartDateTime = DateTime.Now.ToString("dd-MMM-yyyy");
+                        ResetDashboardCounter();
+                    }
                     #region Processing packets
                     if (m.Body is VaaaN.MLFF.Libraries.CommonLibrary.Common.CrossTalkPacket)
                     {
@@ -356,8 +380,6 @@ namespace VaaaN.MLFF.WindowsServices
                                         {
                                             ctp.ReaderPosition = 1;
                                         }
-
-
                                     }
                                     catch (Exception ex)
                                     {
@@ -383,7 +405,6 @@ namespace VaaaN.MLFF.WindowsServices
                                             ctEvent.PlazaName = GetPlazaNameById(ctp.PlazaId);
                                             ctEvent.LaneId = ctp.LaneId;
                                             ctEvent.LaneName = GetLaneNameById(ctp.LaneId);
-
                                         }
                                         else
                                         {
@@ -413,7 +434,6 @@ namespace VaaaN.MLFF.WindowsServices
                                     {
                                         LogMessage("Exception in pushing crosstalk event to event queue. " + ex.ToString() + " tag: " + ctp.ObjectId);
                                     }
-
                                     #endregion
 
                                     //check most recent transactions of the same plaza, same tag, same hardware id (location id)
@@ -425,6 +445,7 @@ namespace VaaaN.MLFF.WindowsServices
                                         {
                                             ctpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.CrossTalkBLL.Insert(ctp);
                                             rfidRecentDataList.Add(new IkePktData { LocationId = ctp.LocationId, PktId = ctpEntryId, PacketTimeStamp = Convert.ToDateTime(ctp.TimeStamp), VehicleClassId = associatedCVCT.VehicleClassId, ObjectId = ctp.ObjectId, PlazaId = ctp.PlazaId, currentDateTime = DateTime.Now, ReaderPosition = ctp.ReaderPosition });
+                                            UpdateRegisterIKE(ctp.ReaderPosition, ctp.VehicleClassId);
 
                                             LogMessage("Crosstalk packet inserted successfully. tag: " + ctp.ObjectId + " Location: " + ctp.LocationId + " at CTid :" + ctpEntryId.ToString());
                                         }
@@ -657,8 +678,6 @@ namespace VaaaN.MLFF.WindowsServices
                                                         }
                                                         #endregion
                                                     }
-
-
                                                     // LogMessage("RFID transcation updated successfully.");
                                                     #endregion
                                                 }
@@ -758,8 +777,6 @@ namespace VaaaN.MLFF.WindowsServices
                                                 }
                                                 #endregion
                                             }
-
-
                                         }
                                         #endregion
                                     }
@@ -841,7 +858,6 @@ namespace VaaaN.MLFF.WindowsServices
                                         {
                                             LogMessage("No lane detail found against the lane id: " + nfp.LaneId);
                                         }
-
                                         nfp.CreationDate = System.DateTime.Now;
                                         nfp.ModifierId = -1;
                                         nfp.ModificationDate = System.DateTime.Now;
@@ -876,9 +892,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             {
                                                 nfEvent.CameraLocation = "Undefined";
                                             }
-
                                             nodeFluxEventMessage.Body = nfEvent;
-
                                             eventQueue.Send(nodeFluxEventMessage);
                                             LogMessage("NodeFlux event pushed to event queue successfully.");
                                         }
@@ -887,7 +901,6 @@ namespace VaaaN.MLFF.WindowsServices
                                             LogMessage("Exception in pushing nodeflux event to event queue. " + ex.ToString());
                                         }
                                         #endregion
-
                                     }
                                     catch (Exception ex)
                                     {
@@ -904,12 +917,13 @@ namespace VaaaN.MLFF.WindowsServices
                                         try
                                         {
                                             nfpEntryId = VaaaN.MLFF.Libraries.CommonLibrary.BLL.NodeFluxBLL.Insert(nfp);
+
+                                            UpdateUnIdentifiedANPR(Convert.ToInt32(nfp.CameraPosition), nfp.VehicleClassId);
                                         }
                                         catch (Exception ex)
                                         {
                                             #region Send data to Failed queue
                                             LogMessage("Failed to insert nodeflux packet. " + ex.Message);
-
                                             try
                                             {
                                                 m.Recoverable = true;
@@ -977,6 +991,7 @@ namespace VaaaN.MLFF.WindowsServices
                                         DateTime nfpDateTime = Convert.ToDateTime(nfp.TimeStamp);
                                         if (associatedCVNF != null)
                                         {
+                                            UpdateRegisterANPR(Convert.ToInt32(nfp.CameraPosition), nfp.VehicleClassId);
                                             #region Checking VRN in recent transactions in tbl_transaction
                                             //LogMessage("Search criteria: " + nfp.TMSId + ", " + nfp.GantryId + ", " + nfpDateTime.ToString("dd/MM/yyyy hh:mm:ss.fff tt") + " " + nfp.PlateNumber);
 
@@ -1003,7 +1018,7 @@ namespace VaaaN.MLFF.WindowsServices
                                                     transaction.TransactionDateTime = filteredTransaction.TransactionDateTime;
                                                     transaction.IsBalanceUpdated = filteredTransaction.IsBalanceUpdated;
                                                     transaction.IsViolation = filteredTransaction.IsViolation;
-                                                  
+
 
                                                     #region Get customer vehicle and customer account
 
@@ -1120,8 +1135,6 @@ namespace VaaaN.MLFF.WindowsServices
                                                     }
                                                     //}
                                                     #endregion
-
-
                                                 }
                                                 else
                                                 {
@@ -1251,6 +1264,7 @@ namespace VaaaN.MLFF.WindowsServices
                                             #region Create/ Update a transaction Main transaction table 
                                             try
                                             {
+                                                UpdateUnRegisterANPR(Convert.ToInt32(nfp.CameraPosition), nfp.VehicleClassId);
                                                 //LogMessage("VRN does not exist. Checking associated nodeflux transaction...");
 
                                                 //VaaaN.MLFF.Libraries.CommonLibrary.CBE.TransactionCollection associatedNodeFluxTrans = VaaaN.MLFF.Libraries.CommonLibrary.BLL.TransactionBLL.GetCorrespondingTransactionInNodeFlux(nfp.TMSId, nfp.GantryId, nfpDateTime, nfp.PlateNumber);
@@ -1365,8 +1379,6 @@ namespace VaaaN.MLFF.WindowsServices
                                             #endregion
 
                                             //***if exists in tbl_transaction updat it, otherwise insert***//
-
-
                                         }
                                         #endregion
                                     }
@@ -1430,7 +1442,6 @@ namespace VaaaN.MLFF.WindowsServices
                     tollToDeduct = GetTollRate(currentTMSId, laneTypeId, transaction.TransactionDateTime, customerVehicleInfo.VehicleClassId);
                     LogMessage("Toll to deduct is (for motorcycle it may be 0.00): " + tollToDeduct);
                 }
-
                 //if (tollToDeduct == -1)
                 //{
                 //    tollToDeduct = 0;
@@ -1516,6 +1527,8 @@ namespace VaaaN.MLFF.WindowsServices
                 //    LogMessage("Transaction has been declined due to insufficient balance.");
                 //    NotificationProcessing(customerVehicleInfo, customerAccountInfo, transaction, tollToDeduct, afterDeduction);
                 //}
+
+                UpdateCharged(customerVehicleInfo.VehicleClassId);
             }
             else
             {
@@ -1609,7 +1622,6 @@ namespace VaaaN.MLFF.WindowsServices
         private string GetVRNByTagId(string tagId)
         {
             string result = string.Empty;
-
             try
             {
                 lock (customerVehicles)
@@ -1628,7 +1640,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 result = string.Empty;
             }
-
             return result;
         }
 
@@ -1654,7 +1665,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Exception in DoesVRNExist() function. " + ex.ToString());
             }
-
             return result;
         }
 
@@ -1669,7 +1679,7 @@ namespace VaaaN.MLFF.WindowsServices
                 lock (customerVehicles)
                 {
                     foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.CustomerVehicleCBE cvc in customerVehicles)
-                    {  
+                    {
                         // if (cvc.TagId.Replace("FC", "00").ToLower() == tagId.Replace("FC", "00").ToLower())
                         if (cvc.TagId.ToLower() == tagId.ToLower())
                         {
@@ -1683,7 +1693,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Exception in DoesVRNExist() function. " + ex.ToString());
             }
-
             return result;
         }
 
@@ -1732,7 +1741,6 @@ namespace VaaaN.MLFF.WindowsServices
         private decimal GetTollRate(int plazaId, int laneType, DateTime transactionTime, int vehicleClass)
         {
             decimal result = -1;
-
             try
             {
                 VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection currentTimeTollRates = new VaaaN.MLFF.Libraries.CommonLibrary.CBE.TollRateCollection();
@@ -1756,14 +1764,12 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("Failed to get toll rate. " + ex.Message);
                 result = -1;
             }
-
             return result;
         }
 
         private int GetLaneTypeByLaneId(int laneId)
         {
             int result = -1;
-
             try
             {
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.LaneCBE lane in lanes)
@@ -1786,7 +1792,6 @@ namespace VaaaN.MLFF.WindowsServices
         private VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCBE GetHardwareById(int hardwareId)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.CBE.HardwareCBE result = null;
-
             try
             {
                 lock (hardwares)
@@ -1805,7 +1810,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 result = null;
             }
-
             return result;
         }
 
@@ -1827,7 +1831,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Exception is GetLaneDetailByHardwareId() function. " + ex.ToString());
             }
-
             return result;
         }
 
@@ -1849,7 +1852,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Exception is GetLaneById() function. " + ex.ToString());
             }
-
             return result;
         }
 
@@ -1872,7 +1874,6 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("Exception is GetLaneById() function. " + ex.ToString());
                 result = string.Empty;
             }
-
             return result;
         }
 
@@ -1897,7 +1898,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 LogMessage("Exception is GetCustomerAccountById() function. " + ex.ToString());
             }
-
             return result;
         }
 
@@ -1905,7 +1905,6 @@ namespace VaaaN.MLFF.WindowsServices
         {
             LogMessage("Getting vehicle class by name...");
             VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE result = null;
-
             try
             {
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicleClasses)
@@ -1921,7 +1920,6 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 result = null;
             }
-
             return result;
         }
 
@@ -1929,7 +1927,6 @@ namespace VaaaN.MLFF.WindowsServices
         {
             LogMessage("Getting vehicle class by name...");
             VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE result = null;
-
             try
             {
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.VehicleClassCBE vc in vehicleClasses)
@@ -1945,14 +1942,12 @@ namespace VaaaN.MLFF.WindowsServices
             {
                 result = null;
             }
-
             return result;
         }
 
         private string GetPlazaNameById(int plazaId)
         {
             string result = "NA";
-
             try
             {
                 foreach (VaaaN.MLFF.Libraries.CommonLibrary.CBE.PlazaCBE plaza in plazas)
@@ -1969,7 +1964,6 @@ namespace VaaaN.MLFF.WindowsServices
                 LogMessage("Exception in getting plaza name for plazaId " + plazaId);
                 result = "NA";
             }
-
             return result;
         }
 
@@ -2288,6 +2282,314 @@ namespace VaaaN.MLFF.WindowsServices
                 VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(message, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.LDS);
             }
         }
+
+
+        #endregion
+
+        #region Dashboard Counter
+        public void ResetDashboardCounter()
+        {
+            try
+            {
+                objDashBoardDataCount.TotalRegisterVehicleCount = customerVehicles.Count;
+                objDashBoardDataCount.EventDate = StartDateTime;
+
+                objRegFrontIKEDataCount.BigCount = 0;
+                objRegFrontIKEDataCount.MediumCount = 0;
+                objRegFrontIKEDataCount.MoterCycleCount = 0;
+                objRegFrontIKEDataCount.SmallCount = 0;
+
+                objRegisterChargedVehcileCount.ChargedClass = objChargedFrontIKEDataCount;
+                objRegisterVehcileCount.FrontIKE = objRegFrontIKEDataCount;
+
+                objRegRearIKEDataCount.BigCount = 0;
+                objRegRearIKEDataCount.MediumCount = 0;
+                objRegRearIKEDataCount.MoterCycleCount = 0;
+                objRegRearIKEDataCount.SmallCount = 0;
+
+                objRegisterVehcileCount.RearIKE = objRegRearIKEDataCount;
+
+
+                objUnRegFrontANPRDataCount.BigCount = 0;
+                objUnRegFrontANPRDataCount.MediumCount = 0;
+                objUnRegFrontANPRDataCount.MoterCycleCount = 0;
+                objUnRegFrontANPRDataCount.SmallCount = 0;
+
+                objUnRegisterVehcileCount.FrontANPR = objUnRegFrontANPRDataCount;
+
+                objUnIdentFrontANPRDataCount.BigCount = 0;
+                objUnIdentFrontANPRDataCount.MediumCount = 0;
+                objUnIdentFrontANPRDataCount.MoterCycleCount = 0;
+                objUnIdentFrontANPRDataCount.SmallCount = 0;
+
+                objUnIdentifiedVehcileCount.FrontANPR = objUnIdentFrontANPRDataCount;
+                //objRegisterVehcileCount.FrontANPR = objFrontANPRDataCount;
+
+
+                objUnRegRearANPRDataCount.BigCount = 0;
+                objUnRegRearANPRDataCount.MediumCount = 0;
+                objUnRegRearANPRDataCount.MoterCycleCount = 0;
+                objUnRegRearANPRDataCount.SmallCount = 0;
+
+                objUnRegisterVehcileCount.RearANPR = objUnRegRearANPRDataCount;
+
+                objUnIdentRearANPRDataCount.BigCount = 0;
+                objUnIdentRearANPRDataCount.MediumCount = 0;
+                objUnIdentRearANPRDataCount.MoterCycleCount = 0;
+                objUnIdentRearANPRDataCount.SmallCount = 0;
+
+                objUnIdentifiedVehcileCount.RearANPR = objUnIdentRearANPRDataCount;
+               // objRegisterVehcileCount.RearANPR = objRearANPRDataCount;
+
+
+                objDashBoardDataCount.RegisterCharged = objRegisterChargedVehcileCount;
+                objDashBoardDataCount.Register = objRegisterVehcileCount;
+
+                objDashBoardDataCount.UnRegister = objUnRegisterVehcileCount;
+                objDashBoardDataCount.UnIdentified = objUnIdentifiedVehcileCount;
+
+                Message m = new Message();
+                m.Formatter = new BinaryMessageFormatter();
+                m.Body = objDashBoardDataCount;
+                if (webDashboardMessageQueue != null)
+                    webDashboardMessageQueue.Purge();
+                webDashboardMessageQueue.Send(m);
+                //Message m = new Message();
+                //m.Formatter = new BinaryMessageFormatter();
+                //m.Body = objDashBoardDataCount;
+                //if (webDashboardMessageQueue == null)
+                //{
+                //    webDashboardMessageQueue.Send(m);
+                //}
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Error in Reset Dashboard Counter. " + ex.ToString());
+                // throw;
+            }
+        }
+        public void UpdateRegisterIKE(int Position, int VehicleClassId)
+        {
+            //Position 1 for Front Type 1 for IKE
+            try
+            {
+                objDashBoardDataCount.EventDate = StartDateTime;
+                objDashBoardDataCount.TotalRegisterVehicleCount = customerVehicles.Count;
+                if (Position == 1)
+                {
+                    if (VehicleClassId == 1)
+                        objDashBoardDataCount.Register.FrontIKE.MoterCycleCount += 1;
+                    else if (VehicleClassId == 2)
+                        objDashBoardDataCount.Register.FrontIKE.SmallCount += 1;
+                    else if (VehicleClassId == 3)
+                        objDashBoardDataCount.Register.FrontIKE.MediumCount += 1;
+                    else if (VehicleClassId == 4)
+                        objDashBoardDataCount.Register.FrontIKE.BigCount += 1;
+                }
+                else if (Position == 2)
+                {
+                    if (VehicleClassId == 1)
+                        objDashBoardDataCount.Register.RearIKE.MoterCycleCount += 1;
+                    else if (VehicleClassId == 2)
+                        objDashBoardDataCount.Register.RearIKE.SmallCount += 1;
+                    else if (VehicleClassId == 3)
+                        objDashBoardDataCount.Register.RearIKE.MediumCount += 1;
+                    else if (VehicleClassId == 4)
+                        objDashBoardDataCount.Register.RearIKE.BigCount += 1;
+                }
+                Message m = new Message();
+                m.Formatter = new BinaryMessageFormatter();
+                m.Body = objDashBoardDataCount;
+                if (webDashboardMessageQueue != null)
+                    webDashboardMessageQueue.Purge();
+                webDashboardMessageQueue.Send(m);
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Error in Update Register IKE. " + ex.ToString());
+                // throw;
+            }
+        }
+
+        public void UpdateRegisterANPR(int Position, int VehicleClassId)
+        {
+            //Position 1 for Front Type 1 for IKE
+            try
+            {
+                objDashBoardDataCount.EventDate = StartDateTime;
+                objDashBoardDataCount.TotalRegisterVehicleCount = customerVehicles.Count;
+                if (Position == 1)
+                {
+                    //if (VehicleClassId == 1)
+                    //    objDashBoardDataCount.Register.FrontANPR.MoterCycleCount += 1;
+                    //else if (VehicleClassId == 2)
+                    //    objDashBoardDataCount.Register.FrontANPR.SmallCount += 1;
+                    //else if (VehicleClassId == 3)
+                    //    objDashBoardDataCount.Register.FrontANPR.MediumCount += 1;
+                    //else if (VehicleClassId == 4)
+                    //    objDashBoardDataCount.Register.FrontANPR.BigCount += 1;
+                    if (VehicleClassId == 1)
+                        objRegFrontANPRDataCount.MoterCycleCount += 1;
+                    else if (VehicleClassId == 2)
+                        objRegFrontANPRDataCount.SmallCount += 1;
+                    else if (VehicleClassId == 3)
+                        objRegFrontANPRDataCount.MediumCount += 1;
+                    else if (VehicleClassId == 4)
+                        objRegFrontANPRDataCount.BigCount += 1;
+
+                    objDashBoardDataCount.Register.FrontANPR = objRegFrontANPRDataCount;
+                }
+                else if (Position == 2)
+                {
+                    //if (VehicleClassId == 1)
+                    //    objDashBoardDataCount.Register.RearANPR.MoterCycleCount += 1;
+                    //else if (VehicleClassId == 2)
+                    //    objDashBoardDataCount.Register.RearANPR.SmallCount += 1;
+                    //else if (VehicleClassId == 3)
+                    //    objDashBoardDataCount.Register.RearANPR.MediumCount += 1;
+                    //else if (VehicleClassId == 4)
+                    //    objDashBoardDataCount.Register.RearANPR.BigCount += 1;
+
+                    if (VehicleClassId == 1)
+                        objRegRearANPRDataCount.MoterCycleCount += 1;
+                    else if (VehicleClassId == 2)
+                        objRegRearANPRDataCount.SmallCount += 1;
+                    else if (VehicleClassId == 3)
+                        objRegRearANPRDataCount.MediumCount += 1;
+                    else if (VehicleClassId == 4)
+                        objRegRearANPRDataCount.BigCount += 1;
+
+                    objDashBoardDataCount.Register.RearANPR = objRegRearANPRDataCount;
+                }
+
+                Message m = new Message();
+                m.Formatter = new BinaryMessageFormatter();
+                m.Body = objDashBoardDataCount;
+                if (webDashboardMessageQueue != null)
+                    webDashboardMessageQueue.Purge();
+                webDashboardMessageQueue.Send(m);
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Error in Update Register ANPR. " + ex.ToString());
+                // throw;
+            }
+        }
+
+        public void UpdateUnRegisterANPR(int Position, int VehicleClassId)
+        {
+            //Position 1 for Front Type 1 for IKE
+            try
+            {
+                objDashBoardDataCount.EventDate = StartDateTime;
+                objDashBoardDataCount.TotalRegisterVehicleCount = customerVehicles.Count;
+                if (Position == 1)
+                {
+                    if (VehicleClassId == 1)
+                        objDashBoardDataCount.UnRegister.FrontANPR.MoterCycleCount += 1;
+                    else if (VehicleClassId == 2)
+                        objDashBoardDataCount.UnRegister.FrontANPR.SmallCount += 1;
+                    else if (VehicleClassId == 3)
+                        objDashBoardDataCount.UnRegister.FrontANPR.MediumCount += 1;
+                    else if (VehicleClassId == 4)
+                        objDashBoardDataCount.UnRegister.FrontANPR.BigCount += 1;
+                }
+                else if (Position == 2)
+                {
+                    if (VehicleClassId == 1)
+                        objDashBoardDataCount.UnRegister.RearANPR.MoterCycleCount += 1;
+                    else if (VehicleClassId == 2)
+                        objDashBoardDataCount.UnRegister.RearANPR.SmallCount += 1;
+                    else if (VehicleClassId == 3)
+                        objDashBoardDataCount.UnRegister.RearANPR.MediumCount += 1;
+                    else if (VehicleClassId == 4)
+                        objDashBoardDataCount.UnRegister.RearANPR.BigCount += 1;
+                }
+                Message m = new Message();
+                m.Formatter = new BinaryMessageFormatter();
+                m.Body = objDashBoardDataCount;
+                if (webDashboardMessageQueue != null)
+                    webDashboardMessageQueue.Purge();
+                webDashboardMessageQueue.Send(m);
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Error in Update UnRegister ANPR. " + ex.ToString());
+                // throw;
+            }
+        }
+
+        public void UpdateUnIdentifiedANPR(int Position, int VehicleClassId)
+        {
+            //Position 1 for Front Type 1 for IKE
+            try
+            {
+                objDashBoardDataCount.EventDate = StartDateTime;
+                objDashBoardDataCount.TotalRegisterVehicleCount = customerVehicles.Count;
+                if (Position == 1)
+                {
+                    if (VehicleClassId == 1)
+                        objDashBoardDataCount.UnIdentified.FrontANPR.MoterCycleCount += 1;
+                    else if (VehicleClassId == 2)
+                        objDashBoardDataCount.UnIdentified.FrontANPR.SmallCount += 1;
+                    else if (VehicleClassId == 3)
+                        objDashBoardDataCount.UnIdentified.FrontANPR.MediumCount += 1;
+                    else if (VehicleClassId == 4)
+                        objDashBoardDataCount.UnIdentified.FrontANPR.BigCount += 1;
+                }
+                else if (Position == 2)
+                {
+                    if (VehicleClassId == 1)
+                        objDashBoardDataCount.UnIdentified.RearANPR.MoterCycleCount += 1;
+                    else if (VehicleClassId == 2)
+                        objDashBoardDataCount.UnIdentified.RearANPR.SmallCount += 1;
+                    else if (VehicleClassId == 3)
+                        objDashBoardDataCount.UnIdentified.RearANPR.MediumCount += 1;
+                    else if (VehicleClassId == 4)
+                        objDashBoardDataCount.UnIdentified.RearANPR.BigCount += 1;
+                }
+                Message m = new Message();
+                m.Formatter = new BinaryMessageFormatter();
+                m.Body = objDashBoardDataCount;
+                if (webDashboardMessageQueue != null)
+                    webDashboardMessageQueue.Purge();
+                webDashboardMessageQueue.Send(m);
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Error in Update UnIdentified ANPR. " + ex.ToString());
+                // throw;
+            }
+        }
+
+        public void UpdateCharged(int VehicleClassId)
+        {
+            //Position 1 for Front Type 1 for IKE
+            try
+            {
+                objDashBoardDataCount.EventDate = StartDateTime;
+                objDashBoardDataCount.TotalRegisterVehicleCount = customerVehicles.Count;
+                if (VehicleClassId == 1)
+                    objDashBoardDataCount.RegisterCharged.ChargedClass.MoterCycleCount += 1;
+                else if (VehicleClassId == 2)
+                    objDashBoardDataCount.RegisterCharged.ChargedClass.SmallCount += 1;
+                else if (VehicleClassId == 3)
+                    objDashBoardDataCount.RegisterCharged.ChargedClass.MediumCount += 1;
+                else if (VehicleClassId == 4)
+                    objDashBoardDataCount.RegisterCharged.ChargedClass.BigCount += 1;
+                Message m = new Message();
+                m.Formatter = new BinaryMessageFormatter();
+                m.Body = objDashBoardDataCount;
+                if (webDashboardMessageQueue != null)
+                    webDashboardMessageQueue.Purge();
+                webDashboardMessageQueue.Send(m);
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Error in Update Charged. " + ex.ToString());
+                // throw;
+            }
+        }
         #endregion
     }
 
@@ -2297,7 +2599,6 @@ namespace VaaaN.MLFF.WindowsServices
     {
         int classId = -1;
         string vrn = string.Empty;
-
         public Int32 ClassId
         {
             get
@@ -2309,7 +2610,6 @@ namespace VaaaN.MLFF.WindowsServices
                 this.classId = value;
             }
         }
-
         public String VRN
         {
             get
@@ -2322,7 +2622,6 @@ namespace VaaaN.MLFF.WindowsServices
             }
         }
     }
-
     public class IkePktData
     {
         public string ObjectId { get; set; }
