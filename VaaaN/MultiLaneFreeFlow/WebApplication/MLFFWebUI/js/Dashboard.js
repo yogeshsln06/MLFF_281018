@@ -144,10 +144,10 @@ function bindChart(data, TotalRVehiclePass, TOTAL_UNREGISTERED) {
             name: "FRONT IKE",
             showInLegend: "true",
             dataPoints: [
-                { label: "TWO-WHEELED", y: data.Register.FrontIKE.MoterCycleCount },
-                { label: "SMALL", y: data.Register.FrontIKE.SmallCount },
-                { label: "MEDIUM", y: data.Register.FrontIKE.MediumCount },
-                { label: "LARGE", y: data.Register.FrontIKE.BigCount },
+                { label: "TWO-WHEELED", y: data.Register.FrontIKE.MoterCycleCount, color: "#cc6600" },
+                { label: "SMALL", y: data.Register.FrontIKE.SmallCount, color: "#cc6600" },
+                { label: "MEDIUM", y: data.Register.FrontIKE.MediumCount, color: "#cc6600" },
+                { label: "LARGE", y: data.Register.FrontIKE.BigCount, color: "#cc6600" },
             ]
         },
 {
@@ -737,7 +737,7 @@ function GetMSMQChartData() {
         dataType: "json",
         success: function (data) {
             BindStackChartData(data);
-            console.log(data);
+            //console.log(data);
         },
         error: function (ex) {
         }

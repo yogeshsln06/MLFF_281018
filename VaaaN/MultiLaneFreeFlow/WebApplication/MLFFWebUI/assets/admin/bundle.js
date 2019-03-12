@@ -509,28 +509,28 @@ webpackJsonp([0], {
 			m = (a.n(p), a(144));
         ! function () {
             var t = function () {
-                r("#sparklinedash").length > 0 && r("#sparklinedash").sparkline([10, 5, 6, 10, 9, 12, 4, 9], {
+                r("#sparklinedash").length > 0 && r("#sparklinedash").sparkline([chartdata[0].FrontIKE.MoterCycleCount, chartdata[0].FrontIKE.SmallCount, chartdata[0].FrontIKE.MediumCount, chartdata[0].FrontIKE.BigCount], {
                     type: "bar",
                     height: "20",
                     barWidth: "3",
                     resize: !0,
                     barSpacing: "3",
                     barColor: "#4caf50"
-                }), r("#sparklinedash2").length > 0 && r("#sparklinedash2").sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
+                }), r("#sparklinedash2").length > 0 && r("#sparklinedash2").sparkline([chartdata[0].RearIKE.MoterCycleCount, chartdata[0].RearIKE.SmallCount, chartdata[0].RearIKE.MediumCount, chartdata[0].RearIKE.BigCount], {
                     type: "bar",
                     height: "20",
                     barWidth: "3",
                     resize: !0,
                     barSpacing: "3",
                     barColor: "#9675ce"
-                }), r("#sparklinedash3").length > 0 && r("#sparklinedash3").sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
+                }), r("#sparklinedash3").length > 0 && r("#sparklinedash3").sparkline([(chartdata[0].FrontANPR.MoterCycleCount + chartdata[1].FrontANPR.MoterCycleCount + chartdata[2].FrontANPR.MoterCycleCount), (chartdata[0].FrontANPR.SmallCount + chartdata[1].FrontANPR.SmallCount + chartdata[2].FrontANPR.SmallCount), (chartdata[0].FrontANPR.MediumCount + chartdata[1].FrontANPR.MediumCount + chartdata[2].FrontANPR.MediumCount), (chartdata[0].FrontANPR.BigCount + chartdata[1].FrontANPR.BigCount + chartdata[2].FrontANPR.BigCount)], {
                     type: "bar",
                     height: "20",
                     barWidth: "3",
                     resize: !0,
                     barSpacing: "3",
                     barColor: "#03a9f3"
-                }), r("#sparklinedash4").length > 0 && r("#sparklinedash4").sparkline([chartdata[0].RearANPR.MoterCycleCount, chartdata[0].RearANPR.SmallCount, chartdata[0].RearANPR.MediumCount, chartdata[0].RearANPR.BigCount, chartdata[1].RearANPR.MoterCycleCount, chartdata[1].RearANPR.SmallCount, chartdata[1].RearANPR.MediumCount, chartdata[1].RearANPR.BigCount, chartdata[2].RearANPR.MoterCycleCount, chartdata[2].RearANPR.SmallCount, chartdata[2].RearANPR.MediumCount, chartdata[2].RearANPR.BigCount], {
+                }), r("#sparklinedash4").length > 0 && r("#sparklinedash4").sparkline([(chartdata[0].RearANPR.MoterCycleCount + chartdata[1].RearANPR.MoterCycleCount + chartdata[2].RearANPR.MoterCycleCount), (chartdata[0].RearANPR.SmallCount + chartdata[1].RearANPR.SmallCount + chartdata[2].RearANPR.SmallCount), (chartdata[0].RearANPR.MediumCount + chartdata[1].RearANPR.MediumCount + chartdata[2].RearANPR.MediumCount), (chartdata[0].RearANPR.BigCount + chartdata[1].RearANPR.BigCount + chartdata[2].RearANPR.BigCount)], {
                     type: "bar",
                     height: "20",
                     barWidth: "3",
