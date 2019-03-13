@@ -87,18 +87,18 @@ namespace MLFFWebUI.Controllers
             return result;
         }
 
-        [HttpPost]
-        public string StackChartData(ViewTransactionCBE transaction)
-        {
-            string result = "";
-            string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy");
-            string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
-            //Thread.Sleep(500);
-             HostingEnvironment.QueueBackgroundWorkItem(cancellationToken => new HelperAsync().StartProcessing(cancellationToken, strstarttime));
-            // string Det = JsonConvert.SerializeObject(TransactionBLL.StackChartData(strstarttime, strendtime), Formatting.Indented);
-            //result = Det.Replace("\r", "").Replace("\n", "");
-            return result;
-        }
+        //[HttpPost]
+        //public string StackChartData(ViewTransactionCBE transaction)
+        //{
+        //    string result = "";
+        //    string strstarttime = Convert.ToDateTime(transaction.StartDate).ToString("dd/MM/yyyy");
+        //    string strendtime = Convert.ToDateTime(transaction.EndDate).ToString("dd/MM/yyyy HH:mm:ss");
+        //    //Thread.Sleep(500);
+        //     HostingEnvironment.QueueBackgroundWorkItem(cancellationToken => new HelperAsync().StartProcessing(cancellationToken, strstarttime));
+        //    // string Det = JsonConvert.SerializeObject(TransactionBLL.StackChartData(strstarttime, strendtime), Formatting.Indented);
+        //    //result = Det.Replace("\r", "").Replace("\n", "");
+        //    return result;
+        //}
 
         [HttpGet]
         public string GetMSMQChartData()

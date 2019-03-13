@@ -23,7 +23,7 @@ $(document).ready(function () {
     $("#totalRANPR").val(0);
     GetMSMQData();
     GetMSMQChartData();
-    BindDateTime(5);
+    //BindDateTime(5);
     myVar = setInterval("GetMSMQData()", 20000);
     myVar = setInterval("GetMSMQChartData()", 20000);
 });
@@ -684,36 +684,36 @@ function DownLoadTransactionReport() {
 }
 
 // Prepare second chart
-function GetStackChartData(StartDate, EndDate) {
-    var StartDate = DateFormatTime(StartDate);
-    var EndDate = DateFormatTime(EndDate);
-   // $(".animationload").show();
-    $('#load').show(); // Show loading animation
-    $('#chartContainerstack').hide(); // Hide content until loaded
-    var Inputdata = {
-        StartDate: StartDate,
-        EndDate: EndDate,
-    }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-       // processData: true,
-        async:true,
-        data: JSON.stringify(Inputdata),
-        url: "Dashboard/StackChartData",
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            $('#filterModel').modal('hide');
-            //$('.animationload').hide();
-            $('#load').hide(); // Hide loading animation
-            $('#chartContainerstack').show(); // Show content
-        },
-        error: function (ex) {
-            $('#load').hide(); // Hide loading animation
-            $('#chartContainerstack').show(); // Show content
-        }
-    });
-}
+//function GetStackChartData(StartDate, EndDate) {
+//    var StartDate = DateFormatTime(StartDate);
+//    var EndDate = DateFormatTime(EndDate);
+//   // $(".animationload").show();
+//    $('#load').show(); // Show loading animation
+//    $('#chartContainerstack').hide(); // Hide content until loaded
+//    var Inputdata = {
+//        StartDate: StartDate,
+//        EndDate: EndDate,
+//    }
+//    $.ajax({
+//        type: "POST",
+//        dataType: "json",
+//       // processData: true,
+//        async:true,
+//        data: JSON.stringify(Inputdata),
+//        url: "Dashboard/StackChartData",
+//        contentType: "application/json; charset=utf-8",
+//        success: function (data) {
+//            $('#filterModel').modal('hide');
+//            //$('.animationload').hide();
+//            $('#load').hide(); // Hide loading animation
+//            $('#chartContainerstack').show(); // Show content
+//        },
+//        error: function (ex) {
+//            $('#load').hide(); // Hide loading animation
+//            $('#chartContainerstack').show(); // Show content
+//        }
+//    });
+//}
 
 function BindStackChartData(data) {
 

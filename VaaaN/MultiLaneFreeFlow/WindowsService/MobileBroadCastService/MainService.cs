@@ -18,8 +18,9 @@ using System.Xml;
 using VaaaN.MLFF.Libraries.CommonLibrary.BLL;
 using VaaaN.MLFF.Libraries.CommonLibrary.CBE;
 using VaaaN.MLFF.Libraries.CommonLibrary.Classes.MobileBroadCast;
-
-
+using System.Messaging;
+using System.Globalization;
+using VaaaN.MLFF.Libraries.CommonLibrary;
 namespace MobileBroadCastService
 {
     public partial class MainService : ServiceBase
@@ -27,6 +28,8 @@ namespace MobileBroadCastService
         #region Variable
         Thread threadAccountBalanceUpdate;
         Thread threadNotificationBoradCast;
+        Thread threadDashboardChart;
+        private MessageQueue dashQueue;
         private volatile bool stopThread = false;
         #endregion
 
@@ -35,7 +38,7 @@ namespace MobileBroadCastService
         {
             InitializeComponent();
 
-            //OnStart(new string[] { "" });
+           // OnStart(new string[] { "" });
         }
 
         static void Main()
@@ -68,6 +71,13 @@ namespace MobileBroadCastService
                 threadNotificationBoradCast.Name = "threadNotificationBoradCast";
                 threadNotificationBoradCast.Start();
                 LogMessage("threadNotificationBoradCast started successfully.");
+
+                LogMessage("Trying to start threadDashboardChart...");
+                threadDashboardChart = new Thread(threadDashboardChartFunction);
+                threadDashboardChart.IsBackground = true;
+                threadDashboardChart.Name = "threadDashboardChart";
+                threadDashboardChart.Start();
+                LogMessage("threadDashboardChart started successfully.");
 
                 LogMessage("Mobile service started successfully.");
             }
@@ -116,21 +126,14 @@ namespace MobileBroadCastService
             }
         }
 
-     
-
         #endregion
 
         #region Helper Methods
-
-       
 
         private void LogMessage(string message)
         {
             VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.Write(message, VaaaN.MLFF.Libraries.CommonLibrary.Logger.Log.ErrorLogModule.MobileWebAPI);
         }
-
-      
-
 
         private void threadAccountBalanceUpdateFunction()
         {
@@ -293,6 +296,49 @@ namespace MobileBroadCastService
             }
         }
 
+        private void threadDashboardChartFunction()
+        {
+            while (!stopThread)
+            {
+                try
+                {
+                    DashboardQueue();
+                }
+                catch (Exception ex)
+                {
+                    LogMessage("Failed to send into Dasboard Queue." + ex.Message);
+                }
+                finally
+                {
+                    Thread.Sleep(500);
+                }
+            }
+        }
+        private void DashboardQueue()
+        {
+            try
+            {
+                string strstarttime = DateTime.Now.ToString("dd-MMM-yyyy");
+                string Det = JsonConvert.SerializeObject(TransactionBLL.StackChartData(strstarttime, strstarttime), Newtonsoft.Json.Formatting.Indented);
+                if (!string.IsNullOrEmpty(Det))
+                {
+                    #region Send data to MSMQ
+                    Message m = new Message();
+                    m.Formatter = new BinaryMessageFormatter();
+                    m.Body = Det;
+                    m.Recoverable = true;
+                    dashQueue = VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.Create(VaaaN.MLFF.Libraries.CommonLibrary.MSMQ.Queue.webChartDashboardMessageQueue);
+                    if (dashQueue != null)
+                        dashQueue.Purge();
+                    dashQueue.Send(m);
+                    #endregion
+                }
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Failed to send into Dasboard Queue." + ex.Message);
+            }
+        }
         public class SMSResponce
         {
             public string transId { get; set; }
