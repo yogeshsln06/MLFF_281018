@@ -161,7 +161,6 @@
     </Compile>
     <Compile Include="Models\CSVUtility.cs" />
     <Compile Include="Models\CustomerVehicleModel.cs" />
-    <Compile Include="Models\HelperAsync.cs" />
     <Compile Include="Models\HelperClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
